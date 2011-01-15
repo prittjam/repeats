@@ -1,0 +1,25 @@
+function [] = cvdb_ins_tc(conn, ...
+                          u, u_scv, ...
+                          us_time_elapsed, us_time_elapsed_scv, ...
+                          image_1, image_2, ...
+                          type)
+    connh = conn.Handle;
+
+    h = char(zeros(2,64));
+    h(1,:) = cvdb_hash_image(image_1);
+    h(2,:) = cvdb_hash_image(image_2);
+    xorh = cvdb_image_hash_xor(h(1,:), h(2,:));
+
+    stm = connh.prepareStatement(['INSERT INTO tc ' ...
+                        '(tc, image_pair, count, count_scv, type, us_time_elapsed, us_time_elapsed_scv) ' ...
+                        'VALUES(?,UNHEX(?),?,?,?,?,?)']);
+    stm.setObject(1, u);
+    stm.setString(2, xorh);
+    stm.setInt(3, size(u,2));
+    stm.setInt(4, size(u,2));
+    stm.setString(5, type);
+    stm.setInt(6,us_time_elapsed);
+    stm.setInt(7,us_time_elapsed_scv);
+    
+    stm.execute();
+    close(stm);
