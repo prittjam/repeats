@@ -1,10 +1,8 @@
 function [conn] = cvdb_init(server_name, db_name, user_name, password)
-    base_path = fileparts(which('cvdb_init'));
+    base_path = fileparts(which('cvdb_init.m'));
     
     addpath([base_path '/ins']);
     addpath([base_path '/sel']);
-    addpath([base_path '/del']);
-    addpath([base_path '/upd']);
     addpath([base_path '/util']);
     addpath([base_path '/serialization']);
     addpath([base_path '/serialization/json']);
