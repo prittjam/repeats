@@ -282,3 +282,45 @@ function [] = cvdb_create(conn)
                             'calib_data(name))']);
         stm.execute();
     end
+
+    stm = connh.prepareStatement(['SELECT COUNT(*) FROM information_schema.tables ' ...
+                        'WHERE table_name=''detector_cfgs''']);
+    rs = stm.executeQuery();
+    rs.next();
+    count = rs.getInt(1);
+    if (count == 0)
+        stm = connh.prepareStatement(['CREATE TABLE detector_cfgs (' ...
+                            'id BINARY(16) NOT NULL, ' ...
+                            'pair_id BINARY(32) NOT NULL, ' ...
+                            'detections_id INTEGER, '
+                            'PRIMARY KEY(id))']);
+        stm.execute();
+    end
+
+    stm = connh.prepareStatement(['SELECT COUNT(*) FROM information_schema.tables ' ...
+                        'WHERE table_name=''descriptor_cfgs''']);
+    rs = stm.executeQuery();
+    rs.next();
+    count = rs.getInt(1);
+    if (count == 0)
+        stm = connh.prepareStatement(['CREATE TABLE descriptor_cfgs (' ...
+                            'id BINARY(16) NOT NULL, ' ...
+                            'pair_id BINARY(32) NOT NULL, ' ...
+                            'descriptions_id INTEGER, '
+                            'PRIMARY KEY(id))']);
+        stm.execute();
+    end
+
+    stm = connh.prepareStatement(['SELECT COUNT(*) FROM information_schema.tables ' ...
+                        'WHERE table_name=''tc_cfgs''']);
+    rs = stm.executeQuery();
+    rs.next();
+    count = rs.getInt(1);
+    if (count == 0)
+        stm = connh.prepareStatement(['CREATE TABLE tc_cfgs (' ...
+                            'id BINARY(16) NOT NULL, ' ...
+                            'pair_id BINARY(32) NOT NULL, ' ...
+                            'tc_id INTEGER, '
+                            'PRIMARY KEY(id))']);
+        stm.execute();
+    end

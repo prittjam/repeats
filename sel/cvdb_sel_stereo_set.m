@@ -1,4 +1,4 @@
-function [stereo_set] = cvdb_select_stereo_set(conn, set_name)
+function [stereo_set] = cvdb_sel_stereo_set(conn, set_name)
     connh = conn.Handle;
 
     stereo_set = {};
