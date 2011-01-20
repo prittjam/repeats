@@ -18,4 +18,3 @@ function h = cvdb_ins_img(conn, img, ...
     stm.setInt(7, height);
     
     err = stm.execute();
-    
