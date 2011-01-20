@@ -1,30 +1,23 @@
 function [t] = cvdb_ins_tc(conn, ...
+                           cfg,
                            u, ...
                            us_time_elapsed, ...
                            img1, img2, ...
                            type)
     connh = conn.Handle;
 
-    cfg_tmp.detectors = cfg.detectors;
-    cfg_tmp.descriptors = cfg.descriptors;
-    cfg_tmp.tc = cfg.tc;
 
-    cfg_hash = cfg2hash(cfg_tmp);
     pair_hash = cvdb_hash_img_pair(img1, img2);
-
+    [tc_cfg, tc_cfg_hash] = cvdb_make_tc_cfg(conn, cfg)
 
     stm = connh.prepareStatement(['INSERT INTO tc ' ...
-                        '(id, tc, pair_id, count, type, us_time_elapsed) ' ...
-                        'VALUES(?,UNHEX(?),?,?,?,?,?)']);
+                        '(tc_cfg_hash, pair_hash, u, count, us_time_elapsed) ' ...
+                        'VALUES(UNHEX(?),UNHEX(?),?,?,?)']);
     stm.setString(1, cfg_hash);
-
-    stm.setObject(1, u);
-    stm.setString(2, xorh);
-    stm.setInt(3, size(u,2));
-    stm.setInt(4, size(u,2));
-    stm.setString(5, type);
-    stm.setInt(6,us_time_elapsed);
-    stm.setInt(7,us_time_elapsed_scv);
+    stm.setString(2, pair_hash);
+    stm.setObject(3, u);
+    stm.setObject(4, size(u,2));
+    stm.setInt(5, us_time_elapsed);
     
     stm.execute();
     close(stm);
