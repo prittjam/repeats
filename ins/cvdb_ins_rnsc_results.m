@@ -1,22 +1,16 @@
-function [] = cvdb_ins_rnsc_results(conn, res, cfg_hash, tag_list)
-
-    
+function [] = cvdb_ins_rnsc_results(conn, title, res, cfg_hash, tag_list)
     connh = conn.Handle;
     
     stm = connh.prepareStatement(['INSERT INTO rnsc ' ...
-                        '(experiment_name, cfg_id, ' ...
+                        '(title, cfg_id, ' ...
                         'inlying_set, model, errors, score, ' ...
                         'samples_drawn, sample_degen_count, ' ...
-                        'us_time_elapsed) VALUES(?,UNHEX(?),?,?,?,' ...
-                        '?,?,?,?)'], java.sql.Statement.RETURN_GENERATED_KEYS);
+                        'us_time_elapsed) ' ...
+                        'VALUES(?,UNHEX(?),?,?,?,?,?,?,?)'], ...
+                                 java.sql.Statement.RETURN_GENERATED_KEYS);
     
-    stm.setString(1, 'test');
-    
-    if exist(cfg_hash)
-        stm.setString(2, cfg_id);
-    else
-        stm.setNull(2, java.sql.Types.VARCHAR);
-    end
+    stm.setString(1, title);
+    stm.setString(2, cfg_hash);
     
     if isfield(res, 'inlying_set')
         stm.setObject(3, res.inlying_set);
