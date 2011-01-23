@@ -11,7 +11,7 @@ function [img_set] = cvdb_sel_img_set(conn, set_name)
     count = rs.getInt(1);
 
     if (count > 0)    
-        sql_query = ['SELECT absolute_path FROM ' ...
+        sql_query = ['SELECT absolute_path,height,width FROM ' ...
                      'imgs ' ...
                      'INNER JOIN img_sets ' ...
                      'ON img_sets.img_id=imgs.id ' ...
@@ -23,6 +23,6 @@ function [img_set] = cvdb_sel_img_set(conn, set_name)
         row_num = 0;
         while (rs.next())
             row_num = row_num+1;
-            img_set{row_num} = char(rs.getString(1));
+            img_set{row_num} = {char(rs.getString(1)),height,width};
         end
     end
