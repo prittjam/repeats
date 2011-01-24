@@ -1,8 +1,7 @@
 function [tc_exist] = cvdb_sel_tc_exist(conn, ...
-                                        cfg, img1, img2)
+                                        cfg, pair_hash)
     connh = conn.Handle;
     [tc_cfg, tc_cfg_hash] = cvdb_make_tc_cfg(cfg);
-    pair_hash = cvdb_hash_img_pair(img1, img2);
 
     sql_query = ['SELECT COUNT(*) ' ...
                  'FROM tc ' ...

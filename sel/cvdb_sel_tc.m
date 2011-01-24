@@ -1,7 +1,6 @@
-function [tc] = cvdb_sel_tc(conn, cfg, img1, img2)
+function [tc] = cvdb_sel_tc(conn, cfg, pair_hash)
     connh = conn.Handle;
 
-    pair_hash = cvdb_hash_img_pair(img1, img2);
     tc_cfg_hash = cfg2hash(cfg);
 
     sql_query = ['SELECT data,count,type ' ...
