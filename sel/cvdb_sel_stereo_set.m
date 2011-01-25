@@ -35,7 +35,7 @@ function [stereo_set] = cvdb_sel_stereo_set(conn, set_name)
         stereo_set = {};
         row_num = 0;
         while (rs.next() && rs2.next())
-            row_num = row_num+1
+            row_num = row_num+1;
 
             stereo_set(row_num).img1.url = ...
                 char(rs.getString(1));
