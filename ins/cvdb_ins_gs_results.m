@@ -1,22 +1,22 @@
-function [auto_id] = cvdb_ins_rnsc_results(conn, title, exp_id, ...
-                                           res, cfg, tag_list)
+function [gs_id] = cvdb_ins_gs_results(conn, title, exp_id, ...
+                                       res, cfg, tags)
     connh = conn.Handle;
-    
+
     if isconnection(conn)
         if ~isempty(cfg)
-            [rnsc_cfg_exist, rnsc_cfg_hash] = cvdb_sel_rnsc_cfg_exist(conn, cfg);
-            if (~rnsc_cfg_exist)
-                rnsc_cfg_hash = cvdb_ins_rnsc_cfg(conn, cfg, rnsc_cfg_hash);
+            [gs_cfg_exist, gs_cfg_hash] = cvdb_sel_gs_cfg_exist(conn, cfg);
+            if (~gs_cfg_exist)
+                gs_cfg_hash = cvdb_ins_gs_cfg(conn, cfg, gs_cfg_hash);
             end
         end
 
-        cfg_hash = rnsc_cfg_hash;
-        stm = connh.prepareStatement(['INSERT INTO rnsc ' ...
+        cfg_hash = cfg2hash(cfg);
+        stm = connh.prepareStatement(['INSERT INTO gs ' ...
                             '(title, exp_id, cfg_id, ' ...
                             'inlying_set, errors, score, ' ...
-                            'samples_drawn, sample_degen_count, ' ...
+                            'samples_drawn, ' ...
                             'us_time_elapsed) ' ...
-                            'VALUES(?,?,UNHEX(?),?,?,?,?,?,?)'], ...
+                            'VALUES(?,?,UNHEX(?),?,?,?,?,?)'], ...
                                      java.sql.Statement.RETURN_GENERATED_KEYS);
         
         stm.setString(1, title);
@@ -43,12 +43,6 @@ function [auto_id] = cvdb_ins_rnsc_results(conn, title, exp_id, ...
         
         stm.setInt(7, res.samples_drawn);
 
-        if isfield(res, 'sample_degen_count')
-            stm.setInt(8, res.sample_degen_count);    
-        else
-            stm.setNull(8, java.sql.Types.INTEGER);
-        end
-        
         if isfield(res, 'us_time_elapsed')
             stm.setInt(9, res.us_time_elapsed);    
         else
@@ -66,5 +60,4 @@ function [auto_id] = cvdb_ins_rnsc_results(conn, title, exp_id, ...
                 cvdb_ins_rnsc_taggings(conn, tag_list, auto_id);
             end
         end
-
     end
