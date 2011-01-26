@@ -1,5 +1,5 @@
-function [gs_id] = cvdb_ins_gs_results(conn, title, exp_id, ...
-                                       res, cfg, tags)
+function [auto_id] = cvdb_ins_gs_results(conn, title, exp_id, ...
+                                       res, cfg, tag_list)
     connh = conn.Handle;
 
     if isconnection(conn)
@@ -8,13 +8,12 @@ function [gs_id] = cvdb_ins_gs_results(conn, title, exp_id, ...
             if (~gs_cfg_exist)
                 gs_cfg_hash = cvdb_ins_gs_cfg(conn, cfg, gs_cfg_hash);
             end
-        end
-
+        end 
         cfg_hash = cfg2hash(cfg);
         stm = connh.prepareStatement(['INSERT INTO gs ' ...
                             '(title, exp_id, cfg_id, ' ...
-                            'inlying_set, errors, score, ' ...
-                            'samples_drawn, ' ...
+                            'weights, errors, score, ' ...
+                            'iterations, ' ...
                             'us_time_elapsed) ' ...
                             'VALUES(?,?,UNHEX(?),?,?,?,?,?)'], ...
                                      java.sql.Statement.RETURN_GENERATED_KEYS);
@@ -23,8 +22,8 @@ function [gs_id] = cvdb_ins_gs_results(conn, title, exp_id, ...
         stm.setInt(2, exp_id);
         stm.setString(3, cfg_hash);
         
-        if isfield(res, 'inlying_set')
-            stm.setObject(4, res.inlying_set);
+        if isfield(res, 'weights')
+            stm.setObject(4, res.weights);
         else
             stm.setNull(4, java.sql.Types.BLOB);
         end
@@ -41,12 +40,12 @@ function [gs_id] = cvdb_ins_gs_results(conn, title, exp_id, ...
             stm.setNull(6, java.sql.Types.DOUBLE);
         end
         
-        stm.setInt(7, res.samples_drawn);
+        stm.setInt(7, res.iterations);
 
         if isfield(res, 'us_time_elapsed')
-            stm.setInt(9, res.us_time_elapsed);    
+            stm.setInt(8, res.us_time_elapsed);    
         else
-            stm.setNull(9, java.sql.Types.INTEGER);
+            stm.setNull(8, java.sql.Types.INTEGER);
         end
         
         stm.execute();
