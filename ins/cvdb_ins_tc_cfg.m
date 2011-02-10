@@ -1,10 +1,10 @@
 function [auto_id] = cvdb_ins_tc_cfg(conn, ...
-                                     cfg)
-
+                                     cfg, tc_cfg_hash)
 connh = conn.Handle;
 
-[tc_cfg_hash tc_cfg_str] = cfg2hash(cfg);
-[tc_cfg, tc_cfg_hash] = cvdb_make_tc_cfg(cfg);
+if nargin < 3
+    [tc_cfg_hash tc_cfg_str] = cfg2hash(cfg);
+end
 
 sql_stmt = ['INSERT INTO tc_cfgs ' ...
             '(id) ' ...

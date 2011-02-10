@@ -1,15 +1,14 @@
 function [auto_id] = cvdb_ins_tc(conn, ...
                                  cfg, u, type, us_time_elapsed, ...
-                                 pair_hash, ...
+                                 pair_hash, tc_cfg_hash, ...
                                  tags)
     
     connh = conn.Handle;
 
-    [tc_cfg, tc_cfg_hash] = cvdb_make_tc_cfg(cfg);
-    [tc_cfg_exist] = cvdb_sel_tc_cfg_exist(conn, tc_cfg);
+    [tc_cfg_exist] = cvdb_sel_tc_cfg_exist(conn, tc_cfg, tc_cfg_hash);
     
     if (~tc_cfg_exist)
-        cvdb_ins_tc_cfg(conn, tc_cfg);        
+        cvdb_ins_tc_cfg(conn, tc_cfg, tc_cfg_hash);        
     end
     
     stm = connh.prepareStatement(['INSERT INTO tc ' ...

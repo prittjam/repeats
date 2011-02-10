@@ -9,5 +9,6 @@ function [conn] = cvdb_init(server_name, db_name, user_name, password)
     
     javaaddpath([base_path '/mysql-connector/mysql-connector-' ...
                  'java-5.1.14-bin.jar']);
+    javaaddpath([base_path '/mysql-connector']);    
     
     conn = cvdb_open(server_name, db_name, user_name, password);

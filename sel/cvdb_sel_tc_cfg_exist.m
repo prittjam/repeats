@@ -1,6 +1,5 @@
-function [tc_cfg_exist] = cvdb_sel_tc_cfg_exist(conn, cfg)
+function [tc_cfg_exist] = cvdb_sel_tc_cfg_exist(conn, cfg, tc_cfg_hash)
     connh = conn.Handle;
-    [tc_cfg, tc_cfg_hash] = cvdb_make_tc_cfg(cfg);
 
     sql_query = ['SELECT COUNT(*) ' ...
                  'FROM tc_cfgs ' ...

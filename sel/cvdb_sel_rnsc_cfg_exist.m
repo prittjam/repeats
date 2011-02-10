@@ -1,8 +1,11 @@
-function [rnsc_cfg_exist, h] = cvdb_sel_rnsc_cfg_exist(conn, rnsc_cfg)
+function [rnsc_cfg_exist, h] = cvdb_sel_rnsc_cfg_exist(conn, rnsc_cfg, ...
+                                                      h)
     connh = conn.Handle;
 
-    h = cvdb_hash_rnsc_cfg(rnsc_cfg);
-    
+    if nargin < 3
+        h = cfg2hash(rnsc_cfg);
+    end
+
     sql_statement = ['SELECT COUNT(*) FROM rnsc_cfgs WHERE id=' ...
                      'UNHEX(?)'];
     stm = connh.prepareStatement(sql_statement);

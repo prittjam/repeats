@@ -1,7 +1,11 @@
 function [tc_exist] = cvdb_sel_tc_exist(conn, ...
-                                        cfg, pair_hash)
+                                        cfg, pair_hash, tc_cfg_hash)
     connh = conn.Handle;
-    [tc_cfg, tc_cfg_hash] = cvdb_make_tc_cfg(cfg);
+    [tc_cfg] = cvdb_make_tc_cfg(cfg);
+
+    if nargin < 4
+        tc_cfg_hash = cfg2hash(tc_cfg);
+    end
 
     sql_query = ['SELECT COUNT(*) ' ...
                  'FROM tc ' ...
