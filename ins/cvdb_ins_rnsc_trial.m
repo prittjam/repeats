@@ -1,14 +1,10 @@
 function [] = cvdb_ins_rnsc_trial(conn,  rnsc_id, ...
                                   sample_set, model, weights, errors, score)
-connh = conn.Handle;
-    
-    if ~isempty(cfg)
-        rnsc_cfg_hash = cvdb_ins_rnsc_cfg(conn, cfg);
-    end
+    connh = conn.Handle;
 
     stm = connh.prepareStatement(['INSERT INTO rnsc_trials ' ...
                         '(rnsc_id, sample_set, model, weights, errors, score) ' ...
-                        'VALUES(?,?,?,?,?,?,?)'], ...
+                        'VALUES(?,?,?,?,?,?)'], ...
                                  java.sql.Statement.RETURN_GENERATED_KEYS);
     
     stm.setInt(1, rnsc_id);

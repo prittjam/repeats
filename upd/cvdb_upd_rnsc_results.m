@@ -1,11 +1,12 @@
-function auto_id = cvdb_upd_rnsc_results(conn, rnsc_id, res)
-    connh = conn.Handle;
+function auto_id = cvdb_upd_rnsc_results(conn, rnsc_id, res, ...
+                                         tag_list)
     
-    if ~isempty(cfg)
-        rnsc_cfg_hash = cvdb_ins_rnsc_cfg(conn, cfg);
+    connh = conn.Handle;
+
+    if nargin < 4
+        tag_list = {};
     end
 
-    cfg_hash = rnsc_cfg_hash;
     stm = connh.prepareStatement(['UPDATE rnsc ' ...
                         'SET weights=?, errors=?, score=?, ' ...
                         'samples_drawn=?, sample_degen_count=?, ' ...
@@ -21,12 +22,6 @@ function auto_id = cvdb_upd_rnsc_results(conn, rnsc_id, res)
 
     stm.execute();
 
-    rs = stm.getGeneratedKeys();
-
-    auto_id = 0;
-    if rs.next()
-        auto_id = rs.getInt(1);
-        if (~isempty(tag_list))
-            cvdb_ins_rnsc_taggings(conn, tag_list, auto_id);
-        end
+    if (~isempty(tag_list))
+        cvdb_ins_rnsc_taggings(conn, tag_list, rnsc_id);
     end
