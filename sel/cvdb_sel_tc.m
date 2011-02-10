@@ -1,13 +1,11 @@
-function [tc tc_cfg_hash] = cvdb_sel_tc(conn, cfg, pair_hash)
+function [tc] = cvdb_sel_tc(conn, tc_cfg_hash, pair_hash)
     connh = conn.Handle;
 
-    tc_cfg_hash = cfg2hash(cfg);
-
-    tc = [];
+    tc = {};
     
     sql_query = ['SELECT data,count,type ' ...
                  'FROM tc ' ...
-                 'WHERE id=UNHEX(?) AND pair_id=UNHEX(?) ' ...
+                 'WHERE cfg_id=UNHEX(?) AND pair_id=UNHEX(?) ' ...
                 ];
     
     stm = connh.prepareStatement(sql_query);
