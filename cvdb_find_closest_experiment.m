@@ -1,8 +1,8 @@
-function [set_id] = cvdb_find_closest_experiment(conn, ...
-                                                 user, begin_time)
+function [set_id, exp_ids] = cvdb_find_closest_experiment(conn, ...
+                                                      user, begin_time)
     connh = conn.Handle;
 
-    exp_id = -1;
+    exp_ids = [];
     set_id = -1;
     sql_query = [ ...
         'SELECT id, set_id, begin ' ...
@@ -18,7 +18,10 @@ function [set_id] = cvdb_find_closest_experiment(conn, ...
     
     rs = stm.executeQuery();
 
-    if rs.next()
-        exp_id = rs.getInt(1);
-        set_id = char(rs.getString(2))
+    set_id = char(rs.getString(2))
+    
+    row_count = 1;
+    while rs.next()
+        exp_id(row_count) = rs.getInt(1);
+        row_count = row_count+1;
     end

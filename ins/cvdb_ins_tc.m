@@ -15,7 +15,7 @@ function cvdb_ins_tc(conn, ...
         
         stm.setString(1, tc_cfg_hash);
         stm.setString(2, pair_hash);
-        stm.setObject(3, typecast(u(:), 'uint8'));
+        stm.setBytes(3, typecast(u(:), 'uint8'));
         stm.setInt(4, size(u,2));
         stm.setString(5, type);
         stm.setInt(6, us_time_elapsed);

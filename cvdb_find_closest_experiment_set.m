@@ -1,24 +1,43 @@
-function [exp_set_id] = cvdb_find_closest_experiment_set(conn, ...
-                                                      user, begin_time)
+function [exp_set_id, exp_ids] = cvdb_find_closest_experiment_set(conn, ...
+                                                      user, begin_time, ...
+                                                      title)
     connh = conn.Handle;
 
-    exp_id = -1;
-    exp_set_id = -1;
+    exp_ids = [];
+
     sql_query = [ ...
-        'SELECT id, set_id, begin ' ...
+        'SELECT set_id, begin ' ...
         'FROM stereo_experiments ' ...
-        'WHERE user=?  ' ...
+        'WHERE user=?  AND ' ...
+        'title=? ' ...
         'ORDER BY abs(?-begin) DESC LIMIT 1' ...
                 ];
     stm = connh.prepareStatement(sql_query);
     stm.setString(1, user);
 
     sqlDate = java.sql.Timestamp(java.util.Date().getTime());
-    stm.setTimestamp(2, sqlDate);
-    
+    stm.setString(2, title);
+    stm.setTimestamp(3, sqlDate);
+
     rs = stm.executeQuery();
 
-    if rs.next()
-        exp_id = rs.getInt(1);
-        exp_set_id = char(rs.getString(2));
+    row_num = 1;
+    while rs.next()
+        exp_set_id = char(rs.getString(1));
     end
+
+    sql_query = [ ...
+        'SELECT id ' ...
+        'FROM stereo_experiments ' ...
+        'WHERE set_id=?'];
+    stm = connh.prepareStatement(sql_query);
+    stm.setString(1, exp_set_id);
+
+    rs = stm.executeQuery();
+
+    row_num = 1;
+    while rs.next()
+        exp_ids(row_num) = rs.getInt(1);
+        row_num = row_num+1;
+    end
+
