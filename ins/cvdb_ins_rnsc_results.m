@@ -16,7 +16,7 @@ function [auto_id] = cvdb_ins_rnsc_results(conn, title, exp_id, tc_id, cfg, ...
     stm.setInt(2, exp_id);
     stm.setString(3, cfg_hash); 
     stm.setString(4, tc_id); 
-    stm.setBytes(3, typecast(sample_set(:), 'uint8'));
+    stm.setBytes(5, typecast(double(sample_set(:)), 'uint8'));
     stm.execute();
 
     rs = stm.getGeneratedKeys();
