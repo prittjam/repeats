@@ -1,5 +1,5 @@
 function [auto_id] = cvdb_ins_stereo_experiment(conn, set_id, ...
-                                               title, pair_id, cfg)	
+                                                title, pair_id, cfg)	
     connh = conn.Handle;
     cfg_id = cfg2hash(cfg);
     stm = connh.prepareStatement(['INSERT INTO stereo_experiments ' ...

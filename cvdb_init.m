@@ -1,5 +1,5 @@
 function [conn] = cvdb_init(server_name, db_name, user_name, password)
-    base_path = fileparts(which('cvdb_init.m'));
+    [base_path, name, ext] = fileparts(mfilename('fullpath'));
     
     addpath([base_path '/ins']);
     addpath([base_path '/upd']);
