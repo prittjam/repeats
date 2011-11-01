@@ -9,7 +9,8 @@ function conn2 = cvdb_open(server_name, db_name, user_name, password)
         throw(MException('MySQLDatabase:mysqlError', ...
                          char(exception.message)));
     end
-    conn2.Handle = conn;
+    %    conn2.Handle = conn;
+    conn2 = conn;
 %    jdbc_string = sprintf('jdbc:mysql://%s/%s', server_name, db_name);
 %    jdbc_driver = 'com.mysql.jdbc.Driver';
 %n = database(db_name, user_name, password, ...
