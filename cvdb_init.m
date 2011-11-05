@@ -7,7 +7,10 @@ function [] = cvdb_init()
     addpath([base_path '/util']);
     addpath([base_path '/serialization']);
     addpath([base_path '/serialization/json']);
+    addpath([base_path '/vendor/imagedb']);
     
-    javaaddpath([base_path '/mysql-connector/mysql-connector-' ...
+    javaaddpath([base_path '/vendor/mysql-connector/mysql-connector-' ...
                  'java-5.1.14-bin.jar']);
-    javaaddpath([base_path '/mysql-connector']);
+    javaaddpath([base_path '/vendor/mysql-connector']);
+
+    imagedb_init;
