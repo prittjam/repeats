@@ -1,4 +1,4 @@
-function dx = eg_sampson_err(u,F)
+function dx = eg_sampson_err(F,u)
 N = size(u,2);
 
 S = [1 0 0 0 0 0; ...

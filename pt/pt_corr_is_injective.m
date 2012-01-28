@@ -1,4 +1,4 @@
-function is_degen = pt_corr_is_injective(u,sample,varargin)
+function is_degen = pt_corr_is_injective(u, sample, varargin)
     t = varargin{ 1 };
 
     N  = sum(sample);
