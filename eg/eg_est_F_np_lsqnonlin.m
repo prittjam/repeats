@@ -1,4 +1,4 @@
-function F = eg_est_np_lsqnonlin(u, sample_set, cfg, varargin)
+function F = eg_est_F_np_lsqnonlin(u, sample_set, cfg, varargin)
 F0 = cfg.model_args{ 1 };
 
 objective_fn = @(f,u) reshape(eg_sampson_err(make_F(f(1),f(2),f(3), ...
