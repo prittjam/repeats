@@ -1,4 +1,4 @@
-function [] = cvtk2_init(wbs_demo_path)
+function [] = cvtk2_init()
 [cvtk_base_path, name, ext] = fileparts(mfilename('fullpath'));
 
 addpath([cvtk_base_path '/eg']);
@@ -9,7 +9,7 @@ addpath([cvtk_base_path '/tc']);
 addpath([cvtk_base_path '/scene']);
 addpath([cvtk_base_path '/ao']);
 
-addpath([wbs_demo_path]);
-
+addpath([cvtk_base_path '/vendor/wbs']);
+addpath([cvtk_base_path '/vendor/wbs/bin']);
 % wbs demo init
 setpaths
