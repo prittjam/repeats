@@ -46,44 +46,40 @@ function [] = cvdb_ins_stereo_set(conn, set_name, img_set_path, ...
                                 img_path_pair{j}, rel_pth, img_name, ext);
                 end
             end
-            xorh = cvdb_img_hash_xor(h(1,:), ...
-                                     h(2,:));
-
             sql_statement = ['SELECT COUNT(*) FROM img_pairs WHERE ' ...
-                             'id=UNHEX(?)'];
-
+                             'img1_id=UNHEX(?) AND img2_id=UNHEX(?)'];
             stm = connh.prepareStatement(sql_statement);
-            stm.setString(1, xorh);
+            stm.setString(1,h(1,:));
+            stm.setString(2,h(2,:));
             rs = stm.executeQuery();
             rs.next();
             count = rs.getInt(1);
             if (count == 0) 
-                stm = connh.prepareStatement(['INSERT INTO img_pairs (id, img1_id, img2_id)' ...
-                                    'VALUES(UNHEX(?),UNHEX(?),UNHEX(?))']);
-                stm.setString(1, xorh);
-                stm.setString(2, h(1,:));
-                stm.setString(3, h(2,:));
+                stm = connh.prepareStatement(['INSERT INTO img_pairs (img1_id, img2_id)' ...
+                                    'VALUES(UNHEX(?),UNHEX(?))']);
+                stm.setString(1, h(1,:));
+                stm.setString(2, h(2,:));
                 err = stm.execute();
             end
             
             sql_statement = ['SELECT COUNT(*) FROM stereo_sets WHERE ' ...
-                             'pair_id=UNHEX(?)'];
+                             'img1_id=UNHEX(?) AND img2_id=UNHEX(?)'];
             stm = connh.prepareStatement(sql_statement);
-            xorh = cvdb_img_hash_xor(h(1,:), ...
-                                     h(2,:));
-            stm.setString(1, cvdb_stringify_hash(xorh));
+            stm.setString(1,h(1,:));
+            stm.setString(2,h(2,:));
             rs = stm.executeQuery();
             rs.next();
             count = rs.getInt(1);
             if (count == 0) 
-                stm = connh.prepareStatement(['INSERT INTO stereo_sets (name,pair_id,description)' ...
-                                    'VALUES(?,UNHEX(?),?)']);
-                stm.setString(1, set_name);
-                stm.setString(2, xorh);
+                stm = connh.prepareStatement(['INSERT INTO stereo_sets (name,img1_id,img2_id,description)' ...
+                                    'VALUES(?,UNHEX(?),UNHEX(?),?)']);
+                stm.setString(1,set_name);
+                stm.setString(2,h(1,:));
+                stm.setString(3,h(2,:));
                 if isempty(description)
-                    stm.setNull(3, java.sql.Types.VARCHAR);
+                    stm.setNull(3,java.sql.Types.VARCHAR);
                 else
-                    stm.setString(3, description);
+                    stm.setString(3,description);
                 end
 
                 err = stm.execute();

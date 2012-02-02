@@ -1,6 +1,7 @@
 function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
-                                  img_set, description)
-    error(nargchk(3, 4, nargin));
+                               img_set, description)
+    error(nargchk(3, 5, nargin));
+
     if nargin < 4
         base_path = [];
     end
@@ -23,7 +24,7 @@ function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
             img_path = [img_set_path img_set{i}]
             
             img = imread(img_path);
-            h = hash(img(:),'SHA-256');
+            h = cvdb_hash_img(img(:));
             sql_statement = ['SELECT COUNT(*) FROM imgs WHERE id=' ...
                              'UNHEX(?)'];
             stm2 = connh.prepareStatement(sql_statement);
@@ -58,6 +59,5 @@ function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
             end
         end
         err = stm.executeBatch();
-        close(stm2);
     end
     close(stm);
