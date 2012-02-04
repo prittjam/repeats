@@ -1,6 +1,7 @@
 function dr2 = scene_flatten_dr(dr)
 dr2 = struct('geom',[],'sifts',[],'id',[]);
 fn = fieldnames(dr);
+
 for j = 1:numel(fn)
     tp = fn{j};
     if isfield(dr.(tp),'geom')
