@@ -1,0 +1,3 @@
+[submodule "vendor/wbs"]
+	path = vendor/wbs
+	url = file:///home.zam2/perdom1/git/wbs
