@@ -1,7 +1,9 @@
-import com.mysql.jdbc.*;
+global conn CASS_CFG
 
-global conn;
 conn = cvdb_open('nash.felk.cvut.cz', ...
                  'ransac', ...
                  'prittjam', ...
                  'gauss123');
+
+CASS_CFG.db_root = '/mnt/fry';
+CASS_CFG.imagedb_cluster = 'cmpgrid_cassandra';
