@@ -2,55 +2,71 @@ function dr = scene_make_dr(detectors,dr)
 global DESC DATA DR chains
 
 if nargin < 2
-    dr = {};
+    dr = struct;
 end
 
 detect(chains);
 upgrade(chains);
 describe(chains);
 
-for i = 1:size(DESC.data,3)
+for i = 1:size(DATA.imgs)
+    idx = 1;
+    z = numel(dr{i});
     for j = 1:size(detectors,2)
         cfg = detectors{j};
-        is_new_dr = false;
-        for k = 1:numel(cfg.subgenid)
+        for k = cfg.subgenid
             if ~isempty(DESC.data{2,k,i})
                 geom = ...
-                    make_geom_array(DESC.data{2,cfg.subgenid(k),i}.sift);
+                    make_geom_array(DESC.data{2,k,i}.sift);
                 sift = ...
-                    make_sift_array(DESC.data{2,cfg.subgenid(k),i}.sift);
-                dr{i} = scene_add_dr(dr{i},cfg,geom,sift,k);
+                    make_sift_array(DESC.data{2,k,i}.sift);
+                dr{i}(z) = scene_add_dr(cfg,geom,sift, ...
+                                        cvdb_hash_img(scene_get_intensity_img(i)), ...
+                                        k,idx);
+                idx = dr{i}(z).id(end)+1;
+                z = z+1;
             end
-        end
-        if is_new_dr
-            scene_put_dr(detectors{j}, ...
-                         cvdb_hash_img(scene_get_intensity_img(i)), ...
-                         dr{i});
         end
     end
 end
 
-function dr = scene_add_dr(dr,cfg,geom,sift,subgenid)
-if nargin < 5
-    subtype = [];
+clear DESC DATA DR chains
+
+function [dr,num_dr] = scene_add_dr(cfg,geom,sift,img_id,subgenid,idx)
+[keys,subtypes,ids,subgenids] = cvdb_get_dr_keys(cfg);
+dr = struct;
+
+num_dr = size(geom,2);
+
+dr.geom = geom;
+dr.sifts = sift;
+dr.id = [idx:idx+size(dr.geom,2)-1];
+dr.s = true(ones(1,size(dr.geom,2)));
+dr.num_dr = size(dr.geom,2);
+
+dr.name = cfg.detector.name;
+
+k = find(cfg.subgenid == subgenid)
+
+dr.subgenid = subgenid;
+
+if (numel(subtypes) > 0)
+    dr.subtype.name = subtypes(k);
+    dr.subtype.id = ids(k);
+else
+    dr.subtype.name = [];
+    dr.subtype.id = [];
 end
 
-if isfield(cfg, 'subtype')
-    subtype = cfg.subtype;
-    dr.(cfg.detector.name).(subtype.tbl{subgenid}).geom = geom;
-    dr.(cfg.detector.name).(subtype.tbl{subgenid}).sifts = sift;
-else
-    dr.(cfg.detector.name).geom = geom;
-    dr.(cfg.detector.name).sifts = sift; 
-end
+scene_put_dr(cfg,keys{k},img_id,dr);
 
 function geom = make_geom_array(dr)
-geom = [dr(:).x; ...
-        dr(:).y; ...
-        dr(:).a11; ...
-        dr(:).a12; ...
+geom = [dr(:).a11; ...
         dr(:).a21; ...
-        dr(:).a22];
+        dr(:).a12; ...
+        dr(:).a22; ...
+        dr(:).x; ...
+        dr(:).y];
 
 function sifts = make_sift_array(dr)
 sifts = reshape([dr(:).desc],128,[]);
