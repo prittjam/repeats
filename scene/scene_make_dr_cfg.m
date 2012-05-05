@@ -1,5 +1,5 @@
 function cfg = scene_make_dr_cfg(tp,detector_cfg)
-global DR
+global DR CFG
 
 clear cfg
 
@@ -8,7 +8,9 @@ switch tp
     cfg.subtype.tbl = {'intp', 'intm'};    
     cfg.subtype.id  = [1 2];    
     cfg.subgenid    = [1 2];
-    cfg.upgrade     = [1 1];
+    cfg.upgrade     = [2 2];
+    CFG.detectors.extrema = detector_cfg;
+    CFG.detectors.lafs.lafConstructsToUse_LAF__LAF_CG_GRAD=1;
     
   case 'haff2_na'
     cfg.subgenid   = 9;
@@ -17,7 +19,7 @@ end
 
 DR.current     = unique(cat(2,cfg.subgenid,DR.current));
 [~,ia]         = intersect(DR.current,cfg.subgenid);
-DR.upgrade(ia) = cfg.upgrade;
+DR.upgrades(ia) = cfg.upgrade;
 
 % === mandatory part (in the most cases stays unchanged) === %
 cfg.verbose                = 0;

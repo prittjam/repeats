@@ -1,13 +1,14 @@
-function [dr,is_found,img_id] = scene_get_combined_dr(img,detectors)
-idx = 1;
-
-dr = [];
+function [dr,is_found,img_id] = scene_get_combined_dr(img_id,detectors)
+dr = scene_construct_dr();
 is_found = logical(size(detectors));
 
+gid = 1;
 for j = 1:numel(detectors)
     cfg = detectors{j};
     tp = cfg.detector.name;
-    [d,is_found(j),num_dr,img_id] = scene_get_dr(img,cfg,idx);
-    dr = cat(2,dr,d);
-    idx = idx+num_dr;
+    [d,is_found(j),num_dr] = scene_get_dr(img_id,cfg,gid);
+    if is_found(j)
+        dr = cat(2,dr,d);
+        gid = gid+num_dr;
+    end
 end

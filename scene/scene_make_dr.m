@@ -1,38 +1,46 @@
-function dr = scene_make_dr(detectors,dr)
+function dr_set = scene_make_dr(detectors,dr_set)
 global DESC DATA DR chains
 
 if nargin < 2
-    dr = struct;
+    dr_set = {};
 end
 
 detect(chains);
 upgrade(chains);
 describe(chains);
 
-for i = 1:size(DATA.imgs)
-    idx = 1;
-    z = numel(dr{i});
+for i = 1:size(DATA.imgs,2)
+    gid = 1;
+    dr = scene_construct_dr();
     for j = 1:size(detectors,2)
         cfg = detectors{j};
         for k = cfg.subgenid
-            if ~isempty(DESC.data{2,k,i})
-                geom = ...
-                    make_geom_array(DESC.data{2,k,i}.sift);
-                sift = ...
-                    make_sift_array(DESC.data{2,k,i}.sift);
-                dr{i}(z) = scene_add_dr(cfg,geom,sift, ...
-                                        cvdb_hash_img(scene_get_intensity_img(i)), ...
-                                        k,idx);
-                idx = dr{i}(z).id(end)+1;
-                z = z+1;
+            if (DR.valid(i,k))
+                if (DR.data{i,k}.num_dr > 0)
+                    geom = ...
+                        make_geom_array(DESC.data{2,k,i}.sift);
+                    sift = ...
+                        make_sift_array(DESC.data{2,k,i}.sift);
+                    dr = cat(2,dr,scene_add_dr(cfg,geom,sift, ...
+                                               cvdb_hash_img(scene_get_intensity_img(i)), ...
+                                               k,gid));
+                    gid = dr(end).id(end)+1;
+                else
+                    geom = [];
+                    sift = [];
+                    dr = cat(2,dr,scene_add_dr(cfg,geom,sift, ...
+                                               cvdb_hash_img(scene_get_intensity_img(i)), ...
+                                               k,gid));
+                end
             end
         end
     end
+    dr_set = cat(2,dr_set,dr);
 end
 
 clear DESC DATA DR chains
 
-function [dr,num_dr] = scene_add_dr(cfg,geom,sift,img_id,subgenid,idx)
+function [dr,num_dr] = scene_add_dr(cfg,geom,sift,img_id,subgenid,gid)
 [keys,subtypes,ids,subgenids] = cvdb_get_dr_keys(cfg);
 dr = struct;
 
@@ -40,13 +48,14 @@ num_dr = size(geom,2);
 
 dr.geom = geom;
 dr.sifts = sift;
-dr.id = [idx:idx+size(dr.geom,2)-1];
+dr.id = [1:size(dr.geom,2)];
+dr.gid = [gid:gid+size(dr.geom,2)-1];
 dr.s = true(ones(1,size(dr.geom,2)));
 dr.num_dr = size(dr.geom,2);
 
 dr.name = cfg.detector.name;
 
-k = find(cfg.subgenid == subgenid)
+k = find(cfg.subgenid == subgenid);
 
 dr.subgenid = subgenid;
 

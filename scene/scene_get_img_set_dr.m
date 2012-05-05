@@ -1,20 +1,22 @@
-function dr = scene_get_img_set_dr(img_set,detectors,disable_cache)
+function dr_set = scene_get_img_set_dr(detectors,disable_cache)
+global chains DATA;
 
-global chains;
-
-if nargin < 3
+if nargin < 2
     disable_cache = 0;
 end
 
-num_cams = numel(img_set);
-
-img_ids = [];
+make_img_idx = [];
 dr_ids = [];
+dr_set = {};
 
-for i = 1:num_cams
-    [img,intensity] = scene_load_img(img_set,i);
-    is_found = [];
-    [dr{i},is_found,img_id] = scene_get_combined_dr(intensity,detectors);
+for img_idx = 1:numel(DATA.imgs)
+    img_id = scene_get_img_id(img_idx);
+    [dr,is_found] = scene_get_combined_dr(img_id, ...
+                                          detectors);
+    if is_found
+        dr_set{img_idx} = dr;
+    end
+
     ia = find(is_found == 0);
 
     if (disable_cache)
@@ -22,12 +24,12 @@ for i = 1:num_cams
     end
 
     if ~isempty(ia) 
-        img_ids = unique(cat(2,img_ids,i));
+        make_img_idx = unique(cat(2,make_img_idx,img_idx));
         for j = ia
             dr_ids = unique(cat(2,dr_ids,detectors{j}.subgenid));
         end
     end
 end
 
-chains = create_chains(img_ids,dr_ids);
-dr = scene_make_dr(detectors,dr);
+chains = create_chains(make_img_idx,dr_ids);
+dr_set = scene_make_dr(detectors,dr_set);
