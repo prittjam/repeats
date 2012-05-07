@@ -1,1 +1,1 @@
-function [] = draw_wireframe_3d(vertices,edges)
+function [] = draw3d_wireframe(ax1,vertices,edges)
