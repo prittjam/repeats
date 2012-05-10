@@ -7,6 +7,9 @@ addpath([cvtk_base_path '/rnsc']);
 addpath([cvtk_base_path '/scene']);
 addpath([cvtk_base_path '/ao']);
 addpath([cvtk_base_path '/draw']);
+addpath([cvtk_base_path '/cam']);
+addpath([cvtk_base_path '/util']);
+addpath([cvtk_base_path '/laf']);
 
 %addpath([src_base_path '/wbs/wbs-demo']);
 %

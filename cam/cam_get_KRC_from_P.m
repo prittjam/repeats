@@ -1,4 +1,4 @@
-function [K R C] = Q2KRC(Q)
+function [K R C] = cam_get_KRC_from_P(Q)
 M = Q(1:3,1:3);
 
 m3 = norm(M(3,:),2);
