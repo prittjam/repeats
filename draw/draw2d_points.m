@@ -1,6 +1,8 @@
-function [] = pt_draw(h,u)
+function [] = draw2d_points(ax1,u)
+u = renormI(u);
 
-axes(h);
+axes(ax1);
+
 v = axis;
 xmin = min([u(1,:) v(1)]);
 xmax = max([u(1,:) v(2)]);
