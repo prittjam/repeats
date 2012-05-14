@@ -8,6 +8,7 @@ xmin = min([u(1,:) v(1)]);
 xmax = max([u(1,:) v(2)]);
 ymin = min([u(2,:) v(3)]);
 ymax = max([u(2,:) v(4)]);
+
 axis([xmin-5 xmax+5 ymin-5 ymax+5]);
 
 hold on;
