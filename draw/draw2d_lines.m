@@ -1,4 +1,4 @@
-function [] = draw2d_lines(ax1,l)
+function lh = draw2d_lines(ax1,l,varargin)
 axes(ax1);
 v = axis;
 n = size(l,2);
@@ -32,5 +32,6 @@ lh = line(reshape(pts2(1,:),2,[]), ...
           reshape(pts2(2,:),2,[]));
 hold off;
 
-set(lh, ...
-    'LineWidth', 1.75);
+if ~isempty(varargin)
+    set(lh,varargin{:});
+end

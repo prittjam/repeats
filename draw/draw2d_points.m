@@ -1,4 +1,4 @@
-function [] = draw2d_points(ax1,u)
+function hp = draw2d_points(ax1,u)
 u = renormI(u);
 
 axes(ax1);

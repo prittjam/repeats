@@ -1,5 +1,6 @@
 [cvtk_base_path, name, ext] = fileparts(mfilename('fullpath'));
 
+addpath([cvtk_base_path '/hg']);
 addpath([cvtk_base_path '/eg']);
 addpath([cvtk_base_path '/line']);
 addpath([cvtk_base_path '/pt']);

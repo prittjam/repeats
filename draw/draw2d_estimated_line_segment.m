@@ -1,4 +1,4 @@
-function [] = draw2d_estimated_line_segment(ax1,u,l)
+function hh = draw2d_estimated_line_segment(ax1,u,l)
 u = renormI(u);
 d = sqdist(u);
 [max_d,idx] = max(d(:));
@@ -10,6 +10,6 @@ ln = l/norm(l);
 v = [ u1+ln*dot(u1,ln) u2+ln*dot(u2,ln) ];
 
 hold on;
-plot(v(1,:)',v(2,:)');
+hh = plot(v(1,:)',v(2,:)');
 hold off;
 
