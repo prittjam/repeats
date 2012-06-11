@@ -1,4 +1,2 @@
 function u = cam_ortho_project(X)
-x = renormI(X);
-v = renormI(x(1:3,:));
-u = v(1:2,:);
+u = [X(1,:);X(2,:);ones(1,size(X,2))];
