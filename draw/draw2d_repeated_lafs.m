@@ -1,4 +1,4 @@
-function [] = draw2d_repeated_lafs(ax1,u,vis)
+function draw2d_repeated_lafs(ax1,u,vis)
 [~,jj] = find(vis);
 jj3 = [jj jj jj]';
 jj3 = jj3(:);
@@ -28,3 +28,4 @@ set(get(hp2,'Children'),           ...
   'MarkerFaceColor' , [.7 .7 .7]  );
 
 set(ax1,'ColorOrder', tmp);
+

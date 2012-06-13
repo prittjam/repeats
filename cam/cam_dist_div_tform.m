@@ -1,2 +1,3 @@
 function u = cam_dist_div_tform(u,T)
-cam_dist_div(u,T.cc,T.q);
+v = cam_dist_div(u',T.tdata.cc,T.tdata.q);
+u = v';

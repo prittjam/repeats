@@ -1,4 +1,4 @@
-function [] = draw2d_wireframe(ax1,u,edges)
+function draw2d_wireframe(ax1,u,edges)
 un = renormI(u);
 axes(ax1);
 hold on;
