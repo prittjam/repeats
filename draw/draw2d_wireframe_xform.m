@@ -18,6 +18,3 @@ y = reshape(ud(:,2),numel(t),[]);
 hold on;
 plot(x,y,'k');
 hold off;
-
-x2 = reshape(x,t,[]);
-y2 = reshape(y,t,[]);

@@ -9,5 +9,3 @@ axes(ax1);
 hold on;
 plot3(X,Y,Z);
 hold off;
-
-iii =3 ;

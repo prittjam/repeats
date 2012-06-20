@@ -1,13 +1,19 @@
-function [x2,y2] = draw2d_wireframe_dist(ax1,u,edges,xform)
-un = renormI(u);
-axes(ax1);
-
+function [xd,yd] = draw2d_wireframe_dist(ax1,u,edges,xform)
 t = [0:0.1:1]';
+k = numel(t);
 
-vx = reshape(un(1,edges),2,[]);
-vy = reshape(un(2,edges),2,[]);
+vx = reshape(u(1,edges),2,[]);
+vy = reshape(u(2,edges),2,[]);
 
-draw2d_lines_xform(vx,vy,xform);
+wx = bsxfun(@plus,vx(1,:),bsxfun(@times,t,vx(2,:)-vx(1,:)));
+wy = bsxfun(@plus,vy(1,:),bsxfun(@times,t,vy(2,:)-vy(1,:)));
 
-x2 = reshape(x,t,[]);
-y2 = reshape(y,t,[]);
+v = tformfwd(xform, [wx(:) wy(:) ones(numel(wx),1)]);
+
+x = reshape(ud(:,1),k,[]);
+y = reshape(ud(:,2),k,[]);
+
+axes(ax1);
+hold on;
+plot(x,y,'k');
+hold off;
