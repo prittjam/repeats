@@ -1,15 +1,21 @@
-function hh = draw2d_estimated_line_segment(ax1,u,l)
+function [hh,v] = draw2d_est_line_segment(ax1,u,l)
 u = renormI(u);
-d = sqdist(u);
-[max_d,idx] = max(d(:));
-[i,j] = ind2sub(size(d),idx);
-u1 = u(:,i);
-u2 = u(:,j);
 
-ln = l/norm(l);
-v = [ u1+ln*dot(u1,ln) u2+ln*dot(u2,ln) ];
+v = line_project_points(ax1,u,l);
 
 hold on;
-hh = plot(v(1,:)',v(2,:)');
+hh = plot(v(1,:)',v(2,:)','r');
 hold off;
 
+draw2d_expand_axis(ax1,v);
+
+function x = line_project_points(ax1,u,l1)
+n = size(u,2);
+d = sqdist(u);
+
+lt = l1./sqrt(l1(1)^2+l1(2)^2);
+c = (lt(1)*u(2,:)-lt(2)*u(1,:));
+l2 = [repmat(lt(2),1,n);repmat(-lt(1),1,n);c];
+
+draw2d_lines(ax1,l1);
+x = renormI(cross(repmat(l1,1,n),l2,1));

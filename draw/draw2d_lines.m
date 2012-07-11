@@ -1,7 +1,8 @@
 function lh = draw2d_lines(ax1,l,varargin)
+n = size(l,2);
+
 axes(ax1);
 v = axis;
-n = size(l,2);
 
 x = [ [v(1) v(3) 1]' ...
       [v(2) v(3) 1]' ...
@@ -26,6 +27,7 @@ ia = [repmat((pts(1,:) > v(1)) & (pts(1,:) < v(2)),2,1);...
       repmat((pts(8,:) > v(3)) & (pts(8,:) < v(4)),2,1)];
 
 pts2 = reshape(pts(ia(:)),2,[]);
+
 
 hold on;
 lh = line(reshape(pts2(1,:),2,[]), ...
