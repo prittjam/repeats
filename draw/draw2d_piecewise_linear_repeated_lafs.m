@@ -1,10 +1,7 @@
 function draw2d_piecewise_linear_repeated_lafs(ax1,x,y,vis)
-[ii,jj] = find(vis);
-
-iv = nonzeros(vis);
-
-tmp = get(ax1,'ColorOrder');
-cmap = colormap(ax1,'lines');
-cmap = cmap(jj,:);
-
-draw2d_piecewise_linear_lafs(ax1,x(:,iv),y(:,iv),cmap);
+iv = nonzeros(vis');
+[ii,jj] = find(vis');
+color_set = repmat(varycolor(size(vis,2)),size(vis,1),1);
+idx = sub2ind(size(vis'),ii,jj);
+draw2d_piecewise_linear_lafs(ax1,x(:,iv),y(:,iv), ...
+                             color_set(idx,:));
