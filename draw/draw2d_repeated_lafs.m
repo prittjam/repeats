@@ -5,17 +5,17 @@ if nargin < 4
 end
 
 iv = nonzeros(vis');
-[ii,jj] = find(vis');
+ind = find(vis');
 color_set = repmat(varycolor(size(vis,2)),size(vis,1),1);
-idx = sub2ind(size(vis'),ii,jj);
+color_set = color_set(ind,:);
 
 tmp = get(gca,'ColorOrder');
-set(gca,'ColorOrder',color_set(idx,:));
+set(gca,'ColorOrder',color_set(ind,:));
 
 x = reshape(u(1:3:end,iv),3,[]);
 y = reshape(u(2:3:end,iv),3,[]);
 
-hold on;
+hold all;
 h1 = plot(x,y,line_style, ...
           'LineWidth'       , 2, ...
           'MarkerEdgeColor','k', ...
