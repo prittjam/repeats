@@ -8,7 +8,8 @@ addpath([cvdb_base_path '/serialization']);
 
 javaaddpath([cvdb_base_path '/vendor/mysql-connector/mysql-connector-' ...
              'java-5.1.14-bin.jar']);
-javaaddpath([cvdb_base_path '/vendor/mysql-connector']);
+javaaddpath([cvdb_base_path '/vendor/imagedb/imagedb.jar']);
+javaaddpath([cvdb_base_path '/vendor/imtools/imtools.jar']);
 
 % add widebaseline stereo dependencies
 addpath([src_base_path '/wbs/matlab/utils']);
