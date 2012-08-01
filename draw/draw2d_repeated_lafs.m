@@ -10,7 +10,7 @@ color_set = repmat(varycolor(size(vis,2)),size(vis,1),1);
 color_set = color_set(ind,:);
 
 tmp = get(gca,'ColorOrder');
-set(gca,'ColorOrder',color_set(ind,:));
+set(gca,'ColorOrder',color_set);
 
 x = reshape(u(1:3:end,iv),3,[]);
 y = reshape(u(2:3:end,iv),3,[]);

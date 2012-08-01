@@ -15,8 +15,6 @@ addpath([cvtk_base_path '/laf']);
 %addpath([src_base_path '/wbs/wbs-demo']);
 %
 %javaaddpath('/home.stud/qqmikula/lib/mysql-connector-java-5.1.6-bin.jar');
-%javaaddpath('/home.stud/qqmikula/lib/imagedb/imagedb.jar');
-%javaaddpath('/home.stud/qqmikula/lib/imtools/imtools.jar');
 %
 %% wbs demo init
 %old_pth = cd([src_base_path '/wbs/wbs-demo']);
