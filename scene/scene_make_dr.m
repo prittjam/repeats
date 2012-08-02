@@ -47,6 +47,7 @@ dr = struct;
 num_dr = size(geom,2);
 
 dr.geom = geom;
+dr.u = laf_get_3p_from_A(laf_unwrap_A(geom));
 dr.sifts = sift;
 dr.id = [1:size(dr.geom,2)];
 dr.gid = [gid:gid+size(dr.geom,2)-1];

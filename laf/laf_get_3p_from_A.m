@@ -1,12 +1,13 @@
-function v = laf_get_3p_from_A(A)
-u = laf_renormI(v);
+function u = laf_get_3p_from_A(A0)
+if iscell(A0)
+    A = reshape(cell2mat(A0'),3,3,[]);
+else
+    A = A0;
+end
 
-n = size(u,2);
-A = squeeze(reshape([u(7:9,:)-u(4:6,:); ...
-                    u(1:3,:)-u(4:6,:); ...
-                    u(4:6,:)], ...
-                    3,3,[]));
-
-u = reshape(A,9,[]);
-v = u([4:6 7:9 1:3],:)'
-v([1:3 7:9],:) = v([1:3 7:9],:)+v([4:6 4:6],:);
+v = reshape(A,9,[]);
+n = size(v,2);
+u = zeros(9,n);
+u(4:6,:) = v(7:9,:);
+u(1:3,:) = v(4:6,:)+u(4:6,:);
+u(7:9,:) = v(1:3,:)+u(4:6,:);
