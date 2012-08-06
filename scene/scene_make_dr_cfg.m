@@ -5,22 +5,14 @@ clear cfg
 
 switch tp
   case 'mser'
+    CFG.detectors.extrema = detector_cfg;
     cfg.subtype.tbl = {'intp', 'intm'};    
     cfg.subtype.id  = [1 2];    
     cfg.subgenid    = [1 2];
     cfg.upgrade     = [2 2];
 
-    CFG.detectors.extrema.min_margin = 45;
-    CFG.detectors.extrema.max_area = 0.1;
-    CFG.detectors.extrema.min_size = 30; 
-
-%    CFG.detectors.lafs.lafConstructsToUse_LAF__LAF_CG_GRAD=1;
-%    CFG.overlapping_bins = 0;
-%    CFG.lafs.lafConstructsToUse_LAF__LAF_CG_VERTICAL = 0;
-%    CFG.minlafsincluster = 5;
-%    CFG.detectors.lafs.lafConstructsToUse_LAF__LAF_CG_DIST_MAX = 1;
-
   case 'haff2_na'
+    CFG.detectors.affpts = detector_cfg;
     cfg.subgenid   = 9;
     cfg.upgrade    = 0;    
 end

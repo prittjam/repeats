@@ -19,7 +19,7 @@ for i = 1:numel(keys)
         break;
     end
     dr(i).geom = s.geom;
-    dr(i).u = laf_get_3p_from_A(laf_unwrap_A(geom));
+    dr(i).u = laf_get_3p_from_A(laf_unwrap_A(s.geom));
     dr(i).sifts = s.sifts;
     dr(i).id = [1:size(dr(i).geom,2)];
     dr(i).gid = [gid:gid+size(dr(i).geom,2)-1];
