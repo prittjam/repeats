@@ -1,2 +1,2 @@
-function v = cam_udist_div_tform(u,T)
-v = cam_udist_div(u',T.tdata.cc,T.tdata.qu)';
+function v = cam_undistort_div_tform(u,T)
+v = cam_undistort_div(u',T.tdata.cc,T.tdata.qu)';

@@ -1,13 +1,18 @@
-function draw2d_repeated_lafs(ax1,u,vis,line_style)
+function draw2d_repeated_lafs(ax0,u,vis,line_style)
 
 if nargin < 4
     line_style = '-o';
 end
 
-iv = nonzeros(vis');
-ind = find(vis');
-color_set = repmat(varycolor(size(vis,2)),size(vis,1),1);
-color_set = color_set(ind,:);
+vist = vis';
+ss = sum(vist>0,2);
+vist = vist(find(ss),:);
+
+iv = nonzeros(vist);
+[ii,~] = find(vist);
+
+color_set = varycolor(max(ii));
+color_set = color_set(ii,:);
 
 tmp = get(gca,'ColorOrder');
 set(gca,'ColorOrder',color_set);

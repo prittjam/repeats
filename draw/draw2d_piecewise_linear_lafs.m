@@ -7,7 +7,7 @@ if nargin > 4
     set(ax1,'ColorOrder', cmap);
 end
 
-hold on;
+hold all;
 h1 = plot(x,y,line_style, ...
           'LineWidth'       , 2);
 
