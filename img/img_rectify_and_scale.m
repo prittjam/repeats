@@ -1,4 +1,4 @@
-function timg = img_rectify_and_scale(img,T1)
+function timg = img_rectify_and_scale(img,H,T1)
 nx = size(img,2);
 ny = size(img,1);
 border = [0.5    ny+0.5; ...
@@ -15,7 +15,14 @@ s = ss(1)/ss(2);
 S = [s 0 0;
      0 s 0;
      0 0 1];
-T2 = maketform('affine',S);
-T = maketform('composite',T1,T2);
+
+if ~isempty(T1)
+    T = maketform('composite',T1, ...
+                  maketform('projective',H'), ...
+                  maketform('affine',S));
+else
+    T = maketform('projective',H', ...
+                  maketform('affine',S));
+end
 
 timg = imtransform(img,T,'bicubic','Fill', 0);
