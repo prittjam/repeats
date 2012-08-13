@@ -11,6 +11,8 @@ addpath([cvtk_base_path '/draw']);
 addpath([cvtk_base_path '/cam']);
 addpath([cvtk_base_path '/util']);
 addpath([cvtk_base_path '/laf']);
+addpath([cvtk_base_path '/img']);
+addpath([cvtk_base_path '/util/emgm/emgm']);
 
 %addpath([src_base_path '/wbs/wbs-demo']);
 %
