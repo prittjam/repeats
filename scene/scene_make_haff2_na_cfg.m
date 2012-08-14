@@ -1,10 +1,16 @@
-function cfg =  scene_make_haff2_na_cfg(detector_cfg)
+function cfg =  scene_make_haff2_na_cfg(detector_cfg,sift_cfg)
 global CFG
 
-if nargin < 1
+if isempty(detector_cfg)
     detector_cfg = CFG.detectors.affpts;
 else
-    CFG.detectors.affpts = detector_cfg;
+    tmp = detector_cfg;
+    detector_cfg = CFG.detectors.affpts;
+    detector_cfg = scene_cp_cfg_fields(tmp,detector_cfg);
 end
 
-cfg = scene_make_dr_cfg('haff2_na',detector_cfg);
+if isempty(sift_cfg)
+    sift_cfg = scene_make_sift_cfg();
+end
+
+cfg = scene_make_dr_cfg('haff2_na',detector_cfg,sift_cfg);

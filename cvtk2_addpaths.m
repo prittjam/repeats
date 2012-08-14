@@ -12,13 +12,4 @@ addpath([cvtk_base_path '/cam']);
 addpath([cvtk_base_path '/util']);
 addpath([cvtk_base_path '/laf']);
 addpath([cvtk_base_path '/img']);
-addpath([cvtk_base_path '/util/emgm/emgm']);
-
-%addpath([src_base_path '/wbs/wbs-demo']);
-%
-%javaaddpath('/home.stud/qqmikula/lib/mysql-connector-java-5.1.6-bin.jar');
-%
-%% wbs demo init
-%old_pth = cd([src_base_path '/wbs/wbs-demo']);
-%setpaths
-%cd(old_pth);
+addpath([cvtk_base_path '/sift']);

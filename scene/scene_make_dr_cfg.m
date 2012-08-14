@@ -1,4 +1,4 @@
-function cfg = scene_make_dr_cfg(tp,detector_cfg)
+function cfg = scene_make_dr_cfg(tp,detector_cfg,sift_cfg)
 global DR CFG
 
 clear cfg
@@ -10,7 +10,7 @@ switch tp
     cfg.subtype.id  = [1 2];    
     cfg.subgenid    = [1 2];
     cfg.upgrade     = [2 2];
-
+    
   case 'haff2_na'
     CFG.detectors.affpts = detector_cfg;
     cfg.subgenid   = 9;
@@ -47,6 +47,7 @@ cfg.storage.retry_count = 25;
 
 cfg.detector = detector_cfg;
 cfg.detector.name = tp;
+cfg.sift = sift_cfg;
 
 % hash for detector/descriptor configuration
 cfg.dhash = cfg2hash(cfg.detector);
