@@ -1,3 +1,4 @@
+function cvdb_init(wbs_base_path)
 global conn CASS_CFG
 
 CASS_CFG.db_root = '/mnt/fry';
