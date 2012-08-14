@@ -25,7 +25,8 @@ function s = get_data(cfg,img_id,key,what)
 
     if (do_sifts)
         tmp = get_sifts(cfg,img_id,key);
-        s.sifts = reshape(typecast(tmp(:),'uint8'),128,[]);              end 
+        s.sifts = cfg.sift.normalize(double(reshape(typecast(tmp(:),'uint8'),128,[])));
+    end 
 
 function geom = get_geom(cfg,img_id,key,geom)
     geom = cfg.storage.get(img_id,['geom:', key],[]); 
