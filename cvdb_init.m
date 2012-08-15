@@ -42,4 +42,6 @@ conn.imagedb.storage = translate_interfaces(conn.imagedb.storage);
 conn.imagedb.storage.retry_count = 25;
 conn.imagedb.storage.db_root = '/mnt/fry';
 
+old_folder = cd([wbs_base_path 'wbs-demo/']);
 init
+cd(old_folder);
