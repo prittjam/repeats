@@ -1,11 +1,12 @@
 function [] = ex1()
-
 addpath('../');
-cvdb_addpaths('../../');
+addpath('../../cvtk2');
+cvtk2_init();
 cvdb_init('../../wbs');
 
 global CVDB_CACHE 
-global img_idx geom sifts u s
+global img_idx geom sifts u s 
+global CASS_CFG conn
 
 CVDB_CACHE.dr = true;
 CVDB_CACHE.bb = true;
@@ -27,9 +28,6 @@ for k = 1:numel(img_set)
     img_idx = k;
     [cimg,img_id] = scene_get_cimg(img_idx);
     dr_set{k} = scene_rm_empty_dr(dr_set{k});
-    dr_set{k} = rpt_get_coplanar_lafs(k, ...
-                                      dr_set{k});
-    dr_set{k} = rpt_rm_dup_lafs(dr_set{k},7);
     cdr = dr_set{k};
 
     figure;

@@ -1,7 +1,7 @@
-function [] = cvdb_init(wbs_base_path)
-global conn CASS_CFG
-
+function conn = cvdb_init(wbs_base_path)
 cvdb_addpaths(wbs_base_path);
+
+global CASS_CFG conn;
 
 fid = fopen('cvdb.cfg');
 text = textscan(fid,'%s','Delimiter','\n');
@@ -41,3 +41,5 @@ conn.imagedb.storage = translate_interfaces(conn.imagedb.storage);
 
 conn.imagedb.storage.retry_count = 25;
 conn.imagedb.storage.db_root = '/mnt/fry';
+
+init
