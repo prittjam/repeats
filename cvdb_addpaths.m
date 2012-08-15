@@ -12,10 +12,14 @@ addpath([cvdb_base_path '/util']);
 addpath([cvdb_base_path '/scene']);
 addpath([cvdb_base_path '/serialization']);
 
-javaaddpath([cvdb_base_path '/vendor/mysql-connector/mysql-connector-' ...
-             'java-5.1.14-bin.jar']);
-javaaddpath([cvdb_base_path '/vendor/imagedb/imagedb.jar']);
-javaaddpath([cvdb_base_path '/vendor/imagedb/imtools.jar']);
+javaaddpath(fullfile([cvdb_base_path '/vendor/mysql-connector/mysql-connector-' ...
+             'java-5.1.14-bin.jar']));
+
+javaaddpath({'/home.stud/qqmikula/lib/imagedb/imagedb.jar', ...
+             '/home.stud/qqmikula/lib/imtools/imtools.jar'});
+
+%javaaddpath({fullfile([cvdb_base_path '/vendor/imagedb/imagedb.jar']), ...
+%             fullfile([cvdb_base_path '/vendor/imagedb/imtools.jar'])});
 
 % add widebaseline stereo dependencies
 addpath([wbs_base_path '/wbs-demo']); 
