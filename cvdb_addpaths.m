@@ -20,7 +20,7 @@ javaaddpath([cvdb_base_path '/vendor/imagedb/imtools.jar']);
 % add widebaseline stereo dependencies
 addpath([wbs_base_path '/wbs-demo']); 
 
-old_folder = cd([wbs_base_path 'wbs-demo/']);
+old_folder = cd([wbs_base_path '/wbs-demo']);
 setpaths;
 cd(old_folder);
 
