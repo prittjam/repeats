@@ -1,13 +1,19 @@
-function cvdb_init(wbs_base_path)
+function [] = cvdb_init(wbs_base_path)
 global conn CASS_CFG
+
+cvdb_addpaths(wbs_base_path);
+
+fid = fopen('cvdb.cfg');
+text = textscan(fid,'%s','Delimiter','\n');
+credentials = text{:};
+
+conn = cvdb_open(credentials{1}, ...
+                 credentials{2}, ...
+                 credentials{3}, ...
+                 credentials{4});
 
 CASS_CFG.db_root = '/mnt/fry';
 CASS_CFG.imagedb_cluster = 'cmpgrid_cassandra';
-
-conn = cvdb_open('bayes.felk.cvut.cz', ...
-                 'ransac', ...
-                 'prittjam', ...
-                 'J4m3SP');
 
 % === mandatory part (in the most cases stays unchanged) === %
 conn.imagedb.verbose                = 0;

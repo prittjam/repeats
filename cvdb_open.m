@@ -1,7 +1,7 @@
-function conn2 = cvdb_open(server_name, db_name, user_name, password)
+function conn2 = cvdb_open(server_name, name, user, pass)
 connh = [];
 try
-    [conn connh] = dbconn2(server_name, db_name, user_name,  password);
+    [conn connh] = dbconn2(server_name, name, user,  pass);
 catch exception
     warning(['Could not open database connection. Database will be ' ...
              'unavailable']);
@@ -9,10 +9,10 @@ end
 
 conn2.Handle = connh;
 
-function [conn connh] = dbconn2(server_name, db_name, user, pass)
+function [conn connh] = dbconn2(server_name, name, user, pass)
    global DBCONNECTIONS;
-   error(nargchk(2, 3, nargin, 'struct'));   
-   if (nargin == 2), pass = ''; end
+   error(nargchk(3, 4, nargin, 'struct'));   
+   if (nargin == 3), pass = ''; end
 
    if ~usejava('jvm')
       error([mfilename ' requires Java to run.']);
@@ -50,4 +50,3 @@ function [conn connh] = dbconn2(server_name, db_name, user, pass)
    conn = DBCONNECTIONS.(hash);
    connh = conn.Handle;
    connh.setAutoReconnect(true);
-end
