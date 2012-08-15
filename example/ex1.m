@@ -1,12 +1,9 @@
 function [] = ex1()
 addpath('../');
-addpath('../../cvtk2');
-cvtk2_init();
 cvdb_init('../../wbs');
 
-global CVDB_CACHE 
-global img_idx geom sifts u s 
-global CASS_CFG conn
+global CVDB_CACHE CASS_CFG conn
+global img_idx
 
 CVDB_CACHE.dr = true;
 CVDB_CACHE.bb = true;
@@ -36,6 +33,25 @@ for k = 1:numel(img_set)
     subplot(1,2,2);
     imshow(cimg);rpt_draw2d_mser_minus(gca,cdr);
 end
+
+function draw2d_lafs(ax1,u,varargin)
+x = reshape(u(1:3:end,:),3,[]);
+y = reshape(u(2:3:end,:),3,[]);
+
+hold all;
+h1 = plot(x,y,'-o', ...
+          'LineWidth'       , 2, ...
+          'MarkerEdgeColor','k', ...
+          'MarkerFaceColor',[.49 1 .63], ...
+          'MarkerSize',4, ...
+          varargin{:});
+
+plot(x(1:3:end)',y(1:3:end)','o', ...
+     'LineWidth'       , 2, ...
+     'MarkerEdgeColor','k', ...
+     'MarkerFaceColor',[0.43 0.81 0.96], ...
+     'MarkerSize',5);
+hold off;
 
 function rpt_draw2d_detector_type(ax1,cdr,name,s);
 ind = scene_find_detector_type(cdr,name);
