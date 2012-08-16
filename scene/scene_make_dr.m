@@ -70,7 +70,7 @@ end
 
 scene_put_dr(cfg,keys{k},img_id,dr);
 
-dr.sifts = cfg.sift.normalize(double(dr.sifts));
+dr.sifts = cfg.sift.normalize(dr.sifts);
 
 function geom = make_geom_array(dr)
 geom = [dr(:).a11; ...
