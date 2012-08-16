@@ -20,7 +20,7 @@ for i = 1:size(DATA.imgs,2)
                     geom = ...
                         make_geom_array(DESC.data{2,k,i}.sift);
                     sift = ...
-                        cfg.sift.normalize(double(make_sift_array(DESC.data{2,k,i}.sift)));
+                        make_sift_array(DESC.data{2,k,i}.sift);
                     dr = cat(2,dr,scene_add_dr(cfg,geom,sift, ...
                                                cvdb_hash_img(scene_get_intensity_img(i)), ...
                                                k,gid));
@@ -69,6 +69,8 @@ else
 end
 
 scene_put_dr(cfg,keys{k},img_id,dr);
+
+dr.sifts = cfg.sift.normalize(double(dr.sifts));
 
 function geom = make_geom_array(dr)
 geom = [dr(:).a11; ...
