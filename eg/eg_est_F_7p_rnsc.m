@@ -1,7 +1,5 @@
-function varargout = eg_rnsc_7p(u,threshold,confidence)
-sample_set = ones(1,size(u,2));
-
-T = pt_make_hartley_xform(renormI([u(1:3,:) u(4:6,:)]));
+function varargout = eg_rnsc_7p(u,s,threshold,confidence)
+T = pt_make_hartley_xform(renormI([u(1:3,s) u(4:6,s)]));
 
 cfg.s = 7;
 cfg.t = pt_get_hartley_threshold(T,threshold);
@@ -12,7 +10,7 @@ cfg.sample_degen_fn = @eg_sample_degen;
 cfg.sample_degen_args = { cfg.t };
 
 % model functions
-cfg.model_fn = @eg_est_7p_tlsq;
+cfg.est_fn = @eg_est_7p_tlsq;
 cfg.error_fn = @(F,u) sum(eg_sampson_err(F,u).^2);
 
 cfg = rnsc_standardize_cfg(cfg);
@@ -20,14 +18,14 @@ cfg = rnsc_standardize_cfg(cfg);
 %cfg.lo = make_eg_inner_rnsc_cfg(cfg);
 %cfg.lo.fn = @eg_inner_rnsc;
 %
-[res, cfg] = rnsc_estimate(blkdiag(T,T)*u,sample_set,cfg);
+[res, cfg] = rnsc_estimate(blkdiag(T,T)*u,s,cfg);
 
 %cfg.model_args.model =  res.model;
 %cfg.epsilon = 0;
 %res = guided_sampling(blkdiag(T,T)*u, logical(res.weights), cfg);
 
 res.model = T'*res.model*T;
-res.errors = sum(eg_sampson_err(res.model,u).^2);
+res.errors = sum(eg_sampson_err(u,res.model).^2);
 
 varargout = { res };
 
