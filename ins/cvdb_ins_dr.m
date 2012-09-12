@@ -1,20 +1,19 @@
-function [] =  cvdb_ins_dr(conn,cfg,img_id,cfg_id,data)
+function [] =  cvdb_ins_dr(conn,cfg,img_id,dr)
 what = {'geom','sifts'};
 opt = [];
 
 try
-    if ~isempty(data)
+    if ~isempty(dr)
         put_data(cfg, ...
-                 cfg_id, ...
+                 dr, ...
                  img_id, ...
-                 data, ...
                  what);
     end
 catch err
     disp(err.message);
 end
 
-function [] = put_data(cfg,cfg_id,img_id,s,what)
+function [] = put_data(cfg,dr,img_id,what)
 if (~iscell(what))
     what = {what};
 end;
@@ -23,11 +22,11 @@ do_sifts = ismember('sifts',what);
 do_geom = ismember('geom',what);
 
 if (do_geom)
-    put_geom(cfg,cfg_id,img_id,s.geom);
+    put_geom(cfg,dr.key,img_id,dr.geom);
 end 
 
 if (do_sifts)
-    put_sifts(cfg,cfg_id,img_id,s.sifts);           
+    put_sifts(cfg,dr.key,img_id,dr.sifts);           
 end 
 
 function [] = put_geom(cfg,cfg_id,img_id,geom)

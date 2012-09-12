@@ -41,36 +41,9 @@ end
 clear DESC DATA DR chains
 
 function [dr,num_dr] = scene_add_dr(cfg,geom,sift,img_id,subgenid,gid)
-[keys,subtypes,ids,subgenids] = cvdb_get_dr_keys(cfg);
-dr = struct;
-
 num_dr = size(geom,2);
-
-dr.geom = geom;
-dr.u = laf_get_3p_from_A(laf_unwrap_A(geom));
-dr.sifts = sift;
-dr.id = [1:size(dr.geom,2)];
-dr.gid = [gid:gid+size(dr.geom,2)-1];
-dr.s = true(ones(1,size(dr.geom,2)));
-dr.num_dr = size(dr.geom,2);
-
-dr.name = cfg.detector.name;
-
-k = find(cfg.subgenid == subgenid);
-
-dr.subgenid = subgenid;
-
-if (numel(subtypes) > 0)
-    dr.subtype.name = subtypes(k);
-    dr.subtype.id = ids(k);
-else
-    dr.subtype.name = [];
-    dr.subtype.id = [];
-end
-
-scene_put_dr(cfg,keys{k},img_id,dr);
-
-dr.sifts = cfg.sift.normalize(dr.sifts);
+dr = scene_construct_dr(geom,sift,gid,subgenid,cfg);
+scene_put_dr(cfg,img_id,dr);
 
 function geom = make_geom_array(dr)
 geom = [dr(:).a11; ...

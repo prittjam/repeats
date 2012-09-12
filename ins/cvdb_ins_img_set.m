@@ -1,9 +1,15 @@
 function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
-                               img_set, description)
-    error(nargchk(3, 5, nargin));
+                               img_set, varargin)
+    error(nargchk(4, 7, nargin));
+    p = inputParser;
 
-    if nargin < 4
-        base_path = [];
+    p.addParamValue('insertmode','keep',@isstr);
+    p.addParamValue('description','',@isstr);
+    p.parse(varargin{:});
+    if strcmpi(p.Results.insertmode,'keep')
+        replace = 0;
+    else
+        replace = 1;
     end
     
     connh = conn.Handle;
@@ -15,8 +21,8 @@ function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
     rs.next();
     count = rs.getInt(1);
     
-    if (count == 0)
-        stm = connh.prepareStatement(['INSERT INTO img_sets ' ...
+    if (count == 0 || replace == 1)
+        stm = connh.prepareStatement(['REPLACE INTO img_sets ' ...
                             '(name, img_id) ' ...
                             'VALUES (?,UNHEX(?))']);
         
@@ -33,14 +39,14 @@ function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
             rs.next();
             count = rs.getInt(1);
 
-            if (count == 0)     
+            %            if (count == 0)     
                 [pth, img_name, ext] = fileparts(img_set{i});
                 rel_pth = regexpi(img_path, '[^/]*/[^/]*$', ...
                                   'match');
                 cvdb_ins_img(conn, img, ...
                              img_path, rel_pth, img_name, ...
                              ext);
-            end
+                %            end
             
             sql_statement = ['SELECT COUNT(*) FROM img_sets ' ... 
                              'WHERE name=? AND ' ...
@@ -52,7 +58,7 @@ function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
             rs.next();
             count = rs.getInt(1);
             
-            if (count == 0) 
+            if (count == 0 || replace == 1) 
                 stm.setString(1, set_name);
                 stm.setString(2, h);
                 stm.addBatch();

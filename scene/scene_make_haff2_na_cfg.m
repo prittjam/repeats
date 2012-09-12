@@ -1,16 +1,33 @@
-function cfg =  scene_make_haff2_na_cfg(detector_cfg,sift_cfg)
+function cfg =  scene_make_haff2_na_cfg(detector_cfg,varargin)
 global CFG
+
+p = inputParser;
+
+p.addParamValue('sift',scene_make_sift_cfg([],@sift_calc_rootSIFT),@isstruct);
+p.addParamValue('lafs',scene_make_laf_cfg(),@isstruct);
+p.parse(varargin{:});
+
+CFG.descs.sift = p.Results.sift.wbs;
+CFG.detectors.lafs = p.Results.lafs.wbs;
+
+cfg.detector.name = 'haff2_na';
+cfg.sift = p.Results.sift;
+cfg.lafs = p.Results.lafs;
 
 if isempty(detector_cfg)
     detector_cfg = CFG.detectors.affpts;
 else
-    tmp = detector_cfg;
-    detector_cfg = CFG.detectors.affpts;
-    detector_cfg = scene_cp_cfg_fields(tmp,detector_cfg);
+    detector_cfg = scene_cp_cfg_fields(detector_cfg,CFG.detectors.affpts);
 end
 
-if isempty(sift_cfg)
-    sift_cfg = scene_make_sift_cfg();
-end
+CFG.detectors.affpts = detector_cfg;
 
-cfg = scene_make_dr_cfg('haff2_na',detector_cfg,sift_cfg);
+cfg.subgenid   = 9;
+cfg.upgrade    = 0;
+scene_update_wbsdr(cfg.subgenid,cfg.upgrade);
+
+% hash for detector/descriptor configuration
+dhash = cfg2hash(detector_cfg);
+cfg.dhash = cvdb_hash_xor(dhash, ...
+                          cvdb_hash_xor(cfg.lafs.dhash,cfg.sift.dhash));
+cfg = scene_make_dr_cfg(cfg);
