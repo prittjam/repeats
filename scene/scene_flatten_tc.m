@@ -1,18 +1,6 @@
-function m2 = scene_flatten_tc(m)
-fn = fieldnames(m);
-m2 = [];
-for j = 1:numel(fn)
-    tp = fn{j};
-    if (isreal(m.(tp)))
-        m2 = cat(2,m2,m.(tp));
-    else
-        fn2 = fieldnames(m.(tp));
-        for z = 1:numel(fn2)
-            subtype = fn2{z};
-            if (strcmp(subtype,'img_id'))
-                continue;
-            end
-            m2 = cat(2,m2,m.(tp).(subtype));
-        end
-    end
-end
+function m2 = scene_flatten_tc(tc,dr1,dr2)
+m1 = [tc(:).m];
+gid1 = [dr1(:).gid];
+gid2 = [dr2(:).gid];
+m2 = [gid1(m1(1,:)); ...
+      gid2(m1(2,:))];

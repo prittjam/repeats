@@ -1,14 +1,14 @@
-function [s,is_found] = cvdb_sel_dr(conn,cfg,img_id,cfg_id)
-s = [];
-is_found = true;
-try 
-    opt = [];
-    what = {'geom','sifts'};
-    s = get_data(cfg,img_id,cfg_id,what);
-catch err
-    disp(err.message);
-    is_found = false;
-end
+function [s,is_found] = cvdb_sel_dr(conn,img_id,cfg_id)
+    s = [];
+    is_found = true;
+    try 
+        opt = [];
+        what = {'geom','sifts'};
+        s = get_data(conn.imagedb,img_id,cfg_id,what);
+    catch err
+        disp(err.message);
+        is_found = false;
+    end
 
 function s = get_data(cfg,img_id,key,what)
     s = struct('geom',[],'sifts',[]);
@@ -25,7 +25,7 @@ function s = get_data(cfg,img_id,key,what)
 
     if (do_sifts)
         tmp = get_sifts(cfg,img_id,key);
-        s.sifts = cfg.sift.normalize(reshape(typecast(tmp(:),'uint8'),128,[]));
+        s.sifts = reshape(typecast(tmp(:),'uint8'),128,[]);
     end 
 
 function geom = get_geom(cfg,img_id,key,geom)

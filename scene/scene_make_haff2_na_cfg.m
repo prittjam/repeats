@@ -15,19 +15,18 @@ cfg.sift = p.Results.sift;
 cfg.lafs = p.Results.lafs;
 
 if isempty(detector_cfg)
-    detector_cfg = CFG.detectors.affpts;
+    cfg.wbs = CFG.detectors.affpts;
 else
-    detector_cfg = scene_cp_cfg_fields(detector_cfg,CFG.detectors.affpts);
+    cfg.wbs = scene_cp_cfg_fields(detector_cfg,CFG.detectors.affpts);
 end
 
-CFG.detectors.affpts = detector_cfg;
-
+CFG.detectors.affpts = cfg.wbs;
+cfg.wbs = cfg.wbs;
 cfg.subgenid   = 9;
 cfg.upgrade    = 0;
 scene_update_wbsdr(cfg.subgenid,cfg.upgrade);
 
 % hash for detector/descriptor configuration
-dhash = cfg2hash(detector_cfg);
+dhash = cfg2hash(cfg.wbs);
 cfg.dhash = cvdb_hash_xor(dhash, ...
                           cvdb_hash_xor(cfg.lafs.dhash,cfg.sift.dhash));
-cfg = scene_make_dr_cfg(cfg);

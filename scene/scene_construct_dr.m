@@ -1,4 +1,4 @@
-function dr = scene_construct_dr(geom,sift,gid,subgenid,cfg)
+function dr = scene_construct_dr(geom,sift,gid,subgenid,cfg,img_id)
 num_dr = 0;
 if nargin < 1
     dr = struct('geom',{}, ...
@@ -11,6 +11,7 @@ if nargin < 1
                 'num_dr',{}, ...
                 'name',{}, ... 
                 'subgenid',{}, ...
+                'img_id',{}, ...
                 'key',{}, ...
                 'subtype',{});
 else
@@ -28,7 +29,7 @@ else
     dr.num_dr = size(dr.geom,2);
     dr.name = cfg.detector.name;
     dr.subgenid = subgenid;
-
+    dr.img_id = img_id;
     k = find(cfg.subgenid == subgenid);
     dr.key = keys{k};
 

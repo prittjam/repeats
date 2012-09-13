@@ -1,10 +1,10 @@
-function m = scene_get_combined_tc(dr1,dr2,detectors)
-m = [];
+function tc = scene_get_combined_tc(dr1,dr2,cfg)
+if nargin < 3
+    cfg = scene_make_tc_cfg();
+end
 
-for k = 1:numel(detectors)
-    cfg = detectors{k};
-    tp = cfg.detector.name;
-    m.(tp) = scene_get_tc(dr1.(tp), ...
-                          dr2.(tp), ...
-                          cfg);
+tc = struct('m',[]);
+
+for k = 1:numel(dr1)
+    tc(k).m = scene_get_tc(dr1(k),dr2(k),cfg);
 end

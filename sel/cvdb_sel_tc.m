@@ -1,12 +1,12 @@
 function varargout = cvdb_sel_tc(conn,img1_id,img2_id,cfg_id)
-    stereo_id = cvdb_hash_xor(img1_id,img2_id);
-    cfg = conn.cassandra;
+    cfg = conn.imagedb;
     
     tc = [];
     is_found = true;
     try 
         opt = [];
         what = {'tc'};
+        stereo_id = cvdb_hash_xor(img1_id,img2_id);
         tc = get_data(cfg,stereo_id,cfg_id,what);
     catch err
         disp(err.message);

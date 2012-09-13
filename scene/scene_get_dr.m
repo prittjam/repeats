@@ -12,14 +12,13 @@ num_dr = 0;
 
 for i = 1:numel(keys)
     [s is_found] = cvdb_sel_dr(conn, ...
-                               cfg, ...
                                img_id, ...
                                keys{i});
     if ~is_found
         break;
     end
 
-    dr(i) = scene_construct_dr(s.geom,s.sifts,gid,cfg.subgenid(i),cfg);
+    dr(i) = scene_construct_dr(s.geom,s.sifts,gid,cfg.subgenid(i),cfg,img_id);
     num_dr = num_dr+dr(i).num_dr;
     gid = gid+size(dr(i).geom,2);
 end

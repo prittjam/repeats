@@ -16,12 +16,12 @@ cfg.lafs = p.Results.lafs;
 cfg.sift = p.Results.sift;
 
 if isempty(detector_cfg)
-    detector_cfg = CFG.detectors.extrema;
+    cfg.wbs = CFG.detectors.extrema;
 else
-    detector_cfg = scene_cp_cfg_fields(detector_cfg,CFG.detectors.extrema);
+    cfg.wbs = scene_cp_cfg_fields(detector_cfg,CFG.detectors.extrema);
 end
 
-CFG.detectors.extrema = detector_cfg;
+CFG.detectors.extrema = cfg.wbs;
 
 cfg.subtype.tbl = {'intp', 'intm'};    
 cfg.subtype.id  = [1 2];    
@@ -29,8 +29,6 @@ cfg.subgenid    = [1 2];
 cfg.upgrade     = [2 2];
 scene_update_wbsdr(cfg.subgenid,cfg.upgrade);
 
-dhash = cfg2hash(detector_cfg);
+dhash = cfg2hash(cfg.wbs);
 cfg.dhash = cvdb_hash_xor(dhash, ...
                           cvdb_hash_xor(cfg.lafs.dhash,cfg.sift.dhash));
-
-cfg = scene_make_dr_cfg(cfg);
