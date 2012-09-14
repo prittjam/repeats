@@ -1,4 +1,4 @@
-function [P0 opt_P] = eg_get_2P_from_4P(u,P1,P2,P3,P4)
+function [P0 opt_P] = cam_get_2P_from_4P(u,P1,P2,P3,P4)
 PP = zeros(3,4,4);
 
 PP(:,:,1) = P1;
@@ -17,7 +17,7 @@ s = true(1,n);
 P0 = [eye(3,3) zeros(3,1)];
 optz = -inf;
 for i = 1:4
-    [X,s1,s2] = scene_make_p3_from_2p2(u(:,s),P0,PP(:,:,i));
+    [X,s1,s2] = cam_triangulate_2p2(u(:,s),P0,PP(:,:,i));
     nz = sum(s1 > 0)+sum(s2 > 0);
     if nz > optz
         optz = nz;

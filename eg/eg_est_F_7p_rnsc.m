@@ -1,4 +1,4 @@
-function varargout = eg_rnsc_7p(u,s,threshold,confidence)
+function varargout = eg_est_F_7p_rnsc(u,s,threshold,confidence)
 T = pt_make_hartley_xform(renormI([u(1:3,s) u(4:6,s)]));
 
 cfg.s = 7;
@@ -11,7 +11,7 @@ cfg.sample_degen_args = { cfg.t };
 
 % model functions
 cfg.est_fn = @eg_est_7p_tlsq;
-cfg.error_fn = @(F,u) sum(eg_sampson_err(F,u).^2);
+cfg.error_fn = @(u,F) sum(eg_sampson_err(u,F).^2);
 
 cfg = rnsc_standardize_cfg(cfg);
 
