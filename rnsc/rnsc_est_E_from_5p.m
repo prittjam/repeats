@@ -1,4 +1,4 @@
-function varargout = eg_est_E_5p_rnsc(u,threshold,confidence)
+function varargout = eg_est_E_from_5p_rnsc(u,threshold,confidence)
 sample_set = ones(1,size(u,2));
 
 T = eye(3,3);
@@ -16,7 +16,7 @@ cfg.sample_degen_fn = @eg_sample_degen;
 cfg.sample_degen_args = { cfg.t };
 
 % model functions
-cfg.est_fn = @eg_est_5p_gb;
+cfg.est_fn = @eg_est_E_from_5p_gb;
 cfg.error_fn = @(u,F) sum(eg_sampson_err(u,F).^2);
 
 cfg = rnsc_standardize_cfg(cfg);
