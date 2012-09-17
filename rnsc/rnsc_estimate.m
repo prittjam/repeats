@@ -45,6 +45,7 @@ function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
         sample_degen_count = sample_degen_count+count;
 
         res = rnsc_get_best_model(u,model_list,cfg);
+        res.score
         if (res.score > best_res.score)
             best_res = res;
 
@@ -59,7 +60,7 @@ function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
             end
             
             if isfield(cfg, 'lo')
-                res = feval(cfg.lo.est_fn,u,res.weights,res.model,cfg.lo);
+                res = feval(cfg.lo.fn,u,res.weights,res.model,cfg.lo);
             end
 
             if (res.score > opt_res.score)
@@ -84,16 +85,3 @@ function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
         varargout = { opt_res, cfg };
     end
 
-function res = rnsc_get_best_model(u,model_list,cfg)
-res.score = -inf;
-
-for i = 1:length(model_list)
-    M = model_list{ i };
-    dx2 = feval(cfg.error_fn,u,M);
-    [model_score res.weights] = feval(cfg.objective_fn,dx2,cfg.objective_args{ : });
-    if (model_score > res.score)
-        res.score = model_score;
-        res.model = M;
-        res.errors = dx2;
-    end
-end

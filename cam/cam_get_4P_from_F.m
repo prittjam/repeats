@@ -1,4 +1,4 @@
-function [P1 P2 P3 P4] = cam_get_4P_from_F(F)
+function [P1 P2 P3 P4] = cam_get_4P_from_F(G)
 Gn = sqrt(2)*G/norm(G,'fro');
 v = null(Gn);
 V = mtx_make_skew_3x3(v);

@@ -1,4 +1,4 @@
-function E = eg_est_E_np_lsqnonlin(u,s,E0)
+function E = eg_est_E_from_np_lsqnonlin(u,s,E0)
 M = eg_get_M_from_E(u(:,s),E0);
 
 R0 = M(1:3,1:3);

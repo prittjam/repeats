@@ -1,13 +1,8 @@
-function varargout = eg_est_E_from_5p_rnsc(u,threshold,confidence)
-sample_set = ones(1,size(u,2));
-
-T = eye(3,3);
-%T = pt_make_hartley_xform(renormI([u(1:3,:) u(4:6,:)]));
+function varargout = rnsc_est_E_from_5p(u,threshold,confidence)
+sample_set = true(1,size(u,2));
 
 cfg.s = 5;
-
-cfg.t = threshold;
-%cfg.t = pt_get_hartley_threshold(T,threshold);
+cfg.t = threshold^2;
 
 cfg.confidence = confidence;
 cfg.max_trials = 1e5;
@@ -17,14 +12,14 @@ cfg.sample_degen_args = { cfg.t };
 
 % model functions
 cfg.est_fn = @eg_est_E_from_5p_gb;
-cfg.error_fn = @(u,F) sum(eg_sampson_err(u,F).^2);
+cfg.error_fn = @(u,E) sum(eg_sampson_err(u,E).^2);
 
 cfg = rnsc_standardize_cfg(cfg);
 
-%cfg.lo = make_eg_inner_rnsc_cfg(cfg);
-%cfg.lo.fn = @eg_inner_rnsc;
-%
-[res, cfg] = rnsc_estimate(blkdiag(T,T)*u,sample_set,cfg);
+cfg.lo = rnsc_lo_make_est_E_from_np_cfg(cfg);
+cfg.lo.fn = @rnsc_lo_est_E_from_np;
+
+[res, cfg] = rnsc_estimate(u,sample_set,cfg);
 
 %cfg.model_args.model =  res.model;
 %cfg.epsilon = 0;
