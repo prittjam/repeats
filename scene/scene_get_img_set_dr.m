@@ -1,9 +1,5 @@
-function dr_set = scene_get_img_set_dr(detectors,disable_cache)
-global chains DATA;
-
-if nargin < 2
-    disable_cache = 0;
-end
+function dr_set = scene_get_img_set_dr(detectors)
+global chains DATA CVDB_CACHE;
 
 make_img_idx = [];
 dr_ids = [];
@@ -19,7 +15,7 @@ for img_idx = 1:numel(DATA.imgs)
 
     ia = find(is_found == 0);
 
-    if (disable_cache)
+    if (~CVDB_CACHE.dr)
         ia = 1:numel(is_found);
     end
 

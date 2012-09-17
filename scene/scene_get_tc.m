@@ -1,5 +1,5 @@
 function m = scene_get_tc(dr1,dr2,cfg)
-global conn
+global conn CVDB_CACHE
 
 ind1 = regexpi(dr1.key,'[^:]*$','start');
 prefix = dr1.key(1:ind1-1);
@@ -16,12 +16,14 @@ end
 
 dhash = [prefix cvdb_hash_xor(cfg.dhash,key3)];
 
-[m,is_found] = cvdb_sel_tc(conn, ...
-                           dr1.img_id, ...
-                           dr2.img_id, ...
-                           dhash);
+is_found = false;
 
-if ~is_found
+if CVDB_CACHE.tc
+    [m,is_found] = cvdb_sel_tc(conn, ...
+                               dr1.img_id, ...
+                               dr2.img_id, ...
+                               dhash);
+elseif ~is_found
     m = scene_make_tc(dr1,dr2,cfg);
     cvdb_ins_tc(conn, ...
                 dr1.img_id,dr2.img_id,dhash, ...

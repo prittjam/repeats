@@ -4,14 +4,17 @@ function cvdb_ins_tc(conn,img1_id,img2_id,cfg_id,u)
     what = {'tc'};
     opt = [];
 
+    [~,ix] = sort({img1_id,img2_id});
+    u(ix,:) = u;
+
     try
-        if ~isempty(u)
+        %        if ~isempty(u)
             put_data(conn.imagedb, ...
                      cfg_id, ...
                      stereo_id, ...
                      u, ...
                      what);
-        end
+            %        end
     catch err
         disp(err.message);
     end

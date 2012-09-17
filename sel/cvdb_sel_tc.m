@@ -8,6 +8,10 @@ function varargout = cvdb_sel_tc(conn,img1_id,img2_id,cfg_id)
         what = {'tc'};
         stereo_id = cvdb_hash_xor(img1_id,img2_id);
         tc = get_data(cfg,stereo_id,cfg_id,what);
+        if ~isempty(tc)
+            [~,ix] = sort({img1_id,img2_id});
+            tc(ix,:) = tc;
+        end
     catch err
         disp(err.message);
         is_found = false;

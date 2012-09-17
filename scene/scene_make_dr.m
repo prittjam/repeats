@@ -42,8 +42,8 @@ clear DESC DATA DR chains
 
 function [dr,num_dr] = scene_add_dr(cfg,geom,sift,img_id,subgenid,gid)
 num_dr = size(geom,2);
-dr = scene_construct_dr(geom,sift,gid,subgenid,cfg);
-scene_put_dr(cfg,img_id,dr);
+dr = scene_construct_dr(geom,sift,gid,subgenid,cfg,img_id);
+scene_put_dr(img_id,dr);
 
 function geom = make_geom_array(dr)
 geom = [dr(:).a11; ...
