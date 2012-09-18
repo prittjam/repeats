@@ -19,11 +19,11 @@ x = lsqnonlin(err_fn, x0, [], [], ...
 E = unwrap(x,R0,c0);
 
 function R = mtx_R_to_3x3(r)
-  q = norm(r); % angle of ration
-  if (q == 0), 
-      R = eye(3,3);
-  else
-      W = mtx_make_skew_3x3(r/q); 	
-      R = (eye(3) + W*sin(q) + W^2*(1-cos(q)));
-  end
+    q = norm(r); % angle of ration
+    if (q == 0), 
+        R = eye(3,3);
+    else
+        W = mtx_make_skew_3x3(r/q); 	
+        R = (eye(3) + W*sin(q) + W^2*(1-cos(q)));
+    end
 
