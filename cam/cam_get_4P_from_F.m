@@ -1,6 +1,7 @@
 function [P1 P2 P3 P4] = cam_get_4P_from_F(G)
 Gn = sqrt(2)*G/norm(G,'fro');
-v = null(Gn);
+[~,~,V] = svd(Gn);
+v = V(:,3);
 V = mtx_make_skew_3x3(v);
 ga = [Gn(:,1) Gn(:,2) Gn(:,3) ...
       cross(Gn(:,1),Gn(:,2)) cross(Gn(:,2),Gn(:,3)) cross(Gn(:,1),Gn(:,3))];
