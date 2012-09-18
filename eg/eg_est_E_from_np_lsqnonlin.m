@@ -1,5 +1,6 @@
 function E = eg_est_E_from_np_lsqnonlin(u,s,E0)
-M = eg_get_M_from_E(u(:,s),E0);
+[Pa,Pb,Pc,Pd] = cam_get_4P_from_F(E0);
+[~,M] = cam_get_2P_from_4P(u(:,s),Pa,Pb,Pc,Pd);
 
 R0 = M(1:3,1:3);
 c0 = -R0'*M(:,end);
