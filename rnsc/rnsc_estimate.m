@@ -84,4 +84,3 @@ function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
     else
         varargout = { opt_res, cfg };
     end
-
