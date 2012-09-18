@@ -14,11 +14,11 @@ cfg.error_fn = @(u,F) sum(eg_sampson_err(u,F).^2);
 cfg.sample_degen_fn = @eg_sample_degen;
 cfg.sample_degen_args = { cfg.t, cfg.s };
 
+cfg = rnsc_standardize_cfg(cfg);
+
 % local optimzation
 cfg.lo = rnsc_lo_make_est_E_from_np_cfg(cfg);
 cfg.lo.fn = @rnsc_lo_est_E_from_np;
-
-cfg = rnsc_standardize_cfg(cfg);
 
 [res, cfg] = rnsc_estimate(u,sample_set,cfg);
 

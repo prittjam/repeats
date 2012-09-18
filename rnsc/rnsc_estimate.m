@@ -45,7 +45,7 @@ function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
         sample_degen_count = sample_degen_count+count;
 
         res = rnsc_get_best_model(u,model_list,cfg);
-        res.score
+
         if (res.score > best_res.score)
             best_res = res;
 
