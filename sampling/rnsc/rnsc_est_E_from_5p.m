@@ -20,13 +20,11 @@ cfg = rnsc_standardize_cfg(cfg);
 cfg.lo = rnsc_lo_make_est_E_from_np_cfg(cfg);
 cfg.lo.fn = @rnsc_lo_est_E_from_np;
 
-[res, cfg] = rnsc_estimate(u,sample_set,cfg);
+[res0,cfg] = rnsc_estimate(u,sample_set,cfg);
 
-%cfg.model_args.model =  res.model;
-%cfg.epsilon = 0;
-%res = guided_sampling(blkdiag(T,T)*u, logical(res.weights), cfg);
-
-res.errors = sum(eg_sampson_err(u,res.model).^2);
+gs_cfg = cfg.lo;
+gs_cfg.epsilon = 1;
+[res,cfg] = gs_estimate(u,res0.weights,res0,gs_cfg);
 
 varargout = { res };
 
