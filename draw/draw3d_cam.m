@@ -7,10 +7,10 @@ if nargin < 4
     label = '\beta';
 end
 
-[K R C] = cam_get_KRC_from_P(P);
+[K R C] = cam_get_KRc_from_P(P);
 Beta = R';
 
-draw3d_affine_csystem(ax1,50*Beta,C,color,label);
+draw3d_affine_csystem(ax1,10*Beta,C,color,label);
 
 hold on;
 plot3(C(1),C(2),C(3),'bo');

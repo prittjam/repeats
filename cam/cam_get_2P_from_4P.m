@@ -18,7 +18,8 @@ P0 = [eye(3,3) zeros(3,1)];
 optz = -inf;
 for i = 1:4
     [X,s1,s2] = cam_triangulate_2p2(u(:,s),P0,PP(:,:,i));
-    nz = sum(s1 > 0)+sum(s2 > 0);
+    s3 = (s1 > 0) & (s2 > 0);
+    nz = sum(s3);
     if nz > optz
         optz = nz;
         opt_P = PP(:,:,i);

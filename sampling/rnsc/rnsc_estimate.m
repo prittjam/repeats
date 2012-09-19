@@ -1,4 +1,4 @@
-function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
+function opt_res = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
     error(nargchk(3, 5, nargin));
     
     K = size(u,2);
@@ -15,7 +15,7 @@ function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
     opt_res.score = -inf;
 
     tic;
-        
+    
     while samples_drawn < max([min([N cfg.max_trials]) cfg.min_trials 1]) 
         count = 0;
         is_sample_degen = true;
@@ -77,10 +77,4 @@ function varargout = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
         end    
 
         samples_drawn = samples_drawn+1;
-    end
-
-    if nargout < 2
-        varargout = { opt_res };
-    else
-        varargout = { opt_res, cfg };
     end

@@ -1,5 +1,7 @@
 function hp = draw2d_points(ax1,u)
-u = renormI(u);
+if (size(u,1) > 2)
+    u = renormI(u);
+end
 
 axes(ax1);
 

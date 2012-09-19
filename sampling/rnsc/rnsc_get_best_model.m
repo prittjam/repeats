@@ -14,5 +14,6 @@ for i = 1:length(model_list)
         res.score = model_score;
         res.model = M;
         res.errors = dx2;
+        res.t = cfg.objective_args{ : };
     end
 end
