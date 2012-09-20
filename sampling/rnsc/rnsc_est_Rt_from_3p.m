@@ -8,7 +8,7 @@ cfg.max_trials = 1e5;
 
 % model functions
 cfg.est_fn = @ao_est_Rt_from_3p;
-cfg.error_fn = @(Xc,u) sum(ao_reproj_err(Xc,u).^2);
+cfg.error_fn = @(u,M) sum(ao_reproj_err(u,M).^2);
 
 % sampling degeneracy
 cfg.sample_degen_fn = @ao_est_Rt_sample_degen;

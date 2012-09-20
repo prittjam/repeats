@@ -5,8 +5,8 @@ res = p3p_grunert(Xw,u(1:3,s));
 
 model_list = cell(1,numel(res));
 
-for r = res
-    Xc = r{1};
-    [R t] = XX2Rt_simple(Xw,Xc);
-    model_list{i} = [R t];
+for k = 1:numel(res)
+    Xc = res{k};
+    [R,t] = XX2Rt_simple(Xw,Xc);
+    model_list{k} = [R t];
 end
