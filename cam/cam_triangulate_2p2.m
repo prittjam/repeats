@@ -33,7 +33,6 @@ for j = 1:n
 end
 
 X = renormI(X);
-
 s1 = P1(3,:)*X;
 s2 = P2(3,:)*X;
 s3 = (s1 < 0) | (s2 < 0);
