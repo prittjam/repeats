@@ -1,4 +1,4 @@
-function [K R C] = cam_get_KRC_from_P(Q)
+function [K R c] = cam_get_KRc_from_P(Q)
 M = Q(1:3,1:3);
 
 m3 = norm(M(3,:),2);
@@ -14,4 +14,4 @@ K = [k11 k12 k13; ...
       0  k22 k23; ...
       0   0   1];
 R = inv(K)*sign(det(M))/m3*M;
-C = -inv(M)*Q(:,4);
+c = -inv(M)*Q(:,4);

@@ -1,8 +1,18 @@
-function [] = draw_affine_csystem(ax1,A,o,color,name)
+function [] = draw3d_affine_csystem(ax1,A,o,varargin)
+p = inputParser;
+p.KeepUnmatched = true;
+p.addParamValue('color','k',@ischar);
+p.addParamValue('axislabel',[],@isstr);
+p.addParamValue('scale',1,@isfloat);
+p.parse(varargin{:});
+
+color = p.Results.color;
+label = p.Results.axislabel;
+s = p.Results.scale;
+
 axes(ax1);
 m = size(A,2);
-u = A+repmat(o,1,m);
-v = 1.1*A+repmat(o,1,m);
+u = [1 1 12; 1 1 12; 1 1 12].*A+repmat(o,1,m);
 
 hold on;
 line([repmat(o(1),1,m);u(1,:)], ...
@@ -11,10 +21,13 @@ line([repmat(o(1),1,m);u(1,:)], ...
      'Color', color);
 labels = ['xyzw'];
 
-for j = 1:m
-    text(v(1,j),v(2,j),v(3,j), ...
-         [name '_' labels(j)], ...
-         'color', color);
+if ~isempty(label)
+    v = 1.1*s*A+repmat(o,1,m);
+    for j = 1:m
+        text(v(1,j),v(2,j),v(3,j), ...
+             [label '_' labels(j)], ...
+             'color', color);
+    end
 end
 
 hold off;

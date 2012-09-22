@@ -1,4 +1,4 @@
-function [P1 P2 P3 P4] = cam_get_4P_from_F(G)
+function [P1 P2 P3 P4] = cam_get_4P_from_E(G)
 Gn = sqrt(2)*G/norm(G,'fro');
 [~,~,V] = svd(Gn);
 v = V(:,3);
@@ -12,6 +12,7 @@ piva = pinv(va);
 R1 = ga*piva;
 R2 = gb*piva;
 
+v = v/norm(v);
 P1 = R1*[eye(3,3) -v];
 P2 = R1*[eye(3,3)  v];
 P3 = R2*[eye(3,3) -v];
