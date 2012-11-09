@@ -5,7 +5,6 @@ is_found = logical(numel(detectors));
 gid = 1;
 for j = 1:numel(detectors)
     cfg = detectors{j};
-    tp = cfg.detector.name;
     [d,is_found(j),num_dr] = scene_get_dr(img_id,cfg,gid);
     if is_found(j)
         dr = cat(2,dr,d);

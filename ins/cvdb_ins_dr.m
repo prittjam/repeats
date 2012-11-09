@@ -27,6 +27,7 @@ end
 
 if (do_sifts)
     put_sifts(cfg,dr.key,img_id,dr.sifts);           
+    put_class(cfg,dr.key,img_id,dr.class);
 end 
 
 function [] = put_geom(cfg,cfg_id,img_id,geom)
@@ -34,3 +35,6 @@ cfg.storage.put(img_id,geom,['geom:' cfg_id],[]);
 
 function [] = put_sifts(cfg,cfg_id,img_id,sifts)
 cfg.storage.put(img_id,sifts,['sifts:' cfg_id],[]);
+
+function [] = put_class(cfg,cfg_id,img_id,cls)
+cfg.storage.put(img_id,cls,['class:' cfg_id],[]);

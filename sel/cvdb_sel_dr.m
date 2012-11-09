@@ -26,10 +26,14 @@ function s = get_data(cfg,img_id,key,what)
     if (do_sifts)
         tmp = get_sifts(cfg,img_id,key);
         s.sifts = reshape(typecast(tmp(:),'uint8'),128,[]);
+        s.cls = get_class(cfg,img_id,key);
     end 
 
-function geom = get_geom(cfg,img_id,key,geom)
+function geom = get_geom(cfg,img_id,key)
     geom = cfg.storage.get(img_id,['geom:', key],[]); 
 
-function sifts = get_sifts(cfg,img_id,key,sifts)
+function sifts = get_sifts(cfg,img_id,key)
     sifts = cfg.storage.get(img_id,['sifts:', key],[]);
+
+function cls = get_class(cfg,img_id,key)
+    cls = cfg.storage.get(img_id,['class:' key],[]);

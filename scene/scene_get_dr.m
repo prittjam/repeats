@@ -18,7 +18,7 @@ for i = 1:numel(keys)
         break;
     end
 
-    dr(i) = scene_construct_dr(s.geom,s.sifts,gid,cfg.subgenid(i),cfg,img_id);
+    dr(i) = scene_construct_dr(s.geom,s.sifts,s.cls,gid,cfg.subgenid(i),cfg,img_id);
     num_dr = num_dr+dr(i).num_dr;
     gid = gid+size(dr(i).geom,2);
 end

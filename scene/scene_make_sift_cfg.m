@@ -8,7 +8,7 @@ else
 end
 
 if nargin < 2
-    sift_cfg.normalize = @(x) x;
+    sift_cfg.normalize = @(x) double(x);
 else
     sift_cfg.normalize = normalize;
 end
