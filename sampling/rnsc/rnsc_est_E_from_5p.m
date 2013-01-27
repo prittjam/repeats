@@ -1,6 +1,4 @@
-function res = rnsc_est_E_from_5p(u,threshold,confidence)
-sample_set = true(1,size(u,2));
-
+function res = rnsc_est_E_from_5p(u,sample_set,threshold,confidence)
 cfg.s = 5;
 cfg.t = threshold;
 cfg.confidence = confidence;

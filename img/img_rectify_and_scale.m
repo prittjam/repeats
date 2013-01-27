@@ -10,8 +10,7 @@ border = [0.5    ny+0.5; ...
           nx+0.5 0.5];
 
 if ~isempty(T1)
-    T = maketform('composite',T1, ...
-                  maketform('projective',H'));
+    T = maketform('composite',maketform('projective',H'),T1);
 else
     T = maketform('projective',H');
 end
@@ -22,12 +21,11 @@ border = [border ones(3,1)]';
 tborder = [tborder ones(3,1)]';
 
 ss = laf_get_scale_from_3p([border(:) tborder(:)]);
-s = sqrt(ss(1)/ss(2));
+s = sqrt(abs(ss(1)/ss(2)));
 
-S = [s 0 0;
-     0 s 0;
+S = [10*s 0 0;
+     0 10*s 0;
      0 0 1];
-S=eye(3,3);
 
 if ~isempty(T1)
     T = maketform('composite',T1, ...
@@ -39,4 +37,4 @@ else
                   maketform('affine',S));
 end
 
-timg = imtransform(img,T,'bicubic','Fill', 0);
+timg = imtransform(img,T,'bicubic','Fill', [255;255;255]);

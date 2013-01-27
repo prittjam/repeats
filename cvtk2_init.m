@@ -1,2 +1,3 @@
 function [] = cvtk2_init()
-cvtk2_addpaths;
+[cvtk_base_path, name, ext] = fileparts(mfilename('fullpath'));
+addpath(genpath(cvtk_base_path));

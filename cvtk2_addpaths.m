@@ -13,3 +13,4 @@ addpath([cvtk_base_path '/util']);
 addpath([cvtk_base_path '/laf']);
 addpath([cvtk_base_path '/img']);
 addpath([cvtk_base_path '/sift']);
+addpath([cvtk_base_path '/plane']);

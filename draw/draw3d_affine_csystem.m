@@ -12,7 +12,7 @@ s = p.Results.scale;
 
 axes(ax1);
 m = size(A,2);
-u = [1 1 12; 1 1 12; 1 1 12].*A+repmat(o,1,m);
+u = [1 1 4; 1 1 4; 1 1 4].*A+repmat(o,1,m);
 
 hold on;
 line([repmat(o(1),1,m);u(1,:)], ...

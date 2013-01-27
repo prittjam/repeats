@@ -1,33 +1,29 @@
-function opt_res = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
-    error(nargchk(3, 5, nargin));
+function opt_res = rnsc_estimate(u,s,cfg)
+    error(nargchk(3,3,nargin));
     
-    K = size(u,2);
+    M = nnz(s);
     p = cfg.confidence;   
     t = cfg.t;
     N = cfg.max_trials;            
 
+    trials = 0;
     sample_degen_count = 0;
-    samples_drawn = 0;
-    num_points = sum(sample_set);
-    ia = find(sample_set > 0);
 
     best_res.score = -inf;
     opt_res.score = -inf;
 
     tic;
     
-    while samples_drawn < max([min([N cfg.max_trials]) cfg.min_trials 1]) 
+    while trials < max([min([N cfg.max_trials]) cfg.min_trials 1]) 
         count = 0;
         is_sample_degen = true;
 
         while (is_sample_degen && ...
                (count < cfg.max_data_retries))
-            ind = feval(cfg.sample_fn,num_points,cfg.s, ...
-                        samples_drawn,cfg.sample_args{ : });
-            sample = false(1,K);
-            sample(ia(ind)) = true;
+            sample = feval(cfg.sample_fn,u,s,cfg.k, ...
+                           trials,cfg.sample_args{ : });
             is_sample_degen = feval(cfg.sample_degen_fn, ...
-                                    u, sample, ...
+                                    u,sample, ...
                                     cfg.sample_degen_args{ : });
             if ~is_sample_degen
                 model_list = feval(cfg.est_fn,u,sample, ...
@@ -44,7 +40,7 @@ function opt_res = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
         
         sample_degen_count = sample_degen_count+count;
 
-        res = rnsc_get_best_model(u,model_list,cfg);
+        res = rnsc_get_best_model(u,s,sample,model_list,cfg);
 
         if (res.score > best_res.score)
             best_res = res;
@@ -69,12 +65,11 @@ function opt_res = rnsc_estimate(u,sample_set,cfg,conn,rnsc_id)
 
             % Update estimate of N, the number of trials to ensure we pick,
             % with probability p, a data set with no outliers.
-            fracinlying_set = opt_res.score/num_points;
-            pNoOutliers = 1-fracinlying_set^cfg.s;
+            fracinlying_set = opt_res.score/M;
+            pNoOutliers = 1-fracinlying_set^cfg.k;
             pNoOutliers = max(eps, pNoOutliers);  % Avoid division by -Inf
             pNoOutliers = min(1-eps, pNoOutliers);% Avoid division by 0.
             N = ceil(log(1-p)/log(pNoOutliers));
         end    
-
-        samples_drawn = samples_drawn+1;
+        trials = trials+1;
     end
