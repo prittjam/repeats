@@ -22,7 +22,7 @@ pts2 = reshape(pts(ia(:)),2,[]);
 
 hold on;
 lh = line(reshape(pts2(1,:),2,[]), ...
-          reshape(pts2(2,:),2,[]));
+          reshape(pts2(2,:),2,[]),varargin{:});
 hold off;
 
 set(lh, ...

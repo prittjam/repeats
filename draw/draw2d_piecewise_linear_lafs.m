@@ -1,5 +1,5 @@
 function draw2d_piecewise_linear_lafs(ax1,x,y,line_style,cmap)
-k = size(x,1)/2;
+k = floor(size(x,1)/2);
 
 tmp = [];
 if nargin > 4

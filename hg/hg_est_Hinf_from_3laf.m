@@ -20,9 +20,14 @@ while true
     end
     [Hi,s] = scale2H_multi(aX,arsc);
     H = diag([sqrt(s) sqrt(s) 1])*Hi*H;
+    if ~isreal(H)
+        error('Homography has complex entries');
+    end
+
     if abs((s0-s)/s) < 1e-4 | s < 1e-6 | k > 10
         break;
     end
+
     s0 = s;
     k = k+1;
 end 
