@@ -20,7 +20,7 @@ else
 
     [keys,subtypes,ids,subgenids] = cvdb_get_dr_keys(cfg);
 
-    [scls,ind] = sort(cls,'ascend');
+    [scls,ind] = sort(reshape(cls,1,[]),'ascend');
     dr.geom = geom(:,ind);
     dr.u = laf_get_3p_from_A(laf_unwrap_A(dr.geom));
     dr.sifts = sift(:,ind);

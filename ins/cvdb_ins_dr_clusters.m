@@ -28,11 +28,10 @@ end
 
 function [] = put_clusters(cfg,cfg_id,img_id,clusters)
 [m,n] = size(clusters);
-k = nnz(clusters);
-cc = [];
-for i = 1:n
-    ia = find(clusters(:,k));
-    cat(2,cc,[ia 0]);
+cc = [n];
+for i = 1:m
+    ia = find(clusters(i,:));
+    cc = cat(2,cc,[ia 0]);
 end
 
 cfg.storage.put(img_id,cc,['dr_clusters:' cfg_id],[]);

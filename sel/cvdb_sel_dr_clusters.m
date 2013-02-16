@@ -22,12 +22,13 @@ if (do_clusters)
 end 
 
 function s = get_sift_clusters(cfg,img_id,key)
-tmp = cfg.storage.get(img_id,['class:' key],[]);
+tmp = cfg.storage.get(img_id,['dr_clusters:' key],[]);
 ind = find(tmp == 0);
 m = numel(ind);
+n = tmp(1);
 s = sparse([],[],false,m,n);
-b = 1;
-for k = 1:numel(ia)
+b = 2;
+for k = 1:m
     s(k,tmp(b:ind(k)-1)) = true;
     b = ind(k)+1;
 end
