@@ -9,8 +9,9 @@ hold off;
 function v = line_project_points(ax1,u,l1)
 n = size(u,2);
 u = renormI(u);
+l1 = renormI(l1);
 
 ln = l1./sqrt(sum(l1(1:2).^2));
-d = abs(sum(bsxfun(@times,ln,u)));
+d = sum(bsxfun(@times,ln,u));
 v = ones(size(u));
 v(1:2,:) = u(1:2,:)-bsxfun(@times,d,ln(1:2,:));

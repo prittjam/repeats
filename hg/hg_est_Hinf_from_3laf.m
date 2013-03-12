@@ -5,7 +5,7 @@ end
 
 k = 1;
 H = eye(3,3);
-s0 = inf;
+sc0 = inf;
 
 while true
     v_laf = laf_renormI(blkdiag(H,H,H)*u_laf);
@@ -18,17 +18,18 @@ while true
         arsc{k} = t1;
         k = k+1;
     end
-    [Hi,s] = scale2H_multi(aX,arsc);
-    H = diag([sqrt(s) sqrt(s) 1])*Hi*H;
+    [Hi,sc] = scale2H_multi(aX,arsc);
+    Hinf = hg_make_Hinf_from_linf(Hi(3,:));
+    H = diag([sqrt(sc) sqrt(sc) 1])*Hinf*H;
     if ~isreal(H)
-        error('Homography has complex entries');
+        break; % could throw exception
     end
 
-    if abs((s0-s)/s) < 1e-4 | s < 1e-6 | k > 10
+    if abs((sc0-sc)/sc) < 1e-4 | s < 1e-6 | k > 10
         break;
     end
 
-    s0 = s;
+    sc0 = sc;
     k = k+1;
 end 
 

@@ -26,6 +26,7 @@ if det(sxy) < 0
 end
 
 R = V'*S*U;
+%R = U*S*V';
 c = 1/sx*trace(D*S);
 t = my-c*R*mx;
 
