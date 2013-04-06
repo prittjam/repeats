@@ -17,6 +17,11 @@ sx = 1/n*sum(sum(bsxfun(@minus,x,mx).^2));
 sxy = cov(x,y);
 sxy = 1/n*x*y'-mx*my';
 
+if any(isnan(sxy))
+    S = eye(3,3);
+    return;
+end
+
 [U,D,V] = svd(sxy);
 
 S = eye(2); 

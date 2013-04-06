@@ -1,4 +1,4 @@
-function dx = hg_sampson_err(H,u)
+function dx = hg_sampson_err(u,H)
 N = size(u,2);
 A = zeros(9,2*N); 
 

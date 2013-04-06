@@ -1,9 +1,17 @@
-function H = hg_est_H_from_4p(ut,s,varargin)
-u = ut(:,s)';
-zero = zeros(sum(s),3);
+function H = hg_est_H_from_4p(v,s)
+u = renormI(v(1:3,s));
+u0 = renormI(v(4:6,s));
 
-A = [   zero    -u(:,1:3)   u(:,[5 5 5]).*u(:,1:3); ...
-      u(:,1:3)     zero    -u(:,[4 4 4]).*u(:,1:3) ];
-[U S V] = svd(A);
+m = size(u,2);
+z = zeros(m,3);
+M = [u' z  bsxfun(@times,-u0(1,:),u)'; ...
+     z  u' bsxfun(@times,-u0(2,:),u)'];  
 
-H = { reshape(V(:,end),3,3)' };
+S = eye(size(M,2),size(M,2));
+if sum(s) > 4
+    S = diag(1./max(abs(M)));
+end
+invS = diag(1./diag(S));
+
+[U S V] = svd(M*S);
+H = { reshape(invS*V(:,end),3,3)' };

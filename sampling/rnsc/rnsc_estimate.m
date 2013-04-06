@@ -45,18 +45,23 @@ function opt_res = rnsc_estimate(u,s,cfg)
         if (res.score > best_res.score)
             best_res = res;
 
-            if isfield(cfg, 'degen')
+            if isfield(cfg,'model_degen')
                 is_model_degen = feval(cfg.model_degen.detect_fn,u,sample, ...
-                                       res.weights, cfg.degen);
+                                       res.model,res.weights,cfg.model_degen);
                 if is_model_degen
                     model = feval(cfg.model_degen.fix_fn,u,res.weights, ...
                                   cfg.model_degen);
+                    if isempty(model), continue, end;
                     res = rnsc_get_best_model(u,model,cfg);
                 end
             end
             
             if isfield(cfg, 'lo')
-                res = feval(cfg.lo.fn,u,res.weights,res.model,cfg.lo);
+                res_lo = feval(cfg.lo.fn,u,s, ...
+                               res.weights,res.model,cfg.lo);
+                if ~isempty(res_lo)
+                    res = res_lo;
+                end
             end
 
             if (res.score > opt_res.score)
