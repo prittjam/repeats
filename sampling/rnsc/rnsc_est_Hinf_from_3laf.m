@@ -63,7 +63,7 @@ err = sparse([],[],[],m,n,false);
 for row_ind = valid_rows'
     ind = find(s(row_ind,:));
     t_laf = laf_renormI(blkdiag(Hinf,Hinf,Hinf)*u(:,ind));
-    err(row_ind,ind) = laf_get_scale_from_3p(t_laf);
+    err(row_ind,ind) = abs(laf_get_scale_from_3p(t_laf));
 end
 
 function [utility,vis2] = hg_calc_Hinf_score(sc,u,s,sample,t)

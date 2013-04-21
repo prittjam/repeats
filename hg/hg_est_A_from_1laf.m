@@ -1,4 +1,4 @@
-function Ha = hg_est_A_from_1_laf(v,s,varargin)
+function Ha = hg_est_A_from_1laf(v,s,varargin)
 m = sum(s);
 if m == 1
     Ha = { laf_get_A_from_3p(v(10:18,s))*inv(laf_get_A_from_3p(v(1:9,s))) ...

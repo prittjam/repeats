@@ -14,7 +14,7 @@ while true
     for j = valid_rows
         ind = find(s(j,:));
         aX{k} = (v_laf(1:2,ind)+v_laf(4:5,ind)+v_laf(7:8,ind))/3;
-        t1 = 1./laf_get_scale_from_3p(v_laf(:,ind));
+        t1 = abs(1./laf_get_scale_from_3p(v_laf(:,ind)));
         arsc{k} = t1;
         k = k+1;
     end
@@ -26,9 +26,9 @@ while true
     Hinf = hg_make_Hinf_from_linf(Hi(3,:));
     H = Hinf*H;
     v_laf = laf_renormI(blkdiag(H,H,H)*u_laf);
-    S = hg_est_A_from_1laf([v_laf(:,ind); ...
-                        u_laf(:,ind)]);
-    H = S*H;
+    A = cell2mat(hg_est_A_from_1laf([v_laf(:,ind);u_laf(:,ind)], ...
+                                    true(1,numel(ind))));
+    H = A*H;
     v_laf = laf_renormI(blkdiag(H,H,H)*u_laf);
 
     if (sc == inf)
