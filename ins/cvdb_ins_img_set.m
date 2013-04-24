@@ -1,6 +1,6 @@
 function [] = cvdb_ins_img_set(conn, set_name, img_set_path, ...
                                img_set, varargin)
-    error(nargchk(4, 7, nargin));
+    error(nargchk(4, 5, nargin));
     p = inputParser;
 
     p.addParamValue('insertmode','keep',@isstr);

@@ -22,8 +22,10 @@ end
 
 CFG.detectors.affpts = cfg.wbs;
 cfg.wbs = cfg.wbs;
-cfg.subgenid   = 9;
-cfg.upgrade    = 0;
+
+cfg.subgenid = 7;
+cfg.output_format = 2;
+cfg.upgrade = 0;
 scene_update_wbsdr(cfg.subgenid,cfg.upgrade);
 
 % hash for detector/descriptor configuration
