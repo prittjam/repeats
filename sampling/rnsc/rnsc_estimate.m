@@ -3,7 +3,6 @@ function opt_res = rnsc_estimate(u,s,cfg)
     
     M = nnz(s);
     p = cfg.confidence;   
-    t = cfg.t;
     N = cfg.max_trials;            
 
     trials = 0;
@@ -28,7 +27,7 @@ function opt_res = rnsc_estimate(u,s,cfg)
             if ~is_sample_degen
                 model_list = feval(cfg.est_fn,u,sample, ...
                                    cfg.est_args{ : });
-                is_sample_degen = is_sample_degen | isempty(model_list);
+                is_sample_degen = is_sample_degen || isempty(model_list);
             end
             count = count+1;
         end
@@ -57,14 +56,14 @@ function opt_res = rnsc_estimate(u,s,cfg)
             end
             
             if isfield(cfg, 'lo')
-                res_lo = feval(cfg.lo.fn,u,s, ...
+                res_lo = feval(cfg.lo.fn,u,s,sample, ...
                                res.weights,res.model,cfg.lo);
-                if ~isempty(res_lo)
+                if ~isempty(res_lo) % && (res_lo.score > res.score)
                     res = res_lo;
                 end
             end
 
-            if (res.score > opt_res.score)
+            if (res.score > opt_res.score) 
                 opt_res = res;
             end
 

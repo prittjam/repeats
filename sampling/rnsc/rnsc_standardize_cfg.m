@@ -36,5 +36,5 @@ function cfg = rnsc_standardize_cfg(cfg)
     end
 
     if ~isfield(cfg, 'objective_args')
-        cfg.objective_args = { cfg.t };
+        cfg.objective_args = { cfg.tsq };
     end

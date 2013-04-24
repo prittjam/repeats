@@ -1,17 +1,38 @@
-function model_list = eg_est_Fa_from_2e(u,s,varargin)
+function model_list = eg_est_Fa_from_2e(v,s,varargin)
+model_list = [];
 
-V = [11 12 22 13 23 33] 
+if sum(s) ~= 2
+    return;
+end
 
-M = triu(ones(3)) 
-M(M==1) = V 
-M = M + tril(M.',-1)
+u = zeros(12,2);
 
-[C21 C21_dual M1] = arandjelovic_canonicalize_ellipses(CC1);
-[C22 C22_dual M2] = arandjelovic_canonicalize_ellipses(CC2);
+u(1:6,:) = ell_from_laf(v(1:9,s));
+u(7:12,:) = ell_from_laf(v(10:18,s));
 
+CC1 = squeeze(mat2cell(zeros(3,3,2),3,3,ones(1,2)));
+CC2 = squeeze(mat2cell(zeros(3,3,2),3,3,ones(1,2)));
 
-cc1 = calc_ellipse_center(C21);
-cc2 = calc_ellipse_center(C22);
+M = triu(ones(3)); 
+ia = find(M==1);
+
+ind = find(s);
+
+CC1{1}(ia) = u(1:6,1);
+CC1{1} = CC1{1}+tril(CC1{1}.',-1);
+CC1{2}(ia) = u(1:6,2);
+CC1{2} = CC1{2}+tril(CC1{2}.',-1);
+
+CC2{1}(ia) = u(7:12,1);
+CC2{1} = CC2{1}+tril(CC2{1}.',-1);
+CC2{2}(ia) = u(7:12,2);
+CC2{2} = CC2{2}+tril(CC2{2}.',-1);
+
+[C21 C21_dual M1] = ell_canonicalize(CC1);
+[C22 C22_dual M2] = ell_canonicalize(CC2);
+
+cc1 = ell_calc_center(C21);
+cc2 = ell_calc_center(C22);
 s = cc1(2)/cc2(2);
 
 p = C21_dual(1,1);
@@ -32,15 +53,11 @@ k4 = (p-p2)^2;
 C = [k4 k3 k2 k1 k0];
 t = roots(C);
 
-ia = [];
-for i = 1:length(t)
-    if (isreal(t(i)))
-        ia = [ia i];
-    end
-end
+ia = find(~imag(t));
+
 Fa_list = [];
 
-if (length(ia) > 0)
+if (~isempty(ia))
     cosa = 1./sqrt(1+t(ia).^2);
     cosb = s*cosa;
     sina = sign(t(ia)).*sqrt(1-cosa.^2);
@@ -56,31 +73,39 @@ if (length(ia) > 0)
     Ft(1,3,:) = [sinb2];
     invM1 = inv(M1);
     invM2 = inv(M2);
-    
+
     for i=1:size(Ft,3)
-        Fa_list{i} = invM2'*Ft(:,:,i)*invM1;
+        model_list{i} = invM2'*Ft(:,:,i)*invM1;
     end
 else
     jjj = 3;
 end
 
-end
+function [C2, C2_dual, M] = ell_canonicalize(CC1)
+M = calc_arandjelovic_faff_canonicalize(CC1{1}, CC1{2});
+C2 = M'*CC1{2}*M;
+T = make_T(ell_calc_center(C2));
+C2_dual = inv(T'*C2*T);
 
-function [] = debug_plot_ellipses(CC1, CC2)
-figure;
-subplot(1,2,1);
-hold on;
-draw_ellipse(CC1(:,:,1),'r');
-draw_ellipse(CC1(:,:,2),'g');
-axis([0 1200 0 1200]);
-axis equal;
-hold off;
-
-subplot(1,2,2);
-hold on;
-draw_ellipse(CC2(:,:,1),'r');
-draw_ellipse(CC2(:,:,2),'g');
-axis([0 1200 0 1200]);
-axis equal;
-hold off;
+function M = calc_arandjelovic_faff_canonicalize(C1,C2)
+A = canonicalize_ellipse(C1);
+C2n_cc = ell_calc_center(A'*C2*A);
+theta = atan2(C2n_cc(2),C2n_cc(1));
+if (sign(theta) < 0)
+    phi = -pi/2-theta;
+else
+    phi = pi/2-theta;
 end
+R = [ cos(phi)  sin(phi)  0; ... 
+     -sin(phi)  cos(phi)  0; ...
+          0          0    1];
+M = A*R;
+
+function M = canonicalize_ellipse(C)
+cc = ell_calc_center(C);
+[Q,D] = eig(C(1:2,1:2));
+W = Q*diag(1./sqrt(diag(D)));
+M = [W cc;0 0 1];
+
+function T = make_T(t)
+T = [eye(length(t)) t; zeros(1,length(t)) 1]; 
