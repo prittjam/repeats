@@ -55,22 +55,6 @@ if (count == 0 || replace == 1)
                             img_path_pair{j}, rel_pth, img_name, ext);
             end
         end
-
-%        sql_statement = ['SELECT COUNT(*) FROM img_pairs WHERE ' ...
-%                         'img1_id=UNHEX(?) AND img2_id=UNHEX(?)'];
-%        stm = connh.prepareStatement(sql_statement);
-%        stm.setString(1,h(1,:));
-%        stm.setString(2,h(2,:));
-%        rs = stm.executeQuery();
-%        rs.next();
-%        count = rs.getInt(1);
-%        if (count == 0) 
-%            stm = connh.prepareStatement(['INSERT INTO img_pairs (img1_id, img2_id)' ...
-%                                'VALUES(UNHEX(?),UNHEX(?))']);
-%            stm.setString(1, h(1,:));
-%            stm.setString(2, h(2,:));
-%            err = stm.execute();
-%        end
         
         sql_statement = ['SELECT COUNT(*) FROM stereo_sets WHERE ' ...
                          'img1_id=UNHEX(?) AND img2_id=UNHEX(?)'];
@@ -81,16 +65,24 @@ if (count == 0 || replace == 1)
         rs.next();
         count = rs.getInt(1);
         if (count == 0 || replace == 1)
-            stm = connh.prepareStatement(['REPLACE INTO stereo_sets (name,img1_id,img2_id,description)' ...
-                                'VALUES(?,UNHEX(?),UNHEX(?),?)']);
+            stm = connh.prepareStatement(['REPLACE INTO stereo_sets (name,img1_id,img2_id,gt_url,description)' ...
+                                'VALUES(?,UNHEX(?),UNHEX(?),?,?)']);
             stm.setString(1,set_name);
             stm.setString(2,h(1,:));
             stm.setString(3,h(2,:));
-            if isempty(description)
-                stm.setNull(4,java.sql.Types.VARCHAR);
+
+            if (numel(img_set{i}) > 2)
+                stm.setString(4,[img_set_path img_set{i}{3}]); 
             else
-                stm.setString(4,description);
+                stm.setNull(4,java.sql.Types.VARCHAR);                
             end
+
+            if isempty(description)
+                stm.setNull(5,java.sql.Types.VARCHAR);
+            else
+                stm.setString(5,description);
+            end
+
             err = stm.execute();
         end
     end
