@@ -1,3 +1,3 @@
-function [score weights] = rnsc_objective_fn(d,u,s,sample,t)
-    weights = d < t^2;
+function [score weights] = rnsc_objective_fn(d2,u,s,sample,tsq)
+    weights = d2 < tsq^2;
     score = sum(weights);

@@ -1,4 +1,5 @@
 function opt_res = rnsc_estimate(u,s,cfg)
+    tic;
     error(nargchk(3,3,nargin));
     
     M = nnz(s);
@@ -7,10 +8,11 @@ function opt_res = rnsc_estimate(u,s,cfg)
 
     trials = 0;
     sample_degen_count = 0;
+    loCount = 0;
 
     best_res.score = -inf;
     opt_res.score = -inf;
-
+    
     tic;
     
     while trials < max([min([N cfg.max_trials]) cfg.min_trials 1]) 
@@ -55,9 +57,10 @@ function opt_res = rnsc_estimate(u,s,cfg)
                 end
             end
             
-            if isfield(cfg, 'lo')
+            if isfield(cfg, 'lo') && (trials > 10)
                 res_lo = feval(cfg.lo.fn,u,s,sample, ...
                                res.weights,res.model,cfg.lo);
+                loCount = loCount+1;
                 if ~isempty(res_lo) % && (res_lo.score > res.score)
                     res = res_lo;
                 end
@@ -77,3 +80,8 @@ function opt_res = rnsc_estimate(u,s,cfg)
         end    
         trials = trials+1;
     end
+    
+opt_res.loCount = loCount;
+opt_res.samples_drawn = trials;
+opt_res.inliers_found = sum(res.weights);
+opt_res.time_elapsed = toc;

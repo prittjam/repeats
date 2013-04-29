@@ -51,6 +51,15 @@ k3 = -4*(p-p2)*q;
 k4 = (p-p2)^2;
 
 C = [k4 k3 k2 k1 k0];
+
+if any(isnan(C))
+    return;
+end
+
+if any(isinf(C))
+    return;
+end
+
 t = roots(C);
 
 ia = find(~imag(t));

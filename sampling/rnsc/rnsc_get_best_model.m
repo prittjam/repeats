@@ -13,7 +13,7 @@ for i = 1:length(model_list)
         res.weights = weights;
         res.score = model_score;
         res.model = M;
-        res.errors = dx2;
+        res.dx2 = dx2;
         res.t = cfg.objective_args{ : };
     end
 end
