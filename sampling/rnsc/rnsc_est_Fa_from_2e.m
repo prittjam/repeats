@@ -10,7 +10,7 @@ cfg.v = [u(4:6,:);u(13:15,:)];
 
 % model functions
 cfg.est_fn = @eg_est_Fa_from_2e;
-cfg.error_fn = @(u,s,sample,F,cfg) sum(eg_sampson_err(cfg.v,s,sample,F,cfg).^2);
+cfg.cost_fn = @(u,s,sample,F,cfg) eg_Fa_dist(cfg.v,F).^2;
 
 cfg = rnsc_standardize_cfg(cfg);
 
