@@ -20,7 +20,7 @@ cfg.lo.tsq = 3.84*lo_sigma^2;
 tic;
 res = rnsc_estimate(u,s,cfg);
 res.time_elapsed = toc;
-res.solver = 'F-2e (from F_A)';
+res.solver = 'F-2e (from Fa)';
 
 varargout = { res };
 

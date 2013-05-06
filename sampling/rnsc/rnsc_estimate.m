@@ -80,8 +80,18 @@ function opt_res = rnsc_estimate(u,s,cfg)
         end    
         trials = trials+1;
     end
+
+if isfield(cfg, 'lo') && (loCount == 0)
+    res_lo = feval(cfg.lo.fn,u,s,sample, ...
+                   res.weights,res.model,cfg.lo);
+    loCount = loCount+1;
+    if ~isempty(res_lo) % && (res_lo.score > res.score)
+        opt_res = res_lo;
+    end
+end
     
 opt_res.loCount = loCount;
 opt_res.samples_drawn = trials;
 opt_res.inliers_found = sum(res.weights);
 opt_res.time_elapsed = toc;
+opt_res.tcCount = sum(s);
