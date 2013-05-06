@@ -43,7 +43,8 @@ if numel(ind) > 14
         res.model = opt_F;
         res.weights = logical(opt_weights);
         res.score = sum(res.weights);
-        res.ei = feval(cfg.cost_fn,u,s,[],opt_F,cfg);
+        res.dx2 = feval(cfg.cost_fn,u,s,[],opt_F,cfg);
+        res.rms = sqrt(mean(res.dx2));
         res.from_lo = true;
     end
 end
