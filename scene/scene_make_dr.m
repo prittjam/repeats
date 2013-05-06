@@ -14,7 +14,8 @@ for i = 1:size(DATA.imgs,2)
     dr = scene_construct_dr();
     for j = 1:size(detectors,2)
         cfg = detectors{j};
-        for k = cfg.subgenid
+        for j2 = cfg.subgenid
+            k = find(DR.current == j2);
             if (DR.valid(i,k))
                 if (DR.data{i,k}.num_dr > 0)
                     geom = ...
