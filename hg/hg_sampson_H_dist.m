@@ -1,5 +1,4 @@
-function dx = hg_sampson_err(u0,s,sample,H,varargin)
-u = u0(:,s);
+function dx = hg_H_sampson_dist(u,H)
 N = size(u,2);
 A = zeros(9,2*N); 
 
