@@ -70,9 +70,11 @@ function opt_res = rnsc_estimate(u,s,cfg)
                 opt_res = res;
             end
 
+            opt_res.inliers_found = sum(res.weights);
+
             % Update estimate of N, the number of trials to ensure we pick,
             % with probability p, a data set with no outliers.
-            fracinlying_set = opt_res.score/M;
+            fracinlying_set = opt_res.inliers_found/M;
             pNoOutliers = 1-fracinlying_set^cfg.k;
             pNoOutliers = max(eps, pNoOutliers);  % Avoid division by -Inf
             pNoOutliers = min(1-eps, pNoOutliers);% Avoid division by 0.
@@ -89,9 +91,9 @@ if isfield(cfg, 'lo') && (loCount == 0)
         opt_res = res_lo;
     end
 end
-    
+
+opt_res.inliers_found = sum(res.weights);    
 opt_res.loCount = loCount;
 opt_res.samples_drawn = trials;
-opt_res.inliers_found = sum(res.weights);
 opt_res.time_elapsed = toc;
 opt_res.tcCount = sum(s);

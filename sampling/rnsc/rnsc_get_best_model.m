@@ -7,13 +7,13 @@ end
 
 for i = 1:length(model_list)
     M = model_list{ i };
-    dx2 = feval(cfg.cost_fn,u,s,sample,M,cfg);
-    [model_score weights] = feval(cfg.objective_fn,dx2,u,s,sample,cfg.objective_args{ : });
+    C = feval(cfg.cost_fn,u,s,sample,M,cfg);
+    [model_score weights] = feval(cfg.objective_fn,C,u,s,sample,cfg);
     if (model_score > res.score)
         res.weights = weights;
         res.score = model_score;
         res.model = M;
-        res.dx2 = dx2;
+        res.C = C;
         res.t = cfg.objective_args{ : };
     end
 end
