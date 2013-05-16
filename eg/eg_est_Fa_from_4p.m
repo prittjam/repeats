@@ -1,16 +1,17 @@
-function [Fa] = faff_four_points_exact(x)
-x1 = [x(1:3,:)]';
-x2 = [x(4:6,:)]';
-Ah = [zeros(3,3)                          -repmat(x2(1:3,3),[1 3]).*x1(1:3,:)    x2(1:3,2).*x1(1:3,3); 
-      repmat(x2(1:3,3),[1 3]).*x1(1:3,:)   zeros(3,3)                           -x2(1:3,1).*x1(1:3,3)];
-[U S V] = svd(Ah);
-Ha = [V(1:3,end)';V(4:6,end)';[0 0 V(7,end)]];
+function [Fa] = eg_est_Fa_from_4p(u,s,varargin)
+    Fa = [];
 
-dHa = det(Ha);
-N = 20;
-Fa = {[]};
-if (dHa < N || dHa > 1/N)
-l = cross(Ha*x1(end,:)',x2(end,:)');
-e2 = [-l(2);l(1);0];
-Fa = {skew(e2)*Ha};
-end
+    x2 = u(4:6,s);
+    x1 = u(1:3,s);
+
+    A = [x2(1:2,:)' x1(1:2,:)' ones(size(x2,2),1)];
+    f = null(A);
+
+    if ~isempty(f)
+        Fa = zeros(3,3);
+        Fa(1:2,3) = f(1:2);
+        Fa(3,1:2) = f(3:4);
+        Fa(3,3) = f(5);
+    end
+
+    Fa = {Fa};
