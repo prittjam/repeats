@@ -42,6 +42,7 @@ while trials < max([min([N cfg.max_trials]) cfg.min_trials 1])
     sample_degen_count = sample_degen_count+count;
 
     res = rnsc_get_best_model(u,s,sample,model_list,cfg);
+    res.from_lo = false;
 
     if (res.score > best_res.score)
         best_res = res;
@@ -60,10 +61,10 @@ while trials < max([min([N cfg.max_trials]) cfg.min_trials 1])
         if isfield(cfg, 'lo') && (trials > 10)
             res_lo = feval(cfg.lo.fn,u,s,sample, ...
                            res.weights,res.model,cfg.lo);
-            loCount = loCount+1;
             if ~isempty(res_lo) % && (res_lo.score > res.score)
+                loCount = loCount+1;
                 res = res_lo;
-            end
+            end              
         end
 
         if (res.score > opt_res.score) 
@@ -85,10 +86,12 @@ end
 
 if isfield(cfg, 'lo') && (loCount == 0)
     res_lo = feval(cfg.lo.fn,u,s,sample, ...
-                   res.weights,res.model,cfg.lo);
-    loCount = loCount+1;
+                   opt_res.weights,opt_res.model,cfg.lo);
     if ~isempty(res_lo) % && (res_lo.score > res.score)
+        loCount = loCount+1;
         opt_res = res_lo;
+    else 
+        opt_res.from_lo = false;
     end
 end
 

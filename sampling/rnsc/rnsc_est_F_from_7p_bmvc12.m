@@ -15,6 +15,7 @@ res.weights(inl) = 1;
 res.inliers_found = sum(res.weights);
 res.samples_drawn = stats(1);
 res.loCount = stats(2);
+res.from_lo = true;
 
 varargout = { res };
 
