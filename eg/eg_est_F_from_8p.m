@@ -1,28 +1,36 @@
-function [F,G] = u2FG(v1,v2)
+function F = eg_est_F_from_8p(u,s)
+n = sum(s);
 
-if size(v1,1) == 2
-    v1 = [v1;ones(1,size(v1,2))];
-    v2 = [v2;ones(1,size(v2,2))];
+v1 = renormI(u(1:3,s));
+v2 = renormI(u(4:6,s));
+
+if n > 8
+    H1 = make_hartley_xform(v1);
+    H2 = make_hartley_xform(v2);
+    p1 = (H1*v1)';
+    p2 = (H2*v2)';
+else
+    p1 = v1';
+    p2 = v2';
 end
-
-H1 = make_hartley_xform(v1);
-H2 = make_hartley_xform(v2);
-p1 = v1'*H1';
-p2 = v2'*H2';
-
+    
 M = [ p2(:,1).*p1(:,1) p2(:,1).*p1(:,2) p2(:,1).*p1(:,3) p2(:,2).*p1(:,1) ...
       p2(:,2).*p1(:,2) p2(:,2).*p1(:,3) p2(:,3).*p1(:,1) p2(:,3).*p1(:,2) ...
       p2(:,3).*p1(:,3) ];
 
-g = null(M);
-G = reshape(g,3,3)';
+[~,~,v] = svd(M);
+G = reshape(v(:,end),3,3)';
 
 [u,d,v] = svd(G);
 d(end,end) = 0;
 F = u*d*v';
 
-F = H2'*F*H1;
-G = H2'*G*H1;
+%Ft = u2F(u([1:2 3:4],s)');
+%F = Ft';
+
+if n > 8
+    F = H2'*F*H1;
+end
 
 function varargout = make_hartley_xform(pts)
 if size(pts,1) ~= 3
