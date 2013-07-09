@@ -1,9 +1,11 @@
-function varargout = rnsc_est_F_from_7p(u,s,sigma,confidence)
+function varargout = rnsc_est_F_from_7p(u,s,sigma,confidence,sz1,sz2)
 cfg.k = 7;
 cfg.sigma = sigma;
 cfg.tsq = 3.84*sigma^2;
 cfg.confidence = confidence;
 cfg.max_trials = 1e5;
+cfg.sz1 = sz1;
+cfg.sz2 = sz2;
 
 %cfg.sample_degen_fn = @eg_sample_degen;
 %cfg.sample_degen_args = { 5.99*sigma^2, cfg.k };
@@ -32,7 +34,7 @@ if nargout == 2
 end
 
 function cfg = make_lo_rnsc_cfg(cfg,sigma) 
-cfg.fn = @rnsc_lo_est_F_bmvc12;
+cfg.fn = @fa_lo_est_F_new;
 cfg.tsq = 3.84*sigma^2;
 
 function is_degen = eg_F_model_check(u,s,sample,weights,F, ...
