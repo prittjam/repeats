@@ -17,8 +17,9 @@ if ind3 > cfg.orsa.k
     e = inf(size(logalpha));
     e(kk) = cfg.orsa.loge0+cfg.orsa.logcombi_n(kk)+ ...
             cfg.orsa.logcombi_k(kk)+logalpha(kk).*(kk-cfg.orsa.k);
-    %    figure;plot(e);
+    figure;plot(e);
     [min_e,ind4] = min(e);
+    ind4-10;
     score = min_e;
     weights(ind2(1:ind4)) = 1;
 end

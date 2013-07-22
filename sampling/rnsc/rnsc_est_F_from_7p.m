@@ -15,6 +15,15 @@ cfg.est_fn = @eg_est_F_from_7p;
 cfg.cost_fn = @robust_cost_fn;
 cfg.objective_fn = @robust_objective_fn;
 
+%orsa
+
+cfg.orsa.sz1 = sz1;
+cfg.orsa.sz2 = sz2;
+cfg.orsa.tcCount = size(u,2);
+cfg.orsa.k = 7;
+cfg.orsa.num_solutions = 3;
+cfg.orsa = orsa_precompute_nfa(cfg,sz1,sz2);
+
 % model degen
 cfg.model_degen.detect_fn = @eg_F_model_check;
 cfg.model_degen.fix_fn = @eg_F_fix;
