@@ -20,8 +20,8 @@ cfg.objective_fn = @robust_objective_fn;
 cfg.orsa.sz1 = sz1;
 cfg.orsa.sz2 = sz2;
 cfg.orsa.tcCount = size(u,2);
-cfg.orsa.k = 7;
-cfg.orsa.num_solutions = 3;
+cfg.orsa.k = 1;
+cfg.orsa.num_solutions = 1;
 cfg.orsa = orsa_precompute_nfa(cfg,sz1,sz2);
 
 % model degen
@@ -51,8 +51,8 @@ function is_degen = eg_F_model_check(u,s,sample,weights,F, ...
 m = numel(F);
 is_degen = false(1,m);
 for k = 1:m
-    is_good = eg_check_orientation(u(:,sample),F{k});
-    is_degen(k) = ~is_good;
+    a = eg_check_orientation(u(:,sample),F{k});
+    is_degen(k) = any(a ~= a(1));
 end
 
 function model_list = eg_F_fix(u,s,sample,weights,degen_model_list,is_model_degen,cfg)
@@ -63,11 +63,10 @@ for k = 1:numel(is_model_degen)
     end
 end
 
-function is_good = eg_check_orientation(u,F)
+function a = eg_check_orientation(u,F)
 [U,D,V] = svd(F,0);
 e2 = renormI(U(:,3));
-is_good = ...
-    all(all(sign(cross(repmat(e2,1,size(u,2)),u(4:6,:))./(F*u(1:3,:)))==1));
+a = sign(dot(F*u(1:3,:),cross(repmat(e2,1,size(u,2)),u(4:6,:))));
 
 function C = robust_cost_fn(u,s,sample,F,cfg)
 C = (eg_sampson_F_dist(u(:,s),F).^2/2/cfg.sigma).^2;
