@@ -51,7 +51,7 @@ function is_degen = eg_F_model_check(u,s,sample,weights,F, ...
 m = numel(F);
 is_degen = false(1,m);
 for k = 1:m
-    a = eg_check_orientation(u(:,sample),F{k});
+    a = eg_get_orientation(u(:,sample),F{k});
     is_degen(k) = any(a ~= a(1));
 end
 
@@ -62,11 +62,6 @@ for k = 1:numel(is_model_degen)
         model_list = cat(2,model_list,degen_model_list{k});
     end
 end
-
-function a = eg_check_orientation(u,F)
-[U,D,V] = svd(F,0);
-e2 = renormI(U(:,3));
-a = sign(dot(F*u(1:3,:),cross(repmat(e2,1,size(u,2)),u(4:6,:))));
 
 function C = robust_cost_fn(u,s,sample,F,cfg)
 C = (eg_sampson_F_dist(u(:,s),F).^2/2/cfg.sigma).^2;
