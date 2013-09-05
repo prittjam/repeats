@@ -14,7 +14,7 @@ while true
     for j = valid_rows
         ind = find(s(j,:));
         aX{k} = (v_laf(1:2,ind)+v_laf(4:5,ind)+v_laf(7:8,ind))/3;
-        t1 = abs(1./laf_get_scale_from_3p(v_laf(:,ind)));
+        t1 = abs(1./laf_get_scale(v_laf(:,ind)));
         arsc{k} = t1;
         k = k+1;
     end

@@ -7,7 +7,7 @@ cfg.max_trials = 1e5;
 % model functions
 cfg.sample_fn = @rnsc_sample_s;
 cfg.est_fn = @hg_est_Hinf_from_3laf;
-cfg.error_fn = @hg_calc_Hinf_scale;
+cfg.cost_fn = @hg_calc_Hinf_scale;
 cfg.objective_fn = @hg_calc_Hinf_score;
 
 cfg = rnsc_standardize_cfg(cfg);
@@ -63,10 +63,10 @@ err = sparse([],[],[],m,n,false);
 for row_ind = valid_rows'
     ind = find(s(row_ind,:));
     t_laf = laf_renormI(blkdiag(Hinf,Hinf,Hinf)*u(:,ind));
-    err(row_ind,ind) = abs(laf_get_scale_from_3p(t_laf));
+    err(row_ind,ind) = abs(laf_get_scale(t_laf));
 end
 
-function [utility,vis2] = hg_calc_Hinf_score(sc,u,s,sample,t)
+function [utility,vis2] = hg_calc_Hinf_score(sc,u,s,sample,cfg)
 [m,n] = size(sc);
 ii = [];
 jj = [];
@@ -74,7 +74,7 @@ jj = [];
 check_rows = find(any(sc,2))';
 for row_ind = check_rows
     ia = find(sc(row_ind,:));
-    [inl,ninl] = scal_set(sc(row_ind,ia),t);
+    [inl,ninl] = scal_set(sc(row_ind,ia),cfg.t);
     pct = ninl/nnz(sc(row_ind,:));
     %    if pct > 0.25
     if nnz(sc(row_ind,:)) > 1

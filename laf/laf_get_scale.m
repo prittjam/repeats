@@ -1,4 +1,4 @@
-function sc = laf_get_scale_from_3p(lafs)
+function sc = laf_get_scale(lafs)
 A = [1:3];
 B = [4:6];
 C = [7:9];

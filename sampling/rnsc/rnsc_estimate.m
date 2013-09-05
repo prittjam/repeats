@@ -11,10 +11,10 @@ loCount = 0;
 rejCount = 0;
 
 best_res.score = inf;
-best_res.weights = 0;
+best_res.labels = 0;
 
 opt_res.score = inf;
-opt_res.weights = 0;
+opt_res.labels = 0;
 
 %%%% hack for approximate models
 if isfield(cfg, 'lo')
@@ -73,23 +73,23 @@ while (trials < max([min([N cfg.max_trials]) cfg.min_trials 1]))
     res = rnsc_get_best_model(u,s,sample,model_list,cfg);
     res.from_lo = false;
 
-    if is_better(res,best_res)
+    if feval(cfg.compare,res.score,best_res.score)
         best_res = res;
         
         if isfield(cfg, 'lo') && (trials >= 50)
             res_lo = feval(cfg.lo.fn,u,s,sample, ...
-                           res.weights,res.model,cfg.lo);
+                           res.labels,res.model,cfg.lo);
             if ~isempty(res_lo) % && (res_lo.score > res.score)
                 loCount = loCount+1;
                 res = res_lo;
              end              
         end
 
-        if is_better(res,opt_res)
+        if feval(cfg.compare,res.score,opt_res.score)
             opt_res = res;
         end
 
-        opt_res.inliers_found = sum(res.weights);
+        opt_res.inliers_found = sum(res.labels);
 
         % Update estimate of N, the number of trials to ensure we pick,
         % with probability p, a data set with no outliers.
@@ -103,8 +103,8 @@ end
 
 if isfield(cfg, 'lo') && (loCount == 0)
     res_lo = feval(cfg.lo.fn,u,s,sample, ...
-                   opt_res.weights,opt_res.model,cfg.lo);
-    if ~isempty(res_lo) % && (res_lo.score < res.score)
+                   opt_res.labels,opt_res.model,cfg.lo);
+    if ~isempty(res_lo) 
         loCount = loCount+1;
         opt_res = res_lo;
     else 
@@ -114,7 +114,7 @@ end
 
 opt_res.time_elapsed = toc;
 
-opt_res.inliers_found = sum(opt_res.weights);    
+opt_res.inliers_found = sum(opt_res.labels);    
 opt_res.samples_drawn = trials;
 
 opt_res.tcCount = tcCount;
@@ -123,13 +123,4 @@ opt_res.loCount = loCount;
 
 if loCount == 0
     kkk = 3;
-end
-
-function better = is_better(res1,res2)
-better = false;
-
-if sum(res1.weights) > sum(res2.weights)
-    better = true;
-elseif res1.score < res2.score
-    better = true;
 end

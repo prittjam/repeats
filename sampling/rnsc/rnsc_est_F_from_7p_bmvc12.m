@@ -10,8 +10,13 @@ res.time_elapsed = toc;
 res.solver = 'F-7p-BMVC12';
 res.tcCount = sum(s);
 res.model = Ft';
-res.weights = zeros(1,numel(inl));
-res.weights(inl) = 1;
+
+res.weights = zeros(1,numel(s));
+
+ind = find(s);
+res.weights(ind(inl)) = 1;
+res.labels = logical(res.weights);
+
 res.inliers_found = sum(res.weights);
 res.samples_drawn = stats(1);
 res.loCount = stats(2);
