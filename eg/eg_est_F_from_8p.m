@@ -1,8 +1,8 @@
-function F = eg_est_F_from_8p(u,s)
-n = sum(s);
+function F = eg_est_F_from_8p(u)
+n = size(u,2);
 
-v1 = renormI(u(1:3,s));
-v2 = renormI(u(4:6,s));
+v1 = renormI(u(1:3,:));
+v2 = renormI(u(4:6,:));
 
 if n > 8
     H1 = make_hartley_xform(v1);

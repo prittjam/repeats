@@ -1,22 +1,15 @@
-function model_list = eg_est_Fa_from_2e(v,s,varargin)
-model_list = [];
-
-if sum(s) ~= 2
-    return;
-end
+function model_list = eg_est_Fa_from_2e(v)
+model_list = {};
 
 u = zeros(12,2);
 
-u(1:6,:) = ell_from_laf(v(1:9,s));
-u(7:12,:) = ell_from_laf(v(10:18,s));
+u(1:6,:) = ell_from_laf(v(1:9,:));
+u(7:12,:) = ell_from_laf(v(10:18,:));
 
 CC1 = squeeze(mat2cell(zeros(3,3,2),3,3,ones(1,2)));
 CC2 = squeeze(mat2cell(zeros(3,3,2),3,3,ones(1,2)));
 
-M = triu(ones(3)); 
-ia = find(M==1);
-
-ind = find(s);
+ia = find(triu(ones(3)) == 1);
 
 CC1{1}(ia) = u(1:6,1);
 CC1{1} = CC1{1}+tril(CC1{1}.',-1);

@@ -1,4 +1,4 @@
-function [score labels labels2] = orsa_objective_fn(C,u,s,sample,cfg,T)
+function [score labels labels2] = orsa_objective_fn(C,u,sample,cfg,T)
 if nargin < 6
     T = cfg.orsa.max_tsq;
 end

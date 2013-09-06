@@ -1,8 +1,8 @@
-function model_list = eg_est_F_from_7p(ut,s,varargin)
+function model_list = eg_est_F_from_7p(ut)
 model_list = { };
 
-M = sum(s);
-u = ut(:,s)';
+M = size(ut,2);
+u = ut';
 
 A = [ u(:,4).*u(:,1) u(:,4).*u(:,2) u(:,4) u(:,5).*u(:,1) u(:,5).*u(:,2) ...
               u(:,5)         u(:,1) u(:,2)      ones(M,1) ];

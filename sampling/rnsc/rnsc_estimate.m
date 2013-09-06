@@ -1,7 +1,7 @@
-function opt_res = rnsc_estimate(u,s,cfg)
-error(nargchk(3,3,nargin));
+function opt_res = rnsc_estimate(u,cfg)
+error(nargchk(2,2,nargin));
 
-tcCount = nnz(s);
+tcCount = size(u,2);
 p = cfg.confidence;   
 N = cfg.max_trials;            
 
@@ -31,13 +31,13 @@ while (trials < max([min([N cfg.max_trials]) cfg.min_trials 1]))
     
     count = 0;
     while true
-        sample = feval(cfg.sample_fn,u,s,cfg.k, ...
+        s = feval(cfg.sample_fn,u,cfg.k, ...
                        trials,cfg.sample_args{ : });
         is_sample_degen = feval(cfg.sample_degen_fn, ...
-                                u,sample, ...
+                                u,s, ...
                                 cfg.sample_degen_args{ : });
         if ~is_sample_degen
-            model_list = feval(cfg.est_fn,u,sample, ...
+            model_list = feval(cfg.est_fn,u(:,s), ...
                                cfg.est_args{ : });
             is_sample_degen = isempty(model_list);
         end
@@ -56,12 +56,12 @@ while (trials < max([min([N cfg.max_trials]) cfg.min_trials 1]))
     sample_degen_count = sample_degen_count+count;
 
     if isfield(cfg,'model_degen')
-        is_model_degen = feval(cfg.model_degen.detect_fn,u,s,sample, ...
+        is_model_degen = feval(cfg.model_degen.detect_fn,u,s, ...
                                [],model_list,cfg.model_degen);
         m2 = sum(is_model_degen);
         rejCount = rejCount+m2;
         if m2 > 0
-            model_list = feval(cfg.model_degen.fix_fn,u,s,sample, ...
+            model_list = feval(cfg.model_degen.fix_fn,u,s, ...
                                [],model_list,is_model_degen, ...
                                cfg.model_degen);
             if isempty(model_list) 
@@ -70,14 +70,14 @@ while (trials < max([min([N cfg.max_trials]) cfg.min_trials 1]))
         end
     end
 
-    res = rnsc_get_best_model(u,s,sample,model_list,cfg);
+    res = rnsc_get_best_model(u,s,model_list,cfg);
     res.from_lo = false;
 
     if feval(cfg.compare,res.score,best_res.score)
         best_res = res;
         
         if isfield(cfg, 'lo') && (trials >= 50)
-            res_lo = feval(cfg.lo.fn,u,s,sample, ...
+            res_lo = feval(cfg.lo.fn,u,s, ...
                            res.labels,res.model,cfg.lo);
             if ~isempty(res_lo) % && (res_lo.score > res.score)
                 loCount = loCount+1;
@@ -102,7 +102,7 @@ while (trials < max([min([N cfg.max_trials]) cfg.min_trials 1]))
 end
 
 if isfield(cfg, 'lo') && (loCount == 0)
-    res_lo = feval(cfg.lo.fn,u,s,sample, ...
+    res_lo = feval(cfg.lo.fn,u,s, ...
                    opt_res.labels,opt_res.model,cfg.lo);
     if ~isempty(res_lo) 
         loCount = loCount+1;
