@@ -1,4 +1,4 @@
-function invA = laf_get_invA_from_3p(v);
+function invA = laf_to_invA(v);
 u = laf_renormI(v);
 
 u1 = u(1,:);

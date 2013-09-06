@@ -93,11 +93,11 @@ end
 function [C2, C2_dual, M] = ell_canonicalize(CC1)
 M = calc_arandjelovic_faff_canonicalize(CC1{1}, CC1{2});
 C2 = M'*CC1{2}*M;
-T = make_T(ell_calc_center(C2));
+T = mtx_make_T(ell_calc_center(C2));
 C2_dual = inv(T'*C2*T);
 
 function M = calc_arandjelovic_faff_canonicalize(C1,C2)
-A = canonicalize_ellipse(C1);
+A = ell_normalize(C1);
 C2n_cc = ell_calc_center(A'*C2*A);
 theta = atan2(C2n_cc(2),C2n_cc(1));
 if (sign(theta) < 0)
@@ -105,16 +105,5 @@ if (sign(theta) < 0)
 else
     phi = pi/2-theta;
 end
-R = [ cos(phi)  sin(phi)  0; ... 
-     -sin(phi)  cos(phi)  0; ...
-          0          0    1];
+R = mtx_make_Rz(phi);
 M = A*R;
-
-function M = canonicalize_ellipse(C)
-cc = ell_calc_center(C);
-[Q,D] = eig(C(1:2,1:2));
-W = Q*diag(1./sqrt(diag(D)));
-M = [W cc;0 0 1];
-
-function T = make_T(t)
-T = [eye(length(t)) t; zeros(1,length(t)) 1]; 

@@ -20,7 +20,7 @@
 %  focal - vector with N focal lengths
 %  F  - 3Nx3 matrix with N fundamental matrices, such that Q2(:,i)'*F*Q1(:,i) = 0
 
-function [focal F] = eg_est_F_from_6p(u,s)
+function F = eg_est_F_from_6p(u,s)
     Q1 = u(1:3,s);
     Q2 = u(4:6,s);
 
@@ -343,6 +343,9 @@ function [focal F] = eg_est_F_from_6p(u,s)
             focal = [focal; sqrt(1/w(i))];
             Fi = v(8,i)*F1 + v(9,i)*F2 + v(10,i)*F3;
             F{k} = Fi;
+            if (numel(F{k}) < 9)
+                kkk = 3;
+            end
             k = k+1;
         end
     end
