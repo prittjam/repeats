@@ -1,11 +1,12 @@
 function [score labels labels2] = orsa_objective_fn(C,u,sample,cfg,T)
-if nargin < 6
+if nargin < 5
     T = cfg.orsa.max_tsq;
 end
 
 n = size(C,2);
 
 labels = false(1,n);
+labels2 = false(1,n);
 score = inf;
 
 [maxC,ind1] = max([sum(C(1:2,:).^2); ...
