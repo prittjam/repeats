@@ -1,16 +1,10 @@
-function sift_cfg = scene_make_sift_cfg(sift_cfg_wbs,normalize)
+function descriptor = scene_make_sift_cfg(varargin)
 global CFG
 
-if isempty(sift_cfg_wbs)
-    sift_cfg.wbs = CFG.descs.sift;
-else
-    sift_cfg.wbs = scene_cp_cfg_fields(sift_cfg_wbs,CFG.descs.sift);
-end
+[CFG.descs.sift,leftover] = helpers.vl_argparse(CFG.descs.sift,varargin{:});
 
-if nargin < 2
-    sift_cfg.normalize = @(x) double(x);
-else
-    sift_cfg.normalize = normalize;
-end
-
-sift_cfg.dhash = cfg2hash(sift_cfg.wbs);
+descriptor = struct;
+descriptor.normalize = @(x) double(x);
+descriptor.name = 'sift';
+descriptor.dhash = cfg2hash(CFG.descs.sift,1);
+descriptor = helpers.vl_argparse(descriptor,leftover);

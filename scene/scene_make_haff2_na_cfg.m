@@ -29,6 +29,6 @@ cfg.upgrade = 0;
 scene_update_wbsdr(cfg.subgenid,cfg.upgrade);
 
 % hash for detector/descriptor configuration
-dhash = cfg2hash(cfg.wbs);
+dhash = cfg2hash(cfg.wbs,1);
 cfg.dhash = cvdb_hash_xor(dhash, ...
                           cvdb_hash_xor(cfg.lafs.dhash,cfg.sift.dhash));

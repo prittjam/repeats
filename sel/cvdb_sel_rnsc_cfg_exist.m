@@ -3,7 +3,7 @@ function [rnsc_cfg_exist, h] = cvdb_sel_rnsc_cfg_exist(conn, rnsc_cfg, ...
     connh = conn.Handle;
 
     if nargin < 3
-        h = cfg2hash(rnsc_cfg);
+        h = cfg2hash(rnsc_cfg,1);
     end
 
     sql_statement = ['SELECT COUNT(*) FROM rnsc_cfgs WHERE id=' ...

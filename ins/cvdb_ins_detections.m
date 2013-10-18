@@ -3,7 +3,7 @@ function [] = cvdb_ins_detections(conn, ...
                                   detections)
     connh = conn.Handle;
 
-    h1 = cfg2hash(cfg);
+    h1 = cfg2hash(cfg,1);
     h2 = cvdb_hash_img_pair(img1, img2);
 
     xorh = cvdb_img_hash_xor(h(1,:), h(2,:));

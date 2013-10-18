@@ -4,5 +4,5 @@ if nargin < 2
 end
 
 for k = 1:numel(stereo_set)
-    scene_load_stereo_pair(stereo_set,k);
+    stereo_set(k) = scene_load_stereo_pair(stereo_set(k));
 end

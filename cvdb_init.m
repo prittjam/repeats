@@ -14,9 +14,6 @@ conn = cvdb_open(credentials{1}, ...
                  credentials{3}, ...
                  credentials{4});
 
-CASS_CFG.db_root = '/mnt/fry';
-CASS_CFG.imagedb_cluster = 'cmpgrid_cassandra';
-
 % === mandatory part (in the most cases stays unchanged) === %
 conn.imagedb.verbose                = 0;
 conn.imagedb.master_isfinished      = false;
@@ -32,16 +29,16 @@ conn.imagedb.confdb.pass   = '';
 % configure data access
 conn.imagedb.imagedb_cluster = 'cmpgrid_cassandra';
 
-conn.imagedb.storage.check = 'cass_imagecheck';
-conn.imagedb.storage.get = 'cass_imageget';
-conn.imagedb.storage.put = 'cass_imageput';
-conn.imagedb.storage.remove = 'cass_imageremove';
+conn.imagedb.storage.check = 'cass_cql_imagecheck';
+conn.imagedb.storage.get = 'cass_cql_imageget';
+conn.imagedb.storage.put = 'cass_cql_imageput';
+conn.imagedb.storage.remove = 'cass_cql_imageremove';
 conn.imagedb.storage.tostr = 'item2str';
 conn.imagedb.storage.list = 'imagelist';
+
+CFG.storage.ncass_conf = struct('keyspace','james');
 
 conn.imagedb.storage = translate_interfaces(conn.imagedb.storage);
 
 conn.imagedb.storage.retry_count = 25;
 conn.imagedb.storage.db_root = '/mnt/fry';
-
-init

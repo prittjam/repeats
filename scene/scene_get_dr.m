@@ -1,24 +1,15 @@
-function [dr,is_found,num_dr,img_id] = scene_get_dr(img_id,cfg,gid)
+function [res,is_found] = scene_get_dr(img_id,detectors)
 global conn
 
-dr = scene_construct_dr();
+res = cell(1,numel(detectors));
+is_found = false(1,numel(detectors));
 
-if nargin < 3
-    gid = 1;
-end
-
-num_dr = 0;
-[keys,subtypes,ids,subgenids] = cvdb_get_dr_keys(cfg);
-
-for i = 1:numel(keys)
-    [s is_found] = cvdb_sel_dr(conn, ...
-                               img_id, ...
-                               keys{i});
-    if ~is_found
-        break;
+for k = 1:numel(res)
+    if strcmp(detectors(k).cache,'On')
+        [res{k},isf] = cvdb_sel_dr(conn,img_id,[detectors(k).name ':' detectors(k).upgrade ...
+                            ':' detectors(k).dhash]);
+        is_found(k) = isf;
     end
-
-    dr(i) = scene_construct_dr(s.geom,s.sifts,s.cls,gid,cfg.subgenid(i),cfg,img_id);
-    num_dr = num_dr+dr(i).num_dr;
-    gid = gid+size(dr(i).geom,2);
 end
+
+is_found = logical(is_found);

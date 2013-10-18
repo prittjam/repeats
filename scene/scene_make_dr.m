@@ -1,47 +1,32 @@
-function dr_set = scene_make_dr(detectors,dr_set)
-global DESC DATA DR chains
+function dr_set = scene_make_dr(dr,img,detectors,descriptor)
+gid = 1;
+dr = scene_construct_dr();
 
-if nargin < 2
-    dr_set = {};
-end
-
-detect(chains);
-upgrade(chains);
-describe(chains);
-
-for i = 1:size(DATA.imgs,2)
-    gid = 1;
-    dr = scene_construct_dr();
-    for j = 1:size(detectors,2)
-        cfg = detectors{j};
-        for j2 = cfg.subgenid
-            k = find(DR.current == j2);
-            if (DR.valid(i,k))
-                if (DR.data{i,k}.num_dr > 0)
-                    geom = ...
-                        make_geom_array(DESC.data{2,k,i}.sift);
-                    sift = ...
-                        make_sift_array(DESC.data{2,k,i}.sift);
-                    cls = ...
-                        make_laf_class_array(DESC.data{2,k,i}.sift);
-                    dr = cat(2,dr,scene_add_dr(cfg,geom,sift,cls, ...
-                                               cvdb_hash_img(scene_get_intensity_img(i)), ...
-                                               k,gid));
-                    gid = dr(end).id(end)+1;
-                else
-                    geom = [];
-                    sift = [];
-                    dr = cat(2,dr,scene_add_dr(cfg,geom,sift,cls, ...
-                                               cvdb_hash_img(scene_get_intensity_img(i)), ...
-                                               k,gid));
-                end
-            end
+for j = 1:size(detectors,2)
+    detector = detectors(j);
+    j2 = scene_get_dr_ids(detector);
+    
+    geom = ...
+        make_geom_array(DESC.data{2,k,i}.sift);
+    sift = ...
+        make_sift_array(DESC.data{2,k,i}.sift);
+    cls = ...
+        make_laf_class_array(DESC.data{2,k,i}.sift);
+    dr = cat(2,dr,scene_add_dr(cfg,geom,sift,cls, ...
+                               cvdb_hash_img(scene_get_intensity_img(i)), ...
+                               k,gid));
+    gid = dr(end).id(end)+1;
+        else
+            geom = [];
+            sift = [];
+            dr = cat(2,dr,scene_add_dr(cfg,geom,sift,cls, ...
+                                       cvdb_hash_img(scene_get_intensity_img(i)), ...
+                                       k,gid));
         end
     end
     dr_set = cat(2,dr_set,dr);
 end
 
-clear DESC DATA DR chains
 
 function [dr,num_dr] = scene_add_dr(cfg,geom,sift,cls,img_id,subgenid,gid)
 num_dr = size(geom,2);

@@ -5,21 +5,14 @@ end
 
 [cvdb_base_path, name, ext] = fileparts(mfilename('fullpath'));
 
-addpath([cvdb_base_path '/ins']);
-addpath([cvdb_base_path '/upd']);
-addpath([cvdb_base_path '/sel']);
-addpath([cvdb_base_path '/util']);
-addpath([cvdb_base_path '/scene']);
-addpath([cvdb_base_path '/serialization']);
+addpath(genpath(cvdb_base_path));
 
 javaaddpath(fullfile([cvdb_base_path '/vendor/mysql-connector/mysql-connector-' ...
              'java-5.1.14-bin.jar']));
 
-javaaddpath({'/home.stud/qqmikula/lib/imagedb/imagedb.jar', ...
-             '/home.stud/qqmikula/lib/imtools/imtools.jar'});
+javaaddpath(fullfile(wbs_base_path,'matlab','ckvs','target',...
+                     'ckvs-0.0.1-jar-with-dependencies.jar'));
 
-%javaaddpath({fullfile([cvdb_base_path '/vendor/imagedb/imagedb.jar']), ...
-%             fullfile([cvdb_base_path '/vendor/imagedb/imtools.jar'])});
 
 % add widebaseline stereo dependencies
 addpath([wbs_base_path '/wbs-demo']); 
@@ -32,5 +25,6 @@ addpath([wbs_base_path '/matlab/utils']);
 addpath([wbs_base_path '/matlab/utils/json']);
 addpath([wbs_base_path '/matlab/utils/uniaccess']);
 
-
-
+old_folder = cd([wbs_base_path '/matlab']);
+setpaths;
+cd(old_folder);

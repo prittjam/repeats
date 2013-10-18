@@ -1,10 +1,23 @@
-function laf_cfg =  scene_make_laf_cfg(laf_cfg_wbs)
-global CFG
+function dr = scene_make_laf_cfg(dr,varargin)
+global CFG DR
 
-if nargin < 1
-    laf_cfg.wbs = CFG.detectors.lafs;
-else
-    laf_cfg.wbs = scene_cp_cfg_fields(laf_cfg_wbs,CFG.detectors.lafs);
+CFG.detectors.lafs = helpers.vl_argparse(CFG.detectors.lafs, ...
+                                         varargin);
+
+dhash = cfg2hash(CFG.detectors.lafs,1);
+
+for k = 1:numel(dr)
+    dr(k).upgrade = 'laf';
+    dr(k).dhash = cvdb_hash_xor(dr(k).dhash,dhash);
 end
 
-laf_cfg.dhash = cfg2hash(laf_cfg.wbs);
+upg_idx = scene_get_upgrade_ids(dr);
+if numel(upg_idx) ~= numel(dr)
+    error;
+end
+
+
+
+
+
+

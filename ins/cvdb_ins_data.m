@@ -1,4 +1,4 @@
-function [] =  cvdb_ins_data(conn,data,img_id,label,key)
+function [] = cvdb_ins_data(conn,data,img_id,label,key)
 if nargin < 6
     key = [];
 end

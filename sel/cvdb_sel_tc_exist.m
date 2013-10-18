@@ -4,7 +4,7 @@ function [tc_exist] = cvdb_sel_tc_exist(conn, ...
     [tc_cfg] = cvdb_make_tc_cfg(cfg);
 
     if nargin < 4
-        tc_cfg_hash = cfg2hash(tc_cfg);
+        tc_cfg_hash = cfg2hash(tc_cfg,1);
     end
 
     sql_query = ['SELECT COUNT(*) ' ...

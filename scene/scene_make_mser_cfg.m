@@ -1,34 +1,15 @@
-function cfg = scene_make_mser_cfg(detector_cfg,varargin)
-global CFG
+function [dr,dhash] = scene_make_mser_cfg(varargin)
+global DR CFG
 
-p = inputParser;
+detectors = {'MSER+ inten.','MSER- inten.'};
+CFG.detectors.extrema = helpers.vl_argparse(CFG.detectors.extrema, ...
+                                            varargin);
+DR.current = unique([DR.current drname2id(detectors)]);
 
-p.addParamValue('sift',scene_make_sift_cfg([],@sift_calc_rootSIFT),@isstruct);
-p.addParamValue('lafs',scene_make_laf_cfg(),@isstruct);
-p.parse(varargin{:});
+dr(1).name = detectors{1};
+dr(2).name = detectors{2};
 
-CFG.descs.sift = p.Results.sift.wbs;
-CFG.detectors.lafs = p.Results.lafs.wbs;
+dhash = cfg2hash(CFG.detectors.extrema,1);
 
-cfg.detector.name = 'mser';
-
-cfg.lafs = p.Results.lafs;
-cfg.sift = p.Results.sift;
-
-if isempty(detector_cfg)
-    cfg.wbs = CFG.detectors.extrema;
-else
-    cfg.wbs = scene_cp_cfg_fields(detector_cfg,CFG.detectors.extrema);
-end
-
-CFG.detectors.extrema = cfg.wbs;
-
-cfg.subtype.tbl = {'intp', 'intm'};    
-cfg.subtype.id  = [1 2];    
-cfg.subgenid    = [1 2];
-cfg.upgrade     = [2 2];
-scene_update_wbsdr(cfg.subgenid,cfg.upgrade);
-
-dhash = cfg2hash(cfg.wbs);
-cfg.dhash = cvdb_hash_xor(dhash, ...
-                          cvdb_hash_xor(cfg.lafs.dhash,cfg.sift.dhash));
+dr(1).dhash = dhash;
+dr(2).dhash = dhash;
