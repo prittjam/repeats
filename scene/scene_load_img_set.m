@@ -4,5 +4,8 @@ if nargin < 2
 end
 
 for k = 1:numel(img_set)
-    scene_load_img(img_set,k,im_fun);
+    img = scene_load_img(img_set(k));
+    img_set(k).data = img.data;
+    img_set(k).intensity = img.intensity;
+    img_set(k).img_id = img.img_id;
 end
