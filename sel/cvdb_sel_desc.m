@@ -1,0 +1,3 @@
+function [s,is_found] = cvdb_sel_desc(conn,img_id,desc_key)
+    [s,is_found] = cvdb_get_val(conn.imagedb,img_id, ...
+                                  descriptor_key,'desc');
