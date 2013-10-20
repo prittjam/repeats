@@ -3,7 +3,7 @@ x = dbstatus;
 cvdb_addpaths(wbs_base_path);
 dbstop(x);
 
-global conn;
+global conn CFG;
 
 fid = fopen('cvdb.cfg');
 text = textscan(fid,'%s','Delimiter','\n');

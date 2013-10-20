@@ -5,5 +5,5 @@ not_found = ~is_found;
 if any(not_found)
     ind = find(not_found);
     res = desc_describe(desc_defs,descriptors,dr,img);
-    %    scene_put_desc(img.img_id,descriptors,res(ind));
+    scene_put_desc(img.img_id,descriptors,res(ind));
 end

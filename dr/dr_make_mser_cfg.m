@@ -11,7 +11,8 @@ for k = 1:2
     dr(k).extrema_cfg = extrema_cfg;
     dr(k).dr_hash = dhash;
     dr(k).key = [dr(k).name ':' dr(k).dr_hash];
-    dr(k).cache = 'On';
+    dr(k).readcache = 'On';
+    dr(k).writecache = 'On';
     [dr(k),leftover2] = helpers.vl_argparse(dr(k),leftover);
 end 
 

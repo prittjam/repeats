@@ -6,7 +6,8 @@ descriptor = struct;
 descriptor.sift_cfg = sift_cfg;
 descriptor.normalize = @(x) double(x);
 descriptor.desc_hash = cfg2hash(descriptor.sift_cfg,1);
-descriptor.cache = 'On';
+descriptor.readcache = 'On';
+descriptor.writecache = 'On';
 descriptor = helpers.vl_argparse(descriptor,leftover);
 
 final_representations = dr_get_final_representations(defs.dr,dr);
