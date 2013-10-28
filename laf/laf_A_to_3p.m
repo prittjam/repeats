@@ -1,4 +1,4 @@
-function u = laf_A23p(A0)
+function u = laf_A_to_3p(A0)
 if iscell(A0)
     A = reshape(cell2mat(A0'),3,3,[]);
 else
