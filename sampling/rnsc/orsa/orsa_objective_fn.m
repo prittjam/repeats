@@ -1,4 +1,4 @@
-function [score labels labels2] = orsa_objective_fn(C,u,sample,cfg,T)
+function [score opt_labels labels labels2] = orsa_objective_fn(C,u,sample,cfg,T)
 if nargin < 5
     T = cfg.orsa.max_tsq;
 end
@@ -22,9 +22,16 @@ if ind3 > cfg.orsa.k
     e = inf(size(logalpha));
     e(kk) = cfg.orsa.loge0+cfg.orsa.logcombi_n(kk)+ ...
             cfg.orsa.logcombi_k(kk)+logalpha(kk).*(kk-cfg.orsa.k);
-    [score,ind4] = min(e);
-    labels(ind2(1:ind4)) = true;
 
-    ind5 = max(find(e < 1));
-    labels2(ind2(1:ind5)) = true;
+    ind5 = max(find(e < 0));
+    
+    if ~isempty(ind5) 
+        [score,ind4] = min(e(1:ind5));
+        labels(ind2(1:ind4)) = true;
+        labels2(ind2(1:ind5)) = true;
+    else
+        score = inf;
+    end
 end
+
+[~,opt_labels] = msac_objective_fn(C,[],[],cfg);    

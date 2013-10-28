@@ -1,4 +1,4 @@
-function orsa = orsa_precalc_hg_nfa(cfg,sz1,sz2)
+function orsa = orsa_calc_hg_nfa(cfg,sz1,sz2)
 ny1 = sz1(1);
 nx1 = sz1(2);
 ny2 = sz2(1);

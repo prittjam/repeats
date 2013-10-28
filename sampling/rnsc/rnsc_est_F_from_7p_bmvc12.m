@@ -8,7 +8,7 @@ tic;
 [Ft,inl,stats] = ransacF(u,cfg.tsq);
 res.time_elapsed = toc;
 
-res.solver = 'F-7p-BMVC12';
+res.solver = '\sevenpt';
 res.tcCount = N;
 res.model = Ft';
 

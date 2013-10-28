@@ -1,5 +1,5 @@
-function A = laf_unwrap_A(affpt)
-geom = affpt([3:6 1 2],:);
+function A = laf_affpt2A(affpt)
+geom = affpt([3 5 4 6 1 2],:);
 A0 = reshape(geom,2,3,[]);
 A = [ A0; ...
       repmat([0 0 1], [1 1 size(A0,3)])];

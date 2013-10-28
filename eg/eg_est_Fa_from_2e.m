@@ -56,7 +56,7 @@ k4 = (p-p2)^2;
 
 C = [k4 k3 k2 k1 k0];
 
-if isreal(C)
+if ~any(isinf(C) | isnan(C) | imag(C))
     t = roots(C);
 
     ia = find(~imag(t));
@@ -80,9 +80,11 @@ if isreal(C)
         Ft(1,3,:) = [sinb];
         invM1 = inv(M1);
         invM2 = inv(M2);
-
+        
         for i=1:size(Ft,3)
-            model_list{i} = invM2'*Ft(:,:,i)*invM1;
+            if ~any(imag(Ft(:,:,i)))
+                model_list{i} = invM2'*Ft(:,:,i)*invM1;
+            end
         end
     end
 end

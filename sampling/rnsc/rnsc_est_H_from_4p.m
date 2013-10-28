@@ -20,10 +20,11 @@ cfg.orsa.num_solutions = 1;
 cfg.orsa = orsa_precompute_nfa(cfg,sz1,sz2);
 cfg.orsa.sz1 = sz1;
 cfg.orsa.sz2 = sz2;
+cfg.orsa.max_tsq = cfg.tsq;
 
 % model functions
 cfg.est_fn = @hg_est_H_from_4p;
-cfg.cost_fn = @(u,H,cfg) eg_sampson_F_dist(cfg.v,H);
+cfg.cost_fn = @(u,H,cfg) eg_sampson_H_dist(cfg.v,H);
 cfg.objective_fn = @orsa_objective_fn;
 
 %cfg.sample_degen_fn = @hg_sample_degen;
