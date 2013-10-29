@@ -1,4 +1,4 @@
-function A = laf_affpt2A(affpt)
+function A = laf_affpt_to_A(affpt)
 geom = affpt([3 5 4 6 1 2],:);
 A0 = reshape(geom,2,3,[]);
 A = [ A0; ...

@@ -1,4 +1,4 @@
-function A = laf_3p2A(v)
+function A = laf_3p_to_A(v)
 u = laf_renormI(v);
 
 A = squeeze(reshape([u(7:9,:)-u(4:6,:); ...
