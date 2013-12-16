@@ -9,6 +9,7 @@ function [ic,clust_ind,n] = laf_find_duplicates(u,cutoff,n)
     [TT,ib] = sort(T);
     ic = ia(ib);
     clust_ind = cell2mat(SplitVec(TT, 'equal', 'blockid'));
+
 %    T(ib) = [col_ind{:}];
 
 function [T] = laf_agglom_clust(X,cutoff)

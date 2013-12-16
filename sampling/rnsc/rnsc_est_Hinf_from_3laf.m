@@ -93,10 +93,11 @@ for row_ind = check_rows
     ia = find(sc(row_ind,:));
     [inl,ninl] = scal_set(sc(row_ind,ia),cfg.t);
     pct = ninl/nnz(sc(row_ind,:));
-    %    if pct > 0.25
-    if nnz(sc(row_ind,:)) > 1
-        ii = cat(1,ii,row_ind*ones(ninl,1));
-        jj = cat(1,jj,ia(inl)');
+    if pct > 0.5
+        if nnz(sc(row_ind,:)) > 1
+            ii = cat(1,ii,row_ind*ones(ninl,1));
+            jj = cat(1,jj,ia(inl)');
+        end
     end
 end
 labels = sparse(ii,jj,true(1,numel(jj)),m,n);

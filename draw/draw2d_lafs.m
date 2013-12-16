@@ -1,6 +1,6 @@
 function draw2d_lafs(ax1,u,varargin)
-x = reshape(u(1:3:end,:),3,[]);
-y = reshape(u(2:3:end,:),3,[]);
+x = reshape(u(1:3:end,:)+1,3,[]);
+y = reshape(u(2:3:end,:)+1,3,[]);
 
 hold all;
 h1 = plot(ax1,x,y,varargin{:});

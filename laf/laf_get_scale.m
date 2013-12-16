@@ -5,6 +5,7 @@ C = [7:9];
 
 sc = ar(lafs(A,:),lafs(B,:)) + ar(lafs(B,:),lafs(C,:)) + ar(lafs(C,:),lafs(A,:));
 sc = 2*sc;
+kkk = 3;
 %sc = abs(sc);
 
 function a = ar(A,B)
