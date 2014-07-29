@@ -1,0 +1,44 @@
+function [H,H2,err1,err2] = hg_2elin2(C1a, C2a, C1b, C2b)
+% function H = hg_2elin(C1a, C2a, C1b, C2b)
+% correspondences: C1a <-> C1b, C2a <-> C2b.
+%
+% INPUT
+%  Four real symmetric nonsingular 3x3 matrices:
+%    C1a, C2a - the conic coefficient matrices in the first view
+%    C1b, C2b - the corresponding conics in the second view
+%
+% For more details see  Chum, Matas ICPR 2012:.
+% Homography Estimation from Correspondences of Local Elliptical Features
+%
+% (C) Ondra Chum 2012
+
+
+N1 = inv(C2A(C1a));
+D1 = C2A(C1b);
+N2 = inv(C2A(C2a));
+D2 = C2A(C2b);
+
+H = hg.icpr12.A2toRH (N1, D1, N2, D2);
+
+u = calc_points(C1a,C2a);
+v = calc_points(C1b,C2b);
+
+H2 = H;
+if (size(u,2) > 0) & (size(v,2) > 0)
+    u2 = renormI(H*u);
+    DD = bsxfun(@plus,sum(u2.^2)',sum(v.^2))-2*u2'*v;
+    [~,ind] = min(DD,[],2);
+
+    m = [1:size(u,2);ind'];
+    uv = [u(:,m(1,:)); ...
+          v(:,m(2,:))];
+    H2 = hg.icpr12.A2toRH2(N1, D1, N2, D2, uv);
+
+
+
+    H3 = H_from_4pl(uv,l);
+end
+
+err1 = hg.sampson_err(uv,H);
+err2 = hg.sampson_err(uv,H2);
+err3 = hg.sampson_err(uv,H3);

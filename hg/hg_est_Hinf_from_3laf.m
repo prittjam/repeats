@@ -37,23 +37,17 @@ while true
     H = Hinf*H;
     v_laf = laf_renormI(blkdiag(H,H,H)*u_laf);
 
-    if abs((sc0-sc)/sc) < 1e-4 | k > 10
+    if abs((sc0-sc)/sc) < 1e-9 | k > 10
         break;
     end
 
     sc0 = sc;
     k = k+1;
-    break;
 end 
 
 function [H, alpha] = scale2H(X, rsc)
 X = X(1:2,:);
 rsc = nthroot(rsc,3);
-
-if any(imag(rsc) > 0)
-    fprintf('!');
-    %  keyboard
-end
 
 tx = mean(X(1,:));
 ty = mean(X(2,:));

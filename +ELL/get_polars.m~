@@ -1,0 +1,2 @@
+function l = get_polars(C1a)
+l = renormI(C1a*u);
