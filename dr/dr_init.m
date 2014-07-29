@@ -29,8 +29,8 @@ if (exist('extrema')==3)
    %                     {'dg', @upgrade_mser2affpt, 'affpt'}});
    % define_dr('MSER- inten.', 'extrema', 2, 'rle2poly', 'rle', {{'laf', @dr_upgrade_mser2laf, 'affpt'}, ...
    %                      {'dg', @upgrade_mser2affpt, 'affpt'}});
-   dr_def = dr_define(dr_def,'MSER+ inten.', 'extrema', 1, 'rle2poly', 'rle', {{'dg', @upgrade_mser2affpt, 'affpt'}, {'laf', @dr_upgrade_mser2laf, 'affpt'}, {'gv', @upgrade_mser2ellpt, 'affpt'}});
-   dr_def = dr_define(dr_def,'MSER- inten.', 'extrema', 2, 'rle2poly', 'rle', {{'dg', @upgrade_mser2affpt, 'affpt'}, {'laf', @dr_upgrade_mser2laf, 'affpt'}, {'gv', @upgrade_mser2ellpt, 'affpt'}});
+   dr_def = dr_define(dr_def,'MSERp', 'extrema', 1, 'rle2poly', 'rle', {{'dg', @upgrade_mser2affpt, 'affpt'}, {'laf', @dr_upgrade_mser2laf, 'affpt'}, {'gv', @upgrade_mser2ellpt, 'affpt'}});
+   dr_def = dr_define(dr_def,'MSERm', 'extrema', 2, 'rle2poly', 'rle', {{'dg', @upgrade_mser2affpt, 'affpt'}, {'laf', @dr_upgrade_mser2laf, 'affpt'}, {'gv', @upgrade_mser2ellpt, 'affpt'}});
 end;
 
 if (exist('kmpts2')==3 & 1)

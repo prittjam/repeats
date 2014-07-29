@@ -4,7 +4,7 @@ sift_cfg = make_default_sift_cfg();
 
 descriptor = struct;
 descriptor.sift_cfg = sift_cfg;
-descriptor.normalize = @(x) double(x);
+descriptor.xform = @(x) double(x);
 descriptor.desc_hash = cfg2hash(descriptor.sift_cfg,1);
 descriptor.readcache = 'On';
 descriptor.writecache = 'On';

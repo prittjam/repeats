@@ -14,8 +14,8 @@ if (check_flag('CFG.extrema.presmooth')>0)
    a(:,:,3) = conv2(a(:,:,3), g,'same');
 end;
 
-if (numel(unique({dr(:).dr_hash})) == 1)
-    [mser img det_time] = extrema(a, dr(1).extrema_cfg, subids);
+if (numel(unique({dr(:).key})) == 1)
+    [mser img det_time] = extrema(a, dr(1).cfg, subids);
 else
     error('Configuration is different for subtypes');
 end
@@ -23,7 +23,10 @@ end
 res = {};
 % store msers and images in apropriate cells
 for k = 1:numel(subids)
-  res{k}.rle = mser{k};
-  res{k}.num_dr = size(mser{k},2);
-  res{k}.time=det_time(k);
-end;
+    ind = 1:numel(mser{k});
+    %    res{k}.rle = dr_rm_overlapping_msers(dr(k),mser{k});   
+    res{k}.rle = mser{:,k};
+    res{k}.num_dr = size(res{k}.rle,2);
+    res{k}.time = det_time(k);
+end
+

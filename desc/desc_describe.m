@@ -9,4 +9,6 @@ for k = 1:numel(dr)
 
     res{k} = feval(['desc_' method{k}],desc_defs,descriptors(k),img,dr{k});
     res{k}.time = cputime-t;
+    res{k}.name = outputs{k};
+    res{k}.uname = [dr{k}.uname ':' res{k}.name];
 end

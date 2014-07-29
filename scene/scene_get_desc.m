@@ -5,7 +5,7 @@ res = cell(1,numel(descriptors));
 is_found = false(1,numel(descriptors));
 
 for k = 1:numel(res)
-    if strcmp(descriptors(k).readcache,'On')
+    if strcmp(descriptors(k).read_cache,'On')
         [res{k},isf] = cvdb_sel_desc(conn,img_id,descriptors(k).key);
         is_found(k) = isf;
     end

@@ -1,4 +1,4 @@
-function res = dr_detect(dr_cfg,dr,img)
+function res = detect(dr_cfg,dr,img)
 drids = dr_get_drids(dr_cfg,dr);
 gens = dr_get_generators(dr_cfg,dr);
 selected_gens = unique(gens);

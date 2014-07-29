@@ -13,7 +13,6 @@ javaaddpath(fullfile([cvdb_base_path '/vendor/mysql-connector/mysql-connector-' 
 javaaddpath(fullfile(wbs_base_path,'matlab','ckvs','target',...
                      'ckvs-0.0.1-jar-with-dependencies.jar'));
 
-
 % add widebaseline stereo dependencies
 addpath([wbs_base_path '/wbs-demo']); 
 
@@ -24,6 +23,7 @@ cd(old_folder);
 addpath([wbs_base_path '/matlab/utils']);
 addpath([wbs_base_path '/matlab/utils/json']);
 addpath([wbs_base_path '/matlab/utils/uniaccess']);
+addpath(genpath([wbs_base_path '/matlab/ckvs']));
 
 old_folder = cd([wbs_base_path '/matlab']);
 setpaths;

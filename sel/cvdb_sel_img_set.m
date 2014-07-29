@@ -28,5 +28,8 @@ if (count > 0)
         img_set(row_num).url = char(rs.getString(1));
         img_set(row_num).height = rs.getInt(2);
         img_set(row_num).width = rs.getInt(3);
+        img_set(row_num).cc = ...
+            [ (img_set(row_num).width+1)/2; ...
+              (img_set(row_num).height+1)/2 ];
     end
 end

@@ -1,9 +1,9 @@
-function final_representations = dr_get_final_representations(dr_defs,dr)
+function final_representations = dr_get_final_representations(dr_defs,dr,upgrades)
 final_representations = cell(1,numel(dr));
 if nargin < 2
     [dr_defs(drids).representation];
 else
-    upgrades = dr_get_selected_upgrades(dr_defs,dr);
+    upgrades = dr_get_selected_upgrades(dr_defs,dr,upgrades);
     no_upgrades = cellfun(@isempty,upgrades);
     has_upgrades = ~no_upgrades;
     representations = dr_get_representations(dr_defs,dr(no_upgrades));

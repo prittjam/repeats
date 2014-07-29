@@ -1,17 +1,22 @@
-function dr = dr_make_laf_cfg(dr_defs,dr,varargin)
+function upg_list = dr_make_laf_cfg(dr_defs,dr,varargin)
 lafs_cfg = make_default_laf_cfg();
 [lafs_cfg,leftover] = helpers.vl_argparse(lafs_cfg,varargin);
+upgrade_hash = cfg2hash(lafs_cfg,1);
 
-dhash = cfg2hash(lafs_cfg,1);
-
+upg_list = struct;
 for k = 1:numel(dr)
-    dr(k).upgrade = 'laf';
-    dr(k).upgrade_cfg = lafs_cfg;
-    dr(k).upgrade_hash = dhash;
-    dr(k).key = [dr(k).key ':' dr(k).upgrade ':' dr(k).upgrade_hash];
+    upg_list(k).name = 'laf';
+    upg_list(k).fqname = [dr(k).fqname ':' upg_list(k).name];
+    upg_list(k).cfg = lafs_cfg;
+    upg_list(k).key = cfg2hash(upg_list(k).cfg,true);
+
+    upg_list(k).read_cache = 'On';
+    upg_list(k).write_cache = 'On';
+
+    [dr(k),leftover] = helpers.vl_argparse(dr(k),varargin{:});
 end
 
-upg_idx = dr_get_upgrade_ids(dr_defs,dr);
+upg_idx = dr_get_upgrade_ids(dr_defs,dr,upg_list);
 if numel(upg_idx) ~= numel(dr)
     error;
 end
