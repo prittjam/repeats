@@ -1,6 +1,5 @@
-classdef laf_cfg < dr.dr_cfg
+classdef laf_cfg < DR.dr_cfg
     properties
-        lafs_cfg = [];
         % default = 0.5 delky hran rovnoramenneho trojuhelniku vepisovaneho do
         % polygonu, uhel pak urcuje krivost
         curvatureArcLength = 0.5;
@@ -190,7 +189,7 @@ classdef laf_cfg < dr.dr_cfg
 
     methods
         function this = laf_cfg(dr_cfg,varargin)
-            this = this@dr.dr_cfg(dr_cfg,varargin{:});
+            this = this@DR.dr_cfg(dr_cfg,varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
             end

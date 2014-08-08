@@ -5,7 +5,7 @@ classdef extrema < matlab.mixin.Heterogeneous
 
     methods
         function this = extrema()
-            this.subids = containers.Map({class(dr.mserp_cfg()),class(dr.mserm_cfg())},[1 2]);
+            this.subids = containers.Map({class(DR.mserp_cfg()),class(DR.mserm_cfg())},[1 2]);
         end
 
         function res = extract_features(this,img,feat_cfg_list)
@@ -23,18 +23,18 @@ classdef extrema < matlab.mixin.Heterogeneous
 
             cfg_list_names = arrayfun(@(x) class(x),feat_cfg_list,'UniformOutput',false);
             subids = cell2mat(values(this.subids,cfg_list_names));
-            key_list = arrayfun(@(x) dr.make_key(x),feat_cfg_list,'UniformOutput',false);
+            key_list = arrayfun(@(x) DR.make_key(x),feat_cfg_list,'UniformOutput',false);
             if (numel(unique(key_list)) == 1)
                 [mser img det_time] = extrema(a, ...
-                                              dr.make_struct(feat_cfg_list(1)), ...
+                                              DR.make_struct(feat_cfg_list(1)), ...
                                               subids);
             else
                 mser = cell(1,numel(subids));
                 det_time = zeros(1,numel(subids));
                 for k = 1:numel(subids)
-                    [mser(k) img det_time(k)] = extrema(a, ...
-                                                        dr.make_struct(feat_cfg_list(k)), ...
-                                                        subids(k));
+                    [mser(k) img] = extrema(a, ...
+                                            DR.make_struct(feat_cfg_list(k)), ...
+                                            subids(k));
                 end
             end
 
@@ -43,7 +43,7 @@ classdef extrema < matlab.mixin.Heterogeneous
                 ind = 1:numel(mser{k});
                 %    res{k}.rle = dr_rm_overlapping_msers(dr(k),mser{k});   
                 res{k}.rle = mser{:,k};
-                res{k}.time = det_time(k);
+                %                res{k}.time = det_time(k);
             end
         end
     end

@@ -1,4 +1,4 @@
-classdef mser_cfg < dr.dr_cfg
+classdef mser_cfg < DR.dr_cfg 
     properties(Access = public)
         verbose = 1;
         relative = 0;
@@ -18,7 +18,7 @@ classdef mser_cfg < dr.dr_cfg
 
     methods
         function this = mser_cfg(varargin)
-            this = this@dr.dr_cfg([],varargin{:});
+            this = this@DR.dr_cfg([],varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
             end

@@ -40,7 +40,7 @@ classdef dr_cache < handle
             
         function [res,is_found] = put(this,cfg_list,res)
             for k = 1:numel(cfg_list)
-                key = dr.make_key(cfg_list(k));
+                key = DR.make_key(cfg_list(k));
                 this.image_cache.put('dr',cfg_list(k).name,res{k});
             end
         end
@@ -49,7 +49,7 @@ classdef dr_cache < handle
             [feat,is_found] = this.get(feat_cfg_list);
             not_found = ~is_found;
             if any(not_found)
-                feat(not_found) = dr.extract(feat_cfg_list(not_found),img);
+                feat(not_found) = DR.extract(feat_cfg_list(not_found),img);
                 this.put(feat_cfg_list(not_found),feat(not_found));
             end
         end
@@ -58,7 +58,7 @@ classdef dr_cache < handle
             [upg,is_found] = this.get(upg_cfg_list);
             not_found = ~is_found;
             if any(not_found)
-                upg(not_found) = dr.upgrade(upg_cfg_list(not_found),img,feat);
+                upg(not_found) = DR.upgrade(upg_cfg_list(not_found),img,feat);
                 this.put(upg_cfg_list(not_found),upg(not_found));
             end
         end
@@ -67,7 +67,7 @@ classdef dr_cache < handle
             [desc,is_found] = this.get(desc_cfg_list);
             not_found = ~is_found;
             if any(not_found)
-                desc(not_found) = dr.describe(desc_cfg_list,img,upg);
+                desc(not_found) = DR.describe(desc_cfg_list,img,upg);
                 this.put(desc_cfg_list,desc(not_found));
             end
         end

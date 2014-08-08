@@ -26,7 +26,7 @@ classdef image_cache < handle
         function xor_key = add_dependency(this,name,key,varargin)
             cfg.parents = {}; 
             
-            key = dr.make_key(key);
+            key = DR.make_key(key);
             
             cfg = helpers.vl_argparse(cfg,varargin);
 	    
@@ -116,21 +116,15 @@ classdef image_cache < handle
         end
 
         function res = get_xor_key(this,v)
-            [~,~,p] = bfs(this.G,v);
+            [~,dt] = bfs(this.G,v);
             tmp = v;
             ia = v;
-            while true
-                [~,ia,ib] = intersect(p,ia);
-                ia = ia(ia>0);
-                if numel(ia) == 0
-                    break
-                end
-                tmp = cat(2,tmp,ia);
-            end
+            [val,order] = sort(dt);
+            order = order(val > 0);
             key_list = cellfun(@(x) x.key, ...
-                               values(this.map,this.vlist(tmp)), ...
+                               values(this.map,this.vlist(order)), ...
                                'UniformOutput',false);
-            if numel(tmp) > 1
+            if numel(key_list) > 1
                 res = cvdb_hash_xor(key_list{:});
             else
                 res = key_list{1};

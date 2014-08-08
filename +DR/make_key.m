@@ -4,7 +4,7 @@ function key = make_key(cfg)
     elseif  ischar(cfg)
         key = cfg;
     else
-        scfg = dr.make_struct(cfg);
+        scfg = DR.make_struct(cfg);
         key = cfg2hash(scfg,true);
     end
 end

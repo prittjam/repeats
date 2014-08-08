@@ -1,5 +1,5 @@
 function res = extract(feat_cfg_list,img)
-syscfg = dr.syscfg();
+syscfg = DR.syscfg();
 gens = syscfg.get_gens(feat_cfg_list);
 names = arrayfun(@(x) class(x),gens,'UniformOutput',false);
 [uname,ia,ic] = unique(names);
