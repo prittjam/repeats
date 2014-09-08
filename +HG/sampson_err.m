@@ -1,4 +1,4 @@
-function dx = hg_H_sampson_dist(u,H)
+function dx = sampson_err(u,H)
 N = size(u,2);
 A = zeros(9,2*N); 
 

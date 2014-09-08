@@ -1,5 +1,5 @@
 function invA = to_invA(v)
-u = laf_renormI(v);
+u = LAF.renormI(v);
 
 u1 = u(1,:);
 u2 = u(2,:);

@@ -18,10 +18,10 @@ D1 = C2A(C1b);
 N2 = inv(C2A(C2a));
 D2 = C2A(C2b);
 
-H = hg.icpr12.A2toRH (N1, D1, N2, D2);
+H = HG.icpr12.A2toRH (N1, D1, N2, D2);
 
-u = calc_points(C1a,C2a);
-v = calc_points(C1b,C2b);
+u = ELL.get_common_real_poles(C1a,C2a);
+v = ELL.get_common_real_poles(C1b,C2b);
 
 H2 = H;
 if (size(u,2) > 0) & (size(v,2) > 0)
@@ -32,13 +32,10 @@ if (size(u,2) > 0) & (size(v,2) > 0)
     m = [1:size(u,2);ind'];
     uv = [u(:,m(1,:)); ...
           v(:,m(2,:))];
-    H2 = hg.icpr12.A2toRH2(N1, D1, N2, D2, uv);
-
-
-
-    H3 = H_from_4pl(uv,l);
+    H2 = HG.icpr12.A2toRH2(N1, D1, N2, D2, uv);
+    %    H3 = HG.H_from_4pl(uv,l);
 end
 
-err1 = hg.sampson_err(uv,H);
-err2 = hg.sampson_err(uv,H2);
-err3 = hg.sampson_err(uv,H3);
+err1 = HG.sampson_err(uv,H);
+err2 = HG.sampson_err(uv,H2);
+%err3 = HG.sampson_err(uv,H3);

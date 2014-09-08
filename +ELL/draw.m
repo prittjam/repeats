@@ -24,10 +24,9 @@ colors = varycolor(numel(CC));
 
 for k = 1:numel(CC)
     C = CC{k};
-    A = ell_get_TRS_from_C(C);
-    m = ell_calc_center(C);
+    [A,m] = ELL.get_A_from_C(C);
     t = linspace(0,2*pi,100);
-    x = A*[cos(t);sin(t);ones(1,length(t))];
+    x = renormI(A*[cos(t);sin(t);ones(1,length(t))]);
     hold all;
     plot(ax1,m(1),m(2),'Color',colors(k,:),varargin{:});
     plot(ax1,x(1,:),x(2,:),'Color',colors(k,:),varargin{:});

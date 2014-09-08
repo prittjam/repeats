@@ -1,7 +1,7 @@
-function draw2d_laf_repeats(ax0,u,labels,varargin)
+function draw_repeats(ax0,u,labels,varargin)
 ulabels = unique(labels);
 cfg.topN = [];
-cfg.exclude_labels = [];
+cfg.exclude = 0;
 
 [cfg,leftover] = helpers.vl_argparse(cfg,varargin{:});
 
@@ -9,7 +9,7 @@ if isempty(leftover)
     leftover = {'LineWidth',3};
 end
 
-uinlier_labels = setdiff(ulabels,cfg.exclude_labels);
+uinlier_labels = setdiff(ulabels,cfg.exclude);
 
 if isempty(cfg.topN)
     cfg.topN = numel(uinlier_labels);
@@ -22,7 +22,6 @@ count = hist(labels,1:max(ulabels));
 jj = 1;
 for k = 1:cfg.topN
     ind2 = find(labels == uinlier_labels(ind(k)));
-    draw2d_lafs(ax0,u(:,ind2),'Color',colors(jj,:), ...
-                leftover{:});
+    LAF.draw(ax0,u(:,ind2),'Color',colors(jj,:),leftover{:});
     jj = jj+1;
 end
