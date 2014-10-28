@@ -5,12 +5,14 @@ dr = struct('desc',[], ...
 dr.drid = [];
 affpt = [];
 maxid = 0;
+
+ls = ceil(log2(numel(desc)-1))+1;
 for k = 1:numel(desc)
     for k2 = 1:numel(desc{k}.affpt)
         desc{k}.affpt(k2).id = ...
             desc{k}.affpt(k2).id+maxid;
         desc{k}.affpt(k2).class = ...
-            bitor(desc{k}.affpt(k2).class,bitshift(k,1));
+            bitor(uint32(bitshift(desc{k}.affpt(k2).class,ls)),uint32(k-1));
     end
 
     dr.desc = cat(2,dr.desc, ...
@@ -29,3 +31,5 @@ for k = 1:numel(desc)
     maxid = max([desc{1}.affpt(:).id]);
 end
 dr.num_dr = size(dr.desc,2);
+
+kkk = 3;
