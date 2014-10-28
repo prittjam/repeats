@@ -15,13 +15,14 @@ if isempty(cfg.topN)
     cfg.topN = numel(uinlier_labels);
 end
 
-colors = varycolor(cfg.topN);
-count = hist(labels,1:max(ulabels));
-[~,ind] = sort(count(uinlier_labels),'descend');
+mpdc = distinguishable_colors(cfg.topN);
+minul = min(ulabels);
+count = hist(labels,minul:max(ulabels));
+[~,ind] = sort(count(uinlier_labels-minul+1),'descend');
 
 jj = 1;
 for k = 1:cfg.topN
     ind2 = find(labels == uinlier_labels(ind(k)));
-    LAF.draw(ax0,u(:,ind2),'Color',colors(jj,:),leftover{:});
+    LAF.draw(ax0,u(:,ind2),'Color',mpdc(jj,:),leftover{:});
     jj = jj+1;
 end

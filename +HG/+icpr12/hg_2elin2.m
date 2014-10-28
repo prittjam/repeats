@@ -27,11 +27,12 @@ H2 = H;
 if (size(u,2) > 0) & (size(v,2) > 0)
     u2 = renormI(H*u);
     DD = bsxfun(@plus,sum(u2.^2)',sum(v.^2))-2*u2'*v;
-    [~,ind] = min(DD,[],2);
+    [dd,ind] = min(DD,[],2);
 
+    ia = find(dd < 20);
     m = [1:size(u,2);ind'];
-    uv = [u(:,m(1,:)); ...
-          v(:,m(2,:))];
+    uv = [u(:,m(1,ia)); ...
+          v(:,m(2,ia))];
     H2 = HG.icpr12.A2toRH2(N1, D1, N2, D2, uv);
     %    H3 = HG.H_from_4pl(uv,l);
 end

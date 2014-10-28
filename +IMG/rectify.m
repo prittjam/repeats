@@ -1,4 +1,8 @@
-function timg = img_rectify(img,H,T1)
+function timg = rectify(img,H,T1)
+if nargin < 3
+    T1 = [];
+end
+
 if ~isempty(T1)
     T = maketform('composite',T1, ...
                   maketform('projective',H'));

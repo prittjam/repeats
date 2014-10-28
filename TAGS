@@ -1,0 +1,30 @@
+
+/home.stud/prittjam/src/cvtk2/util/VChooseK.c,2180
+#define mwSize mwSize87,3978
+#define mwIndex mwIndex88,3998
+#define MWSIZE_MAX MWSIZE_MAX89,4018
+#define WARN_LIMIT WARN_LIMIT93,4091
+#define ERROR_LIMIT ERROR_LIMIT94,4171
+void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])mexFunction130,6090
+void BadInputTypeError(void)BadInputTypeError303,12324
+mwSize GetOutputLen(mwSize n, mwSize k, double *C_double)GetOutputLen310,12563
+void Elem2_8Byte(double *Xp, mwSize nX, double *Yp, mwSize nY)Elem2_8Byte334,13170
+void Elem2_4Byte(INT32_T *Xp, mwSize nX, INT32_T *Yp, mwSize nY)Elem2_4Byte353,13813
+void Elem2_2Byte(INT16_T *Xp, mwSize nX, INT16_T *Yp, mwSize nY)Elem2_2Byte372,14426
+void Elem2_1Byte(INT8_T *Xp, mwSize nX, INT8_T *Yp, mwSize nY)Elem2_1Byte391,15037
+void Elem3_8Byte(double *Xp, mwSize nX, double *Yp, mwSize nY)Elem3_8Byte410,15646
+void Elem3_4Byte(INT32_T *Xp, mwSize nX, INT32_T *Yp, mwSize nY)Elem3_4Byte436,16514
+void Elem3_2Byte(INT16_T *Xp, mwSize nX, INT16_T *Yp, mwSize nY)Elem3_2Byte462,17387
+void Elem3_1Byte(INT8_T *Xp, mwSize nX, INT8_T *Yp, mwSize nY)Elem3_1Byte488,18258
+void Elem4_8Byte(double *Xp, mwSize nX, double *Yp, mwSize nY)Elem4_8Byte514,19127
+void Elem4_4Byte(INT32_T *Xp, mwSize nX, INT32_T *Yp, mwSize nY)Elem4_4Byte544,20121
+void Elem4_2Byte(INT16_T *Xp, mwSize nX, INT16_T *Yp, mwSize nY)Elem4_2Byte574,21120
+void Elem4_1Byte(INT8_T *Xp, mwSize nX, INT8_T *Yp, mwSize nY)Elem4_1Byte604,22117
+void Elem5_8Byte(double *Xp, mwSize nX, double *Yp, mwSize nY)Elem5_8Byte634,23112
+void Elem5_4Byte(INT32_T *Xp, mwSize nX, INT32_T *Yp, mwSize nY)Elem5_4Byte672,24418
+void Elem5_2Byte(INT16_T *Xp, mwSize nX, INT16_T *Yp, mwSize nY)Elem5_2Byte708,25620
+void Elem5_1Byte(INT8_T *Xp, mwSize nX, INT8_T *Yp, mwSize nY)Elem5_1Byte744,26822
+void ElemK_8Byte(double *Xp, mwSize nX, double *Yp, mwSize nY, mwSize K)ElemK_8Byte785,28356
+void ElemK_4Byte(INT32_T *Xp, mwSize nX, INT32_T *Yp, mwSize nY, mwSize K)ElemK_4Byte868,31071
+void ElemK_2Byte(INT16_T *Xp, mwSize nX, INT16_T *Yp, mwSize nY, mwSize K)ElemK_2Byte951,33799
+void ElemK_1Byte(INT8_T *Xp, mwSize nX, INT8_T *Yp, mwSize nY, mwSize K)ElemK_1Byte1034,36523
