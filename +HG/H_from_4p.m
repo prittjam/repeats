@@ -1,4 +1,4 @@
-function H = H_from_4pl(u,l)
+function H = H_from_4p(v)
 u = renormI(v(1:3,:));
 u0 = renormI(v(4:6,:));
 
