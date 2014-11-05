@@ -59,7 +59,7 @@ classdef sqldb < sqlbase
         function h = ins_img(this, img, ...
                              absolute_path, rel_pth, img_name, ...
                              ext)
-            h = cvdb_hash_img(img(:));
+            h = HASH.img(img(:));
             width  = size(img,2);
             height = size(img,1);
             
@@ -99,7 +99,7 @@ classdef sqldb < sqlbase
                     img_path = img_set{i};
                     
                     img = imread(img_path);
-                    h = cvdb_hash_img(img(:));
+                    h = HASH.img(img(:));
                     sql_statement = ['SELECT COUNT(*) FROM imgs WHERE id=' ...
                                      'UNHEX(?)'];
                     stm2 = this.connh.prepareStatement(sql_statement);
@@ -200,7 +200,7 @@ classdef sqldb < sqlbase
                         sql_statement = ['SELECT COUNT(*) FROM imgs WHERE id=' ...
                                          'UNHEX(?)'];
                         stm = this.connh.prepareStatement(sql_statement);
-                        h(j,:) = cvdb_hash_img(img{j}(:));
+                        h(j,:) = HASH.img(img{j}(:));
                         
                         stm.setString(1, h(j,:));
                         rs = stm.executeQuery();
@@ -209,8 +209,7 @@ classdef sqldb < sqlbase
                         rel_pth = regexpi(img_set{i}{j}, '[^/]*/[^/]*$', ...
                                           'match');
                         if (count == 0) 
-                            cvdb_ins_img(conn, img{j}, ...
-                                         img_path_pair{j}, rel_pth, img_name, ext);
+                            this.ins_img(img{j}, img_path_pair{j}, rel_pth, img_name, ext);
                         end
                     end
                     

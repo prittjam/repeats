@@ -32,9 +32,7 @@ classdef imagedb < handle
         end
 
         function [] =  insert(this,table,img_id,key,data)
-            if ~isempty(data)
-                this.storage.put(img_id,data,[table ':' key],[]); 
-            end
+            this.storage.put(img_id,data,[table ':' key],[]); 
         end
 
 
