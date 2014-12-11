@@ -1,0 +1,53 @@
+classdef extrema < DR.gen
+    properties
+        subids;
+    end
+
+    methods
+        function this = extrema()
+            this.subids = ...
+                containers.Map({class(DR.CFG.mserp()),class(DR.CFG.mserm())},[1 2]);
+        end
+
+        function res = extract_features(this,img,feat_cfg_list)
+            msg(1,'MSER detection (%s):\n', img.url);
+                        
+            a = img.data;
+            
+            if (check_flag('CFG.extrema.presmooth')>0)
+                sigma = CFG.extrema.presmooth;
+                g = fspecial('gaussian', 6*sigma, sigma);
+                a(:,:,1) = conv2(a(:,:,1), g,'same');
+                a(:,:,2) = conv2(a(:,:,2), g,'same');
+                a(:,:,3) = conv2(a(:,:,3), g,'same');
+            end;
+
+            cfg_list_names = arrayfun(@(x) class(x),feat_cfg_list,'UniformOutput',false);
+            subids = cell2mat(values(this.subids,cfg_list_names));
+            key_list = arrayfun(@(x) DR.make_key(x),feat_cfg_list,'UniformOutput',false);
+            if (numel(unique(key_list)) == 1)
+                [mser img det_time] = extrema(a, ...
+                                              DR.make_struct(feat_cfg_list(1)), ...
+                                              subids);
+            else
+                mser = cell(1,numel(subids));
+                det_time = zeros(1,numel(subids));
+                for k = 1:numel(subids)
+                    [mser(k) img] = extrema(a, ...
+                                            DR.make_struct(feat_cfg_list(k)), ...
+                                            subids(k));
+                end
+            end
+
+            % store msers and images in apropriate cells
+            res = cell(1,numel(subids));
+            for k = 1:numel(subids)
+                ind = 1:numel(mser{k});
+                if ~isempty(mser{:,k})
+                    res{k}.rle = mser{:,k};
+                end
+                %                res{k}.time = det_time(k);
+            end
+        end
+    end
+end
