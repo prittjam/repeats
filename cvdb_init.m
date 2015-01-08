@@ -23,6 +23,3 @@ if usejava('jvm')
 else
     display('Java is not available. Database functionality will not work.');
 end
-
-addpath('~/opt/wbs/matlab');
-addpath([ckvs_base_path '/cass_cql']);

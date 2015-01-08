@@ -26,7 +26,6 @@ classdef imagedb < handle
     methods
         function this = imagedb()
             this.storage = translate_interfaces(this.storage);
-            this.storage
             this.storage.retry_count = 25;
             this.storage.db_root = '/mnt/fry';
         end
