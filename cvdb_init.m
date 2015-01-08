@@ -10,7 +10,7 @@ end
 [cvdb_base_path, name, ext] = fileparts(mfilename('fullpath'));
 
 addpath(cvdb_base_path);
-addpath(genpath('/home.stud/prittjam/opt/bgl/matlab'));
+addpath(genpath('~/opt/bgl/matlab'));
 
 if usejava('jvm')
 
@@ -18,8 +18,7 @@ if usejava('jvm')
     javaaddpath(fullfile([cvdb_base_path '/vendor/mysql-connector/mysql-connector-' ...
                         'java-5.1.14-bin.jar']));
 
-    javaaddpath(fullfile(ckvs_base_path,'target',...
-                         'ckvs-0.0.1-jar-with-dependencies.jar'));
+    javaaddpath(fullfile([ckvs_base_path '/target/ckvs-0.0.1-jar-with-dependencies.jar']));
     
     dbstop(x);
 else
@@ -33,4 +32,4 @@ cd(old_folder);
 
 addpath([wbs_base_path '/matlab/utils']);
 addpath([wbs_base_path '/matlab/utils/json']);
-addpath([wbs_base_path '/matlab/utils/uniaccess']);
+addpath([ckvs_base_path '/matlab/uniaccess']);

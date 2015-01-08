@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS stereo_sets( id INTEGER AUTO_INCREMENT, 
+name VARCHAR(256) NOT NULL,  
+img1_id BINARY(16) NOT NULL,  
+img2_id BINARY(16) NOT NULL,  
+gt_url TEXT,  
+description TEXT,  
+acknowledgement TEXT,  
+refs TEXT,  
+PRIMARY KEY(id),  
+INDEX(name),  
+CONSTRAINT stereo_set_id UNIQUE (name,img1_id,img2_id),  
+CONSTRAINT FOREIGN KEY(img1_id,img2_id)  
+REFERENCES img_pairs(img1_id,img2_id));
