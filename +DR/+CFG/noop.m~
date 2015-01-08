@@ -1,4 +1,0 @@
-classdef noop < DR.CFG.dr
-    properties
-    end
-end
