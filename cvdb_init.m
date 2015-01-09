@@ -1,4 +1,4 @@
-function conn = cvdb_init(wbs_base_path,ckvs_base_path)
+function [] = cvdb_init(ckvs_base_path)
 if nargin < 1
     wbs_base_path = '../wbs';
 end
