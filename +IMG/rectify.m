@@ -10,4 +10,6 @@ else
     T = maketform('projective',H');
 end
 
-timg = imtransform(img,T,'bicubic','Fill', 0);
+timg = imtransform(img,T,'bicubic', ...
+                   'Fill', 0, ...
+                   'XYScale',1);
