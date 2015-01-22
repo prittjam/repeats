@@ -1,4 +1,4 @@
-function timg = rectify(img,H,T1)
+function [timg,xdata,ydata] = rectify(img,H,T1)
 if nargin < 3
     T1 = [];
 end
@@ -10,6 +10,6 @@ else
     T = maketform('projective',H');
 end
 
-timg = imtransform(img,T,'bicubic', ...
-                   'Fill', 0, ...
-                   'XYScale',1);
+[timg,xdata,ydata] = imtransform(img,T,'bicubic', ...
+                                 'Fill', 0, ...
+                                 'XYScale', 1);
