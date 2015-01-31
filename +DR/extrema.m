@@ -10,17 +10,9 @@ classdef extrema < DR.gen
         end
 
         function res = extract_features(this,img,feat_cfg_list)
-            msg(1,'MSER detection (%s):\n', img.url);
+            disp(['MSER detection ' img.url ':']);
                         
             a = img.data;
-            
-            if (check_flag('CFG.extrema.presmooth')>0)
-                sigma = CFG.extrema.presmooth;
-                g = fspecial('gaussian', 6*sigma, sigma);
-                a(:,:,1) = conv2(a(:,:,1), g,'same');
-                a(:,:,2) = conv2(a(:,:,2), g,'same');
-                a(:,:,3) = conv2(a(:,:,3), g,'same');
-            end;
 
             cfg_list_names = arrayfun(@(x) class(x),feat_cfg_list,'UniformOutput',false);
             subids = cell2mat(values(this.subids,cfg_list_names));

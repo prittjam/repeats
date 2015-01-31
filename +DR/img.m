@@ -15,7 +15,7 @@ classdef img < handle
             this.url = '';
             this.description = '';
 
-            if ~isempty(data)
+            if ~isempty(data) && usejava('jvm')
                 this.id = HASH.img(data);
             end
 

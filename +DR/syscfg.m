@@ -17,6 +17,8 @@ classdef syscfg
                     containers.Map({'DR.CFG.laf:DR.CFG.sift', ...
                                     'DR.CFG.hessian_affine:DR.CFG.sift'}, ...
                                    {'make_affpt_to_sift','make_affpt_to_sift'});
+            else
+                throw(MException('','Cannot find feature mex'));
             end
         end
 
