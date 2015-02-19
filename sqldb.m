@@ -56,6 +56,29 @@ classdef sqldb < sqlbase
             stm.execute();
         end
 
+        function h = upd_img(this, img, ...
+                             absolute_path, rel_pth, img_name, ...
+                             ext)
+
+            h = HASH.img(img(:));
+            width  = size(img,2);
+            height = size(img,1);
+            
+            stm =  this.connh.prepareStatement(['UPDATE imgs' ...
+            					' SET url = ?, name = ?, ext = ?, height = ?, width = ?' ...
+                                ' WHERE id = UNHEX(?)']);
+            
+            stm.setString(1, h);
+            stm.setString(2, absolute_path);
+            stm.setString(3, img_name);
+            stm.setString(4, ext);
+            stm.setInt(5, height);
+            stm.setInt(6, width);
+            
+
+            err = stm.execute();
+        end 
+
         function h = ins_img(this, img, ...
                              absolute_path, rel_pth, img_name, ...
                              ext)
@@ -64,19 +87,19 @@ classdef sqldb < sqlbase
             height = size(img,1);
             
             stm =  this.connh.prepareStatement(['REPLACE INTO imgs' ...
-            					'(id, url, name, ext, height, width) ' ...
-                                'VALUES(UNHEX(?),?,?,?,?,?)']);
+                                ' (id, url, name, ext, height, width)' ...
+                                ' VALUES(UNHEX(?),?,?,?,?,?)']);
+            
             stm.setString(1, h);
             stm.setString(2, absolute_path);
             stm.setString(3, img_name);
             stm.setString(4, ext);
             stm.setInt(5, height);
             stm.setInt(6, width);
-
-             
+                        
 
             err = stm.execute();
-        end        
+        end       
 
         function hh = ins_img_set(this,set_name, ...
                                   img_set, varargin)
@@ -100,7 +123,7 @@ classdef sqldb < sqlbase
                 for i = 1:length(img_set)
                     img_path = img_set{i};
                     
-                    img = imread(img_path);
+                    img = getimage(img_path);
                     h = HASH.img(img(:));
                     sql_statement = ['SELECT COUNT(*) FROM imgs WHERE id=' ...
                                      'UNHEX(?)'];
@@ -110,13 +133,18 @@ classdef sqldb < sqlbase
                     rs.next();
                     count = rs.getInt(1);
 
-                    %            if (count == 0)     
-                    [pth, img_name, ext] = fileparts(img_set{i});
-                    rel_pth = regexpi(img_path, '[^/]*/[^/]*$', ...
-                                      'match');
-                    hh{i} = this.ins_img(img, img_path, rel_pth, ...
-                                        img_name, ext);
-                    %            end
+                        
+                        [pth, img_name, ext] = fileparts(img_set{i});
+                        rel_pth = regexpi(img_path, '[^/]*/[^/]*$', ...
+                                          'match');
+                    if (count == 0)     
+                        hh{i} = this.ins_img(img, img_path, rel_pth, ...
+                                            img_name, ext);
+                    else
+                        hh{i} = this.upd_img(img, img_path, rel_pth, ...
+                                            img_name, ext);
+                    end
+
                     
                     sql_statement = ['SELECT COUNT(*) FROM img_sets ' ... 
                                      'WHERE name=? AND ' ...
@@ -310,4 +338,21 @@ classdef sqldb < sqlbase
         end
     end
 
+end
+
+function filecontent = getimage(fullname)
+    [fpath fname fext] = fileparts(fullname);
+    switch (fext)
+    case {'.jpg', '.png', '.gif', '.JPG', ''}
+    otherwise
+        error('Unsuporrted extension.');
+    end
+
+    try
+        img = imread(fullname);
+    catch
+        error('Not an image (according to matlab).');
+    end
+
+    filecontent = fileread(fullname, inf, '*uint8');
 end

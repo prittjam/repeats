@@ -12,7 +12,6 @@ classdef imagedb < handle
             this.cass.put(img_id,data,[table ':' key],[]); 
         end
 
-
         function [s,is_found] = select(this,table,img_id,cfg_key)
             s = [];
             is_found = false;

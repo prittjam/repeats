@@ -1,6 +1,7 @@
 function [] = put_data_set(base_path,name)
 sql = sqldb;
 sql.open();
+sql.create();
 
 img_files = get_img_files(base_path);
 
