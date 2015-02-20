@@ -79,9 +79,17 @@ classdef sqldb < sqlbase
             err = stm.execute();
         end 
 
+        function is = check_img(this,img_name)
+            stm =  this.connh.prepareStatement(['SELECT id ' ...
+                                     'FROM imgs ' ...
+                                     'WHERE name=?']);
+            stm.setString(1, img_name);
+            rs = stm.executeQuery();
+            is = rs.next();
+        end
+
         function h = ins_img(this, img, ...
-                             absolute_path, rel_pth, img_name, ...
-                             ext)
+                             absolute_path, img_name, ext)
             h = HASH.img(img(:));
             width  = size(img,2);
             height = size(img,1);
@@ -165,7 +173,28 @@ classdef sqldb < sqlbase
                 err = stm.executeBatch();
             end
             close(stm);
-        end    
+        end   
+
+        function row = sel_row(this,column,name)
+            stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM imgs']);
+            rs = stm.executeQuery();
+            rs.next();
+            count = rs.getInt(1);
+            if (count > 0)    
+                sql_query = ['SELECT ',column,' FROM imgs WHERE name=?'];
+
+                stm = this.connh.prepareStatement(sql_query);
+                stm.setString(1, name); 
+                rs = stm.executeQuery();
+
+                row = {};
+                row_num = 0;
+                while (rs.next())
+                    row_num = row_num+1;
+                    row(row_num) = rs.getString(1);
+                end
+            end        
+        end 
 
         function img_set = sel_img_set(this, set_name)
             img_set = {};
@@ -178,7 +207,7 @@ classdef sqldb < sqlbase
             count = rs.getInt(1);
 
             if (count > 0)    
-                sql_query = ['SELECT url,height,width ' ...
+                sql_query = ['SELECT url,height,width,HEX(img_id) ' ...
                              'FROM img_sets JOIN imgs ' ...
                              'WHERE img_sets.img_id=imgs.id ' ...
                              'AND img_sets.name=?'];
@@ -198,6 +227,7 @@ classdef sqldb < sqlbase
                     img_set(row_num).cc = ...
                         [ (img_set(row_num).width+1)/2; ...
                           (img_set(row_num).height+1)/2 ];
+                    img_set(row_num).cid = lower(char(rs.getString(4)));   
                 end
             end        
         end
