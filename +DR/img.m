@@ -11,7 +11,7 @@ classdef img < handle
     end
 
     methods(Access=public)
-        function this = img(data,varargin)
+        function this = img(data)
             this.url = '';
             this.description = '';
 
@@ -29,9 +29,7 @@ classdef img < handle
                 this.intensity = data;
             end
             this.area = this.width*this.height;
-            
-            [this,leftover] = ...
-                helpers.vl_argparse(this,varargin{:});
         end 
     end
+
 end
