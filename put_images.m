@@ -18,7 +18,7 @@ function put_images()
 
 	sql = sqldb;
 	sql.open();
-	create_db(sql);
+	sql.create();
 
 	db = imagedb;
 
@@ -38,12 +38,11 @@ function put_images()
 		end
 
 		try
-			if ~check_img(sql,filename)
-				fullname
+			if ~sql.check_img(name)
 				filecontent = getimage(fullname);
 				h = hash(filecontent, 'MD5');
 				db.insert('image',h,'raw',filecontent);
-				ins_hash(sql,filename,h);
+				sql.ins_img(filecontent,fullname,name,ext);
 			end
 			fprintf('c'); somethingPrinted = true;
 		
@@ -85,39 +84,4 @@ function filecontent = getimage(fullname)
 	end
 
 	filecontent = fileread(fullname, inf, '*uint8');
-end
-
-function [] = create_db(sqldb)
-    stm = sqldb.connh.prepareStatement(['CREATE TABLE IF NOT EXISTS images_hash(' ...
-    					'name TEXT NOT NULL, ' ...
-                        'hash TEXT NOT NULL)']);
-    stm.execute();
-end
-
-function ins_hash(sqldb, img_name, hash)
-	stm =  sqldb.connh.prepareStatement(['REPLACE INTO images_hash' ...
-                        ' (name, hash)' ...
-                        ' VALUES(?,?)']);
-            
-    stm.setString(1, img_name);
-    stm.setString(2, hash);
-    stm.execute();
-end
-
-function upd_hash(sqldb, img_name, hash)
-	stm =  this.connh.prepareStatement(['UPDATE imgs' ...
-    					' SET name = ?, hash = ?']);
-    
-    stm.setString(1, img_name);
-    stm.setString(2, hash);
-    stm.execute();
-end
-
-function check = check_img(sqldb,img_name)
-	stm =  sqldb.connh.prepareStatement(['SELECT hash ' ...
-		                     'FROM images_hash ' ...
-		                     'WHERE name=?']);
-	stm.setString(1, img_name);
-	rs = stm.executeQuery();
-	check = rs.next();
 end
