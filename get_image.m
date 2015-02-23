@@ -1,7 +1,7 @@
 function im = get_image(filename);
 	sql = sqldb;
 	sql.open();
-	hash = get_hash(sql,filename);
+	hash = lower(get_hash(sql,filename));
 	db = imagedb;
 	is = db.check('image',hash,'raw');
 	if is
@@ -13,13 +13,13 @@ end
 function hash = get_hash(sql,name)
     img_set = {};
 
-    stm = sql.connh.prepareStatement(['SELECT COUNT(*) FROM images_hash']);
+    stm = sql.connh.prepareStatement(['SELECT COUNT(*) FROM imgs']);
     rs = stm.executeQuery();
     rs.next();
     count = rs.getInt(1);
     if (count > 0)    
-        sql_query = ['SELECT hash ' ...
-                     'FROM images_hash ' ...
+        sql_query = ['SELECT HEX(id) ' ...
+                     'FROM imgs ' ...
                      'WHERE name=?'];
 
         stm = sql.connh.prepareStatement(sql_query);
