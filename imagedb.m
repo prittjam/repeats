@@ -8,6 +8,21 @@ classdef imagedb < handle
             this.cass = Cass();
         end
         
+        function cid = insert_img(this,url)
+            filecontents = get_native_img(url);
+            cid = HASH.img(filecontents);
+            this.insert('image',cid,'raw',filecontents);
+        end
+        
+        function img = select_img(this,cid)
+            img = [];
+            has_img = this.check('image',cid,'raw');
+            if has_img
+                filecontent = this.select('image',cid,'raw');
+                img = readim(filecontent);
+            end
+        end
+        
         function [] =  insert(this,table,img_id,key,data)
             this.cass.put(img_id,data,[table ':' key],[]); 
         end

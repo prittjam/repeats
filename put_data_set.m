@@ -1,21 +1,25 @@
 function [] = put_data_set(base_path,name)
 sql = sqldb;
 sql.open();
-sql.create();
+db = imagedb();
 
-img_files = get_img_files(base_path);
+img_urls = get_img_urls(base_path);
 
-h = sql.ins_img_set(name,img_files,...
-                    'InsertMode','Replace');
+for k = 1:numel(img_urls)
+    cids{k} = db.insert_img(img_urls{k});
+end
 
-function img_files = get_img_files(base_path)
-img_files = dir(fullfile(base_path,'*.jpg'));
-img_files = cat(1,img_files,dir(fullfile(base_path,'*.JPG')));
-img_files = cat(1,img_files,dir(fullfile(base_path,'*.png')));
-img_files = cat(1,img_files,dir(fullfile(base_path,'*.PNG')));
-img_files = cat(1,img_files,dir(fullfile(base_path,'*.gif')));
-img_files = cat(1,img_files,dir(fullfile(base_path,'*.GIF')));
+cids = sql.ins_img_set(name,img_urls,...
+                       'InsertMode','Replace');
 
-img_files = rmfield(img_files,{'date','bytes','isdir','datenum'});
-img_files = struct2cell(img_files);
-img_files = cellfun(@(x)[base_path '/' x],img_files,'UniformOutput',false);
+function img_urls = get_img_urls(base_path)
+img_urls = dir(fullfile(base_path,'*.jpg'));
+img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.JPG')));
+img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.png')));
+img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.PNG')));
+img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.gif')));
+img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.GIF')));
+
+img_urls = rmfield(img_urls,{'date','bytes','isdir','datenum'});
+img_urls = struct2cell(img_urls);
+img_urls = cellfun(@(x)[base_path '/' x],img_urls,'UniformOutput',false);

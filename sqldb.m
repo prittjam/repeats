@@ -6,24 +6,19 @@ classdef sqldb < sqlbase
 
         function [] = create(this)
             stm = this.connh.prepareStatement(['CREATE TABLE IF NOT EXISTS imgs(' ...
-                                'id BINARY(16), ' ...
+                                'cid BINARY(16), ' ...
                                 'url TEXT, ' ...
-                                'name TEXT NOT NULL, ' ...
-                                'ext TEXT NOT NULL, ' ...
-                                'height INTEGER NOT NULL, ' ...
-                                'width INTEGER NOT NULL, ' ...
-                                'PRIMARY KEY(id))']);
+                                'PRIMARY KEY(cid))']);
             stm.execute();
 
             stm = this.connh.prepareStatement(['CREATE TABLE IF NOT EXISTS img_sets(' ...
                                 'id INTEGER AUTO_INCREMENT, ' ...
                                 'name VARCHAR(128) NOT NULL, ' ...
-                                'img_id BINARY(16) NOT NULL, ' ...
-                                'description TEXT, ' ...
+                                'cid BINARY(16) NOT NULL, ' ...
                                 'PRIMARY KEY(id), ' ...
                                 'INDEX(name), ' ...
-                                'CONSTRAINT img_set_id UNIQUE (name,img_id),' ...
-                                'CONSTRAINT FOREIGN KEY(img_id) REFERENCES imgs(id))']);
+                                'CONSTRAINT img_set_id UNIQUE (name,cid),' ...
+                                'CONSTRAINT FOREIGN KEY(cid) REFERENCES imgs(cid))']);
             stm.execute();
     
             % stm = this.connh.prepareStatement(['CREATE TABLE IF NOT EXISTS stereo_sets(' ...
@@ -46,38 +41,22 @@ classdef sqldb < sqlbase
         function [] =  clear(this)
             warning('sqldb just erased all the cvdb tables in your database');
             stm = this.connh.prepareStatement(['DROP TABLE IF EXISTS img_sets, imgs, img_pairs, ' ...
-                                'stereo_sets, rnsc, rnsc_cfgs, ' ...
-                                'stereo_experiments, ' ...
-                                'tags, stereo_taggings, primitives, ' ...
-                                'geometry_taggings, calib_data, calib_results, ' ...
-                                'rnsc_taggings, detector_cfgs, detectors, descriptor_cfgs, ' ...
-                                'descriptors,  tc_cfgs,  tc, two_view_matrices, ' ...
-                                'gs, gs_cfgs, rnsc_primitives, rnsc_trials']);
+                                'stereo_sets']);
             stm.execute();
         end
-
-        function h = upd_img(this, img, ...
-                             absolute_path, rel_pth, img_name, ...
-                             ext)
-
-            h = HASH.img(img(:));
-            width  = size(img,2);
-            height = size(img,1);
+        
+        function err = ins_img(this, cid, url)
+            stm =  this.connh.prepareStatement(['INSERT INTO imgs' ...
+                                ' (cid, url)' ...
+                                ' VALUES(UNHEX(?),?) ON ' ...
+                                'DUPLICATE KEY UPDATE url = ?']);
             
-            stm =  this.connh.prepareStatement(['UPDATE imgs' ...
-            					' SET url = ?, name = ?, ext = ?, height = ?, width = ?' ...
-                                ' WHERE id = UNHEX(?)']);
-            
-            stm.setString(1, h);
-            stm.setString(2, absolute_path);
-            stm.setString(3, img_name);
-            stm.setString(4, ext);
-            stm.setInt(5, height);
-            stm.setInt(6, width);
-            
+            stm.setString(1, cid);
+            stm.setString(2, url);
+            stm.setString(3, url);
 
             err = stm.execute();
-        end 
+        end            
 
         function is = check_img(this,img_name)
             stm =  this.connh.prepareStatement(['SELECT id ' ...
@@ -88,29 +67,8 @@ classdef sqldb < sqlbase
             is = rs.next();
         end
 
-        function h = ins_img(this, img, ...
-                             absolute_path, img_name, ext)
-            h = HASH.img(img(:));
-            width  = size(img,2);
-            height = size(img,1);
-            
-            stm =  this.connh.prepareStatement(['REPLACE INTO imgs' ...
-                                ' (id, url, name, ext, height, width)' ...
-                                ' VALUES(UNHEX(?),?,?,?,?,?)']);
-            
-            stm.setString(1, h);
-            stm.setString(2, absolute_path);
-            stm.setString(3, img_name);
-            stm.setString(4, ext);
-            stm.setInt(5, height);
-            stm.setInt(6, width);
-                        
-
-            err = stm.execute();
-        end       
-
-        function hh = ins_img_set(this,set_name, ...
-                                  img_set, varargin)
+        function cids = ins_img_set(this,set_name,img_set, ...
+                                    varargin)
             cfg = [];
             cfg.description = [];
             cfg.replace = true;
@@ -124,74 +82,65 @@ classdef sqldb < sqlbase
             count = rs.getInt(1);
             
             if (count == 0 || cfg.replace)
-                stm = this.connh.prepareStatement(['REPLACE INTO img_sets ' ...
-                                    '(name, img_id) ' ...
-                                    'VALUES (?,UNHEX(?))']);
-                hh = {};
+                stm =  this.connh.prepareStatement(['INSERT IGNORE INTO img_sets' ...
+                                    ' (name,cid)' ...
+                                    ' VALUES(?,UNHEX(?))']);                
+                cids = {};
                 for i = 1:length(img_set)
-                    img_path = img_set{i};
-                    
-                    img = getimage(img_path);
-                    h = HASH.img(img(:));
-                    sql_statement = ['SELECT COUNT(*) FROM imgs WHERE id=' ...
-                                     'UNHEX(?)'];
-                    stm2 = this.connh.prepareStatement(sql_statement);
-                    stm2.setString(1, h);
-                    rs = stm2.executeQuery();
-                    rs.next();
-                    count = rs.getInt(1);
+                    url = img_set{i};
+                    filecontents = get_native_img(url);
+                    cids{i} = HASH.img(filecontents(:));
+                    [pth, img_name, ext] = fileparts(img_set{i});
 
-                        
-                        [pth, img_name, ext] = fileparts(img_set{i});
-                        rel_pth = regexpi(img_path, '[^/]*/[^/]*$', ...
-                                          'match');
-                    if (count == 0)     
-                        hh{i} = this.ins_img(img, img_path, rel_pth, ...
-                                            img_name, ext);
-                    else
-                        hh{i} = this.upd_img(img, img_path, rel_pth, ...
-                                            img_name, ext);
-                    end
+                    err = this.ins_img(cids{i},url);
+                    
+                    stm.setString(1, set_name);
+                    stm.setString(2, cids{i});
 
-                    
-                    sql_statement = ['SELECT COUNT(*) FROM img_sets ' ... 
-                                     'WHERE name=? AND ' ...
-                                     'img_id=UNHEX(?)'];
-                    stm2 = this.connh.prepareStatement(sql_statement);        
-                    stm2.setString(1, set_name);
-                    stm2.setString(2, h);
-                    rs = stm2.executeQuery();
-                    rs.next();
-                    count = rs.getInt(1);
-                    
-                    if (count == 0 || cfg.replace) 
-                        stm.setString(1, set_name);
-                        stm.setString(2, h);
-                        stm.addBatch();
-                    end
+                    stm.addBatch();
                 end
+
                 err = stm.executeBatch();
             end
             close(stm);
         end   
 
-        function row = sel_row(this,column,name)
+        function cid = get_img_cid(this,url)
             stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM imgs']);
             rs = stm.executeQuery();
             rs.next();
             count = rs.getInt(1);
+            cid = {};
             if (count > 0)    
-                sql_query = ['SELECT ',column,' FROM imgs WHERE name=?'];
-
+                sql_query = ['SELECT HEX(id) FROM imgs WHERE url=?'];
                 stm = this.connh.prepareStatement(sql_query);
-                stm.setString(1, name); 
+                stm.setString(1,url);
                 rs = stm.executeQuery();
-
-                row = {};
                 row_num = 0;
                 while (rs.next())
                     row_num = row_num+1;
-                    row(row_num) = rs.getString(1);
+                    cid = lower(rs.getString(1));
+                end
+            end                               
+        end 
+        
+        function url = get_img_url(this,cid)
+            stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM imgs']);
+            rs = stm.executeQuery();
+            rs.next();
+            count = rs.getInt(1);
+            url = {};
+            if (count > 0)    
+                sql_query = ['SELECT ',column,' FROM imgs WHERE id=?'];
+
+                stm = this.connh.prepareStatement(sql_query);
+                stm.setString(1, id); 
+                rs = stm.executeQuery();
+
+                row_num = 0;
+                while (rs.next())
+                    row_num = row_num+1;
+                    url = rs.getString(1);
                 end
             end        
         end 
@@ -200,16 +149,16 @@ classdef sqldb < sqlbase
             img_set = {};
 
             stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM img_sets ' ...
-                                'WHERE name=?']);
+                               'WHERE name=?']);
             stm.setString(1, set_name);
             rs = stm.executeQuery();
             rs.next();
             count = rs.getInt(1);
 
             if (count > 0)    
-                sql_query = ['SELECT url,height,width,HEX(img_id) ' ...
+                sql_query = ['SELECT url,HEX(imgs.cid) ' ...
                              'FROM img_sets JOIN imgs ' ...
-                             'WHERE img_sets.img_id=imgs.id ' ...
+                             'WHERE img_sets.cid=imgs.cid ' ...
                              'AND img_sets.name=?'];
 
                 stm = this.connh.prepareStatement(sql_query);
@@ -220,14 +169,8 @@ classdef sqldb < sqlbase
                 row_num = 0;
                 while (rs.next())
                     row_num = row_num+1;
-
                     img_set(row_num).url = char(rs.getString(1));
-                    img_set(row_num).height = rs.getInt(2);
-                    img_set(row_num).width = rs.getInt(3);
-                    img_set(row_num).cc = ...
-                        [ (img_set(row_num).width+1)/2; ...
-                          (img_set(row_num).height+1)/2 ];
-                    img_set(row_num).cid = lower(char(rs.getString(4)));   
+                    img_set(row_num).cid = lower(char(rs.getString(2)));   
                 end
             end        
         end
@@ -368,21 +311,4 @@ classdef sqldb < sqlbase
         end
     end
 
-end
-
-function filecontent = getimage(fullname)
-    [fpath fname fext] = fileparts(fullname);
-    switch (fext)
-    case {'.jpg', '.png', '.gif', '.JPG', ''}
-    otherwise
-        error('Unsuporrted extension.');
-    end
-
-    try
-        img = imread(fullname);
-    catch
-        error('Not an image (according to matlab).');
-    end
-
-    filecontent = fileread(fullname, inf, '*uint8');
 end

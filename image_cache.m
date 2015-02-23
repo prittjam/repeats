@@ -1,7 +1,7 @@
 classdef image_cache < handle
     properties
         G;
-        img_id;
+        cid;
         imagedb;
         vlist;
         map;
@@ -10,9 +10,9 @@ classdef image_cache < handle
     end
 
     methods(Access=public)
-        function this = image_cache(img_id,varargin)
+        function this = image_cache(cid,varargin)
             this.imagedb = imagedb();
-            this.img_id = img_id;
+            this.cid = cid;
             this.map = containers.Map;
             this.vlist = cell(1,1000);
             this.G = [];
@@ -20,7 +20,13 @@ classdef image_cache < handle
             
             this.cfg.read_cache = true;
             this.cfg.write_cache = true;
+
             [this.cfg,~] = helpers.vl_argparse(this.cfg,varargin);
+            
+            if isempty(cid)
+                this.cfg.read_cache = false;
+                this.cfg.write_cache = false;
+            end
         end 
 
         function xor_key = add_dependency(this,name,key,varargin)
@@ -81,9 +87,9 @@ classdef image_cache < handle
                 xor_key = this.get_xor_key(v);
                 
                 if this.cfg.write_cache 
-                    if ((~this.imagedb.check(table,this.img_id,xor_key) | ...
+                    if ((~this.imagedb.check(table,this.cid,xor_key) | ...
                          cfg.overwrite))
-                        this.imagedb.insert(table,this.img_id, ...
+                        this.imagedb.insert(table,this.cid, ...
                                             [name ':' xor_key],value);
                         is_put = true;
                     else
@@ -103,7 +109,7 @@ classdef image_cache < handle
                 xor_key = this.get_xor_key(v);
                 if this.cfg.read_cache
                     [val,is_found] = this.imagedb.select(table, ...
-                                                         this.img_id,[name ':' xor_key]);        
+                                                         this.cid,[name ':' xor_key]);        
                 end    
             end
         end
