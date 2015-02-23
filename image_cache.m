@@ -1,5 +1,5 @@
 classdef image_cache < handle
-    properties
+    properties(Access=private)
         G;
         cid;
         imagedb;
@@ -73,6 +73,10 @@ classdef image_cache < handle
             end
 
             last_add = name_list;
+        end
+        
+        function img = get_img(this)
+            img = this.imagedb.select_img(this.cid);
         end
 
         function [is_put,xor_key] = put(this,table,name,value,varargin)
