@@ -1,5 +1,5 @@
 function put_images()
-	srcdir = '~/src/gtrepeat/cvpr15/*.*';
+	srcdir = '~/src/gtrepeat/cvpr15';
 	name_of_set = 'cvpr15/annotations';
 
 	if (exist('skipped.txt', 'file') && ~makesure('File skipped.txt for skipped files already exist. You have done this before. If you proceed, the file will be deleted. Are you sure?', false))
@@ -9,13 +9,13 @@ function put_images()
 
 	somethingSkipped = false;
 	fprintf('Reading source direcotries... '); tic;
-	l = rdir(srcdir); done; %see help rdir ford correct syntax
+	img_urls = get_img_urls(srcdir); done; %see help rdir ford correct syntax
 
-	if (numel(l) == 0)
+	if (numel(img_urls) == 0)
 		warning('There is no image, input parameter has to be same as for ''dir'' function');
 		return;
 	end
-	fprintf('Found %d images.\n', numel(l));
+	fprintf('Found %d images.\n', numel(img_urls));
 
 	sql = sqldb;
 	sql.open();
@@ -25,10 +25,11 @@ function put_images()
 
 	progressbar('all', 0);
 	n = 0;
-	imgs = l';
-	imgs = {imgs(:).name};
-	for i = 1:numel(imgs)
-		url = imgs{i};
+
+	cids = sql.ins_img_set(name_of_set,img_urls,...
+                   'InsertMode','Replace');
+	for i = 1:numel(img_urls)
+		url = img_urls{i};
 		somethingPrinted = false;
 		n = n + 1;
 		[pathstr, name, ext] = fileparts(url);
@@ -40,10 +41,10 @@ function put_images()
 
 		try
 			if ~sql.check_img(url)
-				filecontent = getimage(url);
-				h = hash(filecontent, 'MD5');
-				db.insert('image',h,'raw',filecontent);
-				sql.ins_img(h,url);
+				% filecontent = getimage(url);
+				% h = hash(filecontent, 'MD5');
+				db.insert('image',cids{i},'raw',filecontent);
+				% sql.ins_img(h,url);
 			end
 			fprintf('c'); somethingPrinted = true;
 		
@@ -61,8 +62,9 @@ function put_images()
 			fclose(skippedfile);
 		end
 
-		progressbar('all', n/numel(l));
+		progressbar('all', n/numel(img_urls));
 	end
+	
 
 	if (somethingSkipped)
 		fprintf('Some files were skipped. To see them look into skipped.txt\nThis is head of that file:\n');
@@ -85,4 +87,17 @@ function filecontent = getimage(fullname)
 	end
 
 	filecontent = fileread(fullname, inf, '*uint8');
+end
+
+function img_urls = get_img_urls(base_path)
+	img_urls = dir(fullfile(base_path,'*.jpg'));
+	img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.JPG')));
+	img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.png')));
+	img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.PNG')));
+	img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.gif')));
+	img_urls = cat(1,img_urls,dir(fullfile(base_path,'*.GIF')));
+
+	img_urls = rmfield(img_urls,{'date','bytes','isdir','datenum'});
+	img_urls = struct2cell(img_urls);
+	img_urls = cellfun(@(x)[base_path '/' x],img_urls,'UniformOutput',false);
 end
