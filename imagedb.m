@@ -11,10 +11,7 @@ classdef imagedb < handle
         function cid = insert_img(this,url)
             filecontents = get_native_img(url);
             cid = HASH.img(filecontents);
-            has_img = this.check('image',cid,'raw');
-            if ~has_img
-                this.insert('image',cid,'raw',filecontents);
-            end
+            this.insert('image',cid,'raw',filecontents);
         end
         
         function img = select_img(this,cid)
@@ -31,7 +28,7 @@ classdef imagedb < handle
                     fwrite(fid,filecontent);
                     fclose(fid);
                     img = imread('tmpimpng');
-                    delete('tmpim');
+                    delete('tmpimpng');
                 else
                     img = readim(filecontent);
                 end
