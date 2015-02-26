@@ -7,8 +7,9 @@ function [img,cid,url] = get_img(varargin)
     elseif isfield(uid,'url')
         im = get_image_cass_url(uid.url);
         
-        if isempty(im) & isfield(uid,'url')
+        if isempty(im)
             im = get_image_url(uid.url);
+        end
     end	
     im = DR.img(im,cid,url);
 

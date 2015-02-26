@@ -58,11 +58,11 @@ classdef sqldb < sqlbase
             err = stm.execute();
         end            
 
-        function is = check_img(this,img_name)
-            stm =  this.connh.prepareStatement(['SELECT id ' ...
+        function is = check_img(this,url)
+            stm =  this.connh.prepareStatement(['SELECT cid ' ...
                                      'FROM imgs ' ...
-                                     'WHERE name=?']);
-            stm.setString(1, img_name);
+                                     'WHERE url=?']);
+            stm.setString(1, url);
             rs = stm.executeQuery();
             is = rs.next();
         end
@@ -112,7 +112,7 @@ classdef sqldb < sqlbase
             count = rs.getInt(1);
             cid = {};
             if (count > 0)    
-                sql_query = ['SELECT HEX(id) FROM imgs WHERE url=?'];
+                sql_query = ['SELECT HEX(cid) FROM imgs WHERE url=?'];
                 stm = this.connh.prepareStatement(sql_query);
                 stm.setString(1,url);
                 rs = stm.executeQuery();
@@ -131,7 +131,7 @@ classdef sqldb < sqlbase
             count = rs.getInt(1);
             url = {};
             if (count > 0)    
-                sql_query = ['SELECT ',column,' FROM imgs WHERE id=?'];
+                sql_query = ['SELECT ',column,' FROM imgs WHERE cid=?'];
 
                 stm = this.connh.prepareStatement(sql_query);
                 stm.setString(1, id); 
@@ -170,7 +170,8 @@ classdef sqldb < sqlbase
                 while (rs.next())
                     row_num = row_num+1;
                     img_set(row_num).url = char(rs.getString(1));
-                    img_set(row_num).cid = lower(char(rs.getString(2)));   
+                    img_set(row_num).cid = lower(char(rs.getString(2))); 
+                    [~,img_set(row_num).name,~] = fileparts(img_set(row_num).url); 
                 end
             end        
         end

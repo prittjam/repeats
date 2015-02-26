@@ -1,5 +1,6 @@
 function put_images()
 	srcdir = '~/src/gtrepeat/cvpr15/*.*';
+	name_of_set = 'cvpr15/annotations';
 
 	if (exist('skipped.txt', 'file') && ~makesure('File skipped.txt for skipped files already exist. You have done this before. If you proceed, the file will be deleted. Are you sure?', false))
 		return;
@@ -24,13 +25,13 @@ function put_images()
 
 	progressbar('all', 0);
 	n = 0;
-	temp = l';
-	for i = 1:numel(temp)
-		f = temp(i);
+	imgs = l';
+	imgs = {imgs(:).name};
+	for i = 1:numel(imgs)
+		url = imgs{i};
 		somethingPrinted = false;
 		n = n + 1;
-		[pathstr, name, ext] = fileparts(f.name);
-		fullname = f.name;
+		[pathstr, name, ext] = fileparts(url);
 		filename = [name, ext];
 		switch (filename)
 		case {'skipped.txt', '.', '..'}
@@ -38,11 +39,11 @@ function put_images()
 		end
 
 		try
-			if ~sql.check_img(name)
-				filecontent = getimage(fullname);
+			if ~sql.check_img(url)
+				filecontent = getimage(url);
 				h = hash(filecontent, 'MD5');
 				db.insert('image',h,'raw',filecontent);
-				sql.ins_img(filecontent,fullname,name,ext);
+				sql.ins_img(h,url);
 			end
 			fprintf('c'); somethingPrinted = true;
 		
@@ -56,7 +57,7 @@ function put_images()
 			fprintf('s');
 
 			skippedfile = fopen('skipped.txt', 'a');
-			fprintf(skippedfile, '%s\t%s\n', fullname, msg);
+			fprintf(skippedfile, '%s\t%s\n', url, msg);
 			fclose(skippedfile);
 		end
 

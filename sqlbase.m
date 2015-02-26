@@ -9,11 +9,11 @@ classdef sqlbase < handle
         function this = sqlbase(file_name)
             this.connh = [];
             if nargin < 1
-                file_name = 'lcraid_sqldb.cfg';
+                file_name = 'zornsqldb.cfg';
             end
 
-            if exist('lcraid_sqldb.cfg','file')
-                fid = fopen('lcraid_sqldb.cfg');
+            if exist('zornsqldb.cfg','file')
+                fid = fopen('zornsqldb.cfg');
                 text = textscan(fid,'%s','Delimiter','\n');
                 credentials = text{:};
                 
