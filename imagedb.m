@@ -11,7 +11,10 @@ classdef imagedb < handle
         function cid = insert_img(this,url)
             filecontents = get_native_img(url);
             cid = HASH.img(filecontents);
-            this.insert('image',cid,'raw',filecontents);
+            has_img = this.check('image',cid,'raw');
+            if ~has_img
+                this.insert('image',cid,'raw',filecontents);
+            end
         end
         
         function img = select_img(this,cid)
