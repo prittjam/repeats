@@ -26,12 +26,18 @@ classdef imagedb < handle
                 sql.open;
                 url = sql.get_img_url(cid);
                 [~,~,ext] = fileparts(url);
-                if strcmp(ext,'.png') || strcmp(ext,'.PNG')
-                    fid = fopen('tmpimpng','w');
+                ext = lower(ext);                                   
+                if strcmp(ext,'.png')
+                    if exist('/tmp','dir') == 7
+                        tmpurl = '/tmp/tmpimpng';
+                    else
+                        tmpurl = 'tmpimpng';
+                    end
+                    fid = fopen(tmpurl,'w');
                     fwrite(fid,filecontent);
                     fclose(fid);
-                    img = imread('tmpimpng');
-                    delete('tmpim');
+                    img = imread(tmpurl);
+                    delete(tmpurl);
                 else
                     img = readim(filecontent);
                 end
