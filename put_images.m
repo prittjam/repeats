@@ -40,12 +40,12 @@ function put_images()
 		end
 
 		try
-			if ~sql.check_img(url)
-				% filecontent = getimage(url);
+			% if ~sql.check_img(url)
+			filecontent = getimage(url);
 				% h = hash(filecontent, 'MD5');
-				db.insert('image',cids{i},'raw',filecontent);
+			db.insert('image',cids{i},'raw',filecontent);
 				% sql.ins_img(h,url);
-			end
+			% end
 			fprintf('c'); somethingPrinted = true;
 		
 			if ~somethingPrinted;

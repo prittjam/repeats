@@ -19,7 +19,19 @@ classdef imagedb < handle
             has_img = this.check('image',cid,'raw');
             if has_img
                 filecontent = this.select('image',cid,'raw');
-                img = readim(filecontent);
+                sql = sqldb();
+                sql.open;
+                url = sql.get_img_url(cid);
+                [~,~,ext] = fileparts(url);
+                if strcmp(ext,'.png') || strcmp(ext,'.PNG')
+                    fid = fopen('tmpimpng','w');
+                    fwrite(fid,filecontent);
+                    fclose(fid);
+                    img = imread('tmpimpng');
+                    delete('tmpim');
+                else
+                    img = readim(filecontent);
+                end
             end
         end
         

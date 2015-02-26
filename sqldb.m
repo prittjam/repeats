@@ -120,7 +120,7 @@ classdef sqldb < sqlbase
                 row_num = 0;
                 while (rs.next())
                     row_num = row_num+1;
-                    cid = lower(rs.getString(1));
+                    cid = lower(char(rs.getString(1)));
                 end
             end                               
         end 
@@ -132,16 +132,16 @@ classdef sqldb < sqlbase
             count = rs.getInt(1);
             url = {};
             if (count > 0)    
-                sql_query = ['SELECT ',column,' FROM imgs WHERE cid=?'];
+                sql_query = ['SELECT url FROM imgs WHERE cid=UNHEX(?)'];
 
                 stm = this.connh.prepareStatement(sql_query);
-                stm.setString(1, id); 
+                stm.setString(1, cid); 
                 rs = stm.executeQuery();
 
-                row_num = 0;
+                % row_num = 0;
                 while (rs.next())
-                    row_num = row_num+1;
-                    url = rs.getString(1);
+                    % row_num = row_num+1;
+                    url = char(rs.getString(1));
                 end
             end        
         end 

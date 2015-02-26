@@ -1,5 +1,5 @@
 function ourl = get_canonical_path(iurl)
-[ipath,name,ext] = fileparts(iurl)
+[ipath,name,ext] = fileparts(iurl);
 if isempty(ipath)
     ipath = pwd;
 end
