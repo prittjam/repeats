@@ -12,8 +12,8 @@ classdef sqlbase < handle
                 file_name = 'zornsqldb.cfg';
             end
 
-            if exist('zornsqldb.cfg','file')
-                fid = fopen('zornsqldb.cfg');
+            if exist('lcraid_sqldb.cfg','file')
+                fid = fopen('lcraid_sqldb.cfg');
                 text = textscan(fid,'%s','Delimiter','\n');
                 credentials = text{:};
                 
