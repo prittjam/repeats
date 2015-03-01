@@ -14,5 +14,3 @@ for k = ind
                     'desc', mat2cell(t, 128*ones(1,numel(t)/128),1)', ...
                     'drid', {desc{k}.affpt(:).class}));
 end
-
-% dr.num_dr = size(dr.desc,2);
