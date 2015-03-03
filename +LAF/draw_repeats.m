@@ -24,5 +24,6 @@ jj = 1;
 for k = 1:cfg.topN
     ind2 = find(labels == uinlier_labels(ind(k)));
     LAF.draw(ax0,u(:,ind2),'Color',mpdc(jj,:),leftover{:});
+    text(u(4,ind2)'+5,u(5,ind2)'+5,num2str(uinlier_labels(ind(k))),'Color',mpdc(jj,:));
     jj = jj+1;
 end
