@@ -1,39 +1,45 @@
 classdef sqlbase < handle
     properties
-        conn;
-        connh;
-        cfg;
+        conn = [];
+        connh = [];
     end
     
     methods(Access=public)
-        function this = sqlbase(file_name)
-            this.connh = [];
-            if nargin < 1
-                file_name = 'zornsqldb.cfg';
-            end
-
-            if exist('lcraid_sqldb.cfg','file')
-                fid = fopen('lcraid_sqldb.cfg');
-                text = textscan(fid,'%s','Delimiter','\n');
-                credentials = text{:};
-                
-                this.cfg.server_name = credentials{1};
-                this.cfg.name = credentials{2};
-                this.cfg.user = credentials{3};
-                this.cfg.pass = credentials{4};
-            end
+        function this = sqlbase()
         end
 
         function conn = open(this,varargin)
-            this.cfg = helpers.vl_argparse(this.cfg,varargin{:});
+            cfg.cfg_file = [];
+            cfg.server_name = [];
+            cfg.name = [];
+            cfg.user = [];
+            cfg.pass = [];
+            
+            cfg = helpers.vl_argparse(this.cfg,varargin{:});
+            
+            if ~isempty(cfg.cfg_file)
+                if exist(cfg.cfg_file,'file')
+                    fid = fopen(cfg.cfg_file);
+                    text = textscan(fid,'%s','Delimiter','\n');
+                    credentials = text{:};
+                    
+                    cfg.server_name = credentials{1};
+                    cfg.name = credentials{2};
+                    cfg.user = credentials{3};
+                    cfg.pass = credentials{4};                
+                else
+                    error('Config file does not exist');
+                end
+            end
+                
             try
                 [this.conn,this.connh] = ...
-                    sqlbase.dbconn2(this.cfg.server_name, ...
-                                    this.cfg.name, ...
-                                    this.cfg.user, ...
-                                    this.cfg.pass);
+                    sqlbase.dbconn2(cfg.server_name, ...
+                                    cfg.name, ...
+                                    cfg.user, ...
+                                    cfg.pass);
             catch exception
-                warning(['Could not open database connection. Database will be ' ...
+                warning(['Could not open database connection. SQL database is ' ...
                          'unavailable']);
             end
         end
