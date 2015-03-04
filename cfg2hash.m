@@ -14,4 +14,4 @@ function [cfghash json] = cfg2hash(cfg, autoorder)
     end
 
     json = mat2json(cfg);
-    cfghash = hash(json, 'md5');
+    cfghash = HASH.hash(json, 'md5');

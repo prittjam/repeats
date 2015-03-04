@@ -10,7 +10,7 @@ classdef imagedb < handle
         
         function cid = insert_img(this,url)
             filecontents = get_native_img(url);
-            cid = HASH.img(filecontents);
+            cid = HASH.hash(filecontents);
             this.insert('image',cid,'raw',filecontents);
         end
         
@@ -19,12 +19,9 @@ classdef imagedb < handle
             has_img = this.check('image',cid,'raw');
             if has_img
                 filecontent = this.select('image',cid,'raw');
-                sql = sqldb();
-                sql.open;
-                url = sql.get_img_url(cid);
-                [~,~,ext] = fileparts(url);
-                ext = lower(ext);                                   
-                if strcmp(ext,'.png')
+                try
+                    img = readim(filecontent);
+                catch
                     if exist('/tmp','dir') == 7
                         tmpurl = '/tmp/tmpimpng';
                     else
@@ -34,10 +31,27 @@ classdef imagedb < handle
                     fwrite(fid,filecontent);
                     fclose(fid);
                     img = imread(tmpurl);
-                    delete(tmpurl);
-                else
-                    img = readim(filecontent);
+                    delete(tmpurl);                    
                 end
+%                sql = sqldb();
+%                sql.open;
+%                url = sql.get_img_url(cid);
+%                [~,~,ext] = fileparts(url);
+%                ext = lower(ext);                                   
+%                if strcmp(ext,'.png')
+%                    if exist('/tmp','dir') == 7
+%                        tmpurl = '/tmp/tmpimpng';
+%                    else
+%                        tmpurl = 'tmpimpng';
+%                    end
+%                    fid = fopen(tmpurl,'w');
+%                    fwrite(fid,filecontent);
+%                    fclose(fid);
+%                    img = imread(tmpurl);
+%                    delete(tmpurl);
+%                else
+%                    img = readim(filecontent);
+%                end
             end
         end
         
