@@ -1,15 +1,17 @@
 function [] = put_data_set(base_path,name)
-sql = sqldb;
-sql.open();
-db = imagedb();
+sql = SqlDb;
+sql.open('cfg_file', ...
+         '~/src/cvdb/sqldbcfgs/zornsqldb.cfg');
+imagedb = ImageDb('cfg_file', ...
+                  '~/src/cvdb/casscfgs/lascarremote.cfg');
 
 img_urls = get_img_urls(base_path);
 
 for k = 1:numel(img_urls)
-    cids{k} = db.insert_img(img_urls{k});
+    cids{k} = imagedb.put_img(img_urls{k});
 end
 
-cids = sql.ins_img_set(name,img_urls,...
+cids = sql.put_img_set(name,img_urls,...
                        'InsertMode','Replace');
 
 function img_urls = get_img_urls(base_path)

@@ -1,49 +1,74 @@
 classdef Cass < handle
-    properties
-        cfg, 
-        ckvs_table_cache
+    properties(Access=private)
+        ckvs_table_cache = struct();
+        
+%        lascar_ip_addr = {'192.168.85.151', ...
+%                          '192.168.85.152', ...
+%                          '192.168.85.153', ...
+%                          '192.168.85.154', ...
+%                          '192.168.85.155', ...
+%                          '192.168.85.156', ...
+%                          '192.168.85.157', ...
+%                          '192.168.85.158', ...
+%                          '192.168.85.159', ...
+%                          '192.168.85.160', ...
+%                          '192.168.85.161'},
+%        
+
+        lascar_ip_addr = {'192.168.85.151'};
+
+        cass_cfg = struct(...
+            'keyspace','engine', ...
+            'table','data',...
+            'nodes',[],...
+            'replicationFactor',2);
+        %,...         'strategy','SimpleStrategy');
     end
     
     methods 
-        function storage = create_handle(this,cassConf)
-            keys = struct(...
-                'cid',ColumnType.TEXT,...
-                'key',ColumnType.TEXT);
-            values = struct(...
-                'data',ColumnType.MDATA);
+        function this = Cass(varargin)
+            this.cass_cfg.nodes = char(this.lascar_ip_addr);
             
-            opts = rmfield(cassConf, {'keyspace','table'});
+            [this.cass_cfg,leftover] = helpers.vl_argparse(this.cass_cfg, ...
+                                                  varargin{:});
+            if ~isempty(leftover)
+                cfg.cfg_file = [];
+                cfg = helpers.vl_argparse(cfg,leftover);
+                if ~isempty(cfg.cfg_file)
+                    if exist(cfg.cfg_file,'file')
+                        fid = fopen(cfg.cfg_file);
+                        text = textscan(fid,'%s','Delimiter','\n');
+                        credentials = text{:};
+                        this.cass_cfg.keyspace = credentials{1};
+                        this.cass_cfg.table = credentials{2};
+                        this.cass_cfg.nodes = char(strsplit(credentials{3},','));
+                        this.cass_cfg.replicationFactor = str2num(credentials{4});              
+                    else
+                        error('Config file does not exist');
+                    end
+                end
+            end
+        end
+
+        function storage = create_handle(this,cass_cfg)
+            keys = struct('cid',ColumnType.TEXT,...
+                          'key',ColumnType.TEXT);
+            values = struct('data',ColumnType.MDATA);
+            
+            opts = rmfield(cass_cfg, {'keyspace','table'});
             opts = [fieldnames(opts)'; struct2cell(opts)'];
-            storage = CassandraDataStore(cassConf.keyspace, cassConf.table, keys, values, opts{:});
+            
+            storage = CassandraDataStore(cass_cfg.keyspace, ...
+                                         cass_cfg.table, ...
+                                         keys, values, opts{:});
         end
         
-        function storage = get_handle(this,arg_cass_conf)
-            if nargin < 1
-                arg_cass_conf = struct();
-            end
-            
-            def_cass_conf = struct(...
-                'keyspace','engine', ...
-                'table','data',...
-                'nodes',char({'192.168.85.151'}),... %,'147.32.84.158','147.32.84.159'}),...
-                'replicationFactor',2);
-            %,...         'strategy','SimpleStrategy');
+        function storage = get_handle(this,varargin)
+            cass_cfg = helpers.vl_argparse(this.cass_cfg, varargin{:});
 
-
-            if ~isfield(this.cfg, 'storage'), this.cfg.storage = struct(); end
-            if ~isfield(this.cfg.storage, 'ncass_conf'), this.cfg.storage.ncass_conf = struct(); end
-            % Override the default settings with global setting
-            cass_conf = optmerge(def_cass_conf, this.cfg.storage.ncass_conf);
-            % Override the global settings with default settings
-            cass_conf = optmerge(cass_conf, arg_cass_conf);
-
-            if isempty(this.ckvs_table_cache)
-                this.ckvs_table_cache = struct();
-            end
-
-            tableName = cass_conf.table;
+            tableName = cass_cfg.table;
             if isfield(this.ckvs_table_cache,tableName)
-                if isequal(this.ckvs_table_cache.(tableName).conf, cass_conf)
+                if isequal(this.ckvs_table_cache.(tableName).cfg, cass_cfg)
                     storage = this.ckvs_table_cache.(tableName).storage;
                     return;
                 else
@@ -51,9 +76,10 @@ classdef Cass < handle
                     this.ckvs_table_cache.(tableName).storage.close();
                 end
             end
-            storage = this.create_handle(cass_conf);
+            storage = this.create_handle(cass_cfg);
+
             this.ckvs_table_cache.(tableName).storage = storage;
-            this.ckvs_table_cache.(tableName).conf = cass_conf;
+            this.ckvs_table_cache.(tableName).cfg = cass_cfg;
         end
 
         
@@ -70,7 +96,6 @@ classdef Cass < handle
                 end
                 return;
             end
-
             
             % In the rest of the scripts, the tablename is usually expressed as
             % 'tablename:somethingelse'
@@ -92,7 +117,6 @@ classdef Cass < handle
             end
         end        
 
-
         function result = check(this,cid, attribute, opt)
             if ~exist('opt','var'), opt = struct(); end;
             if iscell(cid), cid = cid{1}; end
@@ -104,7 +128,7 @@ classdef Cass < handle
             end
             
             tablename = this.get_table_name(attribute,opt);
-            storage = this.get_handle(struct('table',tablename));
+            storage = this.get_handle('table',tablename);
             
             keys = storage.buildKeys(cid, attribute);
             
@@ -133,7 +157,7 @@ classdef Cass < handle
             end
 
             tablename = this.get_table_name(attribute,opt);
-            storage = this.get_handle(struct('table',tablename));
+            storage = this.get_handle('table',tablename);
 
             keys = storage.buildKeys(cid, attribute);
             values = storage.buildValues(data);
@@ -156,7 +180,7 @@ classdef Cass < handle
             end
 
             tablename = this.get_table_name(attribute,opt);
-            storage = this.get_handle(struct('table',tablename));
+            storage = this.get_handle('table',tablename);
 
             keys = storage.buildKeys(cid, attribute);
             cass_res = storage.load(keys, runHooks);
