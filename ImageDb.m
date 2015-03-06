@@ -23,9 +23,9 @@ classdef ImageDb < handle
                     img = readim(filecontent);
                 catch
                     if exist('/tmp','dir') == 7
-                        tmpurl = '/tmp/tmpimpng';
+                        tmpurl = ['/tmp/tmpimpng' cid];
                     else
-                        tmpurl = 'tmpimpng';
+                        tmpurl = ['tmpimpng' cid];
                     end
                     fid = fopen(tmpurl,'w');
                     fwrite(fid,filecontent);
