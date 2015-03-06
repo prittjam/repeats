@@ -36,27 +36,27 @@ classdef ImageDb < handle
             end
         end
         
-        function [] =  put(this,table,img_id,key,data)
-            this.cass.put(img_id,data,[table ':' key],[]); 
+        function [] =  put(this,table,cid,key,data)
+            this.cass.put(cid,data,[table ':' key],[]); 
         end
 
-        function [s,is_found] = get(this,table,img_id,cfg_key)
+        function [s,is_found] = get(this,table,cid,cfg_key)
             s = [];
             is_found = false;
 
             %            try
-                is_found = this.cass.check(img_id,[table ':' cfg_key], ...
+                is_found = this.cass.check(cid,[table ':' cfg_key], ...
                                                  []);
                 if is_found
-                    s = this.cass.get(img_id,[table ':' cfg_key],[]); 
+                    s = this.cass.get(cid,[table ':' cfg_key],[]); 
                 end
 %            catch err
 %                disp(err.message);
 %            end
         end
 
-        function [is_found] = check(this,table,img_id,cfg_key)
-            is_found = this.cass.check(img_id,[table ':' cfg_key],[]);
+        function [is_found] = check(this,table,cid,cfg_key)
+            is_found = this.cass.check(cid,[table ':' cfg_key],[]);
         end
 
     end
