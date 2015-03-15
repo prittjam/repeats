@@ -1,4 +1,4 @@
-classdef img < handle
+classdef Img < handle
     properties
         data;
         height; 
@@ -10,7 +10,7 @@ classdef img < handle
     end
 
     methods(Access=public)
-        function this = img(varargin)
+        function this = Img(varargin)
             cfg = struct('data',[],'url',[],'cid',[]);
             cfg = helpers.vl_argparse(cfg,varargin{:});
             this.data = cfg.data;
