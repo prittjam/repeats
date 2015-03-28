@@ -23,7 +23,7 @@ classdef ImageCache < handle
 
             [this.cfg,~] = helpers.vl_argparse(this.cfg,varargin);
             
-            if isempty(cid)
+            if isempty(cid) || isempty(imagedb)
                 this.cfg.read_cache = false;
                 this.cfg.write_cache = false;
             end

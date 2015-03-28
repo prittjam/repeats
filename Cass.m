@@ -161,8 +161,9 @@ classdef Cass < handle
 
             keys = storage.buildKeys(cid, attribute);
             values = storage.buildValues(data);
-
+            warning('off','MATLAB:structOnObject');
             storage.store(keys, values, runHooks);
+            warning('on','MATLAB:structOnObject');
         end
         
         function [result, errmessage] = get(this, cid, attribute, opt)
