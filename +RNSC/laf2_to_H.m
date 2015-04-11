@@ -1,4 +1,4 @@
-function [H,inl] = H_from_2laf(u,T)
+function [H,inl] = laf2_to_H(u,T)
 u2 = [ reshape(u(1:9,:),3,[]); ...
        reshape(u(10:18,:),3,[]) ];
 [H,inl0] = ransacH(u2,T,int32(4),0.99);

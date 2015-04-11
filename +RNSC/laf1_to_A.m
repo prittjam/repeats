@@ -1,4 +1,4 @@
-function [A,inl] = A_from_1laf(u,T)
+function [A,inl] = laf1_to_A(u,T)
 inl = [];
 A = [];
 for k = 1:size(u,2)
