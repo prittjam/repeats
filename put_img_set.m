@@ -1,4 +1,4 @@
-function [] = put_data_set(base_path,name)
+function [] = put_img_set(base_path,name)
 [sqldb,imagedb] = get_dbs();
 img_urls = get_img_urls(base_path);
 
@@ -6,8 +6,8 @@ for k = 1:numel(img_urls)
     cids{k} = imagedb.put_img(img_urls{k});
 end
 
-cids = sql.put_img_set(name,img_urls,...
-                       'InsertMode','Replace');
+cids = sqldb.put_img_set(name,img_urls,...
+                         'InsertMode','Replace');
 
 function img_urls = get_img_urls(base_path)
 img_urls = dir(fullfile(base_path,'*.jpg'));
