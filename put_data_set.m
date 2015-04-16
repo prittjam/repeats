@@ -1,10 +1,5 @@
 function [] = put_data_set(base_path,name)
-sql = SqlDb;
-sql.open('cfg_file', ...
-         '~/src/cvdb/sqldbcfgs/zornsqldb.cfg');
-imagedb = ImageDb('cfg_file', ...
-                  '~/src/cvdb/casscfgs/lascarremote.cfg');
-
+[sqldb,imagedb] = get_dbs();
 img_urls = get_img_urls(base_path);
 
 for k = 1:numel(img_urls)
