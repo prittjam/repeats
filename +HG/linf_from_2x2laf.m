@@ -1,8 +1,4 @@
-classdef linf_from_2x2laf
-    properties
-
-    end
-    
+classdef laf2x2_to_linf
     methods(Static)
         function H = estimate(aX,arsc)
         % scale2H_multi
