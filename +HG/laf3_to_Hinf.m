@@ -1,4 +1,3 @@
-classdef linf_from_3laf
     methods(Static)
         function H = estimate(u,rsc)
             X = u(1:2,:);
