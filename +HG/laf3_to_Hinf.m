@@ -1,3 +1,4 @@
+classdef laf3_to_Hinf
     methods(Static)
         function H = estimate(u,rsc)
             X = u(1:2,:);
