@@ -1,4 +1,4 @@
-function Ha = A_from_1laf(v,s,varargin)
+function Ha = laf1_to_A(v,s,varargin)
 if nargin < 2
     s = true(1,size(v,2));
 end
@@ -10,5 +10,5 @@ if m == 1
 else
     u = reshape(v([1:2 10:11 4:5 13:14 7:8 16:17],:),4,[]);    
     s = true(1,size(u,2));
-    Ha = HG.A_from_3p(u);
+    Ha = HG.p3_to_A(u);
 end
