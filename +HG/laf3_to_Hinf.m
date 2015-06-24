@@ -37,7 +37,7 @@ classdef laf3_to_Hinf
             angle = acos(dot(du,du2));
             ind = angle > pi/2;
             angle(ind) = pi-angle(ind);
-            is_degen = all(angle < 15*pi/180);
+            is_degen = all(angle < 35*pi/180);
         end
 
         function is_degen = is_model_degen(u,H)
