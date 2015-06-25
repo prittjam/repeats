@@ -1,4 +1,4 @@
-function A = A_from_3p(u)
+function A = p3_to_A(u)
 t1 = mean(u(1:2,:),2);
 t2 = mean(u(3:4,:),2);
 M = bsxfun(@minus,u([1 2 3 4],:),[t1;t2])';
