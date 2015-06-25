@@ -1,8 +1,8 @@
 function ov = calc_overlap(u,v)
 m = size(u,2);
 
-Au = LAF.to_A(u);
-Av = LAF.to_A(v);
+Au = LAF.p3x3_to_A(u);
+Av = LAF.p3x3_to_A(v);
 
 if ~iscell(Au)
     Au = {Au};

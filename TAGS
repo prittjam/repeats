@@ -1,5 +1,361 @@
 
-/home.stud/prittjam/src/cvtk2/util/VChooseK.c,2180
+/home/prittjam/src/cvtk2/distinguishable_colors.m,184
+function colors = distinguishable_colors(n_colors,bg,func)distinguishable_colors1,0
+function c = parsecolor(s)parsecolor121,4900
+function c = colorstr2rgb(c)colorstr2rgb131,5114
+
+/home/prittjam/src/cvtk2/line/line_intersect.m,56
+function pts = line_intersect(l1,l2)line_intersect1,0
+
+/home/prittjam/src/cvtk2/line/line_is_ideal.m,52
+function s = line_is_ideal(u,tol)line_is_ideal1,0
+
+/home/prittjam/src/cvtk2/draw/draw_clone_fig.m,54
+function hh2 = draw_clone_fig(hh1)draw_clone_fig1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_wireframe.m,69
+function draw2d_wireframe(ax1,u,edges,varargin)draw2d_wireframe1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_piecewise_linear_repeated_lafs.m,113
+function draw2d_piecewise_linear_repeated_lafs(ax1,x,y,vis,line_style)draw2d_piecewise_linear_repeated_lafs1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_wireframe_xform.m,88
+function [x2,y2] = draw2d_wireframe_xform(ax1,u,edges,xform)draw2d_wireframe_xform1,0
+
+/home/prittjam/src/cvtk2/draw/draw_wireframe_udist.m,73
+function [] = draw_wireframe_udist(vx,vy,xform)draw_wireframe_udist1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_lines_extents.m,76
+function lh = draw2d_lines_extents(ax1,l,varargin)draw2d_lines_extents1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_lines.m,60
+function lh = draw2d_lines(ax1,l,varargin)draw2d_lines1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_est_line_segment.m,157
+function [hh,v] = draw2d_est_line_segment(ax1,u,l,varargin)draw2d_est_line_segment1,0
+function v = line_project_points(ax1,u,l1)line_project_points9,182
+
+/home/prittjam/src/cvtk2/draw/draw2d_ondrej.m,177
+function draw2d_ondrej(ax0,u,vis,varargin)draw2d_ondrej1,0
+function draw2d_lafs(ax1,u,varargin)draw2d_lafs13,281
+function ColorSet=varycolor(NumberOfPlots)varycolor33,729
+
+/home/prittjam/src/cvtk2/draw/draw2d_line_segment.m,149
+function [hh,v] = draw2d_line_segment(ax1,u,l,varargin)draw2d_line_segment1,0
+function v = line_project_points(ax1,u,l1)line_project_points9,178
+
+/home/prittjam/src/cvtk2/draw/draw2d_laf_labels.m,72
+function draw2d_laf_labels(ax0,u,labels,varargin)draw2d_laf_labels1,0
+
+/home/prittjam/src/cvtk2/draw/draw_ellipse.m,72
+function [K,Q,D,W,l,qf] = draw_ellipse(ax1,C,varargin)draw_ellipse1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_repeated_lafs_xform.m,89
+function [] = draw2d_repeated_lafs_xform(ax1,u,vis,xform)draw2d_repeated_lafs_xform1,0
+
+/home/prittjam/src/cvtk2/draw/tomas.m,174
+function [K,Q,D,W,l,qf] = tomas(ax1,C,varargin)tomas1,0
+function m = ell_calc_center(C)ell_calc_center29,831
+function M = ell_get_TRS_from_C(C)ell_get_TRS_from_C33,918
+
+/home/prittjam/src/cvtk2/draw/draw2d_repeated_lafs2.m,77
+function draw2d_repeated_lafs2(ax0,u,vis,varargin)draw2d_repeated_lafs21,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_epipolar_geom.m,72
+function l = draw2d_epipolar_geom(ax1,ax2,u,F)draw2d_epipolar_geom1,0
+
+/home/prittjam/src/cvtk2/draw/draw_3d_ellipse.m,50
+function draw_3d_ellipse(C,M)draw_3d_ellipse1,0
+
+/home/prittjam/src/cvtk2/draw/draw3d_cam.m,56
+function [] = draw3d_cam(ax1,P,varargin)draw3d_cam1,0
+
+/home/prittjam/src/cvtk2/draw/draw3d_affine_csystem.m,80
+function [] = draw3d_affine_csystem(ax1,A,o,varargin)draw3d_affine_csystem1,0
+
+/home/prittjam/src/cvtk2/draw/draw3d_lafs.m,49
+function [] = draw3d_lafs(ax1,X)draw3d_lafs1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_piecewise_linear.m,79
+function draw2d_piecewise_linear(ax1,x,y,varargin)draw2d_piecewise_linear1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_expand_axis.m,59
+function draw2d_expand_axis(ax1,u);draw2d_expand_axis1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_laf_motif.m,67
+function draw2d_laf_motif(ax0,u,vis,varargin)draw2d_laf_motif1,0
+
+/home/prittjam/src/cvtk2/draw/draw3d_wireframe.m,65
+function [] = draw3d_wireframe(ax1,X,edges)draw3d_wireframe1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_dist_wireframe.m,83
+function [] = draw2d_wireframe_xform(ax1,u,edges,xform)draw2d_wireframe_xform1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_repeated_reflected_lafs.m,95
+function draw2d_repeated_reflected_lafs(ax0,u,vis,varargin)draw2d_repeated_reflected_lafs1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_wireframe_dist.m,86
+function [xd,yd] = draw2d_wireframe_dist(ax1,u,edges,xform)draw2d_wireframe_dist1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_piecewise_linear_lafs.m,96
+function draw2d_piecewise_linear_lafs(ax1,x,y,line_style,cmap)draw2d_piecewise_linear_lafs1,0
+
+/home/prittjam/src/cvtk2/draw/draw3d_cam_array.m,68
+function [] = draw3d_cam_array(ax1,P,varargin)draw3d_cam_array1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_points.m,62
+function hp = draw2d_points(ax1,u,varargin)draw2d_points1,0
+
+/home/prittjam/src/cvtk2/draw/draw_ellipse_list.m,53
+function draw_ellipse_list(CC)draw_ellipse_list1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_make_piecewise_linear_wireframe.m,108
+function [x,y] = draw2d_make_piecewise_linear_wireframe(u,edges)draw2d_make_piecewise_linear_wireframe1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_repeated_lafs.m,75
+function draw2d_repeated_lafs(ax0,u,vis,varargin)draw2d_repeated_lafs1,0
+
+/home/prittjam/src/cvtk2/draw/draw_3d_ellipse_list.m,62
+function draw_3d_ellipse_list(CC,MM)draw_3d_ellipse_list1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_lines_in_axes.m,76
+function lh = draw2d_lines_in_axes(ax1,l,varargin)draw2d_lines_in_axes1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_lafs.m,53
+function draw2d_lafs(ax1,u,varargin)draw2d_lafs1,0
+
+/home/prittjam/src/cvtk2/draw/draw2d_laf_repeats.m,74
+function draw2d_laf_repeats(ax0,u,labels,varargin)draw2d_laf_repeats1,0
+
+/home/prittjam/src/cvtk2/cam/cam_triangulate_2p2.m,73
+function [X,s] = cam_triangulate_2p2(u0,s,P1,P2)cam_triangulate_2p21,0
+
+/home/prittjam/src/cvtk2/cam/cam_make_generic_4mpx.m,67
+function [K nx ny ccd_sz f] = cam_make_4mpx(ef)cam_make_4mpx2,28
+
+/home/prittjam/src/cvtk2/cam/cam_project_perspective.m,68
+function u = cam_perspective_project(x)cam_perspective_project1,0
+
+/home/prittjam/src/cvtk2/cam/cam_get_4P_from_E.m,68
+function [P1 P2 P3 P4] = cam_get_4P_from_E(G)cam_get_4P_from_E1,0
+
+/home/prittjam/src/cvtk2/cam/cam_undistort_div.m,62
+function u = cam_undistort_div(u,ic,la)cam_undistort_div1,0
+
+/home/prittjam/src/cvtk2/cam/cam_get_4P_from_F.m,62
+function [P1 P2] = cam_get_4P_from_F(G)cam_get_4P_from_F1,0
+
+/home/prittjam/src/cvtk2/cam/cam_undistort_div_tform.m,70
+function v = cam_undistort_div_tform(u,T)cam_undistort_div_tform1,0
+
+/home/prittjam/src/cvtk2/cam/cam_get_2P_from_4P.m,79
+function [P0 opt_P] = cam_get_2P_from_4P(u,P1,P2,P3,P4)cam_get_2P_from_4P1,0
+
+/home/prittjam/src/cvtk2/cam/cam_get_KRc_from_P.m,64
+function [K R c] = cam_get_KRc_from_P(Q)cam_get_KRc_from_P1,0
+
+/home/prittjam/src/cvtk2/cam/cam_est_P_from_6p.m,65
+function [opt_Q,err_points] = cam_est_P_6p(u,s)cam_est_P_6p1,0
+
+/home/prittjam/src/cvtk2/cam/cam_project_ortho.m,56
+function u = cam_ortho_project(X)cam_ortho_project1,0
+
+/home/prittjam/src/cvtk2/cam/cam_get_2P_from_F.m,62
+function [P1 P2] = cam_get_2P_from_F(F)cam_get_2P_from_F1,0
+
+/home/prittjam/src/cvtk2/+RANSAC/laf2_to_H.m,110
+function [H,inl] = laf2_to_H(u,T)laf2_to_H1,0
+function is_degen = is_model_degen(u,H)is_model_degen17,307
+
+/home/prittjam/src/cvtk2/+RANSAC/laf1_to_A.m,48
+function [A,inl] = laf1_to_A(u,T)laf1_to_A1,0
+
+/home/prittjam/src/cvtk2/+ELL/get_A_from_C.m,50
+function [A,m] = get_A_from_C(C)get_A_from_C1,0
+
+/home/prittjam/src/cvtk2/+ELL/get_center.m,42
+function m = get_center(C)get_center1,0
+
+/home/prittjam/src/cvtk2/+ELL/get_common_real_poles.m,151
+function vd = get_common_real_poles(C1a, C2a)get_common_real_poles1,0
+function ind = find_real_distinct_eigvals(ea)find_real_distinct_eigvals8,175
+
+/home/prittjam/src/cvtk2/+ELL/get_TRS_from_C.m,50
+function A = get_TRS_from_C(C)get_TRS_from_C1,0
+
+/home/prittjam/src/cvtk2/+ELL/draw.m,57
+function [K,Q,D,W,l,qf] = draw(ax1,CC,varargin)draw1,0
+
+/home/prittjam/src/cvtk2/+ELL/order_poles.m,48
+function m = order_poles(u,v,H)order_poles1,0
+
+/home/prittjam/src/cvtk2/+ELL/get_R.m,72
+function M = get_R(C)get_R1,0
+function [Q,S] = takagi(A)takagi6,129
+
+/home/prittjam/src/cvtk2/+ELL/get_polars.m,46
+function l = get_polars(u,C1a)get_polars1,0
+
+/home/prittjam/src/cvtk2/cvtk2_init.m,42
+function [] = cvtk2_init()cvtk2_init1,0
+
+/home/prittjam/src/cvtk2/ell/ell_from_laf.m,48
+function ell = ell_from_laf(u)ell_from_laf1,0
+
+/home/prittjam/src/cvtk2/ell/ell_calc_center.m,52
+function m = ell_calc_center(C)ell_calc_center1,0
+
+/home/prittjam/src/cvtk2/ell/ell_srt_to_C.m,62
+function M = ell_srt_to_C(sx,sy,alpha,tx,ty)ell_srt_to_C1,0
+
+/home/prittjam/src/cvtk2/ell/ell_get_TRS_from_C.m,99
+function M = ell_get_TRS_from_C(C)ell_get_TRS_from_C1,0
+function [Q,S] = takagi(A)takagi11,250
+
+/home/prittjam/src/cvtk2/plane/plane_reproj_err.m,58
+function err = plane_reproj_err(u,n)plane_reproj_err1,0
+
+/home/prittjam/src/cvtk2/plane/plane_sample_degen.m,82
+function is_degen = plane_sample_degen(u,sample_set,t, ...plane_sample_degen1,0
+
+/home/prittjam/src/cvtk2/plane/plane_est_n_from_3p.m,71
+function n = plane_est_n_from_3p(u,s,varargin)plane_est_n_from_3p1,0
+
+/home/prittjam/src/cvtk2/plane/plane_est_n_from_np.m,81
+function n = plane_est_n_from_np(u,threshold,confidence)plane_est_n_from_np1,0
+
+/home/prittjam/src/cvtk2/mtx/mtx_solve_2x2.m,50
+function x = mtx_solve_2x2(C,y)mtx_solve_2x21,0
+
+/home/prittjam/src/cvtk2/mtx/mtx_make_skew_3x3.m,57
+function S = mtx_make_skew_3x3(e1)mtx_make_skew_3x31,0
+
+/home/prittjam/src/cvtk2/mtx/mtx_make_Rz.m,49
+function [Rz] = mtx_make_Rz(phi)mtx_make_Rz1,0
+
+/home/prittjam/src/cvtk2/mtx/mtx_chol_2x2.m,46
+function L = mtx_chol_2x2(M)mtx_chol_2x21,0
+
+/home/prittjam/src/cvtk2/mtx/mtx_inv_K.m,44
+function invK = mtx_inv_K(K);mtx_inv_K1,0
+
+/home/prittjam/src/cvtk2/mtx/mtx_make_T.m,42
+function T = mtx_make_T(t)mtx_make_T1,0
+
+/home/prittjam/src/cvtk2/mtx/mtx_inv_2x2.m,44
+function M = mtx_inv_2x2(C)mtx_inv_2x21,0
+
+/home/prittjam/src/cvtk2/+PT/to_euclidean.m,57
+function x2 = pt_make_euclidean(x)pt_make_euclidean1,0
+
+/home/prittjam/src/cvtk2/vp/vp_linear.m,40
+function v = vp_linear(X)vp_linear1,0
+
+/home/prittjam/src/cvtk2/vp/vp_annotate_lines.m,60
+function [X] = vp_annotate_lines(img)vp_annotate_lines1,0
+
+/home/prittjam/src/cvtk2/vp/vp_est_np_lsqnonlin.m,107
+function [] = vp_est_np_lsqnonlin(vp,u)vp_est_np_lsqnonlin1,0
+function d = vp_pt_err(x)vp_pt_err16,367
+
+/home/prittjam/src/cvtk2/vp/vp_draw.m,36
+function [] = vp_draw()vp_draw1,0
+
+/home/prittjam/src/cvtk2/vp/vp_est_np_tlsq.m,50
+function v = vp_est_np_tlsq(X)vp_est_np_tlsq1,0
+
+/home/prittjam/src/cvtk2/renorm.m,36
+function un = renorm(u);renorm1,0
+
+/home/prittjam/src/cvtk2/+CAM/make_small_ccd.m,74
+function [K nx ny ccd_sz f] = make_small_ccd(ef,nx,ny)make_small_ccd1,0
+
+/home/prittjam/src/cvtk2/+CAM/make_canon_eos_5d_mark3.m,86
+function [K nx ny ccd_sz f] = make_canon_eos_5d_mark3(ef)make_canon_eos_5d_mark31,0
+
+/home/prittjam/src/cvtk2/+CAM/distort_div_tform.m,66
+function v = cam_distort_div_tform(u,T)cam_distort_div_tform1,0
+
+/home/prittjam/src/cvtk2/+CAM/distort_div.m,52
+function u = cam_dist_div(u,ic,la)cam_dist_div1,0
+
+/home/prittjam/src/cvtk2/+CAM/make_K.m,60
+function K = cam_make_K(f,cc,alpha_c,px_sz);cam_make_K1,0
+
+/home/prittjam/src/cvtk2/+CAM/get_crop_factor.m,65
+function s = cam_get_crop_factor(ccd_sz)cam_get_crop_factor1,0
+
+/home/prittjam/src/cvtk2/+LINE/draw.m,44
+function lh = draw(ax1,l,varargin)draw1,0
+
+/home/prittjam/src/cvtk2/+LINE/draw_extents.m,67
+function [lh,pts2] = draw_extents(ax1,l,varargin)draw_extents1,0
+
+/home/prittjam/src/cvtk2/+LINE/intersect.m,56
+function pts = line_intersect(l1,l2)line_intersect1,0
+
+/home/prittjam/src/cvtk2/+LAF/maxdist.m,41
+function d2 = maxdist(XI,XJ)maxdist1,0
+
+/home/prittjam/src/cvtk2/+LAF/A_to_p3x3.m,35
+function u = from_A(A0)from_A1,0
+
+/home/prittjam/src/cvtk2/+LAF/mindist.m,41
+function d2 = mindist(XI,XJ)mindist1,0
+
+/home/prittjam/src/cvtk2/+LAF/draw.m,44
+function h1 = draw(ax1,u,varargin)draw1,0
+
+/home/prittjam/src/cvtk2/+LAF/p3x3_to_invA.m,39
+function invA = to_invA(v)to_invA1,0
+
+/home/prittjam/src/cvtk2/+LAF/get_scale.m,44
+function sc = get_scale(lafs)get_scale1,0
+
+/home/prittjam/src/cvtk2/+LAF/calc_overlap.m,49
+function ov = calc_overlap(u,v)calc_overlap1,0
+
+/home/prittjam/src/cvtk2/+LAF/get_angle.m,44
+function angle = get_angle(u)get_angle1,0
+
+/home/prittjam/src/cvtk2/+LAF/p3x3_to_A.m,30
+function A = to_A(v)to_A1,0
+
+/home/prittjam/src/cvtk2/+LAF/get_extent_lengths.m,58
+function d = get_extent_lengths(u)get_extent_lengths1,0
+
+/home/prittjam/src/cvtk2/+LAF/renormI.m,44
+function v = laf_renormI(u)laf_renormI1,0
+
+/home/prittjam/src/cvtk2/+LAF/sampson_err.m,48
+function err = sampson_err(u,H)sampson_err1,0
+
+/home/prittjam/src/cvtk2/+LAF/rectify.m,38
+function v = rectify(u,l)rectify1,0
+
+/home/prittjam/src/cvtk2/+LAF/p3x3_to_poly.m,46
+function v = p3x3_to_poly(u)p3x3_to_poly1,0
+
+/home/prittjam/src/cvtk2/+LAF/affpt_to_A.m,46
+function A = affpt_to_A(affpt)affpt_to_A1,0
+
+/home/prittjam/src/cvtk2/+LAF/draw_repeats.m,64
+function draw_repeats(ax0,u,labeling,varargin)draw_repeats1,0
+
+/home/prittjam/src/cvtk2/+LAF/p3x3_to_ell.m,41
+function [ell,CC] = to_ell(u)to_ell1,0
+
+/home/prittjam/src/cvtk2/+LAF/affpt_to_p3x3.m,52
+function u = affpt_to_p3x3(affpt)affpt_to_p3x31,0
+
+/home/prittjam/src/cvtk2/util/cubicfcn.m,53
+function [x,nroot]=cubicfcn(a, b, c, d)cubicfcn1,0
+
+/home/prittjam/src/cvtk2/util/WMM.m,0
+
+/home/prittjam/src/cvtk2/util/quartile.m,0
+
+/home/prittjam/src/cvtk2/util/VChooseK.c,2180
 #define mwSize mwSize87,3978
 #define mwIndex mwIndex88,3998
 #define MWSIZE_MAX MWSIZE_MAX89,4018
@@ -28,3 +384,592 @@ void ElemK_8Byte(double *Xp, mwSize nX, double *Yp, mwSize nY, mwSize K)ElemK_8
 void ElemK_4Byte(INT32_T *Xp, mwSize nX, INT32_T *Yp, mwSize nY, mwSize K)ElemK_4Byte868,31071
 void ElemK_2Byte(INT16_T *Xp, mwSize nX, INT16_T *Yp, mwSize nY, mwSize K)ElemK_2Byte951,33799
 void ElemK_1Byte(INT8_T *Xp, mwSize nX, INT8_T *Yp, mwSize nY, mwSize K)ElemK_1Byte1034,36523
+
+/home/prittjam/src/cvtk2/util/util_make_euclidean.m,60
+function v = util_make_euclidean(u)util_make_euclidean1,0
+
+/home/prittjam/src/cvtk2/util/UGMMF.m,0
+
+/home/prittjam/src/cvtk2/util/inormu.m,36
+function A = inormu(ic);inormu1,0
+
+/home/prittjam/src/cvtk2/util/draw2d_UGMMF.m,53
+function [] = draw2d_UGMMF(X,model)draw2d_UGMMF1,0
+
+/home/prittjam/src/cvtk2/util/ikose.m,37
+function sk = ikose(r,k,n)ikose1,0
+
+/home/prittjam/src/cvtk2/util/varycolor.m,57
+function ColorSet=varycolor(NumberOfPlots)varycolor1,0
+
+/home/prittjam/src/cvtk2/util/util_make_homogeneous.m,64
+function v = util_make_homogeneous(u)util_make_homogeneous1,0
+
+/home/prittjam/src/cvtk2/util/GMM.m,0
+
+/home/prittjam/src/cvtk2/util/UGMM.m,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/ge_points.m,57
+function ge = ge_points( ge, X, varargin )ge_points1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/ge_close.m,42
+function ge = ge_close( ge )ge_close1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/private/parseargs.m,54
+function Params = parseargs( varargin )parseargs1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/private/box.m,36
+function box( fh, X, C, r )box1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/private/R2aa.m,54
+function [a sin_alpha cos_alpha] = R2aa( R )R2aa1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/private/bulb.m,38
+function bulb( fh, X, C, r )bulb1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/private/mkdir_for_file.m,51
+function mkdir_for_file( file )mkdir_for_file1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/private/P2KRt.m,42
+function [K, R, t] = P2KRt( P )P2KRt1,0
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/ge_cams.m,123
+function ge = ge_cams( ge, ptrack, varargin )ge_cams1,0
+function ViewPoint( fh, t, ax, ang, fov, id )ViewPoint103,2810
+
+/home/prittjam/src/cvtk2/util/@ge_vrml/ge_vrml.m,42
+function ge = ge_vrml( file )ge_vrml1,0
+
+/home/prittjam/src/cvtk2/util/test_UGMM.m,0
+
+/home/prittjam/src/cvtk2/util/patchline.m,116
+function p = patchline(xs,ys,varargin)patchline1,0
+function [zs,PVs] = parseInputs(varargin)parseInputs112,3647
+
+/home/prittjam/src/cvtk2/util/VChooseK.m,41
+function Y = VChooseK(X, K)VChooseK1,0
+
+/home/prittjam/src/cvtk2/+MTX/inv_K.m,44
+function invK = mtx_inv_K(K);mtx_inv_K1,0
+
+/home/prittjam/src/cvtk2/+MTX/make_skew_3x3.m,57
+function S = mtx_make_skew_3x3(e1)mtx_make_skew_3x31,0
+
+/home/prittjam/src/cvtk2/+MTX/inv_2x2.m,44
+function M = mtx_inv_2x2(C)mtx_inv_2x21,0
+
+/home/prittjam/src/cvtk2/+MTX/make_Rz.m,49
+function [Rz] = mtx_make_Rz(phi)mtx_make_Rz1,0
+
+/home/prittjam/src/cvtk2/+MTX/chol_2x2.m,46
+function L = mtx_chol_2x2(M)mtx_chol_2x21,0
+
+/home/prittjam/src/cvtk2/+MTX/make_T.m,42
+function T = mtx_make_T(t)mtx_make_T1,0
+
+/home/prittjam/src/cvtk2/+MTX/solve_2x2.m,50
+function x = mtx_solve_2x2(C,y)mtx_solve_2x21,0
+
+/home/prittjam/src/cvtk2/laf/laf_tformfwd.m,48
+function v = laf_tformfwd(T,u)laf_tformfwd1,0
+
+/home/prittjam/src/cvtk2/laf/laf_calc_overlap.m,57
+function ov = laf_calc_overlap(u,v)laf_calc_overlap1,0
+
+/home/prittjam/src/cvtk2/laf/laf_affpt_to_3p.m,59
+function lafs = laf_affpt_to_3p(affpt)laf_affpt_to_3p1,0
+
+/home/prittjam/src/cvtk2/laf/laf_3p_to_A.m,44
+function A = laf_3p_to_A(v)laf_3p_to_A1,0
+
+/home/prittjam/src/cvtk2/laf/laf_unwrap_A.m,50
+function A = laf_unwrap_A(affpt)laf_unwrap_A1,0
+
+/home/prittjam/src/cvtk2/laf/laf_clip_3p.m,48
+function s = laf_clip_3p(pts,x)laf_clip_3p1,0
+
+/home/prittjam/src/cvtk2/laf/laf_affpt_to_A.m,54
+function A = laf_affpt_to_A(affpt)laf_affpt_to_A1,0
+
+/home/prittjam/src/cvtk2/laf/laf_A_to_3p.m,45
+function u = laf_A_to_3p(A0)laf_A_to_3p1,0
+
+/home/prittjam/src/cvtk2/laf/laf_compare_shape.m,58
+function d = laf_compare_shape(u,v)laf_compare_shape1,0
+
+/home/prittjam/src/cvtk2/laf/laf_3p_to_invA.m,48
+function invA = laf_to_invA(v);laf_to_invA1,0
+
+/home/prittjam/src/cvtk2/laf/laf_reflectx.m,47
+function u = laf_reflectx(u);laf_reflectx1,0
+
+/home/prittjam/src/cvtk2/laf/laf_get_scale.m,83
+function sc = laf_get_scale(lafs)laf_get_scale1,0
+function a = ar(A,B)ar11,232
+
+/home/prittjam/src/cvtk2/laf/laf_3p_to_affpt.m,60
+function affpt = laf_3p_to_affpt(u,ids)laf_3p_to_affpt1,0
+
+/home/prittjam/src/cvtk2/laf/laf_find_duplicates.m,150
+function [ic,clust_ind,n] = laf_find_duplicates(u,cutoff,n)laf_find_duplicates1,0
+function [T] = laf_agglom_clust(X,cutoff)laf_agglom_clust15,363
+
+/home/prittjam/src/cvtk2/laf/laf_maxdist.m,49
+function d2 = laf_maxdist(XI,XJ)laf_maxdist1,0
+
+/home/prittjam/src/cvtk2/laf/laf_is_reflected.m,54
+function s = laf_is_reflected(u)laf_is_reflected1,0
+
+/home/prittjam/src/cvtk2/laf/laf_tforminv.m,48
+function v = laf_tforminv(T,u)laf_tforminv1,0
+
+/home/prittjam/src/cvtk2/laf/laf_clip_by_bb.m,56
+function s3 = laf_clip_by_bb(u,s,x);laf_clip_by_bb1,0
+
+/home/prittjam/src/cvtk2/laf/laf_to_origin.m,48
+function u = laf_to_origin(u)laf_to_origin1,0
+
+/home/prittjam/src/cvtk2/laf/laf_distort.m,63
+function [x1d,y2d] = laf_distort(u,dist_xform)laf_distort1,0
+
+/home/prittjam/src/cvtk2/laf/laf_undistort_div.m,61
+function w = laf_undistort_div(u,q,cc)laf_undistort_div1,0
+
+/home/prittjam/src/cvtk2/laf/laf_calc_angle.m,54
+function angle = laf_calc_angle(u)laf_calc_angle1,0
+
+/home/prittjam/src/cvtk2/laf/laf_make_piecewise_linear.m,92
+function [x,y] = draw2d_make_piecewise_linear_lafs(u)draw2d_make_piecewise_linear_lafs1,0
+
+/home/prittjam/src/cvtk2/laf/laf_renormI.m,44
+function v = laf_renormI(u)laf_renormI1,0
+
+/home/prittjam/src/cvtk2/laf/laf_A_to_affpt.m,51
+function [] = laf_A_to_affpt(A)laf_A_to_affpt1,0
+
+/home/prittjam/src/cvtk2/varycolor.m,57
+function ColorSet=varycolor(NumberOfPlots)varycolor1,0
+
+/home/prittjam/src/cvtk2/sampling/guided/gs_estimate.m,56
+function res = gs_estimate(u,s,res,cfg)gs_estimate1,0
+
+/home/prittjam/src/cvtk2/sampling/guided/gs_est_E_from_np.m,63
+function varargout = eg_est_E_np_gs(u,s,E0)eg_est_E_np_gs1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_H_from_2laf.m,156
+function [res,cfg] = rnsc_est_H_from_2laf(u,sample_set,threshold,confidence)rnsc_est_H_from_2laf1,0
+function err = error_fn(v,s,sample,H)error_fn37,835
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_lo_make_est_Rt_from_np_cfg.m,89
+function cfg = rnsc_lo_make_est_Rt_from_np_cfg(cfg) rnsc_lo_make_est_Rt_from_np_cfg1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/lo_rnsc_est_E_from_np.m,167
+function res = lo_rnsc_est_E_from_np(u, sample_set, cfg, varargin)lo_rnsc_est_E_from_np1,0
+function cfg = make_eg_inner_rnsc_cfg(cfg) make_eg_inner_rnsc_cfg12,276
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_lo_est_E_from_np.m,87
+function res = rnsc_lo_est_E_from_np(u, sample_set, E0, cfg)rnsc_lo_est_E_from_np1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_objective_fn.m,79
+function [score weights] = rnsc_objective_fn(d2,u,s,cfg)rnsc_objective_fn1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/msac_objective_fn.m,73
+function [J,labels] = msac_objective_fn(C,u,s,cfg)msac_objective_fn1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_H_from_4p.m,91
+function varargout = rnsc_est_H_from_4p(u,sigma,confidence,sz1, ...rnsc_est_H_from_4p1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_lo_est_plane_from_np.m,92
+function res = rnsc_lo_est_plane_from_np(u,sample_set,n0,cfg)rnsc_lo_est_plane_from_np1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_E_from_5p.m,92
+function res = rnsc_est_E_from_5p(u,sample_set,threshold,confidence)rnsc_est_E_from_5p1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_get_best_model.m,79
+function res = rnsc_get_best_model(u,s,model_list,cfg)rnsc_get_best_model1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_estimate.m,72
+function opt_res = rnsc_estimate(u,cfg,sampling_seed)rnsc_estimate1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_standardize_cfg.m,66
+function cfg = rnsc_standardize_cfg(cfg)rnsc_standardize_cfg1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_lo_est_F_bmvc12.m,88
+function res = rnsc_lo_est_F_bmvc12(u,s,sample,weights,F0,cfg)rnsc_lo_est_F_bmvc121,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_lo_make_est_E_from_np_cfg.m,87
+function cfg = rnsc_lo_make_est_E_from_np_cfg(cfg) rnsc_lo_make_est_E_from_np_cfg1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_F_from_7p_bmvc12.m,97
+function varargout = rnsc_est_F_from_7p_bmvc12(u,sigma,confidence)rnsc_est_F_from_7p_bmvc121,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_F_from_7p.m,159
+function varargout = rnsc_est_F_from_7p(u,sigma,confidence,sz1,sz2)rnsc_est_F_from_7p1,0
+function cfg = make_lo_rnsc_cfg(sigma,cfg) make_lo_rnsc_cfg44,831
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_Rt_from_3p.m,83
+function res = rnsc_est_Rt_from_3p(u,threshold,confidence)rnsc_est_Rt_from_3p1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_samp_uniform.m,88
+function [s,sampling_seed] = rnsc_samp_uniform(u,k,sampling_seed)rnsc_samp_uniform1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_Hinf_from_3laf.m,698
+function res = rnsc_est_Hinf_from_3laf(u,sample_set,threshold,confidence)rnsc_est_Hinf_from_3laf1,0
+function [s2,sampling_seed] = rnsc_sample_s(u,k,sampling_seed,varargin)rnsc_sample_s35,792
+function is_degen = hg_is_degen(u,s,H,cfg)hg_is_degen63,1309
+function model = hg_fix_degen(varargin)hg_fix_degen72,1561
+function err = hg_calc_Hinf_scale(u,sam,Hinf,cfg)hg_calc_Hinf_scale75,1614
+function [utility,labels] = hg_calc_Hinf_score(sc,u,s,cfg)hg_calc_Hinf_score86,1932
+function [inl,ninl] = scal_set(sc,thr)scal_set106,2429
+function cfg = hg_make_inner_rnsc_cfg(cfg) hg_make_inner_rnsc_cfg119,2648
+function res = hg_inner_rnsc(u,s,labels,model,cfg,varargin)hg_inner_rnsc127,2850
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_est_plane_from_3p.m,100
+function res = rnsc_est_plane_from_3p(u,sample_set,threshold,confidence)rnsc_est_plane_from_3p1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_lo_est_Rt_from_np.m,86
+function res = rnsc_lo_est_Rt_from_np(u,sample_set,M0,cfg)rnsc_lo_est_Rt_from_np1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/rnsc_lo_make_est_plane_from_np_cfg.m,95
+function cfg = rnsc_lo_make_est_plane_from_np_cfg(cfg) rnsc_lo_make_est_plane_from_np_cfg1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/orsa/orsa_make_logcombi_k.m,69
+function lognck = orsa_make_logcombi_k(N,K)orsa_make_logcombi_k1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/orsa/orsa_make_logcombi_n.m,69
+function lognck = orsa_make_logcombi_n(N,K)orsa_make_logcombi_n1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/orsa/orsa_objective_fn.m,103
+function [score opt_labels labels labels2] = orsa_objective_fn(C,u,sample,cfg,T)orsa_objective_fn1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/orsa/orsa_calc_eg_nfa.m,67
+function orsa = orsa_calc_eg_nfa(cfg,sz1,sz2)orsa_calc_eg_nfa1,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/orsa/orsa_objective_fn2.m,87
+function [score weights] = orsa_objective_fn2(C,u,s,sample,cfg)orsa_objective_fn21,0
+
+/home/prittjam/src/cvtk2/sampling/rnsc/orsa/orsa_calc_hg_nfa.m,67
+function orsa = orsa_calc_hg_nfa(cfg,sz1,sz2)orsa_calc_hg_nfa1,0
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/A2toH.m,110
+function H = A2toH (A1, u1, A2, u2)A2toH1,0
+function Z = trA(A)trA23,605
+function Z = getZ(u)getZ26,658
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/A2toRH2.m,201
+function H = A2toRH2 (N1, D1, N2, D2, x)A2toRH21,0
+function Z = trA(A)trA56,1337
+function Z = getZ(u)getZ60,1391
+function Z = nd(A,B)nd71,1655
+function [T, iT] = normpts(u1,u2)normpts86,2065
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/hg_2elin.m,55
+function H = hg_2elin(C1a, C2a, C1b, C2b)hg_2elin1,0
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/AntoRH.m,208
+function H = AntoRH (Ns, Ds)AntoRH1,0
+function Z = trA(A)trA59,1203
+function Z = getZ(u)getZ62,1256
+function Z = nd(A,B)nd72,1519
+function A = normu(u);normu86,1928
+function e = p2e (u)p2e96,2138
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/C2A.m,28
+function A = C2A(C)C2A1,0
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/hg_2elin2.m,72
+function [H,H2,err1,err2] = hg_2elin2(C1a, C2a, C1b, C2b)hg_2elin21,0
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/A2toH2.m,112
+function H = A2toH2 (A1, u1, A2, u2)A2toH21,0
+function Z = trA(A)trA23,606
+function Z = getZ(u)getZ26,659
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/hg_nelin.m,43
+function H = hg_2elin(Ca, Cb)hg_2elin1,0
+
+/home/prittjam/src/cvtk2/+HG/+icpr12/A2toRH.m,196
+function H = A2toRH (N1, D1, N2, D2)A2toRH1,0
+function Z = trA(A)trA48,1093
+function Z = getZ(u)getZ52,1147
+function Z = nd(A,B)nd63,1411
+function [T, iT] = normpts(u1,u2)normpts78,1821
+
+/home/prittjam/src/cvtk2/+HG/H_from_4p.m,40
+function H = H_from_4p(v)H_from_4p1,0
+
+/home/prittjam/src/cvtk2/+HG/H_from_2e.m,49
+function [H,H2] = H_from_2e(C1,C2)H_from_2e1,0
+
+/home/prittjam/src/cvtk2/+HG/p3_to_A.m,36
+function A = p3_to_A(u)p3_to_A1,0
+
+/home/prittjam/src/cvtk2/+HG/linf_laf3_to_Huv.m,118
+function H = linf_laf3_to_Huv(u0,m,n,linf)linf_laf3_to_Huv1,0
+function v_perp = find_perp(v_input)find_perp48,995
+
+/home/prittjam/src/cvtk2/+HG/H_from_4pl.m,44
+function H = H_from_4pl(u,l)H_from_4pl1,0
+
+/home/prittjam/src/cvtk2/+HG/laf2x2_to_Hinf.m,0
+
+/home/prittjam/src/cvtk2/+HG/sampson_err.m,47
+function dx = sampson_err(u,H)sampson_err1,0
+
+/home/prittjam/src/cvtk2/+HG/laf3_to_Hinf.m,0
+
+/home/prittjam/src/cvtk2/+HG/laf1_to_A.m,52
+function Ha = laf1_to_A(v,s,varargin)laf1_to_A1,0
+
+/home/prittjam/src/cvtk2/+HG/hg/hg_2e.m,465
+function H = hg_2e(C)hg_2e1,0
+function de = find_real_distinct_eigvals(ea)find_real_distinct_eigvals75,1879
+function d = find_exterior_poles(C, v);find_exterior_poles91,2356
+function L = calc_polars(C1, v)calc_polars94,2435
+function [vd m1 m2 is_order s] = calc_points(C1a, C2a)calc_points154,4812
+function [m1,m2,m3,m4]  = add_points(C1a, C2a, C1b, C2b, ...add_points227,6829
+function [ix, iy] = order_points(m1,m2, is_order, st)order_points254,7787
+
+/home/prittjam/src/cvtk2/+HG/hg/hg_degen_test.m,74
+function is_degen = hg_degen_test(C, u, inlying_set, t)hg_degen_test1,0
+
+/home/prittjam/src/cvtk2/+HG/hg/hg_pole_polar_test.m,56
+function hg_pole_polar_test()hg_pole_polar_test15,564
+
+/home/prittjam/src/cvtk2/renormI.m,36
+function Y = renormI(X)renormI1,0
+
+/home/prittjam/src/cvtk2/ao/ao_est_Rt_sample_degen.m,86
+function is_degen = ao_est_Rt_sample_degen(u,sample_set,t)ao_est_Rt_sample_degen1,0
+
+/home/prittjam/src/cvtk2/ao/ao_est_Rt_from_3p.m,76
+function model_list = ao_est_Rt_from_3p(u,s,varargin)ao_est_Rt_from_3p1,0
+
+/home/prittjam/src/cvtk2/ao/ao_rnsc_3p.m,71
+function varargout = rt_rnsc_p3(u,threshold,confidence)rt_rnsc_p31,0
+
+/home/prittjam/src/cvtk2/ao/ao_est_3p.m,60
+function model_list = rt_est_3p(u,s,varargin)rt_est_3p1,0
+
+/home/prittjam/src/cvtk2/ao/ao_est_Rt_from_np_lsqnonlin.m,129
+function M = ao_est_Rt_from_np_lsqnonlin(u,s,M)ao_est_Rt_from_np_lsqnonlin1,0
+function R = mtx_R_to_3x3(r)mtx_R_to_3x320,475
+
+/home/prittjam/src/cvtk2/ao/ao_reproj_err.m,51
+function dx = ao_reproj_err(u,M)ao_reproj_err1,0
+
+/home/prittjam/src/cvtk2/+MSER/draw.m,43
+function draw(ax1,msers,varargin)draw1,0
+
+/home/prittjam/src/cvtk2/+IMG/undistort_div.m,66
+function timg = img_undistort_div(img,cc,q)img_undistort_div1,0
+
+/home/prittjam/src/cvtk2/+IMG/rectify_and_scale.m,74
+function timg = img_rectify_and_scale(img,H,T1)img_rectify_and_scale1,0
+
+/home/prittjam/src/cvtk2/+IMG/rectify.m,60
+function [timg,xdata,ydata] = rectify(img,H,T1)rectify1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_Fa_from_2e.m,241
+function model_list = eg_est_Fa_from_2e(v)eg_est_Fa_from_2e1,0
+function [C2, C2_dual, M] = ell_canonicalize(CC1)ell_canonicalize92,1940
+function M = calc_arandjelovic_faff_canonicalize(C1,C2)calc_arandjelovic_faff_canonicalize108,2247
+
+/home/prittjam/src/cvtk2/eg/eg_est_F_from_7p_mle2.m,69
+function F = eg_est_F_from_7p_mle2(u,F0,W)eg_est_F_from_7p_mle21,0
+
+/home/prittjam/src/cvtk2/eg/eg_f_np.m,310
+function [F] = eg_f_np(F0, u)eg_f_np1,0
+function e = f_sampson_wrapper(x, u)f_sampson_wrapper10,297
+function x = extract_parameters(F)extract_parameters14,403
+function [Rz] = make_Rz(phi)make_Rz27,664
+function [H2] = calc_H2(f,theta,tx)calc_H232,796
+function [F] = make_f(f,theta,tx,h)make_f42,980
+
+/home/prittjam/src/cvtk2/eg/eg_check_oriented.m,84
+function is_degen = eg_check_oriented(u,sample,weights,F, ...eg_check_oriented1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_F_from_7p_mle.m,378
+function F = eg_est_F_from_7p_mle(u,F0,varargin)eg_est_F_from_7p_mle1,0
+function F = go_bartoli(u,F0,W)go_bartoli24,432
+function F = go_overparam(u,F0,W,R)go_overparam43,965
+function err = overparam_err_fn(x,u,W,R)overparam_err_fn58,1464
+function err = tukey(err0)tukey64,1725
+function err = huber(err0)huber72,1905
+function R = mtx_R_to_3x3(r)mtx_R_to_3x381,2086
+
+/home/prittjam/src/cvtk2/eg/eg_sample_degen.m,90
+function is_degen = eg_sample_degen(u,sample_set,tsq,min_sample_size)eg_sample_degen1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_Fa_np_tlsq.m,52
+function [Faa] = faff_n_points(x)faff_n_points1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_F_from_6p.m,57
+function F = eg_est_F_from_6p(u)eg_est_F_from_6p23,643
+
+/home/prittjam/src/cvtk2/eg/eg_est_Fa_4p_tlsq.m,62
+function [Faa] = faff_four_points(x1,x2)faff_four_points1,0
+
+/home/prittjam/src/cvtk2/eg/faff_two_ellipses.m,136
+function [Fa_list] = faff_two_ellipses(x)faff_two_ellipses1,0
+function [] = debug_plot_ellipses(CC1, CC2)debug_plot_ellipses67,1415
+
+/home/prittjam/src/cvtk2/eg/eg_get_E_from_F.m,54
+function E = eg_get_E_from_F(F,K)eg_get_E_from_F1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_Fa_2e.m,138
+function model_list = eg_est_Fa_2e(u,s,varargin)eg_est_Fa_2e1,0
+function [] = debug_plot_ellipses(CC1, CC2)debug_plot_ellipses68,1423
+
+/home/prittjam/src/cvtk2/eg/eg_faff_two_ellipses.m,60
+function eg_faff_two_ellipses()eg_faff_two_ellipses15,564
+
+/home/prittjam/src/cvtk2/eg/eg_est_E_from_5p_mle.m,128
+function E = eg_est_E_from_np_lsqnonlin(u,s,E0)eg_est_E_from_np_lsqnonlin1,0
+function R = mtx_R_to_3x3(r)mtx_R_to_3x322,594
+
+/home/prittjam/src/cvtk2/eg/eg_est_F_from_8p.m,125
+function F = eg_est_F_from_8p(u)eg_est_F_from_8p1,0
+function varargout = make_hartley_xform(pts)make_hartley_xform35,601
+
+/home/prittjam/src/cvtk2/eg/eg_sampson_F_dist.m,59
+function dx = eg_F_sampson_dist(u,F)eg_F_sampson_dist1,0
+
+/home/prittjam/src/cvtk2/eg/eg_fix_oriented.m,112
+function model_list = eg_fix_oriented(u,sample,weights,degen_model_list,is_model_degen,cfg)eg_fix_oriented1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_Fa_from_2laf.m,60
+function F = eg_est_Fa_from_2laf(u)eg_est_Fa_from_2laf1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_Fa_from_4p.m,59
+function [Fa] = eg_est_Fa_from_4p(u)eg_est_Fa_from_4p1,0
+
+/home/prittjam/src/cvtk2/eg/eg_make_F_from_2P.m,60
+function F = eg_make_F_from_2P(P1,P2)eg_make_F_from_2P1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_F_from_2laf.m,58
+function F = eg_est_F_from_2laf(u)eg_est_F_from_2laf1,0
+
+/home/prittjam/src/cvtk2/eg/eg_calc_7p_coeffs.m,56
+function c = eg_calc_7p_coeffs(F)eg_calc_7p_coeffs1,0
+
+/home/prittjam/src/cvtk2/eg/eg_get_epipoles.m,60
+function [e1 e2] = extract_epipoles(F)extract_epipoles1,0
+
+/home/prittjam/src/cvtk2/eg/eg_est_F_from_7p.m,64
+function model_list = eg_est_F_from_7p(ut)eg_est_F_from_7p1,0
+
+/home/prittjam/src/cvtk2/eg/eg_make_cubic_constraint.m,78
+function c = eg_make_cubic_constraint(file_name)eg_make_cubic_constraint1,0
+
+/home/prittjam/src/cvtk2/eg/arandjelovic_canonicalize_ellipses.m,341
+function [C2, C2_dual, M] = arandjelovic_canonicalize_ellipses(CC1)arandjelovic_canonicalize_ellipses1,0
+function M = calc_arandjelovic_faff_canonicalize(C1,C2)calc_arandjelovic_faff_canonicalize8,221
+function M = canonicalize_ellipse(C)canonicalize_ellipse27,610
+function [] = debug_plot_ellipses(CC1, CC2)debug_plot_ellipses35,771
+
+/home/prittjam/src/cvtk2/eg/eg_est_E_from_5p.m,80
+function model_list = eg_est_E_from_5p_gb(u,s,varargin)eg_est_E_from_5p_gb1,0
+
+/home/prittjam/src/cvtk2/eg/eg_calc_compatible_hg.m,58
+function H = calc_compatible_hg(F)calc_compatible_hg1,0
+
+/home/prittjam/src/cvtk2/eg/eg_Fa_dist.m,44
+function d = eg_Fa_dist(u,F)eg_Fa_dist1,0
+
+/home/prittjam/src/cvtk2/eg/eg_get_orientation.m,60
+function a = eg_get_orientation(u,F)eg_get_orientation1,0
+
+/home/prittjam/src/cvtk2/pt/pt_draw.m,39
+function [] = pt_draw(h,u)pt_draw1,0
+
+/home/prittjam/src/cvtk2/pt/pt_sq_dist.m,38
+function D = sqdist(X1,X2)sqdist1,0
+
+/home/prittjam/src/cvtk2/pt/pt_find_dups.m,59
+function [ind,ind2] = pt_find_dups(u,tsq)pt_find_dups1,0
+
+/home/prittjam/src/cvtk2/pt/pt_is_inf.m,44
+function s = pt_is_inf(u,tol)pt_is_inf1,0
+
+/home/prittjam/src/cvtk2/pt/pt_est_Rt_from_3p.m,63
+function [R,t0] = pt_est_Rt_from_3p(u,v)pt_est_Rt_from_3p1,0
+
+/home/prittjam/src/cvtk2/pt/pt_corr_is_injective.m,87
+function is_degen = pt_corr_is_injective(u, sample, varargin)pt_corr_is_injective1,0
+
+/home/prittjam/src/cvtk2/pt/pt_calc_num_duplicates.m,97
+function num_duplicates = pt_calc_num_duplicates(u, sample, varargin)pt_calc_num_duplicates1,0
+
+/home/prittjam/src/cvtk2/pt/pt_get_hartley_threshold.m,69
+function ht = calc_hartley_threshold(T,t)calc_hartley_threshold1,0
+
+/home/prittjam/src/cvtk2/pt/pt_is_ideal.m,48
+function s = pt_is_ideal(u,tol)pt_is_ideal1,0
+
+/home/prittjam/src/cvtk2/pt/pt_draw_tc.m,56
+function [] = pt_draw_tc(im1,im2,u,span)pt_draw_tc1,0
+
+/home/prittjam/src/cvtk2/pt/pt_make_hartley_xform.m,68
+function varargout = make_hartley_xform(pts)make_hartley_xform1,0
+
+/home/prittjam/src/cvtk2/pt/pt_triu_1p2.m,0
+
+/home/prittjam/src/cvtk2/pt/pt_rm_dups.m,49
+function uind = pt_rm_dups(u,tsq)pt_rm_dups1,0
+
+/home/prittjam/src/cvtk2/hg/hg_est_S_from_2p.m,62
+function [S,R,c,t] = hg_est_S_from_2p(u)hg_est_S_from_2p1,0
+
+/home/prittjam/src/cvtk2/hg/hg_sampson_H_dist.m,59
+function dx = hg_H_sampson_dist(u,H)hg_H_sampson_dist1,0
+
+/home/prittjam/src/cvtk2/hg/hg_sample_degen.m,75
+function is_degen = hg_sample_degen(u,sample,varargin)hg_sample_degen1,0
+
+/home/prittjam/src/cvtk2/hg/hg_3laf_to_linf_mdegen.m,85
+function is_degen = hg_3laf_to_Hinf_model_degen(u,l)hg_3laf_to_Hinf_model_degen1,0
+
+/home/prittjam/src/cvtk2/hg/hg_est_H_from_4p.m,54
+function H = hg_est_H_from_4p(v)hg_est_H_from_4p1,0
+
+/home/prittjam/src/cvtk2/hg/hg_3laf_to_Hinf_sample_degen.m,85
+function is_degen = hg_3laf_to_Hinf_sample_degen(u)hg_3laf_to_Hinf_sample_degen1,0
+
+/home/prittjam/src/cvtk2/hg/hg_make_Hinf_from_linf.m,70
+function H = hg_make_Hinf_from_linf(l_inf)hg_make_Hinf_from_linf1,0
+
+/home/prittjam/src/cvtk2/hg/hg_make_inner_rnsc_cfg.m,71
+function cfg = hg_make_inner_rnsc_cfg(cfg) hg_make_inner_rnsc_cfg1,0
+
+/home/prittjam/src/cvtk2/hg/hg_inner_rnsc.m,62
+function res = hg_inner_rnsc(u,s,model,cfg)hg_inner_rnsc1,0
+
+/home/prittjam/src/cvtk2/hg/hg_est_A_from_1laf.m,70
+function Ha = hg_est_A_from_1laf(v,s,varargin)hg_est_A_from_1laf1,0
+
+/home/prittjam/src/cvtk2/hg/hg_2x2laf_to_linf.m,66
+function [l,N] = hg_2x2laf_to_linf(aX,arsc)hg_2x2laf_to_linf1,0
+
+/home/prittjam/src/cvtk2/hg/hg_est_A_from_3p.m,54
+function A = hg_est_A_from_3p(u)hg_est_A_from_3p1,0
+
+/home/prittjam/src/cvtk2/hg/hg_3laf_to_linf_sdegen.m,71
+function is_degen = hg_3laf_to_Hinf_degen(u)hg_3laf_to_Hinf_degen1,0
+
+/home/prittjam/src/cvtk2/hg/hg_est_S_from_1laf.m,60
+function S = hg_est_S_from_1laf(u,s)hg_est_S_from_1laf1,0
+
+/home/prittjam/src/cvtk2/hg/hg_est_np_lsqnonlin.m,87
+function H = hg_est_np_lsqnonlin(u, sample_set, cfg, varargin)hg_est_np_lsqnonlin1,0
+
+/home/prittjam/src/cvtk2/hg/hg_3laf_to_linf.m,60
+function [l N] = hg_3laf_to_linf(u,rsc)hg_3laf_to_linf1,0
+
+/home/prittjam/src/cvtk2/hg/hg_est_Hinf_from_3laf.m,186
+function H = hg_est_Hinf_from_3laf(u_laf,s)hg_est_Hinf_from_3laf1,0
+function [H, alpha] = scale2H(X, rsc)scale2H48,864
+function [H,s] = scale2H_multi(aX, arsc)scale2H_multi88,1478
+
+/home/prittjam/src/cvtk2/hg/hg_make_H_from_Al.m,58
+function H = hg_make_H_from_Al(A,l)hg_make_H_from_Al1,0
