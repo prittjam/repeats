@@ -41,22 +41,24 @@ classdef linf_laf1_to_Huv
                   zeros(3,2) c1 c2];
             
             uv = (M*MM)\B;
-            
-            uv2 = reshape(uv,2,[]);
-            sx2 = sum(abs(uv2));
-            isze = (sx2 == 0)
-            if any(isze)
-                M2 = [eye(3) eye(3); zeros(3,3) [0 -linf(3) linf(2); ...
-                                    linf(3) 0 -linf(1); ...
-                                    -linf(2) linf(1) 0]];
-                b2 = [[[c1 c2]*uv2(:,~isze)];zeros(3,1)]
+            u = uv(1)*c1 + uv(2)*c2;
+            v = uv(3)*c1 + uv(4)*c2;
+            H = [u;v];
+            % uv2 = reshape(uv,2,[]);
+            % sx2 = sum(abs(uv2));
+            % isze = (sx2 == 0)
+            % if any(isze)
+            %     M2 = [eye(3) eye(3); zeros(3,3) [0 -linf(3) linf(2); ...
+            %                         linf(3) 0 -linf(1); ...
+            %                         -linf(2) linf(1) 0]];
+            %     b2 = [[[c1 c2]*uv2(:,~isze)];zeros(3,1)]
                 
-                uv = reshape((M2*MM)\B,2,[]);
+            %     uv = reshape((M2*MM)\B,2,[]);
                 
-                tst = [[c1 c2]*uv]
-            end
+            %     tst = [[c1 c2]*uv]
+            % end
             
-            kkk = 3;
+            % kkk = 3;
         end
     end
 end
