@@ -1,5 +1,5 @@
-function [] = put_img_set(base_path,name)
-[sqldb,imagedb] = get_dbs();
+function [] = put_img_set(base_path,name,varargin)
+[sqldb,imagedb] = get_dbs(varargin{:});
 img_urls = get_img_urls(base_path);
 
 for k = 1:numel(img_urls)

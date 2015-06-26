@@ -33,13 +33,13 @@ classdef ImageCache < handle
             cfg.parents = {}; 
             
             key = DR.make_key(key);
-            
+
             cfg = helpers.vl_argparse(cfg,varargin);
 	    
-	    if ~isempty(cfg.parents) && ~iscell(cfg.parents)
-                cfg.parents = {cfg.parents};
-     end
-	    
+    	    if ~isempty(cfg.parents) && ~iscell(cfg.parents)
+                    cfg.parents = {cfg.parents};
+            end
+    	    
             if strcmpi([cfg.parents{:}],'__LAST_ADD__')
                 cfg.parents = last_add;
             end

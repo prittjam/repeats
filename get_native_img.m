@@ -16,7 +16,7 @@ function filecontent = get_native_img(url)
 end
 
 function res = fileread(fname, count, precision)
-%FILEREAD fopen, freed, fclose composite for easy use
+%FILEREAD fopen, fread, fclose composite for easy use
 %   FILEREAD(fname, count, precision)
 %      fname is name of the input file
 %      count is optional argument for fread

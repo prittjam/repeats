@@ -106,6 +106,15 @@ classdef SqlDb < SqlBase
             close(stm);
         end   
 
+        function [] = remove_img_set(this,set_name)
+            stm = this.connh.prepareStatement([ 'DELETE FROM img_sets ',...
+                                                'USING img_sets INNER JOIN imgs ',...
+                                                'WHERE img_sets.cid=imgs.cid ',...
+                                                'AND img_sets.name=?' ]);
+            stm.setString(1, set_name);
+            rs = stm.executeQuery();
+        end   
+
         function cid = get_img_cid(this,url)
             stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM imgs']);
             rs = stm.executeQuery();
