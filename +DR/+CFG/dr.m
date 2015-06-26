@@ -1,4 +1,4 @@
-classdef dr < matlab.mixin.Heterogeneous
+classdef dr < matlab.mixin.Heterogeneous & matlab.mixin.Copyable
     properties(Access=public)
         read_cache
         write_cache
