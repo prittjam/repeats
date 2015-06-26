@@ -1,8 +1,8 @@
 
 /home/prittjam/src/cvtk2/distinguishable_colors.m,184
 function colors = distinguishable_colors(n_colors,bg,func)distinguishable_colors1,0
-function c = parsecolor(s)parsecolor121,4900
-function c = colorstr2rgb(c)colorstr2rgb131,5114
+function c = parsecolor(s)parsecolor121,4903
+function c = colorstr2rgb(c)colorstr2rgb131,5117
 
 /home/prittjam/src/cvtk2/line/line_intersect.m,56
 function pts = line_intersect(l1,l2)line_intersect1,0
@@ -695,6 +695,9 @@ function Z = getZ(u)getZ52,1147
 function Z = nd(A,B)nd63,1411
 function [T, iT] = normpts(u1,u2)normpts78,1821
 
+/home/prittjam/src/cvtk2/+HG/p2_to_Rt.m,39
+function Rt = p2_to_Rt(v)p2_to_Rt1,0
+
 /home/prittjam/src/cvtk2/+HG/H_from_4p.m,40
 function H = H_from_4p(v)H_from_4p1,0
 
@@ -720,6 +723,9 @@ function dx = sampson_err(u,H)sampson_err1,0
 
 /home/prittjam/src/cvtk2/+HG/laf1_to_A.m,52
 function Ha = laf1_to_A(v,s,varargin)laf1_to_A1,0
+
+/home/prittjam/src/cvtk2/+HG/vl_to_Hinf.m,44
+function HH = vl_to_Hinf(vl)vl_to_Hinf1,0
 
 /home/prittjam/src/cvtk2/+HG/hg/hg_2e.m,465
 function H = hg_2e(C)hg_2e1,0

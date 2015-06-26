@@ -80,9 +80,9 @@ function colors = distinguishable_colors(n_colors,bg,func)
   x = linspace(0,1,n_grid);
   [R,G,B] = ndgrid(x,x,x);
   rgb = [R(:) G(:) B(:)];
-  if (n_colors > size(rgb,1)/3)
-    error('You can''t readily distinguish that many colors');
-  end
+%  if (n_colors > size(rgb,1)/3)
+%    error('You can''t readily distinguish that many colors');
+%  end
   
   % Convert to Lab color space, which more closely represents human
   % perception
