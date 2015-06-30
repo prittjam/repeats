@@ -1,27 +1,30 @@
-classdef dr < matlab.mixin.Heterogeneous & matlab.mixin.Copyable
+classdef dr < matlab.mixin.Copyable
     properties(Access=public)
         read_cache
         write_cache
-        name
-        prev
     end
 
     methods
         function this = dr(prev,varargin)
             this.read_cache = 'On';
             this.write_cache = 'On';
-            this.prev = prev;
-            this.name = [];
         end
 
-        function name = set_name(this,current)
-            tmp = class(current);
-            if isempty(this.prev)
-                this.name = tmp(4:end);
-            else
-                this.name = [this.prev.name ':' tmp(4:end)];
-            end
-            name = this.name;
+        function [] = set_read_cache(x)
+            this.read_cache = x;
         end
+
+        function x = get_read_cache()
+            x = this.read_cache;
+        end
+
+        function [] = set_write_cache(x)
+            this.write_cache = x;
+        end
+
+        function x = get_write_cache()
+            x = this.write_cache;
+        end
+
     end
 end

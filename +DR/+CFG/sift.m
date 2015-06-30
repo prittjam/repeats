@@ -9,12 +9,11 @@ classdef sift < DR.CFG.dr
     end
 
     methods(Static)
-        function this = sift(dr,varargin)
-            this = this@DR.CFG.dr(dr,varargin{:});
+        function this = sift(varargin)
+            this = this@DR.CFG.dr(varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
             end
-            this.name = this.set_name(this);
         end
     end
 end

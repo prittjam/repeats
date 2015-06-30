@@ -188,12 +188,11 @@ classdef laf < DR.CFG.dr
     end
 
     methods
-        function this = laf(dr,varargin)
-            this = this@DR.CFG.dr(dr,varargin{:});
+        function this = laf(varargin)
+            this = this@DR.CFG.dr(varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
             end
-            this.name = this.set_name(this);
         end
     end
 end 

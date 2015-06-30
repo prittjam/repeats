@@ -7,17 +7,25 @@ classdef dr_cache < handle
         function key_list = add_cfg_list(this,cfg_list)
             if ~isempty(cfg_list)
                 for k = 1:numel(cfg_list)
-                    if isempty(cfg_list(k).prev)
-                        this.image_cache.add_dependency(cfg_list(k).name, ...
-                                                        cfg_list(k));
-                    else
-                        this.image_cache.add_dependency(cfg_list(k).name, ...
-                                                        cfg_list(k), ...
-                                                        'parents',cfg_list(k).prev.name);
+                    for k1 = 1:numel(cfg_list{k})
+                        parents = '';
+                        for i = 1:k1-1
+                            parents = [parents class(cfg_list{k}{i}) ':'];
+                        end
+                        name = [parents class(cfg_list{k}{k1})];
+                        parents = parents(1:end-1);
+                        if isempty(parents)
+                            this.image_cache.add_dependency(name, ...
+                                                            cfg_list{k}{k1});
+                        else
+                            this.image_cache.add_dependency(name, ...
+                                                            cfg_list{k}{k1}, ...
+                                                            'parents',parents);
+                        end
                     end
+                    key_list{k} = name;
                 end
             end
-            key_list = arrayfun(@(x) x.name,cfg_list,'UniformOutput',false);
         end
 
         function [res,is_found] = get(this,cfg_list)
@@ -42,13 +50,14 @@ classdef dr_cache < handle
             this.image_cache = image_cache;
         end
 
-        function [feat,key_list] = extract(this,feat_cfg_list,img)
-            key_list = this.add_cfg_list(feat_cfg_list);
-            [feat,is_found] = this.get(feat_cfg_list);
+        function [feat,upg,desc,key_list] = extract(this,cfg_list,img)
+            key_list = this.add_cfg_list(cfg_list);
+            
+            [feat,is_found] = this.get(cfg_list);
             putit = ~is_found;
             if any(putit)
-                feat(putit) = DR.extract(feat_cfg_list(putit),img);
-                this.put(feat_cfg_list(putit),feat(putit));
+                feat(putit) = DR.extract(cfg_list(putit),img);
+                this.put(cfg_list(putit),feat(putit));
             end
         end
 
