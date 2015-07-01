@@ -1,5 +1,5 @@
 classdef dr < matlab.mixin.Copyable
-    properties(Access=public)
+    properties(Access=private)
         read_cache
         write_cache
     end

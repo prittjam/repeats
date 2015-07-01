@@ -55,69 +55,17 @@ classdef dr_cache < handle
             this.image_cache = image_cache;
         end
 
-        function [feat,upg,desc,key_list] = extract(this,cfg_list,img)
+        function [res,key_list] = extract(this,cfg_list,img)
             key_list = this.add_cfg_list(cfg_list);
             
             [res,is_found] = this.get(cfg_list);
-            feat = res(:,1);
-            upg = res(:,2);
-            desc = res(:,3);
 
-            putit = ~is_found(:,1);
+            putit = cellfun(@(x) any(cellfun(@(y) isempty(y),x)),res);
             if any(putit)
-                feat(putit) = DR.extract(cfg_list(putit,:),img);
-                this.put(cfg_list(putit,:),feat(putit));
-            end
-
-            putit = ~is_found(:,2);
-            isop = cellfun(@(x) ~strcmp(class(x),'DR.CFG.noop'),cfg_list(:,2));
-            doit = isop & putit & cellfun(@(x) ~isempty(x),feat);
-            upg(~isop) = feat(~isop);
-            if any(doit)
-                upg(doit) = ...
-                    DR.upgrade(cfg_list(doit,:), ...
-                               img,feat(doit));
-                this.put(cfg_list(putit,:), ...
-                         upg(putit));
-            end
-            
-            cfg_list(~isop,2) = cfg_list(~isop,1);
-            putit = ~is_found(:,3);
-            doit = putit & cellfun(@(x) ~isempty(x),upg);
-            if any(doit)
-                desc(doit) = ...
-                    DR.describe(cfg_list(doit,:), ...
-                                img, upg(doit));
-                this.put(cfg_list(putit,:),desc(putit));
-            end
-            keyboard
-        end
-
-        function [upg,key_list] = upgrade(this,upg_cfg_list,feat,img)
-            key_list = this.add_cfg_list(upg_cfg_list);
-            [upg,is_found] = this.get(upg_cfg_list);
-            putit = ~is_found;
-            doit = putit & cellfun(@(x) ~isempty(x),feat);
-            if any(doit)
-                upg(doit) = ...
-                    DR.upgrade(upg_cfg_list(doit), ...
-                               img,feat(doit));
-                this.put(upg_cfg_list(putit), ...
-                         upg(putit));
+                res(putit) = DR.extract(cfg_list(putit),img);
+                this.put(cfg_list(putit),res(putit));
             end
         end
 
-        function [desc,key_list] = describe(this,desc_cfg_list,upg,img)
-            key_list = this.add_cfg_list(desc_cfg_list);
-            [desc,is_found] = this.get(desc_cfg_list);
-            putit = ~is_found;
-            doit = putit & cellfun(@(x) ~isempty(x),upg);
-            if any(doit)
-                desc(doit) = ...
-                    DR.describe(desc_cfg_list(doit), ...
-                                img, upg(doit));
-                this.put(desc_cfg_list(putit),desc(putit));
-            end
-        end
     end
 end

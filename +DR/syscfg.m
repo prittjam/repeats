@@ -1,74 +1,50 @@
 classdef syscfg
     properties 
-        genmap
-        upgmap
-        descmap
+        map
     end
 
     methods
         function this = syscfg()
             if (exist('extrema') == 3)
-                tst = DR.CFG.mserp();
-                this.genmap = containers.Map({'DR.CFG.mserp','DR.CFG.mserm','DR.CFG.hessian_affine'}, ...
-                                            {'make_extrema','make_extrema','make_hessian_affine'});
-                this.upgmap = containers.Map({'DR.CFG.mserp:DR.CFG.laf', 'DR.CFG.mserm:DR.CFG.laf','double:DR.CFG.noop'}, ...
-                                            {'make_mser_to_laf','make_mser_to_laf','make_noop'});
-                this.descmap = ...
-                    containers.Map({'DR.CFG.laf:DR.CFG.sift', ...
-                                    'DR.CFG.hessian_affine:DR.CFG.sift'}, ...
-                                   {'make_affpt_to_sift','make_affpt_to_sift'});
+                this.map = containers.Map({'MSER.CFG.mserp','MSER.CFG.mserm','AFFPTS.CFG.hessian_affine', ... 
+                 'MSER.CFG.mserp:LAF.CFG.laf', 'MSER.CFG.mserm:LAF.CFG.laf', 'LAF.CFG.laf:SIFT.CFG.sift', ...
+                        'AFFPTS.CFG.hessian_affine:SIFT.CFG.sift'}, ...
+                 {'make_extrema','make_extrema','make_hessian_affine', ...
+                    'make_mser_to_laf','make_mser_to_laf','make_affpt_to_sift','make_affpt_to_sift' });
             else
                 throw(MException('','Cannot find feature mex'));
             end
         end
 
-        function gens = get_gens(this,cfg_list)
-            gen_str = arrayfun(@(x) values(this.genmap,x), ...
-                               cellfun(@(x) class(x),cfg_list(:,1),'UniformOutput',false), ...
-                               'UniformOutput',false);
-            tmp = cellfun(@(x) feval(str2func(x{:})),gen_str,'UniformOutput',false);
-            gens = [tmp{:}];
+        function chain = go_chain(this,cfg_list)
+            gen_str = cell(1,numel(cfg_list));
+            for i = 1:numel(cfg_list)
+                gen_str{i} = cell(1,numel(cfg_list{i}));
+                name = '';
+                for j = 1:numel(gen_str{i})
+                    gen_str{i}{j} = values(this.map, {[name class(cfg_list{i}{j})]});
+                    name = [class(cfg_list{i}{j}) ':'];
+                end
+            end
+            chain = cellfun(@(x) cellfun(@(y) feval(str2func(y{:})),x, ...
+                'UniformOutput',false),gen_str,'UniformOutput',false);
         end
-
-        function upgs = get_upgrades(this,cfg_list)
-            upg_str = arrayfun(@(x) values(this.upgmap,x), ...
-                               cellfun(@(x,y) [class(x) ':' class(y)], ...
-                                cfg_list(:,1), cfg_list(:,2), ...
-                                        'UniformOutput',false), ...
-                               'UniformOutput',false);
-            tmp = cellfun(@(x) feval(str2func(x{:})),upg_str,'UniformOutput',false);
-            upgs = [tmp{:}];
-        end
-
-        function descriptors = get_descriptors(this,cfg_list)
-            desc_str = arrayfun(@(x) values(this.descmap,x), ...
-                               cellfun(@(x,y) [class(x) ':' class(y)], ...
-                                      cfg_list(:,2), cfg_list(:,3), ...
-                                        'UniformOutput',false), ...
-                               'UniformOutput',false);
-            tmp = cellfun(@(x) feval(str2func(x{:})), ...
-                          desc_str,'UniformOutput',false);
-            descriptors = [tmp{:}];
-        end
+        
     end
 end
 
 function extrema = make_extrema()
-    extrema = DR.extrema();
+    extrema = MSER.extrema();
 end
 
 function extrema = make_hessian_affine()
-    extrema = DR.affpts();
+    extrema = AFFPTS.affpts();
 end
 
 function mser_to_laf = make_mser_to_laf()
-    mser_to_laf = DR.mser_to_laf();
+    mser_to_laf = MSER.mser_to_laf();
 end
 
 function affpt_to_sift = make_affpt_to_sift()
-    affpt_to_sift = DR.affpt_to_sift();
-end
-
-function noop = make_noop()
-    noop = DR.noop();
+    affpt_to_sift = AFFPTS.affpt_to_sift();
 end
