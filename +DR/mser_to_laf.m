@@ -17,7 +17,7 @@ classdef mser_to_laf < DR.gen
 
                 [regs, affpts, cfg] = mexlafs(img, {mser_list{k}.rle}, 0, ...
                                               DR ...
-                                              .make_struct(upg_cfg_list(k)));
+                                              .make_struct(upg_cfg_list{k}));
                 kkk = 3;
                 %DR.data{imid, drid}.upgtime = cputime - t;
 

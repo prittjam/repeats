@@ -9,7 +9,7 @@ classdef affpt_to_sift < handle & matlab.mixin.Heterogeneous
                 %                upper(outputs{k}),dr{k}.name,img.url);
                 t = cputime;
                 res{k} = affpatch(img.intensity,feat{k}.affpt, ...
-                                  DR.make_struct(desc_cfg_list(k)));
+                                  DR.make_struct(desc_cfg_list{k}));
                 res{k}.time = cputime-t;
                 res{k}.desc2dr = [res{k}.affpt(:).id];
                 res{k}.num_desc = length(res{k}.affpt);

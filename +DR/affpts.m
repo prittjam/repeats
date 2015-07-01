@@ -12,7 +12,7 @@ classdef affpts < DR.gen
             res = cell(1,numel(feat_cfg_list));
             for k = 1:numel(feat_cfg_list)
                 res{k} = kmpts2(img.data, ...
-                                DR.make_struct(feat_cfg_list(k)));
+                                DR.make_struct(feat_cfg_list{k}));
             end
         end
     end
