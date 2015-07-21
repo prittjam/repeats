@@ -1,6 +1,8 @@
 function key = make_key(cfg)
     key = repmat('0',1,32);
-
+    if isempty(cfg)
+    	return;
+    end
     if  ischar(cfg)
         key = cfg;
     else

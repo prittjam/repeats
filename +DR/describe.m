@@ -1,5 +1,5 @@
 function res = describe(cfg_list,img,upgs)
-syscfg = DR.syscfg();
+syscfg = DR.Syscfg();
 descriptor_list = syscfg.get_descriptors(cfg_list);
 names = arrayfun(@(x) class(x),descriptor_list,'UniformOutput',false);
 [uname,ia,ic] = unique(names);

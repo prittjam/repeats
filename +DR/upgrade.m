@@ -1,5 +1,5 @@
 function res = upgrade(cfg_list,img,feats)
-syscfg = DR.syscfg();
+syscfg = DR.Syscfg();
 upgrades = syscfg.get_upgrades(cfg_list);
 names = arrayfun(@(x) class(x),upgrades,'UniformOutput',false);
 [uname,ia,ic] = unique(names);

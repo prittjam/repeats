@@ -1,5 +1,5 @@
 function res = extract(cfg_list,img)
-syscfg = DR.syscfg();
+syscfg = DR.Syscfg();
 gens = syscfg.go_chain(cfg_list);
 names = cellfun(@(x) cellfun(@(y) class(y),x,'UniformOutput',false),gens,'UniformOutput',false);
 
