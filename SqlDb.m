@@ -91,7 +91,7 @@ classdef SqlDb < SqlBase
                     url = img_set{i};
                     filecontents = get_native_img(url);
                     cids{i} = HASH.hash(filecontents(:),'MD5');
-                    [pth, img_name, ext] = fileparts(img_set{i});
+                    [pth, img_name, ext] = fileparts(url);
 
                     err = this.put_img(cids{i},url);
                     

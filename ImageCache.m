@@ -51,7 +51,7 @@ classdef ImageCache < handle
 
         function xor_key_list = add_dependency_list(this,name_list, ...
                                                     key_list,varargin)
-          cfg.parents = {}; 
+            cfg.parents = {}; 
             
             if isempty(key)
                 key = repmat('0',1,32);
@@ -60,7 +60,7 @@ classdef ImageCache < handle
             cfg = helpers.vl_argparse(cfg,varargin);
 
 	    if ~iscell(cfg.parents)
-	      cfg.parents = {cfg.parents};
+	        cfg.parents = {cfg.parents};
 	    end
 
             if strcmpi([cfg.parents{:}],'__LAST_ADD__')
@@ -101,6 +101,7 @@ classdef ImageCache < handle
                     end
                 end
             end
+
         end
 
         function [val,is_found,xor_key] = get(this,table,name)
