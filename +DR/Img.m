@@ -19,7 +19,6 @@ classdef Img < handle
             if ~isempty(cfg.url)
                 this.url = fullfile(cfg.url);
             end
-            
 
             if isempty(this.data) && ~isempty(this.url)
                 this.data = imread(this.url);
