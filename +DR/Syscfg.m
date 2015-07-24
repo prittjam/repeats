@@ -41,13 +41,13 @@ function extrema = make_hessian_affine()
 end
 
 function mser_to_laf = make_mser_to_laf()
-    mser_to_laf = MSER.MserToLaf();
+    mser_to_laf = LAF.MserToLaf();
 end
 
 function affpt_to_sift = make_affpt_to_sift()
-    affpt_to_sift = AFFPTS.AffptToSift();
+    affpt_to_sift = SIFT.AffptToSift();
 end
 
 function dist = make_distinct()
-    dist = LAF.LafDistinct();
+    dist = LAF.LafToDistinctLaf();
 end

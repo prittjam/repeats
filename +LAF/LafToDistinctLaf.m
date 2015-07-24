@@ -1,4 +1,4 @@
-classdef DistinctLaf < DR.Gen
+classdef LafToDistinctLaf < DR.Gen
     properties
         distinct_cfg = LAF.CFG.Distinct();
     end

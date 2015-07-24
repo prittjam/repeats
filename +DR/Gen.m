@@ -1,3 +1,3 @@
-classdef gen < matlab.mixin.Heterogeneous & handle 
+classdef Gen < matlab.mixin.Heterogeneous & handle 
 
 end
