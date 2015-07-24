@@ -1,7 +1,7 @@
-classdef SqlDb < SqlBase
+classdef SqlDb < SQL.SqlBase
     methods(Access=public)
         function this = SqlDb(varargin)
-            this@SqlBase(varargin{:});
+            this@SQL.SqlBase(varargin{:});
         end
 
         function [] = create(this)

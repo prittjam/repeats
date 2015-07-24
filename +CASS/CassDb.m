@@ -1,11 +1,11 @@
-classdef ImageDb < handle
+classdef CassDb < handle
     properties
         cass
     end
 
     methods
-        function this = ImageDb(varargin)
-            this.cass = Cass(varargin{:});
+        function this = CassDb(varargin)
+            this.cass = CASS.Cass(varargin{:});
         end
         
         function cid = put_img(this,url)

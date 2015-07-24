@@ -1,4 +1,4 @@
-classdef ImageCache < handle
+classdef CidCache < handle
     properties(Access=private)
         G;
         cid;
@@ -10,7 +10,7 @@ classdef ImageCache < handle
     end
 
     methods(Access=public)
-        function this = ImageCache(cid,imagedb,varargin)
+        function this = CidCache(cid,imagedb,varargin)
             this.imagedb = imagedb;
             this.cid = cid;
             this.map = containers.Map;
@@ -32,7 +32,7 @@ classdef ImageCache < handle
         function xor_key = add_dependency(this,name,key,varargin)
             cfg.parents = {}; 
             
-            key = DR.make_key(key);
+            key = KEY.make(key);
 
             cfg = helpers.vl_argparse(cfg,varargin);
 	    
