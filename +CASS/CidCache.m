@@ -136,7 +136,7 @@ classdef CidCache < handle
                                values(this.map,this.vlist(order)), ...
                                'UniformOutput',false);
             if numel(key_list) > 1
-                res = HASH.xor(key_list{:});
+                res = KEY.xor(key_list{:});
             else
                 res = key_list{1};
             end

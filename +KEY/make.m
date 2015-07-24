@@ -8,7 +8,7 @@ function key = make(cfg)
     else
         scfg = KEY.class_to_struct(cfg);
         if usejava('jvm')
-            key = cfg2hash(scfg,true);
+            key = KEY.cfg2hash(scfg,true);
         end
     end
 end

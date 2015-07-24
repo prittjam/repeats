@@ -12,6 +12,7 @@ function J=mat2json(M,F)
 %
 % Jonas Almeida, March 2010
 
+import KEY.*
 switch class(M)
   case 'struct'
     J='{';

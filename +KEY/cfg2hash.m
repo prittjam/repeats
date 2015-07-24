@@ -13,5 +13,5 @@ function [cfghash json] = cfg2hash(cfg, autoorder)
         warning('You are creating hash from unordered struct!');
     end
 
-    json = mat2json(cfg);
-    cfghash = HASH.hash(json, 'md5');
+    json = KEY.mat2json(cfg);
+    cfghash = KEY.hash(json, 'md5');
