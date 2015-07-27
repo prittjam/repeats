@@ -49,30 +49,51 @@ classdef CidCache < handle
             last_add = name;
         end
 
-        function xor_key_list = add_dependency_list(this,name_list, ...
-                                                    key_list,varargin)
-            cfg.parents = {}; 
+        function key_list = add_chains(this,chains)
+            key_list = cell(1,numel(chains));
+            for k = 1:numel(chains)
+                key_list{k} = cell(1,numel(chains{k}));
+                parents = '';
+                for k1 = 1:numel(chains{k})
+                    name = [parents class(chains{k}{k1})];
+                    if isempty(parents)
+                        this.add_dependency(name, ...
+                                                 chains{k}{k1});
+                    else
+                        this.add_dependency(name, ...
+                                                 chains{k}{k1}, ...
+                                                 'parents',parents(1:end-1));
+                    end
+                    parents = [name ':'];
+                    key_list{k}{k1} = name;
+                end
+            end
+        end
+        
+        function [res,is_found] = get_chains(this,chains)
+            is_found = cell(1,numel(chains));
+            res = cell(1,numel(chains));
             
-            if isempty(key)
-                key = repmat('0',1,32);
+            for k = 1:numel(chains)
+                name = '';
+                res{k} = cell(1,numel(chains{k}));
+                is_found{k} = false(1,numel(chains{k}));
+                for k1 = 1:numel(chains{k})
+                    name = [name class(chains{k}{k1}) ':'];
+                    [res{k}{k1},is_found{k}(k1)] = ...
+                        this.get('dr',name(1:end-1));
+                end
             end
-
-            cfg = helpers.vl_argparse(cfg,varargin);
-
-	    if ~iscell(cfg.parents)
-	        cfg.parents = {cfg.parents};
-	    end
-
-            if strcmpi([cfg.parents{:}],'__LAST_ADD__')
-                cfg.parents = last_add;
+        end
+        
+        function [res,is_found] = put_chains(this,chains,res)
+            for k = 1:numel(chains)
+                name = '';
+                for k1 = 1:numel(chains{k})
+                    name = [name class(chains{k}{k1}) ':'];
+                    this.put('dr',name(1:end-1),res{k}{k1});
+                end
             end
-
-            for k = 1:numel(name_list)
-                v = this.add_vertex(name,key,cfg.parents{:});
-                xor_key_list{k} = this.get_xor_key(v);
-            end
-
-            last_add = name_list;
         end
         
         function img = get_img(this)
