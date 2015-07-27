@@ -11,7 +11,8 @@ classdef LafToDistinctLaf < DR.Gen
             disp(['DISTINCT regions ' img.url]);                
             res = cell(1,numel(cfg_list));
             for k = 1:numel(cfg_list)
-                keepind = get_distinct_affpts(this.distinct_cfg,laf_list{k}.affpt);
+                keepind = LAF.get_distinct(this.distinct_cfg, ...
+                                           laf_list{k}.affpt);
                 res{k}.affpt = laf_list{k}.affpt(keepind);
             end
         end

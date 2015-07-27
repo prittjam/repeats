@@ -1,11 +1,11 @@
-function [keepind,cfg] = get_distinct_affpts(cfg,affpt)
+function [keepind,cfg] = get_distinct(cfg,affpt)
 num_dr = numel(affpt);
 u = LAF.affpt_to_p3x3(affpt);
 drid = [affpt(:).class];
 
 udrid = unique(drid);
 rmind = false(1,num_dr);
-sc = LAF.get_scale(u);
+sc = LAF.calc_scale(u);
 rmind(sc < cfg.min_laf_scale) = true;
 for k = udrid
     ind = find(drid == k);
@@ -23,7 +23,7 @@ for k = udrid
 	end
 end
 keepind1 = setdiff(1:num_dr,find(rmind));
-keepind2 = find(LAF.get_angle(u) > cfg.acute);
-keepind3 = find(LAF.get_angle(u) < cfg.oblique);
+keepind2 = find(LAF.calc_angle(u) > cfg.acute);
+keepind3 = find(LAF.calc_angle(u) < cfg.oblique);
 
 keepind = intersect(intersect(keepind1,keepind2),keepind3);

@@ -15,10 +15,9 @@ classdef MserToLaf < DR.Gen
                 % get result and store it to appropriate field
                 %t = cputime;
 
-                [regs, affpts, cfg] = mexlafs(img, {mser_list{k}.rle}, 0, ...
-                                              DR ...
-                                              .make_struct(upg_cfg_list{k}));
-                kkk = 3;
+                [regs, affpts, cfg] = ...
+                    mexlafs(img, {mser_list{k}.rle}, 0, ...
+                            KEY.class_to_struct(upg_cfg_list{k}));
                 %DR.data{imid, drid}.upgtime = cputime - t;
 
                 upg = struct;
