@@ -1,4 +1,4 @@
-classdef Affpts < DR.CFG.Dr 
+classdef AffPt < DR.CFG.Dr 
     properties(Access = public)
         threshold = 8/3;
         max_iter = 16;
@@ -12,7 +12,7 @@ classdef Affpts < DR.CFG.Dr
     end
 
     methods
-        function this = Affpts(varargin)
+        function this = AffPt(varargin)
             this = this@DR.CFG.Dr(varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
