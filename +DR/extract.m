@@ -41,7 +41,7 @@ function prev_res = make_prev_res(x,y)
     if y == 1
         prev_res = [];
     else
-        prev_res = x{y-1}{:};
+        prev_res = x{y-1};
     end
 
 
