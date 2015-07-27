@@ -15,7 +15,7 @@ classdef Extrema < DR.Gen
             a = img.data;
 
             cfg_list_names = cellfun(@(x) class(x),feat_cfg_list,'UniformOutput',false);
-            subids = cell2mat(values(this.subids,cfg_list_names))';
+            subids = cell2mat(values(this.subids,cfg_list_names));
             key_list = cellfun(@(x) KEY.make(x),feat_cfg_list,'UniformOutput',false);
             if (numel(unique(key_list)) == 1)
                 [mser img det_time] = extrema(a, ...
