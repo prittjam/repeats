@@ -72,7 +72,7 @@ classdef CidCache < handle
         
         function [res,is_found] = get_chains(this,chains)
             is_found = cell(1,numel(chains));
-            res = cell(1,numel(chains));
+            res = cell(numel(chains),1);
             
             for k = 1:numel(chains)
                 name = '';
