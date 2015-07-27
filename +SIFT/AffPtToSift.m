@@ -1,6 +1,6 @@
-classdef AffptToSift < handle & matlab.mixin.Heterogeneous
+classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
     methods
-        function this = AffptToSift()
+        function this = AffPtToSift()
         end
 
         function res = make(this,img,desc_cfg_list,feat)
