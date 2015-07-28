@@ -2,8 +2,10 @@ classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
     methods
         function this = AffPtToSift()
         end
-
-        function res = make(this,img,desc_cfg_list,feat)
+    end
+    
+    methods(Static)
+        function res = make(img,desc_cfg_list,feat)
             for k = 1:numel(desc_cfg_list)
                 %            msg(1, 'Generating ''%s'' desc. from ''%s'' (%s)\n', ...
                 %                upper(outputs{k}),dr{k}.name,img.url);

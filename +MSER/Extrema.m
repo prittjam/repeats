@@ -1,21 +1,21 @@
 classdef Extrema < Gen
-    properties
-        subids;
+    properties(Constant)
+        subids = containers.Map({class(MSER.CFG.Mserp()),class(MSER.CFG.Mserm())},[1 2]);
     end
 
     methods
         function this = Extrema()
-            this.subids = ...
-                containers.Map({class(MSER.CFG.Mserp()),class(MSER.CFG.Mserm())},[1 2]);
         end
-
-        function res = make(this,img,feat_cfg_list,varargin)
+    end
+    
+    methods(Static)
+        function res = make(img,feat_cfg_list,varargin)
             disp(['MSER detection ' img.url ':']);
-                        
+            
             a = img.data;
 
             cfg_list_names = cellfun(@(x) class(x),feat_cfg_list,'UniformOutput',false);
-            subids = cell2mat(values(this.subids,cfg_list_names));
+            subids = cell2mat(values(MSER.Extrema.subids,cfg_list_names));
             key_list = cellfun(@(x) KEY.make(x),feat_cfg_list,'UniformOutput',false);
             if (numel(unique(key_list)) == 1)
                 [mser img det_time] = extrema(a, ...

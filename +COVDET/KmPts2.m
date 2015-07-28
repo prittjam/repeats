@@ -1,13 +1,11 @@
 classdef KmPts2 < Gen
-    properties
-        subids;
-    end
-
     methods
         function this = KmPts2()
         end
-
-        function res = make(this,img,feat_cfg_list,varargin)
+    end
+    
+    methods(Static)
+        function res = make(img,feat_cfg_list,varargin)
             disp(['AFFPT detection ' img.url]);                
             res = cell(1,numel(feat_cfg_list));
             for k = 1:numel(feat_cfg_list)

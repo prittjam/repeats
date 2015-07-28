@@ -2,8 +2,10 @@ classdef MserToLaf < Gen
     methods
         function this = MserToLaf()
         end
-
-        function res = make(this,img,upg_cfg_list,mser_list)
+    end
+    
+    methods(Static)
+        function res = make(img,upg_cfg_list,mser_list)
             img = img.data;
 
             if size(img,3)==1
