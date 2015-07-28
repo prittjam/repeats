@@ -1,11 +1,11 @@
-classdef Dr < matlab.mixin.Copyable
+classdef CfgBase < matlab.mixin.Copyable
     properties(Access=private)
         read_cache
         write_cache
     end
 
     methods
-        function this = Dr(varargin)
+        function this = CfgBase(varargin)
             this.read_cache = 'On';
             this.write_cache = 'On';
         end

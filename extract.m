@@ -6,7 +6,7 @@ end
 doit = cellfun(@(x) cellfun(@(y) isempty(y),x), ...
                res,'UniformOutput',false);
 
-syscfg = DR.SysCfg();
+syscfg = SysCfg();
 gens = syscfg.cfgs_to_gens(cfg_chains);
 names = cellfun(@(x) cellfun(@(y) class(y),x,'UniformOutput',false), ...
                 gens,'UniformOutput',false);

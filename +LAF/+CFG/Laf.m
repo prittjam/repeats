@@ -1,4 +1,4 @@
-classdef Laf < DR.CFG.Dr
+classdef Laf < CfgBase
     properties
         % default = 0.5 delky hran rovnoramenneho trojuhelniku vepisovaneho do
         % polygonu, uhel pak urcuje krivost
@@ -189,7 +189,7 @@ classdef Laf < DR.CFG.Dr
 
     methods
         function this = Laf(varargin)
-            this = this@DR.CFG.Dr(varargin{:});
+            this = this@CfgBase(varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
             end

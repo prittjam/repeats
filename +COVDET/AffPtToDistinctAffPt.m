@@ -1,4 +1,4 @@
-classdef AffPtToDistinctAffPt < DR.Gen
+classdef AffPtToDistinctAffPt < Gen
     properties
         distinct_cfg = COVDET.CFG.DistinctAffPt();
     end

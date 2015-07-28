@@ -1,4 +1,4 @@
-classdef Extrema < DR.Gen
+classdef Extrema < Gen
     properties
         subids;
     end

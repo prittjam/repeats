@@ -1,4 +1,4 @@
-classdef Sift < DR.CFG.Dr
+classdef Sift < CfgBase
     properties(Access=public)
         ignore_gradient_sign = 0;
         desc_factor = 3*sqrt(3);
@@ -10,7 +10,7 @@ classdef Sift < DR.CFG.Dr
 
     methods(Static)
         function this = Sift(varargin)
-            this = this@DR.CFG.Dr(varargin{:});
+            this = this@CfgBase(varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
             end

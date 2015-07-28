@@ -1,4 +1,4 @@
-classdef DistinctAffPt < DR.CFG.Dr 
+classdef DistinctAffPt < CfgBase 
     properties(Access=public)
         acute = 1/10*pi
         oblique = 9/10*pi
@@ -8,7 +8,7 @@ classdef DistinctAffPt < DR.CFG.Dr
     
     methods
         function this = DistinctAffPt(min_size,varargin)
-            this = this@DR.CFG.Dr(varargin{:});
+            this = this@CfgBase(varargin{:});
             if nargin < 1
                 min_size = 0;
             end

@@ -1,4 +1,4 @@
-classdef MserToLaf < DR.Gen
+classdef MserToLaf < Gen
     methods
         function this = MserToLaf()
         end

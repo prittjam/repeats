@@ -1,4 +1,4 @@
-classdef Mser < DR.CFG.Dr 
+classdef Mser < CfgBase 
     properties(Access = public)
         verbose = 1;
         relative = 0;
@@ -18,7 +18,7 @@ classdef Mser < DR.CFG.Dr
 
     methods
         function this = Mser(varargin)
-            this = this@DR.CFG.Dr(varargin{:});
+            this = this@CfgBase(varargin{:});
             if ~isempty(varargin)
                 this = helpers.vl_argparse(this,varargin{:});
             end

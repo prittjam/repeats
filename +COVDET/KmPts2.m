@@ -1,10 +1,10 @@
-classdef AffPt < DR.Gen
+classdef KmPts2 < Gen
     properties
         subids;
     end
 
     methods
-        function this = AffPt()
+        function this = KmPts2()
         end
 
         function res = make(this,img,feat_cfg_list,varargin)
