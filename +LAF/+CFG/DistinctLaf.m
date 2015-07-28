@@ -1,4 +1,4 @@
-classdef Distinct < DR.CFG.Dr 
+classdef DistinctLaf < DR.CFG.Dr 
     properties(Access=public)
         acute = 1/10*pi
         oblique = 9/10*pi
@@ -7,7 +7,7 @@ classdef Distinct < DR.CFG.Dr
     end
     
     methods
-        function this = Distinct(min_size,varargin)
+        function this = DistinctLaf(min_size,varargin)
             this = this@DR.CFG.Dr(varargin{:});
             if nargin < 1
                 min_size = 0;
@@ -15,7 +15,7 @@ classdef Distinct < DR.CFG.Dr
             if ~isempty(varargin)
                 if numel(varargin) > 1
                     [this,~] = helpers.vl_argparse(this,varargin{:});
-                elseif isa(varargin{1},'LAF.CFG.distinct')
+                elseif isa(varargin{1},'LAF.CFG.DistinctLaf')
                     this = copy(varargin{1});
                 end
             end
