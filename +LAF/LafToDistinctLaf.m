@@ -1,6 +1,6 @@
 classdef LafToDistinctLaf < DR.Gen
     properties
-        distinct_cfg = LAF.CFG.Distinct();
+        distinct_cfg = LAF.CFG.DistinctLaf();
     end
 
     methods
