@@ -1,10 +1,10 @@
-classdef LafToDistinctLaf < DR.Gen
+classdef AffPtToDistinctAffPt < DR.Gen
     properties
-        distinct_cfg = LAF.CFG.DistinctLaf();
+        distinct_cfg = COVDET.CFG.DistinctAffPt();
     end
 
     methods
-        function this = LafDistinct()
+        function this = AffPtToDistinctAffPt()
         end
 
         function res = make(this,img,cfg_list,laf_list,varargin)
