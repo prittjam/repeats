@@ -46,7 +46,7 @@ classdef SqlDb < SQL.SqlBase
         end
         
         function err = put_img(this, cid, url)
-            url = get_canonical_path(url);
+            url = SQL.get_canonical_path(url);
             stm =  this.connh.prepareStatement(['INSERT INTO imgs' ...
                                 ' (cid, url)' ...
                                 ' VALUES(UNHEX(?),?) ON ' ...
@@ -63,7 +63,7 @@ classdef SqlDb < SQL.SqlBase
             stm =  this.connh.prepareStatement(['SELECT cid ' ...
                                      'FROM imgs ' ...
                                      'WHERE url=?']);
-            stm.setString(1, url);
+            stm.setString(1, SQL.get_canonical_path(url));
             rs = stm.executeQuery();
             is = rs.next();
         end
@@ -88,9 +88,9 @@ classdef SqlDb < SQL.SqlBase
                                     ' VALUES(?,UNHEX(?))']);                
                 cids = {};
                 for i = 1:length(img_set)
-                    url = img_set{i};
+                    url = SQL.get_canonical_path(img_set{i});
                     filecontents = get_native_img(url);
-                    cids{i} = HASH.hash(filecontents(:),'MD5');
+                    cids{i} = KEY.hash(filecontents(:),'MD5');
                     [pth, img_name, ext] = fileparts(url);
 
                     err = this.put_img(cids{i},url);
