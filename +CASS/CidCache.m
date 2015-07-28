@@ -55,7 +55,7 @@ classdef CidCache < handle
                 key_list{k} = cell(1,numel(chains{k}));
                 parents = '';
                 for k1 = 1:numel(chains{k})
-                    name = [parents class(chains{k}{k1})];
+                    name = [parents chains{k}{k1}.get_uname()];
                     if isempty(parents)
                         this.add_dependency(name, ...
                                                  chains{k}{k1});
@@ -79,7 +79,7 @@ classdef CidCache < handle
                 res{k} = cell(1,numel(chains{k}));
                 is_found{k} = false(1,numel(chains{k}));
                 for k1 = 1:numel(chains{k})
-                    name = [name class(chains{k}{k1}) ':'];
+                    name = [name chains{k}{k1}.get_uname() ':'];
                     [res{k}{k1},is_found{k}(k1)] = ...
                         this.get('dr',name(1:end-1));
                 end
@@ -90,7 +90,7 @@ classdef CidCache < handle
             for k = 1:numel(chains)
                 name = '';
                 for k1 = 1:numel(chains{k})
-                    name = [name class(chains{k}{k1}) ':'];
+                    name = [name chains{k}{k1}.get_uname() ':'];
                     this.put('dr',name(1:end-1),res{k}{k1});
                 end
             end
