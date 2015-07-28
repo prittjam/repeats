@@ -23,5 +23,9 @@ classdef Mser < CfgBase
                 this = helpers.vl_argparse(this,varargin{:});
             end
         end
+
+        function uname = get_uname(this)
+            uname = 'Mser';
+        end
     end
 end 

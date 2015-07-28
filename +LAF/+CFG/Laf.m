@@ -194,5 +194,9 @@ classdef Laf < CfgBase
                 this = helpers.vl_argparse(this,varargin{:});
             end
         end
+
+        function uname = get_uname(this)
+            uname = 'Laf';
+        end
     end
 end 

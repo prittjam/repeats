@@ -15,5 +15,9 @@ classdef Sift < CfgBase
                 this = helpers.vl_argparse(this,varargin{:});
             end
         end
+
+        function uname = get_uname(this)
+            uname = 'Sift';
+        end
     end
 end

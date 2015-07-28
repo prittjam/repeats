@@ -21,5 +21,9 @@ classdef DistinctAffPt < CfgBase
             end
             this.min_laf_scale = min_size;
         end
+
+        function uname = get_uname(this)
+            uname = 'DistinctAffPt';
+        end
     end
 end 
