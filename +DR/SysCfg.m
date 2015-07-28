@@ -6,7 +6,7 @@ classdef SysCfg
     methods
         function this = SysCfg()
             if (exist('extrema') == 3)
-                this.map = containers.Map({'MSER.CFG.Mserp','MSER.CFG.Mserm','AFFPT.CFG.HessianAffine', ... 
+                this.map = containers.Map({'MSER.CFG.Mserp','MSER.CFG.Mserm','LAF.CFG.HessianAffine', ... 
                                     'LAF.CFG.Laf', 'SIFT.CFG.Sift', ...
                                     'LAF.CFG.DistinctLaf'}, ...
                                           {'make_extrema','make_extrema','make_hessian_affine', ...
@@ -37,7 +37,7 @@ function extrema = make_extrema()
 end
 
 function extrema = make_hessian_affine()
-    extrema = AFFPT.AffPt();
+    extrema = LAF.AffPt();
 end
 
 function mser_to_laf = make_mser_to_laf()
