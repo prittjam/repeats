@@ -1,4 +1,8 @@
 classdef AffPt < CfgBase 
+    properties(Access=private,Static)
+        uname = 'AffPt';        
+    end
+    
     properties(Access = public)
         threshold = 8/3;
         max_iter = 16;
@@ -18,9 +22,11 @@ classdef AffPt < CfgBase
                 this = helpers.vl_argparse(this,varargin{:});
             end
         end
-
-        function uname = get_uname(this)
-            uname = 'AffPt';
+    end
+    
+    methods(Static)
+        function uname = get_uname()
+            uname = COVDET.CFG.uname;
         end
     end
 end 

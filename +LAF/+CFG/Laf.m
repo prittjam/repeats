@@ -1,4 +1,8 @@
 classdef Laf < CfgBase
+    properties(Access=private,Constant)
+        uname = 'Laf';    
+    end
+    
     properties
         % default = 0.5 delky hran rovnoramenneho trojuhelniku vepisovaneho do
         % polygonu, uhel pak urcuje krivost
@@ -194,9 +198,11 @@ classdef Laf < CfgBase
                 this = helpers.vl_argparse(this,varargin{:});
             end
         end
+    end
 
-        function uname = get_uname(this)
-            uname = 'Laf';
+    methods(Static)
+        function uname = get_uname()
+            uname = LAF.CFG.Laf.uname;
         end
     end
 end 
