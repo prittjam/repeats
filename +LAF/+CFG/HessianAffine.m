@@ -1,11 +1,11 @@
-classdef HessianAffine < AFFPT.CFG.AffPt
+classdef HessianAffine < LAF.CFG.AffPt
     properties
         detector = 7;
     end
 
     methods 
         function this = HessianAffine(varargin)
-            this@AFFPT.CFG.AffPt(varargin{:});
+            this@LAF.CFG.AffPt(varargin{:});
         end
     end
 end
