@@ -6,9 +6,13 @@ function key = make(cfg)
     if  ischar(cfg)
         key = cfg;
     else
-        scfg = KEY.class_to_struct(cfg);
+        if ismethod(cfg,'get_uname')
+            uname = cfg.get_uname();
+        else
+            uname = class(cfg);
+        end
         if usejava('jvm')
-            key = KEY.cfg2hash(scfg, class(cfg));
+            key = KEY.cfg2hash(scfg,uname);
         end
     end
 end

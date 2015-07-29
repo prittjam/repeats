@@ -25,10 +25,5 @@ classdef CfgBase < matlab.mixin.Copyable
         function x = get_write_cache(this)
             x = this.write_cache;
         end
-
-        function uuid = get_uuid(this)
-            uuid = [];
-        end
-
     end
 end

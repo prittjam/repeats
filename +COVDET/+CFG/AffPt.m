@@ -26,7 +26,7 @@ classdef AffPt < CfgBase
     
     methods(Static)
         function uname = get_uname()
-            uname = COVDET.CFG.uname;
+            uname = COVDET.CFG.AffPt.uname;
         end
     end
 end 

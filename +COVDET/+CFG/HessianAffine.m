@@ -1,4 +1,8 @@
 classdef HessianAffine < COVDET.CFG.AffPt
+    properties(Access=private,Constant)
+        uname = 'HessianAffine';
+    end
+    
     properties
         detector = 7;
     end
@@ -7,9 +11,11 @@ classdef HessianAffine < COVDET.CFG.AffPt
         function this = HessianAffine(varargin)
             this@COVDET.CFG.AffPt(varargin{:});
         end
-
-        function uname = get_uname(this)
-        	uname = 'HessianAffine';
+    end
+    
+    methods(Static)
+        function uname = get_uname()
+            COVDET.CFG.AffPt.HessianAffine = uname;
         end
     end
 end
