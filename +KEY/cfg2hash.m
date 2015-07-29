@@ -4,6 +4,7 @@ function [cfghash json] = cfg2hash(cfg, name)
     	name = '';
     end
 
+    cfg = KEY.class_to_struct(cfg);    
     cfg = orderfields(cfg);
     
     %is cfg ordered?
