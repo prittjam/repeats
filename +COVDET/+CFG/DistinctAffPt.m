@@ -1,4 +1,8 @@
 classdef DistinctAffPt < CfgBase 
+    properties(Access=private,Constant)
+        uname = 'DistinctAffPt';
+    end
+
     properties(Access=public)
         acute = 1/10*pi
         oblique = 9/10*pi
@@ -23,7 +27,7 @@ classdef DistinctAffPt < CfgBase
         end
 
         function uname = get_uname(this)
-            uname = 'DistinctAffPt';
+            uname = COVDET.CFG.DistinctAffPt.uname;
         end
     end
 end 

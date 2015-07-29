@@ -1,4 +1,8 @@
 classdef Mser < CfgBase 
+    properties(Access=private,Constant)
+        uname = 'Mser';
+    end
+
     properties(Access = public)
         verbose = 1;
         relative = 0;
@@ -25,7 +29,7 @@ classdef Mser < CfgBase
         end
 
         function uname = get_uname(this)
-            uname = 'Mser';
+            uname = MSER.CFG.Mser.uname;
         end
     end
 end 
