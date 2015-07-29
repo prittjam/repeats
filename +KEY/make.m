@@ -12,7 +12,7 @@ function key = make(cfg)
             uname = class(cfg);
         end
         if usejava('jvm')
-            key = KEY.cfg2hash(scfg,uname);
+            key = KEY.cfg2hash(cfg,uname);
         end
     end
 end

@@ -1,4 +1,9 @@
 classdef Sift < CfgBase
+    properties(Access=private,Constant)
+        uname = 'Sift';
+    end
+
+
     properties(Access=public)
         ignore_gradient_sign = 0;
         desc_factor = 3*sqrt(3);
@@ -17,7 +22,7 @@ classdef Sift < CfgBase
         end
 
         function uname = get_uname(this)
-            uname = 'Sift';
+            uname = SIFT.CFG.Sift.uname;
         end
     end
 end
