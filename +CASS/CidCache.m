@@ -34,6 +34,8 @@ classdef CidCache < handle
             
             key = KEY.make(key);
 
+            % key = KEY.make(key,name);
+            
             cfg = helpers.vl_argparse(cfg,varargin);
 	    
     	    if ~isempty(cfg.parents) && ~iscell(cfg.parents)
