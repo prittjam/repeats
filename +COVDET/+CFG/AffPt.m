@@ -1,5 +1,5 @@
 classdef AffPt < CfgBase 
-    properties(Access=private,Static)
+    properties(Access=private,Constant)
         uname = 'AffPt';        
     end
     
