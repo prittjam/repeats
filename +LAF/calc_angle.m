@@ -1,4 +1,4 @@
-function angle = get_angle(u)
+function angle = calc_angle(u)
 v1 = u(1:2,:)-u(4:5,:);
 v2 = u(7:8,:)-u(4:5,:);
 

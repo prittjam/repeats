@@ -1,4 +1,4 @@
-function sc = get_scale(lafs)
+function sc = calc_scale(lafs)
 %A = [1:3];
 %B = [4:6];
 %C = [7:9];
