@@ -133,6 +133,13 @@ classdef SqlDb < SQL.SqlBase
                 end
             end                               
         end 
+
+        function rs = remove_img(this,cid)
+            stm = this.connh.prepareStatement([ 'DELETE FROM img_sets ',...
+                                                'WHERE cid=UNHEX(?)']);
+            stm.setString(1, cid);
+            rs = stm.executeUpdate(); 
+        end
         
         function url = get_img_url(this,cid)
             stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM imgs']);
