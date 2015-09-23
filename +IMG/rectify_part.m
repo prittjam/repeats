@@ -18,6 +18,7 @@ data = [max(outbounds(1,:),outimbounds(1,:));
  		min(outbounds(2,:),outimbounds(2,:))];
 
 if max(data(2,:) - data(1,:)) > 8000
+	xdata = data(2,:) - data(1,:);
 	return;
 end
 
