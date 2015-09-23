@@ -11,4 +11,5 @@ x = reshape(u(1:3:end,:),3,[]);
 y = reshape(u(2:3:end,:),3,[]);
 hold(ax1,'on');
 h1 = plot(ax1,x,y,varargin{:});
+% h2 = plot(ax1,u(7,:),u(8,:),'*',varargin{:});
 hold(ax1,'off');

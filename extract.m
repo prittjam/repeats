@@ -45,15 +45,9 @@ function prev_res = make_prev_res(x,y)
     end
 
 
-%    cur_cfg_chain = cellfun(@(x,y) x{y},cfg_chain,num2cell(curi), ...
+%cur_cfg_chain = cellfun(@(x,y) x{y},cfg_chain,num2cell(curi), ...
 %                            'UniformOutput',false);    
 %end
-%        
-%    
-%
-%
-%
-%
 %while( ~all(cellfun(@(x) isempty(x),curgen)) )
 %
 %

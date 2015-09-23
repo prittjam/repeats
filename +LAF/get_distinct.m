@@ -7,6 +7,9 @@ udrid = unique(drid);
 rmind = false(1,num_dr);
 sc = LAF.calc_scale(u);
 rmind(sc < cfg.min_laf_scale) = true;
+if sum([affpt.reflected]) > 0
+	u(:,[affpt.reflected]) = LAF.switch_hands(u(:,[affpt.reflected]));
+end
 for k = udrid
     ind = find(drid == k);
     lafs = u(:,ind);
@@ -18,8 +21,13 @@ for k = udrid
 	    ov = LAF.calc_overlap(lafs(:,ind1), ...
 	                          lafs(:,idx(ind1,2)));
 	    ind2 = find(ov < cfg.ovthresh);
-	    rmind(ind(idx(ind1(ind2),2))) = true;
-	    rmind(ind(ind1(ind2))) = true;
+	    remove1 = ind(idx(ind1(ind2),2));
+	    remove2 = ind(ind1(ind2));
+	    % remove = unique(sort([remove1; remove2])','rows')';
+	    % rmind(remove(1,:)) = true;
+	    % rmind(remove(2,:)) = true;
+	    rmind(remove1) = true;
+	    rmind(remove2) = true;
 	end
 end
 keepind1 = setdiff(1:num_dr,find(rmind));

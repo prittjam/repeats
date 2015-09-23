@@ -18,13 +18,25 @@ classdef MserToLaf < Gen
                 %t = cputime;
 
                 [regs, affpts, cfg] = ...
-                    mexlafs(img, {mser_list{k}.rle}, 0, ...
+                    mexlafs(img, {mser_list{k}.rle(:,~mser_list{k}.reflected)}, 0, ...
                             KEY.class_to_struct(upg_cfg_list{k}));
+                affpts_ref = [];
+                if any(mser_list{k}.reflected)
+                    reflected_ind = find(mser_list{k}.reflected == 1);
+                    [regs_ref, affpts_ref, cfg_ref] = ...
+                    mexlafs(IMG.reflect(img), {mser_list{k}.rle(:,reflected_ind)}, 0, ...
+                            KEY.class_to_struct(upg_cfg_list{k}));
+                    ref = num2cell(reflected_ind([affpts_ref.id]));
+                    [affpts_ref.id] = deal(ref{:});
+                end
+                affpts = [affpts; affpts_ref];
                 %DR.data{imid, drid}.upgtime = cputime - t;
 
                 upg = struct;
                 % output map of upgrades to dr
-                upg.upg2dr  = [affpts.id];
+                upg.upg2dr  = [affpts.id]';
+                reflected = num2cell(mser_list{k}.reflected(upg.upg2dr)');
+                [affpts.reflected] = deal(reflected{:});
 
                 % relabel upgraded regions
                 for i=1:numel(affpts)

@@ -13,6 +13,7 @@ classdef AffPt < CfgBase
         estimate_angle = 1;
         compute_descriptor = 0;
         output_format = 2;
+        reflection = 0;
     end
 
     methods

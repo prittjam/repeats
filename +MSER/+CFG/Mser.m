@@ -18,6 +18,7 @@ classdef Mser < CfgBase
         chroma_thresh = 0.09;
         min_areadiff = 0.1;
         nms_method = 0;
+        reflection = 0;
     end
 
     methods

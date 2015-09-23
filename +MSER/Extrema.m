@@ -21,6 +21,19 @@ classdef Extrema < Gen
                 [mser img det_time] = extrema(a, ...
                                               KEY.class_to_struct(feat_cfg_list{1}), ...
                                               subids);
+                reflected = cell(size(mser));
+                for k = 1:numel(reflected)
+                    reflected{k} = zeros(1,size(mser{k},2));
+                end
+                if feat_cfg_list{1}.reflection
+                    [mser0 img det_time] = extrema(IMG.reflect(a), ...
+                                              KEY.class_to_struct(feat_cfg_list{1}), ...
+                                              subids);
+                    for k = 1:numel(reflected)
+                        mser{k} = [mser{k} mser0{k}];
+                        reflected{k} = [reflected{k} ones(1,size(mser0{k},2))];
+                    end
+                end
             else
                 mser = cell(1,numel(subids));
                 det_time = zeros(1,numel(subids));
@@ -28,6 +41,14 @@ classdef Extrema < Gen
                     [mser(k) img] = extrema(a, ...
                                             KEY.class_to_struct(feat_cfg_list{k}), ...
                                             subids(k));
+                    reflected{k} = zeros(1,size(mser{k},2));
+                    if feat_cfg_list{1}.reflection
+                        [mser0(k) img] = extrema(IMG.reflect(a), ...
+                                                KEY.class_to_struct(feat_cfg_list{k}), ...
+                                                subids(k));
+                        mser{k} = [mser{k} mser0{k}];
+                        reflected{k} = [reflected{k} ones(1,size(mser0{k},2))];
+                    end
                 end
             end
 
@@ -37,6 +58,7 @@ classdef Extrema < Gen
                 ind = 1:numel(mser{k});
                 if ~isempty(mser{:,k})
                     res{k}.rle = mser{:,k};
+                    res{k}.reflected = reflected{k};
                 end
                 %                res{k}.time = det_time(k);
             end
