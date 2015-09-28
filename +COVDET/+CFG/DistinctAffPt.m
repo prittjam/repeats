@@ -18,7 +18,7 @@ classdef DistinctAffPt < CfgBase
             end
             if ~isempty(varargin)
                 if numel(varargin) > 1
-                    [this,~] = helpers.vl_argparse(this,varargin{:});
+                    [this,~] = cmp_argparse(this,varargin{:});
                 elseif isa(varargin{1},'COVDET.CFG.DistinctAffPt')
                     this = copy(varargin{1});
                 end

@@ -12,7 +12,7 @@ classdef Img < handle
     methods(Access=public)
         function this = Img(varargin)
             cfg = struct('data',[],'url',[],'cid',[]);
-            cfg = helpers.vl_argparse(cfg,varargin{:});
+            cfg = cmp_argparse(cfg,varargin{:});
             this.data = cfg.data;
             this.cid = cfg.cid;
            

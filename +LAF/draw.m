@@ -1,6 +1,6 @@
 function h1 = draw(ax1,u,varargin)
 cfg.Color = [];
-[cfg,leftover] = helpers.vl_argparse(cfg,varargin{:});
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 if isempty(cfg.Color)
     mpdc = distinguishable_colors(size(u,2));

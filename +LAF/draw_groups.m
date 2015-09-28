@@ -1,7 +1,7 @@
 function draw_repeats(ax0,u,labeling,varargin)
 cfg.exclude = 0;
 cfg.color = '';
-[cfg,leftover] = helpers.vl_argparse(cfg,varargin{:});
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
 if isempty(leftover)
     leftover = {'LineWidth',3};
 end

@@ -9,7 +9,7 @@ classdef Slic < CfgBase
             this = this@CfgBase(varargin{:});
             if ~isempty(varargin)
                 if numel(varargin) > 1
-                    [this,~] = helpers.vl_argparse(this,varargin{:});
+                    [this,~] = cmp_argparse(this,varargin{:});
                 elseif isa(varargin{1},'SPIXEL.CFG.Slic')
                     this = copy(varargin{1});
                 end

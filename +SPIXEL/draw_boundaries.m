@@ -1,15 +1,18 @@
 function [] = draw_boundaries(gca,segments,varargin)
-if nargin < 3
-    varargin = {'r.','MarkerSize',2};
-end
+cfg = struct('segments',1:max(segments(:)), ...
+             'markersize',2);
+leftover = {};
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 perim = false(size(segments,1),size(segments,2));
-for k = 1:max(segments(:))
+for k = cfg.segments
     regionK = segments == k;
     perimK = bwperim(regionK,4);
     perim(perimK) = true;
 end
+
 [ii,jj] = find(perim);
 hold on;
-plot(gca,jj,ii,varargin{:});
+plot(gca,jj,ii,'.','MarkerSize', ...
+     cfg.markersize,leftover{:});
 hold off;

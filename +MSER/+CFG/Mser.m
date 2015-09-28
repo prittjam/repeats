@@ -25,7 +25,7 @@ classdef Mser < CfgBase
         function this = Mser(varargin)
             this = this@CfgBase(varargin{:});
             if ~isempty(varargin)
-                this = helpers.vl_argparse(this,varargin{:});
+                this = cmp_argparse(this,varargin{:});
             end
         end
 
