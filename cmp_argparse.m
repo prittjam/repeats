@@ -35,9 +35,18 @@ function [conf, args] = vl_argparse(conf, args, varargin)
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
-if ~isstruct(conf), error('CONF must be a structure') ; end
+%if ~isstruct(conf), error('CONF must be a structure') ; end
+
+if nargin == 1
+    args = [];
+    return;
+end
 
 if length(varargin) > 0, args = {args, varargin{:}} ; end
+
+if length(args) == 0
+    return;
+end
 
 remainingArgs = {} ;
 names = fieldnames(conf) ;
