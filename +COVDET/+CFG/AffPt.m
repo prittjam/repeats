@@ -4,7 +4,7 @@ classdef AffPt < CfgBase
     end
     
     properties(Access = public)
-        threshold = 8/3;
+        threshold = 2*8/3;
         max_iter = 16;
         double_image = 0;
         initial_sigma = 1.6;

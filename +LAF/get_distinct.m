@@ -1,15 +1,13 @@
 function [keepind,cfg] = get_distinct(cfg,affpt)
 num_dr = numel(affpt);
 u = LAF.affpt_to_p3x3(affpt);
+affpt = COVDET.split_reflect(affpt);
 drid = [affpt(:).class];
 
 udrid = unique(drid);
 rmind = false(1,num_dr);
 sc = LAF.calc_scale(u);
 rmind(sc < cfg.min_laf_scale) = true;
-if sum([affpt.reflected]) > 0
-	u(:,[affpt.reflected]) = LAF.switch_hands(u(:,[affpt.reflected]));
-end
 for k = udrid
     ind = find(drid == k);
     lafs = u(:,ind);
