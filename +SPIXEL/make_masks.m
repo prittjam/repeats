@@ -1,4 +1,4 @@
-function masks = make_spixel_masks(labels,labeling,spixels)
+function masks = make_masks(labels,labeling,spixels)
     num_spixels = max(spixels(:));
     num_dr = double(numel(labeling)-num_spixels);
     spixel_sites = [numel(labeling)-num_spixels+1:numel(labeling)];
@@ -13,4 +13,4 @@ function masks = make_spixel_masks(labels,labeling,spixels)
     
     masks = struct('linf_id', ...
                    mat2cell([slabels(:).linf_id],1,ones(1,numel(slabel_inds))), ...
-                   'data',data);
+                   'BW',data);

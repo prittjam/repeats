@@ -1,4 +1,4 @@
-function w = join_to_lafs(u,segments,varargin)
+function w = join_to_lafs(segments,u,varargin)
 cfg.test = 'cog';
 [cfg,leftover] =  cmp_argparse(cfg,varargin{:});
 

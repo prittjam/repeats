@@ -1,10 +1,12 @@
 classdef Img < handle
     properties
+        real;
         data;
         height; 
         width;
         area;
         intensity;
+        
         cid;
         url;
     end
@@ -35,6 +37,8 @@ classdef Img < handle
             elseif (ndims(this.data) == 1)
                 this.intensity = data;
             end
+            
+            this.real = im2double(this.data);
         end
     end
     

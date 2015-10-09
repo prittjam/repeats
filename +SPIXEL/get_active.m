@@ -1,3 +1,3 @@
-function active = get_active(img,segments,active)
-[A,B] = ismember(spixels,active_spixels);
-active = A.*segments;
+function [active,BW] = get_active(segments,active)
+BW = ismember(segments,active);
+active = BW.*segments;
