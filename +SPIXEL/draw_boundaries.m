@@ -1,8 +1,10 @@
 function [] = draw_boundaries(gca,segments,varargin)
 cfg = struct('segments',1:max(segments(:)), ...
              'markersize',2);
-leftover = {};
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
+if isempty(leftover)
+	leftover = {};
+end
 
 perim = false(size(segments,1),size(segments,2));
 for k = cfg.segments
