@@ -163,6 +163,9 @@ classdef SqlDb < SQL.SqlBase
         end 
 
         function img_set = get_img_set(this,set_name,img_names)
+            if nargin < 3
+                img_names = [];
+            end
             img_set = {};
 
             stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM img_sets ' ...
