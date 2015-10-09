@@ -29,11 +29,11 @@ classdef Cass < handle
         function this = Cass(varargin)
             this.cass_cfg.nodes = char(this.lascar_ip_addr);
             
-            [this.cass_cfg,leftover] = helpers.vl_argparse(this.cass_cfg, ...
+            [this.cass_cfg,leftover] = cmp_argparse(this.cass_cfg, ...
                                                   varargin{:});
             if ~isempty(leftover)
                 cfg.cfg_file = [];
-                cfg = helpers.vl_argparse(cfg,leftover);
+                cfg = cmp_argparse(cfg,leftover);
                 if ~isempty(cfg.cfg_file)
                     if exist(cfg.cfg_file,'file')
                         fid = fopen(cfg.cfg_file);
@@ -64,7 +64,7 @@ classdef Cass < handle
         end
         
         function storage = get_handle(this,varargin)
-            cass_cfg = helpers.vl_argparse(this.cass_cfg, varargin{:});
+            cass_cfg = cmp_argparse(this.cass_cfg, varargin{:});
 
             tableName = cass_cfg.table;
             if isfield(this.ckvs_table_cache,tableName)

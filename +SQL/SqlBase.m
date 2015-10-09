@@ -15,7 +15,7 @@ classdef SqlBase < handle
                          'user',[], ...
                          'pass',[]);
             
-            cfg = helpers.vl_argparse(cfg,varargin{:});
+            cfg = cmp_argparse(cfg,varargin{:});
             
             if ~isempty(cfg.cfg_file)
                 if exist(cfg.cfg_file,'file')

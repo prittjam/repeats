@@ -21,7 +21,7 @@ classdef CidCache < handle
             this.cfg.read_cache = true;
             this.cfg.write_cache = true;
 
-            [this.cfg,~] = helpers.vl_argparse(this.cfg,varargin);
+            [this.cfg,~] = cmp_argparse(this.cfg,varargin);
             
             if isempty(cid) || isempty(imagedb)
                 this.cfg.read_cache = false;
@@ -36,7 +36,7 @@ classdef CidCache < handle
 
             % key = KEY.make(key,name);
             
-            cfg = helpers.vl_argparse(cfg,varargin);
+            cfg = cmp_argparse(cfg,varargin);
 	    
     	    if ~isempty(cfg.parents) && ~iscell(cfg.parents)
                     cfg.parents = {cfg.parents};
@@ -104,7 +104,7 @@ classdef CidCache < handle
 
         function [is_put,xor_key] = put(this,table,name,value,varargin)
             cfg.overwrite = false;
-            cfg = helpers.vl_argparse(cfg,varargin);
+            cfg = cmp_argparse(cfg,varargin);
 
             is_put = false;
             

@@ -1,4 +1,8 @@
 function [img_subset,ind] = find_img_subset(img_set,subset)
-for k = 1:numel(subset)
-    [img_subset{k},ind(k)] = find_img_name(img_set,subset{k});
+if iscell(subset)
+    for k = 1:numel(subset)
+        [img_subset(k),ind(k)] = SQL.find_img_name(img_set,subset{k});
+    end
+else
+    [img_subset,ind] = SQL.find_img_name(img_set,subset);
 end

@@ -73,7 +73,7 @@ classdef SqlDb < SQL.SqlBase
             cfg = [];
             cfg.description = [];
             cfg.replace = true;
-            [cfg,leftover] =  helpers.vl_argparse(cfg,varargin{:});
+            [cfg,leftover] =  cmp_argparse(cfg,varargin{:});
 
             stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM img_sets ' ...
                                 'WHERE name=?']);
@@ -162,7 +162,7 @@ classdef SqlDb < SQL.SqlBase
             end        
         end 
 
-        function img_set = get_img_set(this, set_name)
+        function img_set = get_img_set(this,set_name,img_names)
             img_set = {};
 
             stm = this.connh.prepareStatement(['SELECT COUNT(*) FROM img_sets ' ...
@@ -190,7 +190,11 @@ classdef SqlDb < SQL.SqlBase
                     img_set(row_num).cid = lower(char(rs.getString(2))); 
                     [~,img_set(row_num).name,~] = fileparts(img_set(row_num).url); 
                 end
-            end        
+            end
+            
+            if ~isempty(img_names)
+                img_set = SQL.find_img_subset(img_set,img_names);
+            end
         end
 
 
@@ -199,7 +203,7 @@ classdef SqlDb < SQL.SqlBase
             cfg.description = [];
             cfg.replace = false;
 
-            [cfg,leftover] =  helpers.vl_argparse(cfg,varargin{:});
+            [cfg,leftover] =  cmp_argparse(cfg,varargin{:});
  
             h = char(zeros(2,32));
 

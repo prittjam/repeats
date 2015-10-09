@@ -10,5 +10,4 @@ for img = img_set
     end
 end
 
-ind = -1;
-img = [];
+assert(false,['File ' name ' is not found when loading img set.']);
