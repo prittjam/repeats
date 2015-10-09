@@ -4,7 +4,7 @@ cfg.topN = [];
 cfg.exclude_labels = [];
 cfg.draw_labels = false;
 
-[cfg,leftover] = helpers.vl_argparse(cfg,varargin{:});
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 if isempty(leftover)
     leftover = {'LineWidth',3};
