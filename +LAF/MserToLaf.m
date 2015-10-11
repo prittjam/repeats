@@ -35,6 +35,9 @@ classdef MserToLaf < Gen
                 upg = struct;
                 % output map of upgrades to dr
                 upg.upg2dr  = [affpts.id]';
+                upg2dr = num2cell(upg.upg2dr);
+                [affpts.upg2dr] = deal(upg2dr{:});
+
                 reflected = num2cell(mser_list{k}.reflected(upg.upg2dr)');
                 [affpts.reflected] = deal(reflected{:});
 
