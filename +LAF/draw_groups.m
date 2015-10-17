@@ -2,7 +2,7 @@ function draw_groups(ax0,u,labeling,varargin)
 cfg.exclude = 0;
 cfg.color = '';
 cfg.chain = [];
-cfg.linewidth = 4;
+cfg.linewidth = 3;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 ulabeling = unique(labeling);
@@ -27,20 +27,31 @@ if isempty(cfg.chain)
         end
     end
 else
-    idx = labeling ~= cfg.exclude;
     chain = cfg.chain;
-    keepmserp = chain{1}{2}.upg2dr([chain{1}{4}.affpt(:).id]);
-    keepmserm = chain{2}{2}.upg2dr([chain{2}{4}.affpt(:).id]);
+    inl = labeling ~= cfg.exclude;
+    inl_mserp = inl(1:numel(chain{1}{4}.affpt));
+    inl_mserm = inl(end-numel(chain{2}{4}.affpt)+1:end);
+
+    mserp_id = [chain{1}{4}.affpt(:).id];
+    mserm_id = [chain{2}{4}.affpt(:).id];
+    mserp_id = mserp_id(~[chain{1}{4}.affpt(:).reflected] & inl_mserp);
+    mserm_id = mserm_id(~[chain{2}{4}.affpt(:).reflected] & inl_mserm);
+    keepmserp = chain{1}{2}.upg2dr(mserp_id);
+    keepmserm = chain{2}{2}.upg2dr(mserm_id);
 
     chain{1}{1}.rle = chain{1}{1}.rle(:,keepmserp);
     chain{2}{1}.rle = chain{2}{1}.rle(:,keepmserm);
     MSER.draw(gca,chain{1}{1},'LineWidth',cfg.linewidth,'Color',rgb('SpringGreen'));
     MSER.draw(gca,chain{2}{1},'LineWidth',cfg.linewidth,'Color',rgb('SpringGreen'));
 
-    A = LAF.p3x3_to_A(u(:,idx));
+    A = LAF.p3x3_to_A(u(:,inl));
     ELL.draw_A(gca,A,'Color',rgb('Indigo'),'LineWidth',cfg.linewidth);
     
-    tdru = u(:,idx);
+    tdru = u(:,inl);
+    tdru(7:9,:) = tdru(1:3,:);
+    LAF.draw(ax0,tdru,'Color',rgb('Gold'),'LineWidth',cfg.linewidth);
+    
+    tdru = u(:,inl);
     tdru(1:3,:) = tdru(7:9,:);
     LAF.draw(ax0,tdru,'Color',rgb('Red'),'LineWidth',cfg.linewidth);
     
@@ -48,5 +59,5 @@ else
     plot(gca,tdru(7,:),tdru(8,:),'*', ...
         'MarkerSize',8,'LineWidth',cfg.linewidth,'Color',rgb('Red'));
     plot(gca,tdru(4,:),tdru(5,:),'+', ...
-        'MarkerSize',15,'LineWidth',cfg.linewidth,'Color',rgb('Indigo'));
+        'MarkerSize',25,'LineWidth',cfg.linewidth,'Color',rgb('Indigo'));
 end
