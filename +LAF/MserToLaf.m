@@ -20,6 +20,7 @@ classdef MserToLaf < Gen
                 [regs, affpts, cfg] = ...
                     mexlafs(img, {mser_list{k}.rle(:,~mser_list{k}.reflected)}, 0, ...
                             KEY.class_to_struct(upg_cfg_list{k}));
+                
                 affpts_ref = [];
                 if any(mser_list{k}.reflected)
                     reflected_ind = find(mser_list{k}.reflected == 1);
@@ -45,7 +46,7 @@ classdef MserToLaf < Gen
                 for i=1:numel(affpts)
                     affpts(i).id=i;
                 end
-
+                
                 upg.affpt = affpts;
                 res{k} = upg;
             end
