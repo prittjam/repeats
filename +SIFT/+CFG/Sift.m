@@ -3,14 +3,14 @@ classdef Sift < CfgBase
         uname = 'Sift';
     end
 
-
     properties(Access=public)
         ignore_gradient_sign = 0;
+        estimate_angle = 0;
         desc_factor = 3*sqrt(3);
         verbose = 1;
         patch_size = 41;
         compute_descriptor = 1;
-        output_format= 2;
+        output_format = 2;
     end
 
     methods(Static)
