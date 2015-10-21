@@ -84,6 +84,9 @@ classdef CidCache < handle
                     name = [name chains{k}{k1}.get_uname() ':'];
                     [res{k}{k1},is_found{k}(k1)] = ...
                         this.get('dr',name(1:end-1));
+                    if is_found{k}(k1) && isstruct(res{k}{k1}) && isfield(res{k}{k1},'Data')
+                        res{k}{k1} = CompressLib.decompress(res{k}{k1});
+                    end
                 end
             end
         end
@@ -93,7 +96,7 @@ classdef CidCache < handle
                 name = '';
                 for k1 = 1:numel(chains{k})
                     name = [name chains{k}{k1}.get_uname() ':'];
-                    this.put('dr',name(1:end-1),res{k}{k1});
+                    this.put('dr',name(1:end-1),CompressLib.compress(res{k}{k1}));
                 end
             end
         end

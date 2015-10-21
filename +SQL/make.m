@@ -1,5 +1,5 @@
 function [] = make_sqldb()
-sql = sqldb;
+sql = SQL.SqlDb;
 sql.open();
 sql.clear();
 sql.create();
