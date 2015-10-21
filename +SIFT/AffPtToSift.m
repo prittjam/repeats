@@ -11,6 +11,8 @@ classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
                 %                upper(outputs{k}),dr{k}.name,img.url);
                 t = cputime;
                 reflected_ind = ([feat{k}.affpt.reflected]);
+                ids = num2cell([1:numel(feat{k}.affpt)]);
+                [feat{k}.affpt(:).id] = deal(ids{:});
                 res{k} = affpatch(img.intensity,feat{k}.affpt(~reflected_ind), ...
                                   KEY.class_to_struct(desc_cfg_list{k}));
                 desc = [res{k}.affpt(:).desc];
@@ -29,7 +31,11 @@ classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
                     [temp.affpt.reflected] = deal(true);
                     RF = [-1 0 img.width; 0 1 0; 0 0 1];
                     temp.affpt = LAF.apply_T_to_affpt(temp.affpt,RF);
-                    res{k}.affpt = [res{k}.affpt temp.affpt];
+                    if size(temp.affpt,2) == 1
+                        res{k}.affpt = [res{k}.affpt; temp.affpt];
+                    else
+                        res{k}.affpt = [res{k}.affpt temp.affpt];
+                    end    
                 end    
                 res{k}.time = cputime-t;
                 % res{k}.desc2dr = [res{k}.affpt(:).id];
