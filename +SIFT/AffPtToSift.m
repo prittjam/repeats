@@ -15,6 +15,7 @@ classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
                 [feat{k}.affpt(:).id] = deal(ids{:});
                 res{k} = affpatch(img.intensity,feat{k}.affpt(~reflected_ind), ...
                                   KEY.class_to_struct(desc_cfg_list{k}));
+                res{k}.affpt_sift = res{k}.affpt;
                 desc = [res{k}.affpt(:).desc];
                 desc = mat2cell(desc,1,128*ones(numel(desc)/128,1));
                 res{k}.affpt = feat{k}.affpt([res{k}.affpt(:).id])';
@@ -24,6 +25,7 @@ classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
                 if any(reflected_ind)
                     temp = affpatch(IMG.reflect(img.intensity),feat{k}.affpt(find(reflected_ind)), ...
                                   KEY.class_to_struct(desc_cfg_list{k}));
+                    temp.affpt_sift = temp.affpt;
                     desc = [temp.affpt(:).desc];
                     desc = mat2cell(desc,1,128*ones(numel(desc)/128,1));
                     temp.affpt = feat{k}.affpt([temp.affpt(:).id])';
@@ -33,8 +35,10 @@ classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
                     temp.affpt = LAF.apply_T_to_affpt(temp.affpt,RF);
                     if size(temp.affpt,2) == 1
                         res{k}.affpt = [res{k}.affpt; temp.affpt];
+                        res{k}.affpt_sift = [res{k}.affpt_sift; temp.affpt_sift];
                     else
                         res{k}.affpt = [res{k}.affpt temp.affpt];
+                        res{k}.affpt_sift = [res{k}.affpt_sift temp.affpt_sift];
                     end    
                 end    
                 res{k}.time = cputime-t;
