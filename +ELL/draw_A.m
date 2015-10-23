@@ -16,5 +16,5 @@ end
 mpdc = distinguishable_colors(numel(A));
 hold(ax1,'on');
 set(ax1,'ColorOrder',mpdc);    % <--- HERE
-plot(reshape(x(1,:),M,[]),reshape(x(2,:),M,[]),varargin{:});
+plot(reshape(x(1,:),M,[])+0.5,reshape(x(2,:),M,[])+0.5,varargin{:});
 hold(ax1,'off');
