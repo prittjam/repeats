@@ -47,7 +47,7 @@ classdef MserToLaf < Gen
                     affpts(i).id=i;
                 end
                 
-                upg.affpt = affpts;
+                upg.affpt = affpts';
                 res{k} = upg;
             end
         end
