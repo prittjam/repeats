@@ -140,6 +140,11 @@ classdef CompressLib
             end
 		end
 
+		function NumBytes = byteSize(in)
+			s = whos('in');
+			NumBytes = s.bytes;
+		end
+
 		function out = unpackBytes(byteData)
 % CompressLib.unpackBytes
 %--------------------------------------------------------------------------

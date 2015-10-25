@@ -37,7 +37,7 @@ classdef CidCache < handle
             % key = KEY.make(key,name);
             
             cfg = cmp_argparse(cfg,varargin);
-	    
+	        
     	    if ~isempty(cfg.parents) && ~iscell(cfg.parents)
                     cfg.parents = {cfg.parents};
             end
@@ -58,6 +58,7 @@ classdef CidCache < handle
                 parents = '';
                 for k1 = 1:numel(chains{k})
                     name = [parents chains{k}{k1}.get_uname()];
+                    chains{k}{k1}.metadata = [k k1];
                     if isempty(parents)
                         this.add_dependency(name, ...
                                                  chains{k}{k1});
@@ -96,7 +97,11 @@ classdef CidCache < handle
                 name = '';
                 for k1 = 1:numel(chains{k})
                     name = [name chains{k}{k1}.get_uname() ':'];
-                    this.put('dr',name(1:end-1),CompressLib.compress(res{k}{k1}));
+                    data_put = res{k}{k1};
+                    if CompressLib.byteSize(res{k}{k1})/1024^2 > 30
+                        data_put = CompressLib.compress(res{k}{k1});
+                    end
+                    this.put('dr',name(1:end-1),data_put);
                 end
             end
         end
