@@ -4,6 +4,10 @@ classdef CfgBase < matlab.mixin.Copyable
         write_cache
     end
 
+    properties(Access=public)
+        metadata = []
+    end
+
     methods
         function this = CfgBase(varargin)
             this.read_cache = 'On';
