@@ -1,8 +1,14 @@
 function rimg = rectify_inliers(im,Hinf,dr,inl_idx)
+rimg = [];
+if isempty(inl_idx)
+    return;
+end
+if all(size(Hinf) == [1 3])
+    Hinf = [1 0 0; 0 1 0; Hinf];
+end
 inl_idx = inl_idx(cellfun(@numel, inl_idx) > 1);        
 u2 = dr.u(:,unique([inl_idx{:}]));
 mu2 = dr.mu(:,unique([inl_idx{:}]));
-rimg = [];
 if ~isempty(u2)
     v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u2);
     A = HG.laf1_to_A([v;u2]);
