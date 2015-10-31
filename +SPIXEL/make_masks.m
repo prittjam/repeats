@@ -5,12 +5,20 @@ function masks = make_masks(labels,labeling,spixels)
     slabel_inds = unique(labeling(spixel_sites));
     slabels = labels(slabel_inds);
 
-    for k = 1:numel(slabel_inds) 
-        ssites = find(labeling == slabel_inds(k));
+    linf_id = [slabels(:).linf_id];
+    ulinf_id = unique(linf_id);
+
+    for k = 1:numel(ulinf_id) 
+        slabels_linf = find(linf_id == ulinf_id(k));
+        ssites = [];
+        for kk = 1:numel(slabels_linf)
+            ssites = [ssites find(labeling == slabel_inds(slabels_linf(kk)))];
+        end
         active_spixels = ssites-num_dr;
         data{k} = ismember(spixels,active_spixels);
     end
     
     masks = struct('linf_id', ...
-                   mat2cell([slabels(:).linf_id],1,ones(1,numel(slabel_inds))), ...
+                   mat2cell(ulinf_id,1,ones(1,numel(ulinf_id))), ...
                    'BW',data);
+

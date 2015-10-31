@@ -3,6 +3,7 @@ cfg.exclude = 0;
 cfg.color = '';
 cfg.chain = [];
 cfg.linewidth = 3;
+cfg.text = true;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 ulabeling = unique(labeling);
@@ -11,7 +12,7 @@ mpdc = distinguishable_colors(max(udraw_labeling)+1);
 cmap = [0:max(udraw_labeling)];
 
 mu = [(u(1:2,:)+u(4:5,:)+u(7:8,:))/3];
-
+su = LAF.shrink(u,1.5);
 if isempty(cfg.chain)
     for k = 1:numel(udraw_labeling)
         idx = find(labeling == udraw_labeling(k));
@@ -19,8 +20,9 @@ if isempty(cfg.chain)
         if ~isempty(cfg.color)
         	color = cfg.color;
         end
-        LAF.draw(ax0,u(:,idx),'Color',color,'LineWidth',cfg.linewidth);
-        if numel(unique(labeling)) > 1
+        LAF.draw(ax0,u(:,idx),'Color','black','LineWidth',cfg.linewidth+2);
+        LAF.draw(ax0,su(:,idx),'Color',color,'LineWidth',cfg.linewidth);
+        if numel(unique(labeling)) > 1 && cfg.text
             text(mu(1,idx)',mu(2,idx)', ...
                  num2str(udraw_labeling(k)), ...
                  'Color',color);
