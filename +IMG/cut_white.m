@@ -1,9 +1,23 @@
-function [nimg, T] = cut_white(img)
+function [nimg, T, dim] = cut_white(img)
 T = eye(3);
 simg = sum(img,3);
+
 mask = sum(simg,1) ~= 765*size(simg,1);
-nimg = img(:,find(mask,1,'first'):find(mask,1,'last'),:);
-T(1,3) = -find(mask,1,'first');
+first1 = find(mask,1,'first');
+last1 = find(mask,1,'last');
+nimg = img(:,first1:last1,:);
+if ~isempty(first1)
+	T(1,3) = -first1+1;
+end
+
 mask = sum(simg,2) ~= 765*size(simg,2);
-nimg = nimg(find(mask,1,'first'):find(mask,1,'last'),:,:);
-T(2,3) = -find(mask,1,'first');
+first2 = find(mask,1,'first');
+last2 = find(mask,1,'last');
+nimg = nimg(first2:last2,:,:);
+if ~isempty(first2)
+	T(2,3) = -first2+1;
+end
+
+dim = [first2 last2 first1 last1];
+
+

@@ -1,5 +1,6 @@
-function rimg = rectify_inliers(im,Hinf,dr,inl_idx,varargin)
+function [rimg T] = rectify_inliers(im,Hinf,dr,inl_idx,varargin)
 rimg = [];
+T = eye(3); 
 if isempty(inl_idx)
     return;
 end
@@ -17,14 +18,19 @@ if ~isempty(u2)
     v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u2);
     A = HG.laf1_to_A([v;u2]);
     H = A*Hinf;
-    for i = 0:500
+    for i = 1:500
         BW = LINE.line2mask(Hinf(3,:)',im,mu2,i*10);
         inboundary = find_inboundary(BW);
-        rimg = IMG.rectify_part(im,H,inboundary,varargin);
+        [rimg xdata ydata] = IMG.rectify_part(im,H,inboundary,varargin);
         if ~isempty(rimg)
             break;
         end
     end
+    M = eye(3); 
+    if ~isempty(xdata) && ~isempty(ydata)
+        M(1:2,3) = -[xdata(1) ydata(1)]+1;
+    end
+    T = M*H;
     if isempty(rimg)
         warning('Probably wrong line infinity. Skipping...');
         return;
