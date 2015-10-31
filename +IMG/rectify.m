@@ -1,7 +1,9 @@
-function [timg,xdata,ydata] = rectify(img,H,T1)
+function [timg,xdata,ydata] = rectify(img,H,T1,varargin)
 if nargin < 3
     T1 = [];
 end
+cfg.fill = 0;
+cfg = cmp_argparse(cfg,varargin{:});
 
 if all(size(H) == [1 3])
 	H = [1 0 0; 0 1 0; H];
@@ -15,5 +17,5 @@ else
 end
 
 [timg,xdata,ydata] = imtransform(img,T,'bicubic', ...
-                                 'Fill', 0, ...
+                                 'Fill', cfg.fill, ...
                                  'XYScale', 1);

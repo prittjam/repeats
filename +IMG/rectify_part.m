@@ -1,10 +1,12 @@
-function [timg,xdata,ydata] = rectify_part(im,H,inbounds)
+function [timg,xdata,ydata] = rectify_part(im,H,inbounds,varargin)
 timg = [];
 xdata = [];
 ydata = [];
 if isempty(inbounds)
 	return;
 end
+cfg.fill = 0;
+cfg = cmp_argparse(cfg,varargin{:});
 
 T = maketform('projective',H');
 imbounds = [1 1; size(im,2) size(im,1)];
@@ -23,7 +25,7 @@ if max(data(2,:) - data(1,:)) > 8000
 end
 
 [timg,xdata,ydata] = imtransform(im,T,'bicubic', ...
-                                 'Fill', 0, ...
+                                 'Fill', cfg.fill, ...
                                  'XYScale', 1, ...
                                  'XData', data(:,1)', ...
                                  'YData', data(:,2)');

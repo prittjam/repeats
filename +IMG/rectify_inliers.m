@@ -1,4 +1,4 @@
-function rimg = rectify_inliers(im,Hinf,dr,inl_idx)
+function rimg = rectify_inliers(im,Hinf,dr,inl_idx,varargin)
 rimg = [];
 if isempty(inl_idx)
     return;
@@ -6,9 +6,13 @@ end
 if all(size(Hinf) == [1 3])
     Hinf = [1 0 0; 0 1 0; Hinf];
 end
-inl_idx = inl_idx(cellfun(@numel, inl_idx) > 1);        
-u2 = dr.u(:,unique([inl_idx{:}]));
-mu2 = dr.mu(:,unique([inl_idx{:}]));
+inl = inl_idx;
+if iscell(inl_idx)
+    inl_idx = inl_idx(cellfun(@numel, inl_idx) > 1);  
+    inl = unique([inl_idx{:}]);
+end
+u2 = dr.u(:,inl);
+mu2 = dr.mu(:,inl);
 if ~isempty(u2)
     v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u2);
     A = HG.laf1_to_A([v;u2]);
@@ -16,7 +20,7 @@ if ~isempty(u2)
     for i = 0:500
         BW = LINE.line2mask(Hinf(3,:)',im,mu2,i*10);
         inboundary = find_inboundary(BW);
-        rimg = IMG.rectify_part(im,H,inboundary);
+        rimg = IMG.rectify_part(im,H,inboundary,varargin);
         if ~isempty(rimg)
             break;
         end
