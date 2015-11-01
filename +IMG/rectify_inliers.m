@@ -18,7 +18,9 @@ if ~isempty(u2)
     v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u2);
     A = HG.laf1_to_A([v;u2]);
     H = A*Hinf;
-    for i = 0:500
+    r = [[1:500]; -[1:500]];
+    range = [0 [r(:)]'];
+    for i = range
         BW = LINE.line2mask(Hinf(3,:)',im,mu2,i*10);
         inboundary = find_inboundary(BW);
         [rimg xdata ydata] = IMG.rectify_part(im,H,inboundary,varargin);
