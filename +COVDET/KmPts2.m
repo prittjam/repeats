@@ -20,6 +20,7 @@ classdef KmPts2 < Gen
                 end
                 reflected = num2cell(reflected);
                 [res{k}.affpt.reflected] = deal(reflected{:});
+                res{k}.haff = 1;
             end
         end
     end

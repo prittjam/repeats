@@ -35,7 +35,11 @@ classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
                         temp.affpt = feat{k}.affpt([temp.affpt(:).id]);
                         [temp.affpt.desc] = deal(desc{:});
                         [temp.affpt.reflected] = deal(true);
-                        RF = [-1 0 img.width; 0 1 0; 0 0 1];
+                        m = 0; 
+                        if isfield(feat{k},'haff') && feat{k}.haff
+                            m = 1;
+                        end
+                        RF = [-1 0 img.width-m; 0 1 0; 0 0 1];
                         temp.affpt = LAF.apply_T_to_affpt(temp.affpt,RF);
                         % res{k}.patch = [res{k}.patch temp.patch];
                         

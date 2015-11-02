@@ -31,21 +31,23 @@ if isempty(cfg.chain)
 else
     chain = cfg.chain;
     inl = labeling ~= cfg.exclude;
-    inl_mserp = inl(1:numel(chain{1}{4}.affpt));
-    inl_mserm = inl(end-numel(chain{2}{4}.affpt)+1:end);
+    if numel(chain) > 1
+        inl_mserp = inl(1:numel(chain{1}{4}.affpt));
+        inl_mserm = inl(end-numel(chain{2}{4}.affpt)+1:end);
 
-    mserp_id = [chain{1}{4}.affpt(:).id];
-    mserm_id = [chain{2}{4}.affpt(:).id];
-    mserp_id = mserp_id(~[chain{1}{4}.affpt(:).reflected] & inl_mserp);
-    mserm_id = mserm_id(~[chain{2}{4}.affpt(:).reflected] & inl_mserm);
-    keepmserp = chain{1}{2}.upg2dr(mserp_id);
-    keepmserm = chain{2}{2}.upg2dr(mserm_id);
+        mserp_id = [chain{1}{4}.affpt(:).id];
+        mserm_id = [chain{2}{4}.affpt(:).id];
+        mserp_id = mserp_id(~[chain{1}{4}.affpt(:).reflected] & inl_mserp);
+        mserm_id = mserm_id(~[chain{2}{4}.affpt(:).reflected] & inl_mserm);
+        keepmserp = chain{1}{2}.upg2dr(mserp_id);
+        keepmserm = chain{2}{2}.upg2dr(mserm_id);
 
-    chain{1}{1}.rle = chain{1}{1}.rle(:,keepmserp);
-    chain{2}{1}.rle = chain{2}{1}.rle(:,keepmserm);
-    MSER.draw(gca,chain{1}{1},'LineWidth',cfg.linewidth,'Color',rgb('SpringGreen'));
-    MSER.draw(gca,chain{2}{1},'LineWidth',cfg.linewidth,'Color',rgb('SpringGreen'));
-
+        chain{1}{1}.rle = chain{1}{1}.rle(:,keepmserp);
+        chain{2}{1}.rle = chain{2}{1}.rle(:,keepmserm);
+        MSER.draw(gca,chain{1}{1},'LineWidth',cfg.linewidth,'Color',rgb('SpringGreen'));
+        MSER.draw(gca,chain{2}{1},'LineWidth',cfg.linewidth,'Color',rgb('SpringGreen'));
+    end
+    
     A = LAF.p3x3_to_A(u(:,inl));
     ELL.draw_A(gca,A,'Color',rgb('Indigo'),'LineWidth',cfg.linewidth);
     
