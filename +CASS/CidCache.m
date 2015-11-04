@@ -28,6 +28,10 @@ classdef CidCache < handle
                 this.cfg.write_cache = false;
             end
         end 
+        
+        function imagedb = get_imagedb(this)
+            imagedb = this.imagedb;
+        end
 
         function xor_key = add_dependency(this,name,key,varargin)
             cfg.parents = {}; 
