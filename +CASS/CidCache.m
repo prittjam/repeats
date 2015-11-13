@@ -62,7 +62,7 @@ classdef CidCache < handle
                 parents = '';
                 for k1 = 1:numel(chains{k})
                     name = [parents chains{k}{k1}.get_uname()];
-                    chains{k}{k1}.metadata = [k k1];
+                    chains{k}{k1}.metadata = name;
                     if isempty(parents)
                         this.add_dependency(name, ...
                                                  chains{k}{k1});
@@ -77,7 +77,7 @@ classdef CidCache < handle
             end
         end
         
-        function [res,is_found] = get_chains(this,chains)
+        function [res,is_found] = get_chains(this,chains,fmake,varargin)
             is_found = cell(1,numel(chains));
             res = cell(numel(chains),1);
             
@@ -89,10 +89,12 @@ classdef CidCache < handle
                     name = [name chains{k}{k1}.get_uname() ':'];
                     [res{k}{k1},is_found{k}(k1)] = ...
                         this.get('dr',name(1:end-1));
-                    if is_found{k}(k1) && isstruct(res{k}{k1}) && isfield(res{k}{k1},'Data')
-                        res{k}{k1} = CompressLib.decompress(res{k}{k1});
-                    end
                 end
+            end
+
+            if any(~[is_found{:}]) && nargin > 2
+                res = feval(fmake,chains,varargin{:},res);
+                this.put_chains(chains,res);
             end
         end
         
@@ -101,11 +103,7 @@ classdef CidCache < handle
                 name = '';
                 for k1 = 1:numel(chains{k})
                     name = [name chains{k}{k1}.get_uname() ':'];
-                    data_put = res{k}{k1};
-                    if CompressLib.byteSize(res{k}{k1})/1024^2 > 30
-                        data_put = CompressLib.compress(res{k}{k1});
-                    end
-                    this.put('dr',name(1:end-1),data_put);
+                    this.put('dr',name(1:end-1),res{k}{k1});
                 end
             end
         end
@@ -119,6 +117,11 @@ classdef CidCache < handle
             cfg = cmp_argparse(cfg,varargin);
 
             is_put = false;
+
+            if ~CompressLib.isCompressed(value) && ...
+                     CompressLib.byteSize(value)/1024^2 > 30
+                value = CompressLib.compress(value);
+            end
             
             if this.map.isKey(name)
                 item = this.map(name);
@@ -139,7 +142,7 @@ classdef CidCache < handle
 
         end
 
-        function [val,is_found,xor_key] = get(this,table,name)
+        function [val,is_found,xor_key] = get(this,table,name,fmake,varargin)
             val = [];
             xor_key = [];
             is_found = false;
@@ -150,7 +153,15 @@ classdef CidCache < handle
                 if this.cfg.read_cache
                     [val,is_found] = this.imagedb.get(table, ...
                                                       this.cid,[name ':' xor_key]);        
+                    if is_found && CompressLib.isCompressed(val)
+                        val = CompressLib.decompress(val);
+                    end
                 end    
+            end
+            if ~is_found && nargin > 3
+                val = feval(fmake,varargin{:});
+                this.put(table,name,val);
+                is_found = true;
             end
         end
     end

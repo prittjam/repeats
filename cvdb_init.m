@@ -10,6 +10,7 @@ end
 [cvdb_base_path, name, ext] = fileparts(mfilename('fullpath'));
 
 addpath(cvdb_base_path);
+addpath(fullfile(cvdb_base_path,'jsonlab'));
 addpath(genpath('~/opt/bgl/matlab'));
 
 if usejava('jvm')

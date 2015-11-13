@@ -145,6 +145,15 @@ classdef CompressLib
 			NumBytes = s.bytes;
 		end
 
+		function is = isCompressed(in)
+			is = isstruct(in);
+			if is
+				fields = fieldnames(in);
+				is = strcmp([fields{:}], ...
+					'compressedBlockSizeUncompressedSizeData');
+			end
+		end
+
 		function out = unpackBytes(byteData)
 % CompressLib.unpackBytes
 %--------------------------------------------------------------------------
