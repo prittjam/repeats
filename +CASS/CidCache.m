@@ -34,23 +34,21 @@ classdef CidCache < handle
         end
 
         function xor_key = add_dependency(this,name,key,varargin)
-            cfg.parents = {}; 
-            
-            key = KEY.make(key);
+            tcfg.parents = {};
+            tcfg.read_cache = this.cfg.read_cache;
+            tcfg.write_cache = this.cfg.write_cache;
 
-            % key = KEY.make(key,name);
-            
-            cfg = cmp_argparse(cfg,varargin);
+            tcfg = cmp_argparse(tcfg,varargin);
 	        
-    	    if ~isempty(cfg.parents) && ~iscell(cfg.parents)
-                cfg.parents = {cfg.parents};
+    	    if ~isempty(tcfg.parents) && ~iscell(tcfg.parents)
+                tcfg.parents = {tcfg.parents};
             end
     	    
-            if strcmpi([cfg.parents{:}],'__LAST_ADD__')
-                cfg.parents = last_add;
+            if strcmpi([tcfg.parents{:}],'__LAST_ADD__')
+                tcfg.parents = last_add;
             end
 
-            v = this.add_vertex(name,key,cfg.parents{:});
+            v = this.add_vertex(name,key,tcfg);
             xor_key = this.get_xor_key(v);
             last_add = name;
         end
@@ -65,7 +63,6 @@ classdef CidCache < handle
                 parents = init_parents;
                 for k1 = 1:numel(chains{k})
                     name = chains{k}{k1}.get_uname();
-                    % chains{k}{k1}.metadata = name;
                     if isempty(parents)
                         this.add_dependency(name, ...
                                                  chains{k}{k1});
@@ -136,7 +133,7 @@ classdef CidCache < handle
                 v = item.v;
                 xor_key = this.get_xor_key(v);
                 
-                if this.cfg.write_cache 
+                if item.write_cache 
                     if ((~this.imagedb.check(table,this.cid,xor_key) | ...
                          cfg.overwrite))
                         if iscell(value)
@@ -161,7 +158,7 @@ classdef CidCache < handle
                 item = this.map(name);
                 v = item.v;
                 xor_key = this.get_xor_key(v);
-                if this.cfg.read_cache
+                if item.read_cache
                     [val,is_found] = this.imagedb.get(table, ...
                                                       this.cid,[name ':' xor_key]);        
                     if is_found && CompressLib.isCompressed(val)
@@ -200,21 +197,25 @@ classdef CidCache < handle
             end
         end
         
-        function v = add_vertex(this,name,key,varargin)
+        function v = add_vertex(this,name,key,tcfg)
+            hkey = KEY.make(key);
             [ii,jj] = find(this.G);
             this.G = sparse(ii,jj,ones(1,numel(jj)), ...
                            num_vertices(this.G)+1, ...
                            num_vertices(this.G)+1); 
             if num_vertices(this.G) > 1            
-                for pa = varargin
+                for pa = tcfg.parents
                     item = this.map(pa{:});
                     this.G(num_vertices(this.G),item.v) = 1;
                 end
             end
             v = num_vertices(this.G);
             item = struct('v',v, ...
-                          'key',key, ...
-                          'name',name);
+                          'key',hkey, ...
+                          'name',name, ...
+                          'read_cache', tcfg.read_cache, ...
+                          'write_cache', tcfg.write_cache);
+
             uid = name;
             this.map(uid) = item;
             this.vlist{v} = uid;
