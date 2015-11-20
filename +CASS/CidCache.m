@@ -181,11 +181,15 @@ classdef CidCache < handle
         end
 
         function res = get_xor_key(this,v)
-            key_list = this.get_parent_tree(v);
+            [key_list, name_list] = this.get_parent_tree(v);
             if numel(key_list) > 1
                 res = KEY.xor(key_list{:});
             else
                 res = key_list{1};
+            end
+            if numel(name_list) > 1
+                uid = strjoin(name_list,':');
+                res = KEY.xor(res,KEY.hash(uid,'MD5'));
             end
         end
         
