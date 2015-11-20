@@ -139,6 +139,9 @@ classdef CidCache < handle
                 if this.cfg.write_cache 
                     if ((~this.imagedb.check(table,this.cid,xor_key) | ...
                          cfg.overwrite))
+                        if iscell(value)
+                             value = cell2struct(value,'convertme',1);
+                        end
                         this.imagedb.put(table,this.cid, ...
                                          [name ':' xor_key],value);
                         is_put = true;
@@ -163,6 +166,10 @@ classdef CidCache < handle
                                                       this.cid,[name ':' xor_key]);        
                     if is_found && CompressLib.isCompressed(val)
                         val = CompressLib.decompress(val);
+                    end
+                    if isstruct(val) && ...
+                        length(fieldnames(val)) == 1 && isfield(val,'convertme')
+                        val = struct2cell(val);
                     end
                 end    
             end
