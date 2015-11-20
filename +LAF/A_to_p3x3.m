@@ -1,7 +1,4 @@
-function u = A_to_p3x3(A0,reflected)
-if nargin < 2 
-	reflected = zeros(size(A0));
-end
+function u = A_to_p3x3(A0)
 if iscell(A0)
     A = reshape(cell2mat(A0'),3,3,[]);
 else
@@ -14,6 +11,3 @@ u = zeros(9,n);
 u(4:6,:) = v(7:9,:);
 u(1:3,:) = v(4:6,:)+u(4:6,:);
 u(7:9,:) = v(1:3,:)+u(4:6,:);
-if sum(reflected) > 0
-	u(:,reflected) = LAF.switch_hands(u(:,reflected));
-end

@@ -28,9 +28,7 @@ classdef Img < handle
                 this.cid = HASH.hash(filecontents,'MD5');
             end
 
-            this.height = size(this.data,1);
-            this.width = size(this.data,2);
-            this.area = this.width*this.height;
+            this.calc_size();
 
             if (ndims(this.data) == 3)
                 this.intensity = rgb2gray(this.data);
@@ -40,6 +38,18 @@ classdef Img < handle
             
             this.real = im2double(this.data);
         end
+
+        function [] = calc_size(this)
+            this.height = size(this.data,1);
+            this.width = size(this.data,2);
+            this.area = this.width*this.height;
+        end
+
+        function timg = transform(this,f,varargin)
+            data = f(this.data,varargin);
+            cid = KEY.hash(this.data,'MD5');
+            timg = Img('data',data,'cid',cid);
+        end 
     end
-    
+
 end
