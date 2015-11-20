@@ -209,11 +209,13 @@ classdef CidCache < handle
             this.vlist{v} = uid;
 
             [~,name_list] = this.get_parent_tree(v);
-            uid = strjoin(name_list,':');
-            
-            item.key = KEY.xor(item.key,KEY.hash(uid,'MD5'));
-            this.map(uid) = item;
-            this.vlist{v} = uid;
+            if numel(name_list) > 1
+                uid = strjoin(name_list,':');
+                
+                item.key = KEY.xor(item.key,KEY.hash(uid,'MD5'));
+                this.map(uid) = item;
+                this.vlist{v} = uid;
+            end
         end
 
         function [key_list, name_list] = get_parent_tree(this,v)
