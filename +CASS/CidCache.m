@@ -11,7 +11,7 @@ classdef CidCache < handle
 
     methods(Access=public)
         function this = CidCache(cid,varargin)
-            this.imagedb = CASS.CassDb.getDb();
+            this.imagedb = CASS.CassDb.getObj();
             this.cid = cid;
             this.map = containers.Map;
             this.vlist = cell(1,1000);
@@ -43,7 +43,7 @@ classdef CidCache < handle
             cfg = cmp_argparse(cfg,varargin);
 	        
     	    if ~isempty(cfg.parents) && ~iscell(cfg.parents)
-                    cfg.parents = {cfg.parents};
+                cfg.parents = {cfg.parents};
             end
     	    
             if strcmpi([cfg.parents{:}],'__LAST_ADD__')

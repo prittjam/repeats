@@ -4,15 +4,15 @@ classdef CassDb < handle
     end
 
     methods (Static)
-        function obj = getDb( renew, varargin ) 
+        function obj = getObj( renew, varargin ) 
             if nargin == 0
                 renew = false;
             end         
-            persistent localObjDb;
-            if isempty(localObjDb) || ~isvalid(localObjDb) || renew
-                localObjDb = CASS.CassDb(varargin{:});
+            persistent localObjCassDb;
+            if isempty(localObjCassDb) || ~isvalid(localObjCassDb) || renew
+                localObjCassDb = CASS.CassDb(varargin{:});
             end
-            obj = localObjDb;
+            obj = localObjCassDb;
         end
     end 
 

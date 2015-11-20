@@ -1,9 +1,26 @@
 classdef SqlDb < SQL.SqlBase
-    methods(Access=public)
+
+     methods (Static)
+        function obj = getObj( renew, varargin ) 
+            if nargin == 0
+                renew = false;
+            end         
+            persistent localObjSqlDb;
+            if isempty(localObjSqlDb) || ~isvalid(localObjSqlDb) || renew
+                localObjSqlDb = SQL.SqlDb;
+                localObjSqlDb.open(varargin{:});
+            end
+            obj = localObjSqlDb;
+        end
+    end 
+
+    methods (Access = private)
         function this = SqlDb(varargin)
             this@SQL.SqlBase(varargin{:});
         end
+    end
 
+    methods(Access=public)
         function [] = create(this)
             stm = this.connh.prepareStatement(['CREATE TABLE IF NOT EXISTS imgs(' ...
                                 'cid BINARY(16), ' ...

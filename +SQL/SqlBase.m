@@ -4,7 +4,7 @@ classdef SqlBase < handle
         connh = [];
     end
     
-    methods(Access=public)
+    methods(Access=protected)
         function this = SqlBase()
         end
 
