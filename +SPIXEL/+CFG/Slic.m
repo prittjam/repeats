@@ -7,7 +7,7 @@ classdef Slic < CfgBase
         region_size = 50 
         regularizer = 0.1
     end
-    
+
     methods
         function this = Slic(varargin)
             this = this@CfgBase(varargin{:});
