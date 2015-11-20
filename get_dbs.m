@@ -6,4 +6,4 @@ cfg.cass_cfg = getenv('CVDB_CASS_CFG');
 
 sqldb = SQL.SqlDb;
 sqldb.open('cfg_file',cfg.sqldb_cfg);
-cassdb = CASS.CassDb('cfg_file',cfg.cass_cfg);
+cassdb = CASS.CassDb.getDb(true,'cfg_file',cfg.cass_cfg);

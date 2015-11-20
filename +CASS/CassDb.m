@@ -3,11 +3,26 @@ classdef CassDb < handle
         cass
     end
 
-    methods
+    methods (Static)
+        function obj = getDb( renew, varargin ) 
+            if nargin == 0
+                renew = false;
+            end         
+            persistent localObjDb;
+            if isempty(localObjDb) || ~isvalid(localObjDb) || renew
+                localObjDb = CASS.CassDb(varargin{:});
+            end
+            obj = localObjDb;
+        end
+    end 
+
+    methods (Access = private)
         function this = CassDb(varargin)
             this.cass = CASS.Cass(varargin{:});
         end
-        
+    end
+
+    methods
         function cid = put_img(this,url)
             filecontents = get_native_img(url);
             cid = HASH.hash(filecontents,'MD5');

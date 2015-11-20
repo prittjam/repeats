@@ -10,8 +10,8 @@ classdef CidCache < handle
     end
 
     methods(Access=public)
-        function this = CidCache(cid,imagedb,varargin)
-            this.imagedb = imagedb;
+        function this = CidCache(cid,varargin)
+            this.imagedb = CASS.CassDb.getDb();
             this.cid = cid;
             this.map = containers.Map;
             this.vlist = cell(1,1000);
@@ -23,7 +23,7 @@ classdef CidCache < handle
 
             [this.cfg,~] = cmp_argparse(this.cfg,varargin);
             
-            if isempty(cid) || isempty(imagedb)
+            if isempty(cid) || isempty(this.imagedb)
                 this.cfg.read_cache = false;
                 this.cfg.write_cache = false;
             end
