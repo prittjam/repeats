@@ -55,34 +55,42 @@ classdef CidCache < handle
             last_add = name;
         end
 
-        function key_list = add_chains(this,chains)
+        function key_list = add_chains(this,chains,init_parents)
+            if nargin < 3
+                init_parents = '';
+            end
             key_list = cell(1,numel(chains));
             for k = 1:numel(chains)
                 key_list{k} = cell(1,numel(chains{k}));
-                parents = '';
+                parents = init_parents;
                 for k1 = 1:numel(chains{k})
-                    name = [parents chains{k}{k1}.get_uname()];
-                    chains{k}{k1}.metadata = name;
+                    name = chains{k}{k1}.get_uname();
+                    % chains{k}{k1}.metadata = name;
                     if isempty(parents)
                         this.add_dependency(name, ...
                                                  chains{k}{k1});
                     else
                         this.add_dependency(name, ...
                                                  chains{k}{k1}, ...
-                                                 'parents',parents(1:end-1));
+                                                 'parents',parents);
                     end
-                    parents = [name ':'];
+                    parents = [name];
                     key_list{k}{k1} = name;
                 end
             end
         end
         
-        function [res,is_found] = get_chains(this,chains,fmake,varargin)
+        function [res,is_found] = get_chains(this,chains,init_parents,fmake,varargin)
+            if nargin < 3
+                init_parents = '';
+            elseif ~isempty(init_parents)
+                init_parents = [init_parents ':'];
+            end
             is_found = cell(1,numel(chains));
             res = cell(numel(chains),1);
             
             for k = 1:numel(chains)
-                name = '';
+                name = init_parents;
                 res{k} = cell(1,numel(chains{k}));
                 is_found{k} = false(1,numel(chains{k}));
                 for k1 = 1:numel(chains{k})
@@ -91,16 +99,16 @@ classdef CidCache < handle
                         this.get('dr',name(1:end-1));
                 end
             end
-
-            if any(~[is_found{:}]) && nargin > 2
+            
+            if any(~[is_found{:}]) && nargin > 3
                 res = feval(fmake,chains,varargin{:},res);
-                this.put_chains(chains,res);
+                this.put_chains(chains,res,init_parents);
             end
         end
         
-        function [res,is_found] = put_chains(this,chains,res)
+        function [res,is_found] = put_chains(this,chains,res,init_parents)
             for k = 1:numel(chains)
-                name = '';
+                name = init_parents;
                 for k1 = 1:numel(chains{k})
                     name = [name chains{k}{k1}.get_uname() ':'];
                     this.put('dr',name(1:end-1),res{k}{k1});
@@ -173,14 +181,7 @@ classdef CidCache < handle
         end
 
         function res = get_xor_key(this,v)
-            [~,dt] = bfs(this.G,v);
-            tmp = v;
-            ia = v;
-            [val,order] = sort(dt);
-            order = order(val > 0);
-            key_list = cellfun(@(x) x.key, ...
-                               values(this.map,this.vlist(order)), ...
-                               'UniformOutput',false);
+            key_list = this.get_parent_tree(v);
             if numel(key_list) > 1
                 res = KEY.xor(key_list{:});
             else
@@ -201,10 +202,32 @@ classdef CidCache < handle
             end
             v = num_vertices(this.G);
             item = struct('v',v, ...
-                          'key',key);
+                          'key',key, ...
+                          'name',name);
             uid = name;
             this.map(uid) = item;
             this.vlist{v} = uid;
+
+            [~,name_list] = this.get_parent_tree(v);
+            uid = strjoin(name_list,':');
+            
+            item.key = KEY.xor(item.key,KEY.hash(uid,'MD5'));
+            this.map(uid) = item;
+            this.vlist{v} = uid;
+        end
+
+        function [key_list, name_list] = get_parent_tree(this,v)
+            [~,dt] = bfs(this.G,v);
+            tmp = v;
+            ia = v;
+            [val,order] = sort(dt);
+            order = order(val > 0);
+            key_list = cellfun(@(x) x.key, ...
+                               values(this.map,this.vlist(order)), ...
+                               'UniformOutput',false);
+            name_list = cellfun(@(x) x.name, ...
+                   values(this.map,this.vlist(order(end:-1:1))), ...
+                   'UniformOutput',false);
         end
 
         function [] = remove_vertex(this,v)

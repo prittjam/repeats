@@ -1,4 +1,4 @@
-function [] = read_img()
+function img = read_img()
     try
         img = readim(filecontent);
     catch
