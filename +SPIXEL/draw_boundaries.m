@@ -1,6 +1,7 @@
 function [] = draw_boundaries(gca,segments,varargin)
-cfg = struct('segments',1:max(segments(:)), ...
-             'markersize',2);
+N = max(segments(:));
+cfg = struct('segments',1:N, ...
+             'markersize',10);
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 if isempty(leftover)
 	leftover = {};
