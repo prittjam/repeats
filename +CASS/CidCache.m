@@ -53,24 +53,22 @@ classdef CidCache < handle
             last_add = name;
         end
 
-        function key_list = add_chains(this,chains,init_parents)
-            if nargin < 3
-                init_parents = '';
-            end
+        function key_list = add_chains(this,chains,varargin)
+            tcfg.parents = {};
+            tcfg.read_cache = this.cfg.read_cache;
+            tcfg.write_cache = this.cfg.write_cache;
+            tcfg = cmp_argparse(tcfg,varargin);            
+            
             key_list = cell(1,numel(chains));
             for k = 1:numel(chains)
                 key_list{k} = cell(1,numel(chains{k}));
-                parents = init_parents;
+                parents = tcfg.parents;
                 for k1 = 1:numel(chains{k})
                     name = chains{k}{k1}.get_uname();
-                    if isempty(parents)
-                        this.add_dependency(name, ...
-                                                 chains{k}{k1});
-                    else
-                        this.add_dependency(name, ...
-                                                 chains{k}{k1}, ...
-                                                 'parents',parents);
-                    end
+                    this.add_dependency(name,chains{k}{k1}, ...
+                                        'parents',parents, ...
+                                        'read_cache',tcfg.read_cache, ...
+                                        'write_cache',tcfg.write_cache);
                     parents = [name];
                     key_list{k}{k1} = name;
                 end
