@@ -1,6 +1,4 @@
 function [] = draw_pairwise(img,segments,pairwise,varargin)
-figure;
-imshow(img.data);
 N = max(segments(:));
 cfg = struct('segments',1:N, ...
              'markersize',5);
@@ -23,8 +21,10 @@ nb = segments(bsxfun(@plus,indxy,offset'));
 nb = sort(nb')';
 ind = sub2ind([N N],nb(:,1),nb(:,9));
 
+figure;
+imshow(img.data);
 hold on;
-scatter(y,x,50*pairwise(ind),'filled');
+scatter(y,x,100*(pairwise(ind)+eps),'filled');
 
 
 function offset = get_offset(M);
