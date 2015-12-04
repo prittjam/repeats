@@ -11,6 +11,7 @@ classdef Sift < CfgBase
         patch_size = 41;
         compute_descriptor = 1;
         output_format = 2;
+        sqrt_sift_desc = 0.5;
     end
 
     methods(Static)

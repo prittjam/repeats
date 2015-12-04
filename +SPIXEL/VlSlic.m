@@ -9,7 +9,7 @@ classdef VlSlic < Gen
             imlab = single(im2double(img.data));
             segments0 = vl_slic(imlab,cfg.region_size, ...
                                 cfg.regularizer);
-            segments = SPIXEL.relabel(segments0);
+            segments = SPIXEL.renumber(segments0);
         end          
     end
 end
