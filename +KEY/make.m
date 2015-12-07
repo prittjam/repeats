@@ -1,7 +1,10 @@
-function key = make(cfg)
+function key = make(cfg,add)
+    if nargin < 2
+        add = [];
+    end
     key = repmat('0',1,32);
     if isempty(cfg)
-    	return;
+        return;
     end
     if  ischar(cfg)
         key = cfg;
@@ -12,7 +15,7 @@ function key = make(cfg)
             uname = class(cfg);
         end
         if usejava('jvm')
-            key = KEY.cfg2hash(cfg,uname);
+            key = KEY.cfg2hash(cfg,[uname add]);
         end
     end
 end
