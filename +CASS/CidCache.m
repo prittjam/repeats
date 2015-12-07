@@ -33,7 +33,7 @@ classdef CidCache < handle
             imagedb = this.imagedb;
         end
 
-        function xor_key = add_dependency(this,name,key,varargin)
+        function [xor_key,v] = add_dependency(this,name,key,varargin)
             tcfg.parents = {};
             tcfg.read_cache = this.cfg.read_cache;
             tcfg.write_cache = this.cfg.write_cache;
@@ -65,12 +65,13 @@ classdef CidCache < handle
                 parents = tcfg.parents;
                 for k1 = 1:numel(chains{k})
                     name = chains{k}{k1}.get_uname();
-                    this.add_dependency(name,chains{k}{k1}, ...
+                    [~,v]=this.add_dependency(name,chains{k}{k1}, ...
                                         'parents',parents, ...
                                         'read_cache',tcfg.read_cache, ...
                                         'write_cache',tcfg.write_cache);
-                    parents = [name];
-                    key_list{k}{k1} = name;
+                    [~, name_list] = get_parent_tree(this,v);
+                    key_list{k}{k1} = strjoin(name_list,':');
+                    parents = key_list{k}{k1};
                 end
             end
         end
@@ -222,7 +223,7 @@ classdef CidCache < handle
             if numel(name_list) > 1
                 uid = strjoin(name_list,':');
                 
-                item.key = KEY.xor(item.key,KEY.hash(uid,'MD5'));
+                item.key = KEY.make(key,uid);
                 this.map(uid) = item;
                 this.vlist{v} = uid;
             end
