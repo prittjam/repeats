@@ -175,6 +175,19 @@ classdef CidCache < handle
                 is_found = true;
             end
         end
+
+        function [val,is_found,xor_key] = add_and_get(this,table,name,key,parents,fmake,varargin)
+            if nargin > 4
+                [xor_key,v] = this.add_dependency(name,key,'parents',parents);
+            else
+                [xor_key,v] = this.add_dependency(name,key);
+            end
+            if nargin > 5
+                [val,is_found,xor_key] = this.get(table,name,fmake,varargin);
+            else
+                [val,is_found,xor_key] = this.get(table,name);
+            end
+        end
     end
 
     methods(Access=private) 
