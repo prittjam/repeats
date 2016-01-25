@@ -38,7 +38,8 @@ for i = 1:numel(indxy)
 end
 R = R + R';
 R = R./counts;
-R = R/max(R(:));
+b = 1/(2*mean((R(R>0)).^2));
+R(R>0) = exp(-b*(R(R>0)).^2);
 
 
 function ind = get_ind(array,N)

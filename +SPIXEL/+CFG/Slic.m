@@ -18,6 +18,9 @@ classdef Slic < CfgBase
                     this = copy(varargin{1});
                 end
             end
+            if numel(this.region_size) == 2
+                this.region_size = max(10,min(80, sqrt(1.3*max(this.region_size)) ));
+            end
         end
     end
     
