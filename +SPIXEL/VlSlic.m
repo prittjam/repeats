@@ -6,7 +6,8 @@ classdef VlSlic < Gen
     
     methods(Static)
         function segments = make(img,cfg)
-            imlab = single(im2double(img.data));
+            colorTransform = makecform('srgb2lab');
+            imlab = im2single(applycform(img.data, colorTransform));
             segments0 = vl_slic(imlab,cfg.region_size, ...
                                 cfg.regularizer);
             segments = SPIXEL.renumber(segments0);

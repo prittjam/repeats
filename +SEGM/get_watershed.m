@@ -1,4 +1,4 @@
-function [] = watershed(origImg)
+function [grayLabel, edgeLabel] = get_watershed(origImg, flag)
 % convert to grayscale
 img = rgb2gray(origImg);
 
@@ -30,17 +30,13 @@ bgm = wLines == 0;
 seSquare3 = strel('square', 3);
 rangeImg = rangefilt(imgRecon2, getnhood(seSquare3));
 segFunc = imimposemin(rangeImg, fgm | bgm);
-grayLabel = watershed(segFunc);
-
-rgbLabel= label2rgb(grayLabel);
-figure, imshow(rgbLabel); title('Output using Watershed')
+grayLabel = uint32(watershed(segFunc));
 
 % alternatively, extract edges from the preprocessed image
 % perform morph cleanup
-bwEdges = edge(imgRecon2, 'canny');
-bwFilled = imfill(bwEdges, 'holes');
-bwRegions = imopen(bwFilled, seSquare3);
-grayLabel = bwlabel(bwRegions);
-
-rgbLabel = label2rgb(grayLabel, 'jet', 'k');
-figure, imshow(rgbLabel); title('Output using Canny')
+if nargin > 1
+	bwEdges = edge(imgRecon2, 'canny');
+	bwFilled = imfill(bwEdges, 'holes');
+	bwRegions = imopen(bwFilled, seSquare3);
+	edgeLabel = uint32(bwlabel(bwRegions));
+end

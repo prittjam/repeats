@@ -3,3 +3,4 @@ function [] = cmpfeat_init()
 
 addpath(cmpfeat_base_path);
 addpath('~/opt/wbs/matlab');
+addpath('~/src/cmpfeat/slic');
