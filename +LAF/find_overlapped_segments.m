@@ -1,4 +1,4 @@
-function w = join_to_lafs(segments,u,varargin)
+function w = find_overlapped_segments(u,segments,varargin)
 cfg.test = 'cog';
 [cfg,leftover] =  cmp_argparse(cfg,varargin{:});
 

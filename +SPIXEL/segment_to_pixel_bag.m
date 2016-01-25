@@ -1,4 +1,4 @@
-function c = label_to_cell(segments,img,varargin)
+function c = segments_to_pixel_bags(segments,img,varargin)
 cfg.sigma = 0;
 cfg.decimation_factor = 1;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
