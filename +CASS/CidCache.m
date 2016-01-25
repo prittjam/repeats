@@ -177,13 +177,14 @@ classdef CidCache < handle
         end
 
         function [val,is_found,xor_key] = add_and_get(this,table,name,key,parents,fmake,varargin)
-            if nargin > 4
-                [xor_key,v] = this.add_dependency(name,key,'parents',parents);
-            else
+            if isempty(parents)
                 [xor_key,v] = this.add_dependency(name,key);
+            else
+                [xor_key,v] = this.add_dependency(name,key,'parents',parents);
             end
+            
             if nargin > 5
-                [val,is_found,xor_key] = this.get(table,name,fmake,varargin);
+                [val,is_found,xor_key] = this.get(table,name,fmake,varargin{:});
             else
                 [val,is_found,xor_key] = this.get(table,name);
             end
