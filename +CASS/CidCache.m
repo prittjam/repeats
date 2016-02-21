@@ -123,7 +123,7 @@ classdef CidCache < handle
             is_put = false;
 
             if ~CompressLib.isCompressed(value) && ...
-                     CompressLib.byteSize(value)/1024^2 > 30
+                     CompressLib.byteSize(value)/1024^2 > 15
                 value = CompressLib.compress(value);
             end
             
