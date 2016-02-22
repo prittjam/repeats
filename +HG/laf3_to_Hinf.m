@@ -43,8 +43,8 @@ classdef laf3_to_Hinf
         function is_degen = is_model_degen(u,H)
             %detH = l(3)-l(1)-l(2);
             %is_degen = any((l'*v)/detH <= 0);
-            v = renormI(H*u);
-            is_degen = any(v(3,:)/v(3,1) <= 0);
-        end
+                zz = H(3,:)*reshape(u,3,[]);
+                is_degen = any(sign(zz) ~= sign(zz(1)));
+            end
     end
 end
