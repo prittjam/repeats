@@ -8,7 +8,7 @@ Nx = Nx./nrm;       Ny = Ny./nrm;
 Nx(isnan(Nx)) = 0;  Ny(isnan(Ny)) = 0;
 
 response = abs(Nx.*Gx) + abs(Ny.*Gy);
-response = response/max(response(:));
+% response = response/max(response(:));
 
 border = logical(abs(Nx)+abs(Ny));
 border_thin = bwmorph(border,'thin');
@@ -38,8 +38,11 @@ for i = 1:numel(indxy)
 end
 R = R + R';
 R = R./counts;
-b = 1/(2*mean((R(R>0)).^2));
-R(R>0) = exp(-b*(R(R>0)).^2);
+indnnz = logical(zeros(N,N));
+indnnz(uind) = true;
+indnnz = indnnz | indnnz';
+b = 1/(2*mean((R(indnnz)).^2));
+R(indnnz) = exp(-b*(R(indnnz)).^2);
 
 
 function ind = get_ind(array,N)

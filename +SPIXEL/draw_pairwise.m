@@ -25,7 +25,12 @@ figure;
 imshow(img.data);
 hold on;
 scatter(y,x,(100)*(1 - pairwise(ind)/max(pairwise(:))+eps),'filled');
-
+% scatter(y,x,100*pairwise(ind)/max(pairwise(:))+eps,'filled');
+ 
+for i = 1:N
+	[x y] = find(segments == i);
+	text(mean(y),mean(x), num2str(i));
+end
 
 function offset = get_offset(M);
 s=size(M);
