@@ -24,7 +24,7 @@ ind = sub2ind([N N],nb(:,1),nb(:,9));
 figure;
 imshow(img.data);
 hold on;
-scatter(y,x,(100)*(1 - pairwise(ind)/max(pairwise(:))+eps),'filled');
+scatter(y,x,(50)*(1 - pairwise(ind)/max(pairwise(:))+eps),'filled','MarkerFaceColor','w');
 % scatter(y,x,100*pairwise(ind)/max(pairwise(:))+eps,'filled');
  
 for i = 1:N

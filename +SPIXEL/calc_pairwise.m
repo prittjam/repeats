@@ -1,4 +1,7 @@
-function R = calc_pairwise(img,segments)
+function [R indnnz] = calc_pairwise(img,segments,all_pairs)
+if nargin < 3
+	all_pairs = false;
+end
 N = max(segments(:));
 
 [Gx,Gy] = imgradientxy(rgb2gray(img.data),'Sobel');
@@ -32,16 +35,31 @@ counts = counts + counts';
 counts(counts == 0) = 1;
 
 % construct pairwise matrix
-R = zeros(N,N);
+% R = zeros(N,N);
+Rcell = cell(N,N);
 for i = 1:numel(indxy)
-	R(ind{i}) = R(ind{i}) + response(indxy(i))/numel(ind{i});
+	% R(ind{i}) = R(ind{i}) + response(indxy(i))/numel(ind{i});
+	for j = 1:numel(ind{i})
+		Rcell{ind{i}(j)} = [Rcell{ind{i}(j)} response(indxy(i))/numel(ind{i})];
+	end
 end
+% R = R + R';
+% R = R./counts;
+R = cellfun(@(x) nth_element(x),Rcell,'UniformOutput',false);
+R = cell2mat(R);
 R = R + R';
-R = R./counts;
+
 indnnz = logical(zeros(N,N));
 indnnz(uind) = true;
 indnnz = indnnz | indnnz';
 b = 1/(2*mean((R(indnnz)).^2));
+
+if all_pairs
+	R(indnnz & R == 0) = R(indnnz & R == 0) + eps;
+	R = floyd_warshall_all_sp(sparse(R));
+	indnnz = ~eye(size(R,2));
+end
+
 R(indnnz) = exp(-b*(R(indnnz)).^2);
 
 
@@ -56,3 +74,14 @@ N=length(s);
 c2(1:N)={2};
 offset=sub2ind(s,c1{:}) - sub2ind(s,c2{:});
 offset = offset(:);
+
+function el = nth_element(array)
+el = 0;
+if numel(array) == 1
+	el = array(1);
+	return;
+end
+if ~isempty(array)
+	array = sort(array);
+	el = array(round(0.3*numel(array)));
+end
