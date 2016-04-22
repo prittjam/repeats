@@ -5,6 +5,7 @@ classdef Seeds < CfgBase
     
     properties(Access = public)
         num_spixels = 150
+        min_size = 0
     end
 
     methods

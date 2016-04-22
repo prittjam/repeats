@@ -5,7 +5,7 @@ cfg.test = 'poly';
 num_lafs = size(u,2);
 
 if strcmpi(cfg.test,'poly')
-	u = LAF.shrink(u,5);
+	u = LAF.shrink(u,0.1);
     v = LAF.p3x3_to_poly(u);
     for k = 1:size(v,2)
         BW = poly2mask(v(1:2:end,k),v(2:2:end,k), ...
