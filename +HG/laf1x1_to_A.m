@@ -1,4 +1,4 @@
-function Ha = laf1_to_A(v,s,varargin)
+function Ha = laf1x1_to_A(v,s,varargin)
 if nargin < 2
     s = true(1,size(v,2));
 end
