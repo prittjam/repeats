@@ -1,4 +1,4 @@
-function [] = draw_pairwise(img,segments,pairwise,varargin)
+function alpha = draw_pairwise(img,segments,pairwise,varargin)
 N = max(segments(:));
 cfg = struct('segments',1:N, ...
              'markersize',5);
@@ -24,13 +24,18 @@ ind = sub2ind([N N],nb(:,1),nb(:,9));
 figure;
 imshow(img.data);
 hold on;
-scatter(y,x,(50)*(1 - pairwise(ind)/max(pairwise(:))+eps),'filled','MarkerFaceColor','w');
+s = (1 - pairwise(ind)/max(pairwise(:))+eps);
+scatter(y,x,50*s,'filled','MarkerFaceColor','w');
+
+alpha = zeros(size(img.data,1),size(img.data,2));
+alpha(sub2ind(size(alpha),x,y)) = s;
+
 % scatter(y,x,100*pairwise(ind)/max(pairwise(:))+eps,'filled');
  
-for i = 1:N
-	[x y] = find(segments == i);
-	text(mean(y),mean(x), num2str(i));
-end
+% for i = 1:N
+% 	[x y] = find(segments == i);
+% 	text(mean(y),mean(x), num2str(i));
+% end
 
 function offset = get_offset(M);
 s=size(M);

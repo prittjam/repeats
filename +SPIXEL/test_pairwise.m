@@ -5,4 +5,4 @@ img = Img('data',imread(img_name));
 % cfg.spixel.regularizer = 0.001;
 segments = SPIXEL.Seeds.make(img,cfg.spixel);
 R = SPIXEL.calc_pairwise(img,segments,false);
-SPIXEL.draw_pairwise(img,segments,R);
+alpha = SPIXEL.draw_pairwise(img,segments,R);
