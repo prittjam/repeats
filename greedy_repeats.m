@@ -9,6 +9,8 @@ ransac = RANSAC.Ransac(model,sampler,eval,'lo',lo);
 v = LAF.renormI(blkdiag(H,H,H)*[dr(:).u]);
 [corresp,X,Rt] = segment_motions(dr,findgroups(G_app.*res.cs));
 
+keyboard;
+
 cframes = join(corresp(corresp.G_rt > 0, ...
                        {'G_rt','G_app', 't_i'}), X, ...
                'Keys',{'G_rt','G_app'});
