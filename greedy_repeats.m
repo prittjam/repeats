@@ -7,7 +7,7 @@ lo = Lo();
 ransac = RANSAC.Ransac(model,sampler,eval,'lo',lo);
 [H,res,stats] = ransac.fit(dr,G_app);
 v = LAF.renormI(blkdiag(H,H,H)*[dr(:).u]);
-[corresp,X,Rt] = est_cframes(dr,findgroups(G_app.*res.cs));
+[corresp,X,Rt] = segment_motions(dr,findgroups(G_app.*res.cs));
 
 cframes = join(corresp(corresp.G_rt > 0, ...
                        {'G_rt','G_app', 't_i'}), X, ...

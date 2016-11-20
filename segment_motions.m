@@ -36,3 +36,8 @@ X = table(uGG{:,1},uGG{:,2},X0', ...
           'VariableNames',{'G_rt','G_app','X0'});
 Rt = table([1:size(rt,2)]',rt', ...
            'VariableNames', {'G_rt','Rt'});
+
+function [Rt,ii,jj] = calc_pwise_xforms(u,est_xform)
+M = size(u,2);
+[ii,jj] = find(tril(ones(M,M),-1));
+Rt = feval(est_xform,[u(:,ii);u(:,jj)]);
