@@ -14,7 +14,7 @@ classdef coplanar_pattern < handle
             this.X = [];
             this.X2 = [];
 
-            this.do_rot = true;
+            this.do_rot = false;
 
             this.w2 = w2;
             this.h2 = h2;
@@ -66,7 +66,9 @@ classdef coplanar_pattern < handle
                                0   0   1]*[1 0 10;0 1 0; 0 0 1];
                         phi = phi+dphi;
                     else
-                        R1 = eye(3);
+                        R1 = [1 0 (c-1)*10;
+                              0 1 (r-1)*10; 
+                              0 0        1];
                     end
                     T{r,c} = R1;
                 end

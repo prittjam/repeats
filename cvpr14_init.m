@@ -19,6 +19,10 @@ if ~exist('+helpers','dir')
     addpath(ckvs_path);
 end
 
+if ~exist('+MMS','dir')
+    addpath(fullfile([opt_path 'mex']));
+end
+
 if ~exist('+RANSAC')
     addpath([src_path]);
 end

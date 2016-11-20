@@ -1,5 +1,5 @@
 function [] = test()
-cvpr14_init();
+greedy_repeats_init();
 
 %listA = { 'fireengine1.jpg' };
 %listA = {'liz_taylor.jpg'};
@@ -18,8 +18,8 @@ cvpr14_init();
 %listA = {'rhino1.jpg'};
 %listA = {'crochet9.png'};
 %listA = {'crochet.png'};
-listA = {'circular_window.png'};
-%listA = {'building_us.jpg'};
+%listA = {'circular_window.png'};
+listA = {'building_us.jpg'};
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
@@ -46,7 +46,7 @@ dr = get_dr(img,cid_cache, ...
 tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 [dr(:).drid] = tmp{:};
 
-[M,desc_groups,res,stats] = cvpr14(dr);
+[M,desc_groups,res,stats] = greedy_repeats(dr);
 [rimg,T,rb] = IMG.rectify_and_scale(img.data,M);
 v = LAF.warp_fwd([dr(:).u],T);
 
@@ -55,3 +55,4 @@ imshow(rimg,rb);
 LAF.draw_groups(gca,v, ...
                 desc_groups.*res.cs, ...
                 'text',true);
+
