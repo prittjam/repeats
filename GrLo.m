@@ -1,9 +1,9 @@
-classdef Lo < handle
+classdef GrLo < handle
     properties    
     end
 
     methods
-        function this = Lo()
+        function this = GrLo()
             
         end
         

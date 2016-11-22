@@ -1,40 +1,112 @@
-function [M,G_app,res,stats] = greedy_repeats(dr,varargin)
+function [H,G_app,res,stats] = greedy_repeats(dr,varargin)
+
+
 G_app = group_desc(dr);
-sampler = VlSampler(G_app);
-eval = VlEval();
+sampler = GrSampler(G_app);
+eval = GrEval();
 model = RANSAC.laf3x1_to_HaHp_model();
-lo = Lo();
+lo = GrLo();
 ransac = RANSAC.Ransac(model,sampler,eval,'lo',lo);
-[H,res,stats] = ransac.fit(dr,G_app);
-v = LAF.renormI(blkdiag(H,H,H)*[dr(:).u]);
-[corresp,X,Rt] = segment_motions(dr,findgroups(G_app.*res.cs));
 
-keyboard;
+[H0,res,stats] = ransac.fit(dr,G_app);
 
-cframes = join(corresp(corresp.G_rt > 0, ...
-                       {'G_rt','G_app', 't_i'}), X, ...
-               'Keys',{'G_rt','G_app'});
-xforms = join(cframes, Rt, 'Keys',{'G_rt'});
-y_ii = LAF.translate(xforms{:,'X0'}',xforms{:,'t_i'}');
-y_jj = LAF.translate(y_ii,xforms{:,'Rt'}');
+u = [dr(:).u];
+is_converged = false;
+while ~is_converged
+    v = LAF.renormI(blkdiag(H0,H0,H0)*u);
+    [corresp,U,Rt] = segment_motions(v,findgroups(G_app.*res.cs));
+    good_corresp = corresp(corresp.G_rt > 0,:); 
+    keyboard;
+    H = refine_motions(u,H0,q0,cc,corresp,U,Rt);
+    H0 = H;
+    is_converged = true;
+end
 
-[G1,uG1] = findgroups(corresp(corresp.G_rt >0 ,{'G_rt','G_app'}));
-cmap = distinguishable_colors(size(uG1,1));
-colors = cmap(G1,:);
+[G1,uG1] = findgroups(good_corresp(:,'G_rt'));
+numG = 1:numel(G1);
 
-keyboard;
+%figure;
+%xx2 = ;
+%LAF.draw(gca,xx2,'labels',good_corresp{:,'ii'});
+%axis tight;
+%axis equal;
+%
+
 figure;
-cmp_splitapply(@(v,color) LAF.draw(gca,v,'Color',color), ...
-               [dr(:,corresp(corresp.G_rt > 0,'jj')).u],colors,G1);
+LAF.draw(gca,v(:,good_corresp{:,'jj'}), ...
+         'LineStyle','--','labels',good_corresp{:,'jj'});
+axis tight;
+axis equal;
+
 figure;
-cmp_splitapply(@(v,t,color) draw_it(gca,v,t,color), ...
-               cframes(cframes.G_rt > 0,{'X0','t_i'}),colors,G1);
+xx3 = LAF.translate(xforms{:,'X0'}',xforms{:,'t_i'}');
+yy2 = LAF.translate(xx3,xforms{:,'Rt'}');
+LAF.draw(gca,yy2,'LineStyle','--', ...
+         'labels',good_corresp{:,'jj'});
+axis tight;
+axis equal;
 
 
-function [] = draw_it(gca,u,t,color)
-v = LAF.translate(u,t);
-LAF.draw(gca,v,'Color',color);
+%
+%subplot(2,2,3);
+%figure;
+%xx3 = LAF.translate(xforms{:,'X0'}',xforms{:,'t_i'}');
+%LAF.draw(gca,xx3,'labels',good_corresp{:,'ii'});
+%axis tight;
+%axis equal;    
 
+
+
+
+
+
+
+%for g = 50:80
+%    figure;
+%    subplot(2,2,1);
+%    xx2 = v(:,good_corresp{find(g==G1),'ii'});
+%    LAF.draw(gca,xx2);
+%    axis tight;
+%    axis equal;
+%    
+%    
+%    subplot(2,2,2);
+%    LAF.draw(gca,v(:,good_corresp{find(g==G1),'jj'}), ...
+%             'LineStyle','--');
+%    axis tight;
+%    axis equal;
+%
+%    subplot(2,2,3);
+%    xx3 = LAF.translate(xforms{find(g==G1),'X0'}', ...
+%                        xforms{find(g==G1),'t_i'}');
+%    LAF.draw(gca,xx3);
+%    axis tight;
+%    axis equal;    
+%    
+%    
+%    subplot(2,2,4);
+%    yy2 = LAF.translate(xx2,xforms{find(g==G1),'Rt'}');
+%    LAF.draw(gca,yy2,'LineStyle','--');    
+%    axis tight;
+%    axis equal;
+%end
+
+
+%keyboard;
+
+%figure;
+%cmp_splitapply(@(v,color) LAF.draw_groups(gca,v,'Color',color), ...
+%               [dr(:,corresp{corresp.G_rt > 0,'jj'}).u], ...
+%               colors',G1');
+%figure;
+%cmp_splitapply(@(v,t,color) draw_it(gca,v,t,color), ...
+%               cframes(cframes.G_rt > 0,{'X0','t_i'}),colors,G1);
+%
+%function [] = draw_it(gca,u,t,color)
+%keyboard;
+%v = LAF.translate(u,t);
+%LAF.draw(gca,v,'Color',color);
+%
 %function draw_cframes()
 %
 %draw_cframes

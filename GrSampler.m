@@ -1,4 +1,4 @@
-classdef VlSampler < handle
+classdef GrSampler < handle
     properties
         groups
         N,p
@@ -13,7 +13,7 @@ classdef VlSampler < handle
     end
     
     methods
-        function this = VlSampler(labeling,varargin)
+        function this = GrSampler(labeling,varargin)
             [this,~] = cmp_argparse(this,varargin{:});
             
             this.N = numel(labeling);

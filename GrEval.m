@@ -1,4 +1,4 @@
-classdef VlEval < handle
+classdef GrEval < handle
     properties    
         T = log(1.3/1.0);
         linkage_method = 'complete';
@@ -7,7 +7,7 @@ classdef VlEval < handle
     end
 
     methods
-        function this = VlEval(varargin)
+        function this = GrEval(varargin)
             [this,~] = cmp_argparse(this,varargin{:});
             this.iff = @(x) make_iif(sum(x < this.T) > 1, ...
                                      @() x < this.T, ...
