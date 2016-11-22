@@ -1,15 +1,27 @@
 function h1 = draw(ax1,u,varargin)
-cfg.Color = [];
+cfg.labels = [];
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-if isempty(cfg.Color)
+if ~any(strcmpi('color',leftover))
     mpdc = distinguishable_colors(size(u,2));
     set(ax1,'ColorOrder',mpdc); 
 end
 
-x = reshape(u(1:3:end,:),3,[])+0.5;
-y = reshape(u(2:3:end,:),3,[])+0.5;
+x = reshape(u(1:3:end,:),3,[]);
+y = reshape(u(2:3:end,:),3,[]);
+
 hold(ax1,'on');
-h1 = plot(ax1,x,y,varargin{:});
-% h2 = plot(ax1,u(7,:),u(8,:),'*',varargin{:});
+if isempty(leftover)
+    h1 = plot(ax1,x,y);
+else
+    h1 = plot(ax1,x,y,leftover{:});    
+end
+
+if ~isempty(cfg.labels)
+    label_str = num2str(reshape(cfg.labels,1,[]));
+    labels = regexp(label_str,'(\w+)','tokens');
+    mu = [(u(1:2,:)+u(4:5,:)+u(7:8,:))/3];
+    text(mu(1,:),mu(2,:),labels);
+end
+
 hold(ax1,'off');
