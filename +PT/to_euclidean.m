@@ -1,3 +1,3 @@
-function x2 = pt_make_euclidean(x)
+function x2 = to_euclidean(x)
 x1 = renormI(x);
 x2 = x1(1:end-1,:);
