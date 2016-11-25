@@ -1,4 +1,4 @@
-function [X,s] = cam_triangulate_2p2(u0,s,P1,P2)
+function [X,s] = pt1x2_to_X(u0,s,P1,P2)
 F = eg_make_F_from_2P(P1,P2);
 dx = eg_sampson_err(u0(:,s),F);
 

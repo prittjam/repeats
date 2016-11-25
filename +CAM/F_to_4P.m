@@ -1,4 +1,4 @@
-function [P1 P2] = cam_get_4P_from_F(G)
+function [P1 P2] = F_to_4P(G)
 Gn = sqrt(2)*G/norm(G,'fro');
 [~,~,V] = svd(Gn);
 v = V(:,3);

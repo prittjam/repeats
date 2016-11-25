@@ -1,4 +1,4 @@
-function [P1 P2] = cam_get_2P_from_F(F)
+function [P1 P2] = F_to_2P(F)
 [U,D,V] = svd(F,0);
 e2 = renormI(U(:,3));
 P1 = [eye(3) zeros(3,1)];
