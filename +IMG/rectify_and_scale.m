@@ -1,8 +1,4 @@
-function [timg,T2,rb] = rectify_and_scale(img,H,T1)
-if nargin < 3
-    T1 = [];
-end
-
+function [timg,T,rb] = rectify_and_scale(img,H,T0)
 T = projective2d(H');
 x = [0.5 size(img,2)+0.5];
 y = [0.5 size(img,1)+0.5];
@@ -13,9 +9,15 @@ S = [s 0 0;
      0 s 0;
      0 0 1];
 
-ra = imref2d(size(img));
-T2 = projective2d((S*H)');
+Tp = projective2d((S*H)');
 
-[timg,rb] = imwarp(img,ra,T2, ...
+if nargin == 3
+    T = Tp;
+else
+    T = maketform('composite',Tp,T0);
+end
+
+ra = imref2d(size(img));
+[timg,rb] = imwarp(img,ra,T, ...
                    'bicubic','Fill', ...
                    [255;255;255]);
