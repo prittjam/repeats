@@ -48,6 +48,10 @@ if ~exist('+DR','dir')
     cd(cur_path);
 end
 
+if ~exist('mixGaussVb')
+    addpath(fullfile([src_path 'VbGm']));
+end
+
 if ~exist('export_fig')
     addpath(fullfile([src_path 'export_fig']));
 end

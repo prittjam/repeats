@@ -49,7 +49,7 @@ classdef GrSampler < handle
                                    labeling,1:numel(labeling), ...
                                    findgroups(labeling));
             
-                labeling = combine(split_res,idx,labeling);
+                labeling = apply_combine(split_res,idx,labeling);
                 cs_freq = hist(labeling,1:max(labeling0));
                 
                 ind = this.freq > 0;

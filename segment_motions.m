@@ -1,4 +1,4 @@
-function [corresp,X,Rt] = segment_motions(u,G_app)
+function [u_corr,U,t_i,Rt] = segment_motions(u,G_app,Hinf)
 rt = [];
 ii = [];
 jj = [];
@@ -17,23 +17,27 @@ reflect = find(rt(1,:) < 0);
 rt(1:2,reflect) = -1*rt(1:2,reflect);
 [jj(reflect),ii(reflect)] = deal(ii(reflect),jj(reflect));
 
-meanshift = MMS.Meanshift('manifold','R2', ...
-                          'bandwidth_type','sample', ...
-                          'pilot_knn',5,'min_support',5);
-t_ij = rt;
-[rt,G_rt] = meanshift.fit_and_predict(t_ij);
-meanshift.delete();
+%meanshift = MMS.Meanshift('manifold','R2', ...
+%                          'bandwidth_type','sample', ...
+%                          'pilot_knn',20,'min_support',5);
+%t_ij = rt;
+%[rt,G_rt] = meanshift.fit_and_predict(t_ij);
+%meanshift.delete();
 
-t_i = u(4:5,ii);
-corresp = table(G_rt',G_app(ii)',ii',jj',t_i',t_ij', ...
-                'VariableNames',{'G_rt','G_app','ii','jj','t_i','t_ij'});
+cluster_xforms(u,ii,jj,rt,Hinf);
 
-[GG,uGG] = findgroups(corresp(:,{'G_rt','G_app'}));
-X0 = cmp_splitapply(@(u) u(:,1), ...
-                    LAF.apply_rigid_xforms(u(:,ii),0,-t_i),GG');  
+t_i = table([1:size(u,2)]',[u(4:5,:)]', ...
+            'VariableNames',{'i','t_i'});
+u_corr = table(G_rt',G_app(ii)',ii',jj',t_ij', ...
+               'VariableNames',{'G_rt','G_app','i','j','t_ij'});
 
-X = table(uGG{:,1},uGG{:,2},X0', ...
-          'VariableNames',{'G_rt','G_app','X0'});
+%[GG,uGG] = findgroups(corresp(:,{'G_rt','G_app'}));
+[GG,uGG] = findgroups(u_corr(:,{'G_app'}));
+U = cmp_splitapply(@(u) u(:,1), ...
+                    LAF.apply_rigid_xforms(u(:,ii),0,-t_i{ii,'t_i'}'),GG'); 
+%U = table(uGG{:,1},uGG{:,2},U', ...
+%          'VariableNames',{'G_rt','G_app','U'});
+U = table(uGG{:,1}, U', 'VariableNames',{'G_app','U'});
 Rt = table([1:size(rt,2)]',rt', ...
            'VariableNames', {'G_rt','Rt'});
 
