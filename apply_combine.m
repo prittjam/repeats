@@ -1,4 +1,10 @@
 function res = apply_combine(split_res,idx,G)
-split_res = [split_res{:}];
-res = nan(1,numel(G));
-res([idx{:}]) = split_res;
+[~,dim] = max(size(G));
+idx = cat(dim,idx{:});
+max_idx = max(idx);
+indices = repmat({':'},1,ndims(split_res{1}));
+indices{dim} = idx;
+max_indices = size(split_res{1});
+max_indices(dim) = numel(G);
+res = nan(max_indices);
+res(indices{:}) = cat(dim,split_res{:});

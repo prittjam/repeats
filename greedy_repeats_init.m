@@ -27,6 +27,11 @@ if ~exist('+RANSAC')
     addpath([src_path]);
 end
 
+if ~exist('itriu','file')
+    halfvec = fullfile(cur_path, '/HalfVectorization');
+    addpath(halfvec);
+end
+
 if ~exist('cvtk2_init','file')
     cvtk_path = fullfile(src_path, '/cvtk2');
     cd(cvtk_path);
@@ -46,10 +51,6 @@ if ~exist('+DR','dir')
     cd(cmpfeat_path);
     feval('cmpfeat_init'); 
     cd(cur_path);
-end
-
-if ~exist('mixGaussVb')
-    addpath(fullfile([src_path 'VbGm']));
 end
 
 if ~exist('export_fig')

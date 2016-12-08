@@ -12,30 +12,26 @@ ransac = RANSAC.Ransac(model,sampler,eval,'lo',lo);
 [Hinf,ransac_res,stats] = ransac.fit(dr,G_app);
 
 u = [dr(:).u];
-is_converged = false;
-%while ~is_converged
 q = cfg.q0;
 
 G_inl = findgroups(G_app.*ransac_res.cs);
 
-for k = 1:1
-    v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
-    M = est_motions(v,G_inl);
-    G_m = findgroups(M.MotionModel);
-    [tmp,ind] = cmp_splitapply(@segment_motions2, ...
-                               M(:,{'i','j','Rt'}), ...
-                               1:numel(G_m),G_m);
-    G_r = tmp(ind);
-    
-    %    [u_corr,U,t_i,Rt] = segment_motions(v,findgroups(G_app.*cs),Hinf);
-    figure;
-    draw_motion_segmentation(gca,u_corr);
-    ind = ceil(rand(1,500)*height(u_corr));
-    opt_res = refine_motions(u,Hinf,u_corr(ind,:),U,t_i,Rt,q,cc);
-    is_converged = true;
-    Hinf = opt_res.Hinf;
-    q = opt_res.q;
-end
+v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
+M = resection(v,G_inl);
+
+G_r = reshape(msplitapply(@(i,j,Rt) segment_motions(u,Hinf,i,j,Rt), ...
+                          M(:,{'i','j','Rt'}), ...
+                          findgroups(M.MotionModel)),1,[]);
+PT.draw_groups(gca,PT.to_homogeneous(M.Rt'),G_r);
+[U,t_i] = section(u,M,Hinf);
+
+ind = ceil(rand(1,500)*height(u_corr));
+opt_res = refine_motions(u,Hinf,u_corr(ind,:),U,t_i,Rt,q,cc);
+
+%    is_converged = true;<
+%    Hinf = opt_res.Hinf;
+%    q = opt_res.q;
+%
 
 res = struct('Hinf',Hinf, ...
              'q', q, ...

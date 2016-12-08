@@ -44,14 +44,9 @@ classdef GrSampler < handle
 
             if any(isfinite(labeling))
                 freq = hist(labeling,1:max(labeling));
-                [split_res,idx] = ...
-                    cmp_splitapply(@(x,g) deal({ this.iif(x) },{g}), ...
-                                   labeling,1:numel(labeling), ...
-                                   findgroups(labeling));
-            
-                labeling = apply_combine(split_res,idx,labeling);
+                labeling = msplitapply(this.iif,labeling,findgroups(labeling));
                 cs_freq = hist(labeling,1:max(labeling0));
-                
+
                 ind = this.freq > 0;
                 p2 = hygepdf(3,this.freq(ind),cs_freq(ind),3);
                 p3 = dot(this.p(ind),p2);
