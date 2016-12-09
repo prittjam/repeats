@@ -19,19 +19,19 @@ G_inl = findgroups(G_app.*ransac_res.cs);
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
 M = resection(v,G_inl);
 
-G_r = reshape(msplitapply(@(i,j,Rt) segment_motions(u,Hinf,i,j,Rt), ...
-                          M(:,{'i','j','Rt'}), ...
-                          findgroups(M.MotionModel)),1,[]);
-PT.draw_groups(gca,PT.to_homogeneous(M.Rt'),G_r);
-[U,t_i] = section(u,M,Hinf);
+M.G_m = msplitapply(@(i,j,Rt) segment_motions(u,Hinf,i,j,Rt), ...
+                    M(:,{'i','j','Rt'}), ...
+                    findgroups(M.MotionModel));
+M.G_app = G_app(M.i)';
 
-ind = ceil(rand(1,500)*height(u_corr));
-opt_res = refine_motions(u,Hinf,u_corr(ind,:),U,t_i,Rt,q,cc);
-
-%    is_converged = true;<
-%    Hinf = opt_res.Hinf;
-%    q = opt_res.q;
+meanRt = cmp_splitapply(@mean,M.Rt,findgroups(M.G_m));
+%PT.draw_groups(gca,PT.to_homogeneous(M.Rt'),M.G_r');
+%hold on;plot(meanRt(:,1),meanRt(:,2),'r*');hold off;
 %
+[U,M.G_t,t_i] = section(u,G_app,M,Hinf);
+
+ind = ceil(rand(1,500)*height(M));
+opt_res = refine_motions(u,Hinf,M(ind,:),U,t_i,meanRt',q,cc);
 
 res = struct('Hinf',Hinf, ...
              'q', q, ...

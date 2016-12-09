@@ -50,8 +50,6 @@ tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 
 res = greedy_repeats(dr,cc,'q0',0.0);
 
-keyboard;
-
 T0 = CAM.make_distortion_tform(cc,res.q);
 [rimg,T,rb] = IMG.rectify_and_scale(img.data,res.Hinf,T0);
 
