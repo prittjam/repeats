@@ -20,8 +20,7 @@ du = reshape(ut-u(:,jj),3,[]);
 d = max(reshape(sqrt(sum(du.^2)),3,[]));
 
 Z = linkage(d,'single');
-T = cluster(Z,'cutoff', 3.0, ...
-            'criterion','distance');
+T = cluster(Z,'cutoff', 3.0,'criterion','distance');
 
 freq = hist(T,1:max(T));
 [max_freq,maxc] = max(freq);

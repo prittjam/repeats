@@ -16,11 +16,11 @@ greedy_repeats_init();
 % listA = {'kitkat.jpg'};
 
 
-listA = {'rhino1.jpg'};
+%listA = {'rhino1.jpg'};
 %listA = {'crochet9.png'};
 %listA = {'crochet.png'};
 %listA = {'circular_window.png'};
-%listA = {'building_us.jpg'};
+listA = {'building_us.jpg'};
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
@@ -57,4 +57,4 @@ v = LAF.warp_fwd([dr(:).u],T);
 
 figure;
 imshow(rimg,rb);
-LAF.draw_groups(gca,v,res.G,'PrintLabels',true);
+%LAF.draw_groups(gca,v,res.M.G_app,'PrintLabels',true);
