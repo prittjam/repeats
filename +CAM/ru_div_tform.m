@@ -1,2 +1,2 @@
-function v = ru_tform(u,T)
-v = cam_undistort_div(u',T.tdata.cc,T.tdata.q)';
+function v = ru_div_tform(u,T)
+v = CAM.ru_div(u',T.tdata.cc,T.tdata.q)';

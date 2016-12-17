@@ -1,4 +1,4 @@
-function u = ru(u,ic,la)
+function u = ru_div(u,ic,la)
 
 %UDERAD - removes additive radial distortion from coordinates
 %     function u = uderad(u, ic, la)
