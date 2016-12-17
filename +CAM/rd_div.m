@@ -1,4 +1,4 @@
-function u = distort(u,ic,la)
+function u = rd(u,ic,la)
 %URAD - adds additive radial distortion to coordinates
 %     function u = urad(u, ic, la)
 %     where ic is image centre and la is the parameter of the
