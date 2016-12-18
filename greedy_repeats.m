@@ -1,5 +1,7 @@
 function [res,stats] = greedy_repeats(dr,cc,varargin)
 cfg.q0 = 0.0;
+cfg.estimator = 'laf2xN_to_RtxN';
+
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 G_app = group_desc(dr);
@@ -18,10 +20,10 @@ G_inl = findgroups(G_app.*ransac_res.cs);
 
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
 
-M = resection(v,G_inl);
+M = resection(v,G_inl,cfg.estimator);
 
-M.G_m = msplitapply(@(i,j,Rt) segment_motions(u,Hinf,i,j,Rt), ...
-                    M(:,{'i','j','Rt'}), ...
+M.G_m = msplitapply(@(i,j,Rt,xform_type) segment_motions(u,Hinf,i,j,Rt,xform_type), ...
+                    M(:,{'i','j','Rt','MotionModel'}), ...
                     findgroups(M.MotionModel));
 M.G_app = G_app(M.i)';
 

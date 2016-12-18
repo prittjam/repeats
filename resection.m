@@ -1,24 +1,32 @@
-function M = resection(u,G)
-estimator = {};
-reflect = [];
-M = [];
-uG = unique(G);
-for g = uG
-    iG = find(G==g);
-    estimator = 'laf2xN_to_txN';
-    [g_rt,g_ii,g_jj] = calc_pwise_xforms(u(:,iG),estimator);
-    reflect = find(g_rt(1,:) < 0);
-    g_rt(1:2,reflect) = -1*g_rt(1:2,reflect);
-    [g_jj(reflect),g_ii(reflect)] = deal(g_ii(reflect),g_jj(reflect));
-    estimators = cell(numel(g_ii),1);
-    estimators(:) = { estimator };
-    tmp = table(iG(g_ii)',iG(g_jj)',g_rt',estimators, ...
-                'VariableNames',{'i','j','Rt','MotionModel'});
-    M = [M;tmp];
+function M = resection(u,G,estimator)
+g_rt = cmp_splitapply(@(v,ind) { calc_pwise_xforms(v,ind,estimator) }, ...
+                      u,1:size(u,2),G);
+Rt = [g_rt{:}];
+
+switch estimator
+  case 'laf2xN_to_txN'
+    estimators = categorical(numel(Rt),    
+  case 'laf2xN_to_RtxN'
+    
 end
+  
+    
+    
+
+M = table([Rt(:).i]',[Rt(:).j]',[Rt(:).t]',[Rt(:).theta]',estimators, ...
+            'VariableNames',{'i','j','t','theta','MotionModel'});
 M.MotionModel = categorical(M.MotionModel);
 
-function [Rt,ii,jj] = calc_pwise_xforms(u,est_xform)
-M = size(u,2);
-[ii,jj] = itril([M M],-1);
+function Rt = calc_pwise_xforms(u,ind,est_xform)
+N = size(u,2);
+[ii,jj] = itril([N N],-1);
 Rt = feval(est_xform,[u(:,ii);u(:,jj)]);
+t = [Rt(:).t];
+theta = [Rt(:).theta];
+reflect = t(1,:) < 0;
+t(:,reflect) = -1*t(:,reflect);
+[jj(reflect),ii(reflect)] = deal(ii(reflect),jj(reflect));
+Rt = struct('theta',mat2cell(theta,1,ones(1,numel(theta))), ...
+            't',mat2cell(t,2,ones(1,numel(theta))), ...
+            'i',mat2cell(ind(ii),1,ones(1,numel(theta))), ...
+            'j',mat2cell(ind(jj),1,ones(1,numel(theta))));

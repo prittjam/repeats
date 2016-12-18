@@ -13,6 +13,6 @@ dr = get_dr(img,cid_cache, ...
 tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 [dr(:).drid] = tmp{:};
 
-res = greedy_repeats(dr,cc,'q0',0.0);
+res = greedy_repeats(dr,cc);
 
 draw_results(img,res);

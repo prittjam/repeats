@@ -1,13 +1,19 @@
-function G = segment_motions(u,Hinf,ii,jj,Rt)
+function G = segment_motions(u,Hinf,ii,jj,Rt,xform_type)
 Hinv = inv(Hinf);
-Rt = Rt';
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
-v_mu = v(4:6,:);
 
 N = numel(ii);
 [aa,bb] = meshgrid(1:N,1:N);
-rt = PT.to_homogeneous(Rt);
-x = PT.to_euclidean(Hinv*(PT.translate(v_mu(:,ii(aa(:))),Rt(:,bb(:)))));
+v_mu = v(4:6,ii(aa(:)));
+Rt = Rt(bb,:)';
+
+switch (unique(xform_type))
+  case 'laf2xN_to_txN'
+    x = PT.to_euclidean(Hinv*(PT.translate(v_mu,Rt)));
+  case 'laf2xN_to_RtxN'
+    x = PT.to_euclidean(Hinv*(PT.apply_rigid_xform(v_mu,Rt(1,:),Rt(2:3,:))));    
+end
+    
 y = u(4:5,jj(aa(:)));
 d = sqrt(sum((y-x).^2));
 ind = sub2ind([N N],aa,bb);
