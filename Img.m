@@ -24,8 +24,8 @@ classdef Img < handle
 
             if isempty(this.data) && ~isempty(this.url)
                 this.data = imread(this.url);
-                filecontents = get_raw_img(this.url);
-                this.cid = HASH.hash(filecontents,'MD5');
+                filecontents = get_native_img(this.url);
+                this.cid = KEY.hash(filecontents,'MD5');
             end
 
             this.calc_size();
