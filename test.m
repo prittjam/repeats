@@ -10,17 +10,16 @@ greedy_repeats_init();
 %listA = { 'fairey2.png' };
 %listA = { 'wp006.png' };
 %listA = { 'sett4.jpg' };
-%listA = { 'calib_prague3.jpg' };
 % listA = { '2063499388_567bd68634_o.jpg' };
 % listA = { 'two_planes.jpg' };
 % listA = {'kitkat.jpg'};
-
-
 %listA = {'rhino1.jpg'};
 %listA = {'crochet9.png'};
 %listA = {'crochet.png'};
 %listA = {'circular_window.png'};
 listA = {'building_us.jpg'};
+
+%listA = { 'calib_prague3.jpg' };
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
@@ -41,7 +40,7 @@ cid_cache = CASS.CidCache(img_metadata.cid,imparams{:});
 img = Img('data',cid_cache.get_img(), ...
           'cid',img_metadata.cid, ...
           'url',img_metadata.url);       
-cc = [img.height/2 img.width/2];
+cc = [img.width/2 img.height/2];
 dr = get_dr(img,cid_cache, ...
                 {'type',cfg.dr.dr_type});
 [~,drid2] = ismember([dr(:).drid],unique([dr(:).drid]));
@@ -50,11 +49,4 @@ tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 
 res = greedy_repeats(dr,cc,'q0',0.0);
 
-T0 = CAM.make_distortion_tform(cc,res.q);
-[rimg,T,rb] = IMG.rectify_and_scale(img.data,res.Hinf,T0);
-
-v = LAF.warp_fwd([dr(:).u],T);
-
-figure;
-imshow(rimg,rb);
-%LAF.draw_groups(gca,v,res.M.G_app,'PrintLabels',true);
+draw_results(img,res);

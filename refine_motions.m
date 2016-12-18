@@ -1,4 +1,4 @@
-function res = refine_motions(u,Hinf0,u_corr,U,t,Rt,q0,cc)
+function [res,stats] = refine_motions(u,Hinf0,u_corr,U,t,Rt,q0,cc)
 u_corr = u_corr(u_corr.G_m > 0,:);
 
 x_laf = [u(:,u_corr{:,'i'}) u(:,u_corr{:,'j'})];
@@ -35,7 +35,6 @@ err0 = errfun(dz0,idx,x,u_corr,cc,Hinf0,U0,t0,Rt0,q0);
 Jpat = make_Jpat(idx);
 
 options = optimoptions('lsqnonlin','Display','iter', ...
-                       'MaxIterations',5, ...
                        'JacobPattern',Jpat);
 [dz,resnorm,err] = lsqnonlin(@errfun,dz0,[],[],options, ...
                              idx,x,u_corr,cc,Hinf0,U0,t0,Rt0,q0);
@@ -43,7 +42,36 @@ options = optimoptions('lsqnonlin','Display','iter', ...
 [Hinf,U,t,Rt,q] = unwrap(dz,idx,Hinf0,U0,t0,Rt0,q0);
 
 res = struct('Hinf', Hinf, 'U', U, 't', t, ...
-             'Rt', Rt, 'q', q, 'err',err);
+             'Rt', Rt, 'q', q, 'cc',cc);
+stats = struct('resnorm', resnorm, ...
+               'err',err);
+
+function err = errfun(dz,idx,x,u_corr,cc,Hinf0,U0,t0,Rt0,q0)
+[Hinf,U,t,Rt,q] = unwrap(dz,idx,Hinf0,U0,t0,Rt0,q0);
+
+y_ii = LAF.translate(U(:,idx.predict.U),t(:,idx.predict.t));
+y_jj = LAF.translate(y_ii,Rt(:,idx.predict.Rt));
+
+invH = inv(Hinf);
+ylaf = LAF.renormI(blkdiag(invH,invH,invH)*[y_ii y_jj]);
+yu = reshape(ylaf,3,[]);
+yd = CAM.rd_div(yu(1:2,:),cc,q);
+err = reshape(yd-x,[],1);
+
+function [Hinf,U,t,Rt,q] = unwrap(dz,idx,Hinf0,U0,t0,Rt0,q0)
+Hinf = Hinf0;
+
+dq = dz(idx.params.q);
+dlinf = dz(idx.params.linf);
+dU = LAF.pt2x3_to_pt3x3(reshape(dz(idx.params.U),6,[]));
+dti = reshape(dz(idx.params.t),2,[]);
+dRt = reshape(dz(idx.params.Rt),2,[]);
+
+q = q0+dq;
+Hinf(3,:) = Hinf(3,:)+dlinf';
+U = U0+dU;
+t = t0+dti;
+Rt = Rt0+dRt;
 
 function Jpat = make_Jpat(idx)
 M = 12*numel(idx.predict.Rt);
@@ -74,32 +102,3 @@ ind = sub2ind(size(Jpat), ...
               [dq_jj dlinf_jj(:)' dU_jj dti_jj dRt_jj]);
 
 Jpat(ind) = 1;
-
-
-
-function err = errfun(dz,idx,x,u_corr,cc,Hinf0,U0,t0,Rt0,q0)
-[Hinf,U,t,Rt,q] = unwrap(dz,idx,Hinf0,U0,t0,Rt0,q0);
-
-y_ii = LAF.translate(U(:,idx.predict.U),t(:,idx.predict.t));
-y_jj = LAF.translate(y_ii,Rt(:,idx.predict.Rt));
-
-invH = inv(Hinf);
-ylaf = LAF.renormI(blkdiag(invH,invH,invH)*[y_ii y_jj]);
-yd = reshape(ylaf,3,[]);
-yu = CAM.distort(yd(1:2,:),cc,q);
-err = reshape(yu-x,[],1);
-
-function [Hinf,U,t,Rt,q] = unwrap(dz,idx,Hinf0,U0,t0,Rt0,q0)
-Hinf = Hinf0;
-
-dq = dz(idx.params.q);
-dlinf = dz(idx.params.linf);
-dU = LAF.pt2x3_to_pt3x3(reshape(dz(idx.params.U),6,[]));
-dti = reshape(dz(idx.params.t),2,[]);
-dRt = reshape(dz(idx.params.Rt),2,[]);
-
-q = q0+dq;
-Hinf(3,:) = Hinf(3,:)+dlinf';
-U = U0+dU;
-t = t0+dti;
-Rt = Rt0+dRt;

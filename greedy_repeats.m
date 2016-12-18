@@ -1,4 +1,4 @@
-function res = greedy_repeats(dr,cc,varargin)
+function [res,stats] = greedy_repeats(dr,cc,varargin)
 cfg.q0 = 0.0;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
@@ -33,7 +33,7 @@ is_converged = false;
 
 %while ~is_converged
     %    ind = ceil(rand(1,500)*height(M));
-    opt_res = refine_motions(u,Hinf,M,U,t,meanRt',q,cc);
+[opt_res,stats] = refine_motions(u,Hinf,M,U,t,meanRt',q,cc);
 %    ui = unique(M{:,{'i','G_app','G_t'}},'rows');
 %    %    u2(:,ui(:,1)) = LAF.translateU(:,ui(:,2))+
 %    M.G_m = msplitapply(@(i,j,Rt) segment_motions(u,Hinf,i,j,Rt), ...
