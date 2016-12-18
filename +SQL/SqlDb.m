@@ -1,5 +1,4 @@
 classdef SqlDb < SQL.SqlBase
-
      methods (Static)
         function obj = getObj( renew, varargin ) 
             if nargin == 0

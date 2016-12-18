@@ -1,5 +1,5 @@
 function [cfghash json] = cfg2hash(cfg, name)
-    error(nargchk(1, 2, nargin));
+   narginchk(1, 2);
     if (nargin < 2)
     	name = '';
     end

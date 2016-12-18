@@ -48,7 +48,7 @@ classdef SqlBase < handle
     methods(Static,Access=private)
         function [conn,connh] = dbconn2(server_name, name, user, pass)
             global DBCONNECTIONS;
-            error(nargchk(3, 4, nargin, 'struct'));   
+            narginchk(3, 4);   
             if (nargin == 3), pass = ''; end
 
             if ~usejava('jvm')
@@ -64,7 +64,7 @@ classdef SqlBase < handle
             if (~isfield(DBCONNECTIONS, hash) || ~isa(DBCONNECTIONS.(hash), 'database')) %connection did not exist
                 DBCONNECTIONS.(hash) = database(name, user, pass, jdbcDriver, jdbcString);
                 DBCONNECTIONS.(hash_time) = now;
-            elseif (~isconnection(DBCONNECTIONS.(hash))) %reconnect
+            elseif (~isopen(DBCONNECTIONS.(hash))) %reconnect
                 DBCONNECTIONS.(hash) = database(name, user, pass, jdbcDriver, jdbcString);
                 DBCONNECTIONS.(hash_time) = now;
             end
@@ -79,7 +79,7 @@ classdef SqlBase < handle
                 disp('DB connection refreshed.');
             end
 
-            if (~isconnection(DBCONNECTIONS.(hash))) %final check
+            if (~isopen(DBCONNECTIONS.(hash))) %final check
                 error(get(DBCONNECTIONS.(hash), 'Message'));
             end
 
