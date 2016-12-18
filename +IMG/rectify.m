@@ -9,7 +9,7 @@ cfg.transforms = {};
 S = eye(3,3);
 
 if strcmpi(cfg.scale,'Yes')
-    S = calc_scale(img,H,cfg.transforms{:})
+    S = calc_scale(img,H,cfg.transforms{:});
 end
 
 H = S*H;

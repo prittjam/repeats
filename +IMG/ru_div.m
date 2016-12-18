@@ -6,7 +6,7 @@ border = [0.5    0.5; ...
           nx+0.5 ny+0.5; ...
           0.5    ny+0.5];
 
-T = CAM.make_rd_div_tform(cc,q)
+T = CAM.make_rd_div_tform(cc,q);
 
 tborder = tformfwd(T,border);
 
