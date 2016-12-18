@@ -1,4 +1,4 @@
-function [timg,xdata,ydata] = rectify(img,H,varargin)
+function timg = rectify(img,H,varargin)
 assert(all(size(H) == [3 3]));
 
 cfg.scale = 'No';
@@ -22,8 +22,6 @@ function S = calc_scale(img,H,varargin)
     T = make_composite(H,varargin{:});
     nx = size(img,2);
     ny = size(img,1);
-
-    keyboard;
     
     border = [0.5    ny+0.5; ...
               0.5    0.5; ...
@@ -36,15 +34,13 @@ function S = calc_scale(img,H,varargin)
     ss = LAF.calc_scale([border(:) tborder(:)]);
     s = sqrt(abs(ss(1)/ss(2)));
     
-    S = [10*s 0 0;
-         0 10*s 0;
+    S = [s 0 0;
+         0 s 0;
          0 0 1];
-
 
 function T = make_composite(H,varargin)
 if isempty(varargin)
     T = maketform('projective',H');
 else
-    T = maketform('composite',varargin{:}, ...
-                  maketform('projective',H'));
+    T = maketform('composite',maketform('projective',H'),varargin{:});
 end

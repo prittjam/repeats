@@ -21,6 +21,3 @@ ra = imref2d(size(img));
 [timg,rb] = imwarp(img,ra,T, ...
                    'bicubic','Fill', ...
                    [255;255;255]);
-
-
-
