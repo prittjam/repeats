@@ -4,6 +4,7 @@ classdef GrEval < handle
         linkage_method = 'complete';
         iff = [];
         err_type = 'cviu16';
+        motion_model = @laf2xN_to_RtxN;
     end
 
     methods
@@ -20,10 +21,9 @@ classdef GrEval < handle
             err = zeros(1,numel(dr));
             u = [dr(:).u];
             ind = 1:size(u,2);
-            est_xform = @laf2xN_to_RtxN;
             [cs0,idx] = ...
                 cmp_splitapply(@(x,y) ...
-                               deal({calc_pwise_registration_err(x,H,est_xform)},{y}), ...
+                               deal({calc_pwise_registration_err(x,H,this.motion_model)},{y}), ...
                                u,ind,findgroups(G));            
             cs([idx{:}]) = [cs0{:}];
         end

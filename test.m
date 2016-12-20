@@ -2,7 +2,7 @@ function [] = test()
 greedy_repeats_init();
 
 %listA = { 'fireengine1.jpg' };
-%listA = {'liz_taylor.jpg'};
+listA = {'liz_taylor.jpg'};
 %listA = {'object0149.view01.png'};
 % listA = {'226148941_00d29de16b_o.jpg'};
 %listA = {'PSWT12.JPG'};
@@ -16,7 +16,7 @@ greedy_repeats_init();
 %listA = {'rhino1.jpg'};
 %listA = {'crochet9.png'};
 %listA = {'crochet.png'};
-listA = {'circular_window.png'};
+%listA = {'circular_window.png'};
 %listA = {'building_us.jpg'};
 
 %listA = { 'calib_prague3.jpg' };
@@ -48,5 +48,5 @@ tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 [dr(:).drid] = tmp{:};
 
 res = greedy_repeats(dr,cc, ...
-                     'estimator','laf2xN_to_txN');
+                     'motion_model','laf2xN_to_txN');
 draw_results(img,res);

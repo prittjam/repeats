@@ -1,4 +1,4 @@
-function [cs,theta,t] = calc_pwise_registration_err(u,H,est_xform)
+function [cs,theta,t] = calc_pwise_registration_err(u,H,motion_model)
 M = size(u,2);
 
 v = LAF.renormI(blkdiag(H,H,H)*u);
@@ -10,7 +10,7 @@ N = numel(ii);
 v2 = [v(:,ii); ...
       v(:,jj)];
 
-Rt = feval(est_xform,v2);
+Rt = feval(motion_model,v2);
 
 cs = nan(1,M);
 err = zeros(1,M);

@@ -1,12 +1,12 @@
 function [res,stats] = greedy_repeats(dr,cc,varargin)
 cfg.q0 = 0.0;
-cfg.estimator = 'laf2xN_to_RtxN';
+cfg.motion_model = 'laf2xN_to_RtxN';
 
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 G_app = group_desc(dr);
 sampler = GrSampler(G_app);
-eval = GrEval();
+eval = GrEval('motion_model',cfg.motion_model);
 model = RANSAC.WRAP.laf1x3_to_HaHp();
 lo = GrLo();
 ransac = RANSAC.Ransac(model,sampler,eval,'lo',lo);
@@ -20,7 +20,7 @@ G_inl = findgroups(G_app.*ransac_res.cs);
 
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
 
-M = resection(v,G_inl,cfg.estimator);
+M = resection(v,G_inl,cfg.motion_model);
 
 M.G_m = msplitapply(@(i,j,theta,t) segment_motions(u,Hinf,i,j,theta,t), ...
                     M(:,{'i','j','theta','t'}),findgroups(M.MotionModel));
