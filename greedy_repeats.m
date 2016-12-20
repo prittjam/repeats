@@ -27,7 +27,8 @@ M.G_m = msplitapply(@(i,j,theta,t) segment_motions(u,Hinf,i,j,theta,t), ...
 M.G_app = G_app(M.i)';
 
 meanRt = cmp_splitapply(@mean,M{:,{'theta','t'}},findgroups(M.G_m));
-Rt = meanRt(:,2:3)';
+tij = meanRt(:,2:3)';
+theta = meanRt(:,1)';
 
 [U,t,M.G_i] = section(u,G_app,M,Hinf);
 u2 = u;
@@ -35,7 +36,7 @@ is_converged = false;
 
 %while ~is_converged
     %    ind = ceil(rand(1,500)*height(M));
-[opt_res,stats] = refine_motions(u,Hinf,M,U,t,Rt,q,cc);
+[opt_res,stats] = refine_motions(u,Hinf,M,U,t,tij,theta,q,cc);
 %    ui = unique(M{:,{'i','G_app','G_t'}},'rows');
 %    %    u2(:,ui(:,1)) = LAF.translateU(:,ui(:,2))+
 %    M.G_m = msplitapply(@(i,j,Rt) segment_motions(u,Hinf,i,j,Rt), ...
