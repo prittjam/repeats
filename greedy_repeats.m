@@ -22,12 +22,12 @@ v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
 
 M = resection(v,G_inl,cfg.estimator);
 
-M.G_m = msplitapply(@(i,j,Rt,xform_type) segment_motions(u,Hinf,i,j,Rt,xform_type), ...
-                    M(:,{'i','j','Rt','MotionModel'}), ...
-                    findgroups(M.MotionModel));
+M.G_m = msplitapply(@(i,j,theta,t) segment_motions(u,Hinf,i,j,theta,t), ...
+                    M(:,{'i','j','theta','t'}),findgroups(M.MotionModel));
 M.G_app = G_app(M.i)';
 
-meanRt = cmp_splitapply(@mean,M.Rt,findgroups(M.G_m));
+meanRt = cmp_splitapply(@mean,M{:,{'theta','t'}},findgroups(M.G_m));
+Rt = meanRt(:,2:3)';
 
 [U,t,M.G_i] = section(u,G_app,M,Hinf);
 u2 = u;
@@ -35,7 +35,7 @@ is_converged = false;
 
 %while ~is_converged
     %    ind = ceil(rand(1,500)*height(M));
-[opt_res,stats] = refine_motions(u,Hinf,M,U,t,meanRt',q,cc);
+[opt_res,stats] = refine_motions(u,Hinf,M,U,t,Rt,q,cc);
 %    ui = unique(M{:,{'i','G_app','G_t'}},'rows');
 %    %    u2(:,ui(:,1)) = LAF.translateU(:,ui(:,2))+
 %    M.G_m = msplitapply(@(i,j,Rt) segment_motions(u,Hinf,i,j,Rt), ...

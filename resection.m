@@ -2,19 +2,19 @@ function M = resection(u,G,estimator)
 g_rt = cmp_splitapply(@(v,ind) { calc_pwise_xforms(v,ind,estimator) }, ...
                       u,1:size(u,2),G);
 Rt = [g_rt{:}];
+N = numel(Rt);
 
 switch estimator
   case 'laf2xN_to_txN'
-    estimators = categorical(numel(Rt),    
+    estimators = categorical(ones(N,1),[1 2], ...
+                             {'laf2xN_to_txN','laf2xN_to_RtxN'});
   case 'laf2xN_to_RtxN'
-    
+    estimators = categorical(ones(N,1),[1 2], ...
+                             {'laf2xN_to_txN','laf2xN_to_RtxN'});
 end
-  
-    
-    
 
-M = table([Rt(:).i]',[Rt(:).j]',[Rt(:).t]',[Rt(:).theta]',estimators, ...
-            'VariableNames',{'i','j','t','theta','MotionModel'});
+M = table([Rt(:).i]',[Rt(:).j]',[Rt(:).theta]',[Rt(:).t]',estimators, ...
+            'VariableNames',{'i','j','theta','t','MotionModel'});
 M.MotionModel = categorical(M.MotionModel);
 
 function Rt = calc_pwise_xforms(u,ind,est_xform)
