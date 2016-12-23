@@ -1,10 +1,11 @@
-greedy_repeats_init();
 imparams = { 'dr_type','mser', ...
              'res_path','~/cvpr16' };
+cache_params = { 'read_cache',false, ...
+                 'write_cache',false };
+greedy_repeats_init();
 cfg = CFG.get(imparams{:});
-
 img = Img('url','haus2.jpg');       
-cid_cache = CASS.CidCache(img.cid); 
+cid_cache = CASS.CidCache(img.cid,cache_params{:}); 
 
 cc = [img.width/2 img.height/2];
 dr = get_dr(img,cid_cache, ...

@@ -14,7 +14,7 @@ switch motion_model
 end
 
 M = table([Rt(:).i]',[Rt(:).j]',[Rt(:).theta]',[Rt(:).t]',motion_model_list, ...
-            'VariableNames',{'i','j','theta','t','MotionModel'});
+            'VariableNames',{'i','j','theta','tij','MotionModel'});
 
 function Rt = calc_pwise_xforms(u,ind,est_xform)
 N = size(u,2);
