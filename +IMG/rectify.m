@@ -1,22 +1,29 @@
-function timg = rectify(img,H,varargin)
+function [timg] = rectify(img,H,varargin)
 assert(all(size(H) == [3 3]));
 
-cfg.scale = 'No';
+cfg.align = 'No';
+cfg.good_points = [];
 cfg.transforms = {};
-
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 S = eye(3,3);
-
-if strcmpi(cfg.scale,'Yes')
-    S = calc_scale(img,H,cfg.transforms{:});
+if strcmpi(cfg.align,'Yes')
+    if isempty(cfg.good_points)
+        S = calc_scale(img,H,cfg.transforms{:});
+    else
+        S = calc_align(cfg.good_points,H,cfg.transforms{:});
+    end
 end
 
-H = S*H;
+H1 = S*H;
 
-T = make_composite(H,cfg.transforms{:});
+T = make_composite(H1,cfg.transforms{:});
 
-timg = imtransform(img,T,leftover{:});
+timg = imtransform(img,T,'XYScale',1,leftover{:});
+
+function S = calc_align(u,H,varargin)
+v = PT.renormI(H*u);
+S = HG.pt2x2_to_sRt([v;u]);
 
 function S = calc_scale(img,H,varargin)
     T = make_composite(H,varargin{:});
@@ -32,12 +39,9 @@ function S = calc_scale(img,H,varargin)
     tborder = [tborder ones(3,1)]';
     
     ss = LAF.calc_scale([border(:) tborder(:)]);
-    s = sqrt(abs(ss(1)/ss(2)));
+    ss2 = sqrt(abs(ss(1)/ss(2)));
+    S = [ss2 0 0; 0 ss2 0; 0 0 1];
     
-    S = [s 0 0;
-         0 s 0;
-         0 0 1];
-
 function T = make_composite(H,varargin)
 if isempty(varargin)
     T = maketform('projective',H');

@@ -11,7 +11,7 @@ for k = 1:numel(CC)
     C = CC{k};
     [A,m] = ELL.get_A_from_C(C);
     t = linspace(0,2*pi,M);
-    x(:,M*(k-1)+1:M*k) = renormI(A*[cos(t);sin(t);ones(1,length(t))]);
+    x(:,M*(k-1)+1:M*k) = PT.renormI(A*[cos(t);sin(t);ones(1,length(t))]);
 end
 
 mpdc = distinguishable_colors(numel(CC));

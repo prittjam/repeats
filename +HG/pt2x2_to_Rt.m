@@ -1,4 +1,4 @@
-function Rt = p2_to_Rt(u)
+function Rt = pt2x2_to_Rt(u)
 u1c = mean(u(1:2,:),2);
 u2c = mean(u(3:4,:),2);
 
