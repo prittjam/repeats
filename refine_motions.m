@@ -1,4 +1,7 @@
-function [res,stats] = refine_motions(u,Hinf0,u_corr,U,ti,tij,theta,q0,cc)
+function [res,stats] = refine_motions(u,Hinf0,u_corr,U,ti,tij,theta,q0,cc,varargin)
+cfg.do_distortion = true;
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
+
 u_corr = u_corr(u_corr.G_rt > 0,:);
 
 x_laf = [u(:,u_corr{:,'i'}) u(:,u_corr{:,'j'})];
@@ -15,12 +18,19 @@ tij0 = tij(:,uG_tij);
 U0 = U(:,uG_app);
 
 q_idx = 1;
-H_idx =  [1:3]+q_idx(end);
+
+rtxn_idx = find(u_corr.MotionModel == 'laf2xN_to_RtxN');
+
+if isempty(rtxn_idx)
+    H_idx =  [1:3]+q_idx(end);
+else
+    H_idx =  [1:8]+q_idx(end);
+end
+
 U_idx = [1:6*size(U0,2)]+H_idx(end);
 dti_idx = [1:numel(ti0)]+U_idx(end);
 dtij_idx = [1:numel(tij0)]+dti_idx(end);
 
-rtxn_idx = find(u_corr.MotionModel == 'laf2xN_to_RtxN');
 [G_theta,uG_theta] = findgroups(u_corr(rtxn_idx,:).MotionModel);
 
 theta0 = theta;
@@ -47,24 +57,32 @@ idx = ...
                              'U',G_app, ...
                              'active',struct('theta',rtxn_idx)));
 
-err0 = errfun(dz0,idx,x,u_corr,cc,Hinf0,U0,ti0,tij0,theta0,q0);
+initial_guess = struct('Hinf0',Hinf0,'U0',U0, ...
+                       'ti0',ti0,'tij0',tij0, ...
+                       'theta0',theta0,'q0',q0);
+
+keyboard;
+err0 = errfun(dz0,idx,x,u_corr,cc,initial_guess);
 
 Jpat = make_Jpat(idx);
 
 options = optimoptions('lsqnonlin','Display','iter', ...
-                       'JacobPattern',Jpat);
+                       'MaxIter',30,'JacobPattern',Jpat);
 [dz,resnorm,err] = lsqnonlin(@errfun,dz0,[],[],options, ...
-                             idx,x,u_corr,cc,Hinf0,U0,ti0,tij0,theta0,q0);
+                             idx,x,u_corr,cc,initial_guess);
 
-[Hinf,U,ti,tij,theta,q] = unwrap(dz,idx,Hinf0,U0,ti0,tij0,theta0,q0);
+[Hinf,U,ti,tij,theta,q] = unwrap(dz,idx,initial_guess);
 
 res = struct('Hinf', Hinf, 'U', U, 'ti', ti, ...
              'tij', tij, 'q', q, 'cc',cc);
-stats = struct('resnorm', resnorm, ...
-               'err',err);
 
-function err = errfun(dz,idx,x,u_corr,cc,Hinf0,U0,ti0,tij0,theta0,q0)
-[Hinf,U,ti,tij,theta,q] = unwrap(dz,idx,Hinf0,U0,ti0,tij0,theta0,q0);
+stats = struct('err0',err0, ...
+               'resnorm0', sum(err0.^2), ...
+               'err',err, ...
+               'resnorm', resnorm);
+
+function err = errfun(dz,idx,x,u_corr,cc,initial_guess)
+[Hinf,U,ti,tij,theta,q] = unwrap(dz,idx,initial_guess);
 
 yi = LAF.translate(U(:,idx.predict.U),ti(:,idx.predict.ti));
 yj = LAF.apply_rigid_xforms(yi,theta(idx.predict.Rt),...
@@ -76,30 +94,35 @@ yu = reshape(ylaf,3,[]);
 yd = CAM.rd_div(yu(1:2,:),cc,q);
 err = reshape(yd-x,[],1);
 
-function [Hinf,U,ti,tij,theta,q] = unwrap(dz,idx,Hinf0,U0,ti0,tij0,theta0,q0)
-Hinf = Hinf0;
+function [Hinf,U,ti,tij,theta,q] = unwrap(dz,idx,initial_guess)
+Hinf = initial_guess.Hinf0;
 
-dq = dz(idx.fit.q);
-dH = dz(idx.fit.H);
-dU = LAF.pt2x3_to_pt3x3(reshape(dz(idx.fit.U),6,[]));
-dti = reshape(dz(idx.fit.ti),2,[]);
-dtij = reshape(dz(idx.fit.tij),2,[]);
-dtheta = reshape(dz(idx.fit.theta),1,[]);
+dq = dz(idx.q);
+dH = dz(idx.H);
+dU = LAF.pt2x3_to_pt3x3(reshape(dz(idx.U),6,[]));
+dti = reshape(dz(idx.ti),2,[]);
+dtij = reshape(dz(idx.tij),2,[]);
+dtheta = reshape(dz(idx.theta),1,[]);
 
-q = q0+dq;
+if isfield(initial_guess,'q0')
+    q = initial_guess.q0+dq;
+else
+    q = 0;
+end
 
-if isempty(idx.fit.theta)    
+if isempty(idx.theta)    
     Hinf(3,:) = Hinf(3,:)+dH';
 else
-    Hinf = [1+dh(1) dh(2) dh(3);dh(4) 1+dh(5) dh(6); dh(7) dh(8) 1]*Hinf0;
+    Hinf = [1+dH(1)  dH(4)   dH(7); ...
+            dH(2)    1+dH(5) dH(8); ...
+            dH(3)    dH(6)    1]*Hinf0;
 end
     
-U = U0+dU;
-ti = ti0+dti;
-tij = tij0+dtij;
-theta = theta0;
-
-theta(idx.fit.active.theta) = theta0(idx.fit.active.theta)+dtheta;
+U = initial_guess.U0+dU;
+ti = initial_guess.ti0+dti;
+tij = initial_guess.tij0+dtij;
+theta = initial_guess.theta0;
+theta(idx.active.theta) = initial_guess.theta0(idx.active.theta)+dtheta;
 
 function Jpat = make_Jpat(idx)
 K = numel(idx.predict.Rt);

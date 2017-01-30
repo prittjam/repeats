@@ -14,8 +14,8 @@ for k = 1:3
     v_ii = bsxfun(@rdivide,v_ii,sqrt(sum(v_ii.^2)));
     v_jj = u_jj([1 2]+k2,:)-mu_jj;
     v_jj = bsxfun(@rdivide,v_jj,sqrt(sum(v_jj.^2)));        
-    theta(k,:) = atan2(v_ii(1,:).*v_jj(2,:)-v_jj(1,:).*v_ii(2,:), ...
-                       v_ii(1,:).*v_jj(1,:)+v_ii(2,:).*v_jj(2,:));
+    theta(k,:) = mod(atan2(v_ii(1,:).*v_jj(2,:)-v_jj(1,:).*v_ii(2,:), ...
+                           v_ii(1,:).*v_jj(1,:)+v_ii(2,:).*v_jj(2,:)),2*pi);
 end
 
 theta = mean(unwrap(theta));

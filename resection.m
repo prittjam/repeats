@@ -14,18 +14,28 @@ switch motion_model
 end
 
 M = table([Rt(:).i]',[Rt(:).j]',[Rt(:).theta]',[Rt(:).t]',motion_model_list, ...
-            'VariableNames',{'i','j','theta','tij','MotionModel'});
+          [Rt(:).reflected]', ...
+          'VariableNames',{'i','j','theta','tij',...
+                    'MotionModel','reflected'});
 
-function Rt = calc_pwise_xforms(u,ind,est_xform)
+function [Rt,reflect] = calc_pwise_xforms(u,ind,motion_model)
 N = size(u,2);
 [ii,jj] = itril([N N],-1);
-Rt = feval(est_xform,[u(:,ii);u(:,jj)]);
+Rt = feval(motion_model,[u(:,ii);u(:,jj)]);
+
 t = [Rt(:).t];
 theta = [Rt(:).theta];
+
+reflect = false(1,numel(theta));
 reflect = t(1,:) < 0;
-t(:,reflect) = -1*t(:,reflect);
+theta(reflect) = -1*theta(reflect);
+t(:,reflect) = PT.apply_rigid_xforms(-1*t(:,reflect), ...
+                                     theta(reflect), ...
+                                     zeros(2,sum(reflect)));
 [jj(reflect),ii(reflect)] = deal(ii(reflect),jj(reflect));
+
 Rt = struct('theta',mat2cell(theta,1,ones(1,numel(theta))), ...
             't',mat2cell(t,2,ones(1,numel(theta))), ...
             'i',mat2cell(ind(ii),1,ones(1,numel(theta))), ...
-            'j',mat2cell(ind(jj),1,ones(1,numel(theta))));
+            'j',mat2cell(ind(jj),1,ones(1,numel(theta))), ...
+            'reflected',mat2cell(reflect,1,ones(1,numel(theta))));

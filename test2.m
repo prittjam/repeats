@@ -14,7 +14,14 @@ dr = get_dr(img,cid_cache, ...
 tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 [dr(:).drid] = tmp{:};
 
-res = greedy_repeats(dr,cc, ...
-                     'motion_model','laf2xN_to_txN');
+figure;
+imshow(img.data);
+[res,stats] = greedy_repeats(dr,cc, ...
+                             'motion_model','laf2xN_to_RtxN');
+
+figure;
+v = LAF.renormI(blkdiag(res.Hinf,res.Hinf,res.Hinf)*[dr(:).u]);
+LAF.draw(gca,v);
+keyboard;
 
 draw_results(img,res);

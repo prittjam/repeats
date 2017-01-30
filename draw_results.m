@@ -1,14 +1,15 @@
-function draw_results(img,res)
-T0 = CAM.make_rd_div_tform(res.cc,res.q);
-rimg = IMG.rectify(img.data,res.Hinf, ...
-                   'Transforms', { T0 },'Scale','Yes');
-uimg = IMG.ru_div(img.data,res.cc,res.q, ...
-                  'Fill', [255 255 255]');
+function draw_results(img,rimg,ud_img)
 figure;
-imshow(img.data);
-
-figure;
-subplot(1,2,1);
-imshow(rimg);
-subplot(1,2,2);
-imshow(uimg);
+if nargin == 2
+    subplot(1,2,1);
+    imshow(img.data);
+    subplot(1,2,2);
+    imshow(rimg);
+elseif nargin == 3
+    subplot(1,3,1);
+    imshow(img.data);
+    subplot(1,3,2);
+    imshow(rimg);
+    subplot(1,3,3);
+    imshow(ud_img);
+end

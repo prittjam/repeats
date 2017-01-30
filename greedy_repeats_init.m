@@ -23,6 +23,10 @@ if ~exist('+MMS','dir')
     addpath(fullfile([opt_path 'mex']));
 end
 
+if ~exist('tlnk', 'file')
+    addpath(fullfile(src_path,'Tlinkage_beta'));
+end
+    
 if ~exist('+RANSAC')
     addpath([src_path]);
 end
