@@ -22,7 +22,6 @@ if ~isempty(cfg.img)
 end
 
 v = LAF.renormI(blkdiag(Hinf0,Hinf0,Hinf0)*u);
-
 keyboard;
 M = resection(v,G_inl,cfg.motion_model);
 M.G_app = G_app(M.i)';
@@ -34,7 +33,7 @@ M.G_app = G_app(M.i)';
 
 M.G_rt = segment_motions(u,M,Hinf0,varargin{:});
 [U0,ti0,M.G_i] = section(u,M,Hinf0);
-keyboard;
+
 mle_impl = MleImpl();
 initial_guess = struct('Hinf',Hinf0,'U',U0,'ti',ti0, ...
                        'tij',tij0,'theta',theta0, ...
