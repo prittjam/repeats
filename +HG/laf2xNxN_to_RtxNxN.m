@@ -21,3 +21,6 @@ if cfg.do_reflection
     [jj(is_reflected),ii(is_reflected)] = deal(ii(is_reflected), ...
                                                jj(is_reflected));
 end
+K = numel(Rt);
+Rt = struct('theta',mat2cell(theta,1,ones(1,K)), ...
+            't', mat2cell(t,2,ones(1,K)));
