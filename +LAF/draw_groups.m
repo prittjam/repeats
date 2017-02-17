@@ -1,9 +1,18 @@
 function [] = draw_groups(ax0,u,G,varargin)
 cfg.exclude = [];
-cfg.linewidth = 3;
 cfg.printlabels = true;
+cfg.linewidth = 3;
 cfg.color = '';
+
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
+
+if isstruct(u)
+    u = [u(:).u];
+end
+
+if isempty(leftover)
+    leftover = { {} };
+end
 
 Lia = ismember(G,cfg.exclude);
 G(find(Lia)) = nan;
@@ -13,7 +22,7 @@ cmap_dc = distinguishable_colors(numel(uG)+1);
 colors = zeros(numel(G),3);
 colors(G>0,:) = cmap_dc(G(G>0),:);
 
-cmp_splitapply(@(v,color) draw_one_group(ax0,v,color,cfg.linewidth,leftover), ...
+cmp_splitapply(@(v,color) draw_one_group(ax0,v,color,cfg.linewidth,leftover{:}),...
                u,colors',G);
 
 if cfg.printlabels

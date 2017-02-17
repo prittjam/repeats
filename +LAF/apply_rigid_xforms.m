@@ -1,7 +1,7 @@
-function v = apply_rigid_xforms(u,theta,t)
-c = cos(theta);
-s = sin(theta);
-t = repmat([t;zeros(1,size(t,2))],3,1);
+function v = apply_rigid_xforms(u,Rt)
+c = cos([Rt(:).theta]);
+s = sin([Rt(:).theta]);
+t = repmat([[Rt(:).t]; zeros(1,numel(Rt))],3,1);
 
 Ru = ones(size(u));
 Ru([1 2 4 5 7 8],:) = ...
