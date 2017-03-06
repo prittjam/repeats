@@ -1,35 +1,60 @@
-function [] = draw_reconstruction(u,u_corr,Hinf,M,U,ti,theta,tij)
-inl = ~isnan(M.G_rt);
-M = M(inl,:);
-invH = inv(Hinf);
-idx = struct('predict', struct('ti',M.G_i, ...
-                               'Rt',M.G_rt, ...
-                               'U', M.G_app));
+function [] = draw_reconstruction(ax,res,varargin)
+cfg.dr = [];
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-y_ii = LAF.translate(U(:,idx.predict.U),ti(:,idx.predict.ti));
-y_jj = LAF.apply_rigid_xforms(y_ii,theta(idx.predict.Rt), ...
-                              tij(:,idx.predict.Rt));
+invH = inv(res.Hinf);
+
+y_ii = LAF.apply_rigid_xforms(res.U(:,res.u_corr.G_u),res.Rt_i(res.u_corr.G_i));
+y_jj = LAF.apply_rigid_xforms(y_ii,[res.Rt_ij(res.u_corr.G_ij)]);
 
 y_ii = LAF.renormI(blkdiag(invH,invH,invH)*y_ii);
 y_jj = LAF.renormI(blkdiag(invH,invH,invH)*y_jj);
 
-u_corr = u_corr(u_corr.G_rt > 0,:);
+LAF.draw_groups(ax,y_ii,res.u_corr.G_ij');
+LAF.draw_groups(ax,y_jj,res.u_corr.G_ij');
 
-k1 = ceil(4/5*height(u_corr));
-rng = k1+[1:9];
-k2 = 0;
-
-figure;
-for k = rng
-    k2 = k2+1;
-    subplot(3,3,k2);
-    LAF.draw(gca,u(:,u_corr{k,'i'}),'LineStyle','--');
-    LAF.draw(gca,y_ii(:,k));
-    LAF.draw(gca,u(:,u_corr{k,'j'}),'Color','r','LineStyle','--');
-    LAF.draw(gca,y_jj(:,k),'Color','r');
-    title(['(' num2str(u_corr{k,'i'}) ', ' ...
-           num2str(u_corr{k,'j'}) ')']);
-    axis equal;
+if ~isempty(cfg.dr)
+    vi = [cfg.dr(:,res.u_corr.i').u];
+    LAF.draw_groups(gca,vi,res.u_corr.G_ij', ...
+                    'Color','w','LineWidth',3, ...
+                    'LineStyle','--',leftover{:});
+    vj = [cfg.dr(:,res.u_corr.j').u];
+    LAF.draw_groups(gca,vj,res.u_corr.G_ij',...
+                    'Color','w','LineWidth',3, ...
+                    'LineStyle','--',leftover{:});
 end
 
-keyboard;
+%k2 = 0;
+%M = height(res.u_corr);
+%MM = max([M 9]);
+%
+%uind = unique(res.u_corr{:,'G_ij'});
+%
+%for k = uind'
+%    idx = find(res.u_corr{:,'G_ij'} == k);
+
+%    LAF.draw(gca,y_ii(:,idx),'LineWidth',3,'LineStyle','--', ...
+%             'Color','w');
+
+%    LAF.draw(gca,y_jj(:,idx),'LineWidth',3,'LineStyle','--', ...
+%             'Color','w');
+%end
+%
+%LAF.draw_groups(gca,y_ii,res.u_corr{:,'G_rt'}','LineStyle','--');
+%LAF.draw_groups(gca,y_jj,res.u_corr{:,'G_rt'}','LineStyle','--');
+
+%keyboard;
+%
+%imshow(img);
+%LAF.draw_groups(gca,u(:,res.u_corr{:,'i'}),res.u_corr{:,'G_u'}');
+%LAF.draw_groups(gca,u(:,res.u_corr{:,'j'}),res.u_corr{:,'G_u'}');
+%
+%%LAF.draw_groups(gca,y_ii,res.u_corr{:,'G_rt'}','LineStyle','--');
+%%LAF.draw_groups(gca,y_jj,res.u_corr {:,'G_rt'}','LineStyle','--');
+%%
+%keyboard;
+%
+%
+%
+%LAF.draw(gca,y_ii(:,ind));
+%LAF.draw(gca,y_jj(:,ind));

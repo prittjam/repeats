@@ -24,4 +24,18 @@ freq = hist(G,1:max(G));
 [~,idxb] = ismember(find(freq == 1),G);
 G(idxb) = nan;
 
-G = findgroups(G);
+G0 = findgroups(G);
+G = msplitapply(@(dr,G) rm_duplicates([dr(:).u],G),dr,G0,G0);
+
+function G = rm_duplicates(u,G)
+K = size(u,2);
+d2 = pdist(u(4:5,:)','euclidean')';
+ind = find(d2 < 100*eps);
+if ~isempty(ind)
+    [I,J] = ind2sub(size(u,2),ind);
+    G([I;J]) = nan;
+    num_good = sum(~isnan(G));
+    if num_good == 1
+        G = nan(size(G));
+    end
+end

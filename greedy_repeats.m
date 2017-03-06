@@ -1,73 +1,50 @@
-function [res,stats] = greedy_repeats(dr,varargin)
-cfg.motion_model = 'laf2xN_to_RtxN';
-cfg.rd_div = [];
+function [res,stats,res0] = greedy_repeats(dr,varargin)
+cfg.motion_model = 'HG.laf2xN_to_RtxN';
 cfg.img = [];
+cfg.cc = [];
+cfg.rho = 'l2';
+cfg.do_distortion = true;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-G_app = group_desc(dr,varargin{:});
-sampler = GrSampler(G_app);
-eval = GrEval('motion_model',cfg.motion_model);
-model = RANSAC.WRAP.laf1x3_to_HaHp();
-lo = GrLo();
-ransac = RANSAC.Ransac(model,sampler,eval,'lo',lo);
-
-[Hinf0,ransac_res,stats] = ransac.fit(dr,G_app);
 u = [dr(:).u];
 
-G_inl = findgroups(G_app.*ransac_res.cs);
+G_app = group_desc(dr,varargin{:});
 
-if ~isempty(cfg.img)
-    imshow(cfg.img);
-    LAF.draw_groups(gca,u,G_inl);
-end
+%figure;
+%imshow(cfg.img);
+%LAF.draw_groups(gca,u,G_app,'LineWidth',3);
+
+ransac = make_ransac(G_app,cfg.motion_model);
+[Hinf0,res,stats] = ransac.fit(dr,G_app);
 
 v = LAF.renormI(blkdiag(Hinf0,Hinf0,Hinf0)*u);
-keyboard;
-M = resection(v,G_inl,cfg.motion_model);
-M.G_app = G_app(M.i)';
 
-%M.G_rt = msplitapply(@(i,j,theta,tij) segment_motions(u,Hinf0,i,j,theta,tij), ...
-%                    M(:,{'i','j','theta','tij'}), ...
-%                     findgroups(M.MotionModel));
-%
+G_sv = verify_geometry(G_app,res.cs);
+u_corr = resection(v,G_sv,cfg.motion_model);
+[U0,Rt_i,u_corr.G_i] = section(u,u_corr,Hinf0);
 
-M.G_rt = segment_motions(u,M,Hinf0,varargin{:});
-[U0,ti0,M.G_i] = section(u,M,Hinf0);
+[u_corr.G_ij,Rt_ij] = segment_motions2(u,u_corr,Hinf0,varargin{:});
+[u_corr,U0,Rt_i,Rt_ij] = get_valid_motions(u_corr,U0,Rt_i,Rt_ij);
 
-mle_impl = MleImpl();
-initial_guess = struct('Hinf',Hinf0,'U',U0,'ti',ti0, ...
-                       'tij',tij0,'theta',theta0, ...
-                       'rd_div',cfg.rd_div, ...
-                       'u_corr',M);
-mle_impl.set_initial_guess(u,initial_guess);
+res0 = struct('Hinf',Hinf0,'q',0.0,'U',U0, ...
+              'Rt_i',Rt_i,'Rt_ij',Rt_ij);
+rho = 'geman_mcclure';
+mle_impl = MleImpl(u,u_corr,cfg.cc,res0);
+[res,stats] = mle_impl.fit('rho',rho);
 
-mle = Mle(mle_impl);
+G0 = label_outliers(stats.err0);
+res0.G = G0;
+res0.u_corr = u_corr;
 
-mle.set_initial_guess(u,M,Hinf0,U,ti,tij,theta, ...
-                        'rd_div',cfg.rd_div);
+G = label_outliers(stats.err);
 
+u_corr = u_corr(logical(G),:);
+mle_impl = MleImpl(u,u_corr,cfg.cc,res);
+rho = 'l2';
+[res,stats] = mle_impl.fit('rho',rho);
 
-%draw_reconstruction(u,M,Hinf0,M,U,ti,theta,tij);
-
-%u2 = u;
-%is_converged = false;
-%%while ~is_converged
-    %    ind = ceil(rand(1,500)*height(M));
-
-[opt_res,stats] = refine_motions(u,Hinf0,M,U,ti,tij,theta,q,cc,varargin{:});
-%    ui = unique(M{:,{'i','G_app','G_t'}},'rows');
-%    %    u2(:,ui(:,1)) = LAF.translateU(:,ui(:,2))+
-%M.G_m = msplitapply(@(i,j,Rt) segment_motions(u,Hinf0,i,j,Rt), ...
-%                    M(:,{'i','j','Rt'}), ...
-%                    findgroups(M.MotionModel));
-%%end
-opt_res.cc = cc;
-res = opt_res;
-res.M = M;
-res.cc = cc;
-
-
-function do_hist(theta)
-figure;
-hist(theta,[-pi:pi/50:pi]);
-axis tight;
+res.rd_div = struct('q',res.q, ...
+                    'cc', cfg.cc);
+res.u_corr = u_corr;
+res.G = G;
+rmfield(res,'q');

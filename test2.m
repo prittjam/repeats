@@ -18,6 +18,7 @@ figure;
 imshow(img.data);
 [res,stats] = greedy_repeats(dr,cc, ...
                              'motion_model','laf2xN_to_RtxN');
+keyboard;
 
 figure;
 v = LAF.renormI(blkdiag(res.Hinf,res.Hinf,res.Hinf)*[dr(:).u]);

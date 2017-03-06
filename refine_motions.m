@@ -61,7 +61,6 @@ initial_guess = struct('Hinf0',Hinf0,'U0',U0, ...
                        'ti0',ti0,'tij0',tij0, ...
                        'theta0',theta0,'q0',q0);
 
-keyboard;
 err0 = errfun(dz0,idx,x,u_corr,cc,initial_guess);
 
 Jpat = make_Jpat(idx);
@@ -71,7 +70,7 @@ options = optimoptions('lsqnonlin','Display','iter', ...
 [dz,resnorm,err] = lsqnonlin(@errfun,dz0,[],[],options, ...
                              idx,x,u_corr,cc,initial_guess);
 
-[Hinf,U,ti,tij,theta,q] = unwrap(dz,idx,initial_guess);
+[Hinf,U,ti,tij,theta,q] = unpack(dz,idx,initial_guess);
 
 res = struct('Hinf', Hinf, 'U', U, 'ti', ti, ...
              'tij', tij, 'q', q, 'cc',cc);

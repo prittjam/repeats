@@ -18,8 +18,11 @@ greedy_repeats_init();
 %listA = { 'calib_prague3.jpg' };
 %listA = {'circular_window.png'};
 %listA = {'PSWT12.JPG'};
-
-listA = {'kitkat.jpg'};
+%listA = {'kitkat.jpg'};
+%listA  = {'OLD_rot_001.jpg'};
+%listA  = {'wall.jpg'};
+%listA = {'EsherA.jpg'};
+listA = {'DSC_0810.jpg'}
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
@@ -48,16 +51,47 @@ dr = dr(randperm(numel(dr)));
 tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 [dr(:).drid] = tmp{:};
 
-rd_div = struct('q', 0.0, ...
-                'cc', [img.width/2 img.height/2]);
-
 gr_params = {'desc_linkage', 'single', ...
-             'desc_cutoff', 195,... 
+             'desc_cutoff', 200,... 
              'vq_distortion', 5, ...
-             'rd_div', rd_div, ...
-             'motion_model', 'laf2xN_to_RtxN', ...
+             'cc', [img.width/2 img.height/2], ...
+             'motion_model', 'HG.laf2xN_to_txN', ...
              'img', img.data };
 
-res = greedy_repeats(dr,gr_params{:});
-draw_results(img,res);
-output_results(img,res);
+[res,stats,res0] = greedy_repeats(dr,gr_params{:});
+rimg = render_results([dr(:).u],res,img);
+
+draw_results(img,rimg);
+
+ires = res;
+ores = res;
+ires.u_corr = ires.u_corr(logical(res.G),:);
+ores.u_corr = ores.u_corr(~logical(res.G),:);
+
+%draw_motions(ires,img.data,'dr',dr,'Color','c');
+
+ores0 = res0;
+ores0.u_corr = ores0.u_corr(~logical(res0.G),:);
+if ~isempty(ores0.u_corr)
+    draw_motions(ores0,img.data,'dr',dr);
+end
+drawnow('update') ;
+%output_results(img,res);
+
+if ~isempty(ores.u_corr)
+    draw_motions(ores,img.data,'dr',dr);
+end
+drawnow('update') ;
+
+
+figure;
+subplot(2,2,1);
+plot(stats.rho_0);
+subplot(2,2,2);
+plot(stats.l2_0);
+subplot(2,2,3);
+plot(stats.rho);
+subplot(2,2,4);
+plot(stats.l2);
+
+

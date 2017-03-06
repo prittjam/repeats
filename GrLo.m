@@ -7,9 +7,10 @@ classdef GrLo < handle
             
         end
         
-        function M = fit(this,dr,G)
-            u = [dr(G>0).u];
-            G = findgroups(G(G > 0));
+        function M = fit(this,dr,labeling,res)
+            G0 = res.cs.*labeling;
+            u = [dr(G0>0).u];
+            G = findgroups(G0(G0 > 0));
 
             Hp = HG.laf2x2_to_Hinf(u,G);            
             v = LAF.renormI(blkdiag(Hp,Hp,Hp)*u);

@@ -1,12 +1,41 @@
 classdef GrEval < handle
     properties    
-        T = log(1.3/1.0);
-        linkage_method = 'complete';
+        sigma = 1;
         iff = [];
-        err_type = 'cviu16';
-        motion_model = @laf2xN_to_RtxN;
+        motion_model = @HG.laf2xN_to_RtxN;
+        T = [];
     end
+    
+    methods(Static)
+        function E = calc_error_impl(u,H,motion_model,cutoff)
+            v = LAF.renormI(blkdiag(H,H,H)*u);
+            [rt,ii,jj,is_reflected] = HG.laf2xNxN_to_RtxNxN(v,'motion_model', ...
+                                                             motion_model);
+            invrt = Rt.invert(rt);
+            N = size(v,2);
+            M = size(rt,2);
+            invH = inv(H);
 
+            ut1 = LAF.renormI(blkdiag(invH,invH,invH)* ...
+                              LAF.apply_rigid_xforms(v(:,ii),rt));
+            dut1 = ut1-u(:,jj);
+       
+            ut2 = LAF.renormI(blkdiag(invH,invH,invH)* ...
+                              LAF.apply_rigid_xforms(v(:,jj),invrt));
+            dut2 = ut2-u(:,ii);
+            
+            d2 = sum([dut1;dut2].^2);
+            Z = linkage(d2,'complete');
+            T = cluster(Z,'cutoff', cutoff, 'criterion','distance');
+            freq = hist(T,1:max(T));
+            [max_freq,maxc] = max(freq);
+            E = ones(1,N);
+            if max_freq > 3
+                E(find(T==maxc)) = 0;
+            end            
+        end         
+    end
+    
     methods
         function this = GrEval(varargin)
             [this,~] = cmp_argparse(this,varargin{:});
@@ -14,49 +43,34 @@ classdef GrEval < handle
                                      @() x < this.T, ...
                                      true, ...
                                      @() false(1,numel(x)));
-        end
+            this.T = 21.026*this.sigma^2;
+        end        
         
-        function [cs,err] = calc_cviu16_objective(this,dr,G,H)
-            cs = nan(1,numel(dr));
-            err = zeros(1,numel(dr));
+        function [loss,E] = calc_loss(this,dr,G,H)
             u = [dr(:).u];
-            ind = 1:size(u,2);
-            [cs0,idx] = ...
-                cmp_splitapply(@(x,y) ...
-                               deal({calc_pwise_utility(x,H,this.motion_model)},{y}), ...
-                               u,ind,findgroups(G));            
-            cs([idx{:}]) = [cs0{:}];
-            cs2 = msplitapply(@(u) calc_pwise_utility(u,H,this.motion_model), ...
-                              u,findgroups(G));           
-        end
+            E = msplitapply(@(u) GrEval.calc_error_impl(u,H,this.motion_model,this.T), ...
+                            u,findgroups(G)); 
+            E(isnan(E)) = 1;
+            loss = sum(E);
+        end        
         
-        function [utility,cs,err] = calc_objective(this,dr,G,H)
-            [cs,err] = calc_cviu16_objective(this,dr,G,H);
-            utility = sum(isfinite(cs));
-        end
+        function cs = calc_cs(this,E)
+            cs = 1-E;
+        end                        
     end
 end
 
-
-% function err = calc_err_cvpr14(this,dr,G,H)        
-%     v = blkdiag(H,H,H)*[dr(:).u];
-%     w = v([3 6 9],:);
-%     v = LAF.renormI(v);
-%     sc = abs(LAF.calc_scale(v));
-%
-%     valid = all(w > 0);
-%     assert(sum(valid > 0) == sum((sc > 0) & valid), ...
-%            'There are valid lafs with negative scale.'); 
-%
-%     logsc = nan(1,numel(sc));
-%     logsc(valid) = log(sc(valid));
-%
-%     [err_tmp,err_idx] = ...
-%         cmp_splitapply(@(x,g) deal({abs(x-median(x))},{g}), ...
-%                    logsc,1:numel(dr),findgroups(G));
-%
-%     err_tmp = [err_tmp{:}];
-%     err = inf*ones(1,numel(dr));
-%     err([err_idx{:}]) = err_tmp;
-% end
-
+%        function d2 = calc_loss_impl(u,H,motion_model,linkage_method,dist_cutoff)
+%            v = LAF.renormI(blkdiag(H,H,H)*u);
+%            [Rt,ii,jj,is_reflected] = ...
+%                HG.laf2xNxN_to_RtxNxN(v,'motion_model',motion_model, ...
+%                                      'do_reflection', false);
+%            N = size(v,2);
+%            M = numel(Rt);
+%            err = zeros(1,M);
+%            invH = inv(H);
+%            ut = LAF.renormI(blkdiag(invH,invH,invH)* ...
+%                             LAF.apply_rigid_xforms(v(:,ii),[Rt(:).theta],[Rt(:).t]));
+%            du = reshape(ut-u(:,jj),3,[]);
+%            d = max(reshape(sqrt(sum(du.^2)),3,[]));
+%        end 

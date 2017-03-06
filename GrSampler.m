@@ -41,7 +41,6 @@ classdef GrSampler < handle
             labeling0(labeling0 == 0) = nan;
             labeling = labeling0.*cs;
             labeling(labeling == 0) = nan;
-
             if any(isfinite(labeling))
                 freq = hist(labeling,1:max(labeling));
                 labeling = msplitapply(this.iif,labeling,findgroups(labeling));
