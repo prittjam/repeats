@@ -18,7 +18,6 @@ ransac = make_ransac(G_app,cfg.motion_model);
 [Hinf0,res,stats] = ransac.fit(dr,G_app);
 
 v = LAF.renormI(blkdiag(Hinf0,Hinf0,Hinf0)*u);
-
 G_sv = verify_geometry(G_app,res.cs);
 u_corr = resection(v,G_sv,cfg.motion_model);
 [U0,Rt_i,u_corr.G_i] = section(u,u_corr,Hinf0);

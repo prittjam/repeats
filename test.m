@@ -3,7 +3,7 @@ greedy_repeats_init();
 
 %listA = { 'fireengine1.jpg' };
 %listA = {'liz_taylor.jpg'};
-%listA = {'object0149.view01.png'};
+listA = {'object0149.view01.png'};
 % listA = {'226148941_00d29de16b_o.jpg'};
 % listA = { 'SY_darts.jpg' };
 %listA = { 'fairey2.png' };
@@ -22,7 +22,7 @@ greedy_repeats_init();
 %listA  = {'OLD_rot_001.jpg'};
 %listA  = {'wall.jpg'};
 %listA = {'EsherA.jpg'};
-listA = {'DSC_0810.jpg'}
+%listA = { 'DSC_0810.jpg' }
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
@@ -52,7 +52,7 @@ tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 [dr(:).drid] = tmp{:};
 
 gr_params = {'desc_linkage', 'single', ...
-             'desc_cutoff', 200,... 
+             'desc_cutoff', 250,... 
              'vq_distortion', 5, ...
              'cc', [img.width/2 img.height/2], ...
              'motion_model', 'HG.laf2xN_to_txN', ...
@@ -93,5 +93,3 @@ subplot(2,2,3);
 plot(stats.rho);
 subplot(2,2,4);
 plot(stats.l2);
-
-

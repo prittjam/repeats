@@ -59,18 +59,3 @@ classdef GrEval < handle
         end                        
     end
 end
-
-%        function d2 = calc_loss_impl(u,H,motion_model,linkage_method,dist_cutoff)
-%            v = LAF.renormI(blkdiag(H,H,H)*u);
-%            [Rt,ii,jj,is_reflected] = ...
-%                HG.laf2xNxN_to_RtxNxN(v,'motion_model',motion_model, ...
-%                                      'do_reflection', false);
-%            N = size(v,2);
-%            M = numel(Rt);
-%            err = zeros(1,M);
-%            invH = inv(H);
-%            ut = LAF.renormI(blkdiag(invH,invH,invH)* ...
-%                             LAF.apply_rigid_xforms(v(:,ii),[Rt(:).theta],[Rt(:).t]));
-%            du = reshape(ut-u(:,jj),3,[]);
-%            d = max(reshape(sqrt(sum(du.^2)),3,[]));
-%        end 
