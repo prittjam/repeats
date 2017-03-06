@@ -1,9 +1,6 @@
 function [] = test()
 greedy_repeats_init();
 
-%listA = { 'fireengine1.jpg' };
-%listA = {'liz_taylor.jpg'};
-listA = {'object0149.view01.png'};
 % listA = {'226148941_00d29de16b_o.jpg'};
 % listA = { 'SY_darts.jpg' };
 %listA = { 'fairey2.png' };
@@ -23,6 +20,10 @@ listA = {'object0149.view01.png'};
 %listA  = {'wall.jpg'};
 %listA = {'EsherA.jpg'};
 %listA = { 'DSC_0810.jpg' }
+%listA = { 'fireengine1.jpg' };
+%listA = {'liz_taylor.jpg'};
+
+listA = {'object0149.view01.png'};
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
