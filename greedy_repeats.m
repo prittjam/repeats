@@ -42,17 +42,8 @@ G_app = group_desc(dr,varargin{:});
 %
 
 for k = 1:cfg.num_planes
-    ransac = make_ransac(G_app,cfg.motion_model);
-    [Hinf0,res,stats] = ransac.fit(dr,G_app);
+    [model,u_corr] = generate_model(dr,G_app,motion_model)
 
-    G_sv = verify_geometry(G_app,res.cs);
-    u_corr = resection(v,G_sv,cfg.motion_model);
-    [U0,Rt_i,u_corr.G_i] = section(u,u_corr,Hinf0);
-    [u_corr.G_ij,Rt_ij] = segment_motions2(u,u_corr,Hinf0,varargin{:});
-    [u_corr,U0,Rt_i,Rt_ij] = get_valid_motions(u_corr,U0,Rt_i,Rt_ij);
-
-    res0 = struct('Hinf',Hinf0,'q',0.0,'U',U0, ...
-                  'Rt_i',Rt_i,'Rt_ij',Rt_ij);
     rho = 'geman_mcclure';
     mle_impl = MleImpl(u,u_corr,cfg.cc,res0);
     [res,stats] = mle_impl.fit('rho',rho);
@@ -79,3 +70,4 @@ for k = 1:cfg.num_planes
     res_list{k} = res;
     stats_list{k} = stats;
 end
+
