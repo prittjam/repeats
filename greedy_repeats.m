@@ -42,23 +42,9 @@ G_app = group_desc(dr,varargin{:});
 %
 
 for k = 1:cfg.num_planes
-    [model,u_corr] = generate_model(dr,G_app,motion_model)
-
-    rho = 'geman_mcclure';
-    mle_impl = MleImpl(u,u_corr,cfg.cc,res0);
-    [res,stats] = mle_impl.fit('rho',rho);
-
-    G0 = label_outliers(stats.err0);
-    res0.G = G0;
-    res0.u_corr = u_corr;
-
-    G = label_outliers(stats.err);
-
-    u_corr = u_corr(logical(G),:);
-    mle_impl = MleImpl(u,u_corr,cfg.cc,res);
-    rho = 'l2';
-    [res,stats] = mle_impl.fit('rho',rho);
-
+    [model0,u_corr0] = generate_model(dr,G_app,motion_model)
+    refine_model();
+    
     res.rd_div = struct('q',res.q, ...
                         'cc', cfg.cc);
     res.u_corr = u_corr;
