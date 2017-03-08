@@ -6,11 +6,10 @@ classdef GrEval < handle
         T = [];
     end
     
-    methods(Static)
-        function E = calc_error_impl(u,H,motion_model,cutoff)
+    methods(Static)        
+        function E = old_calc_error_impl(u,H,motion_model,cutoff)
             v = LAF.renormI(blkdiag(H,H,H)*u);
-            [rt,ii,jj,is_reflected] = HG.laf2xNxN_to_RtxNxN(v,'motion_model', ...
-                                                             motion_model);
+            [rt,ii,jj] = HG.laf2xNxN_to_RtxNxN(v,'motion_model',motion_model);
             invrt = Rt.invert(rt);
             N = size(v,2);
             M = size(rt,2);
@@ -19,7 +18,7 @@ classdef GrEval < handle
             ut1 = LAF.renormI(blkdiag(invH,invH,invH)* ...
                               LAF.apply_rigid_xforms(v(:,ii),rt));
             dut1 = ut1-u(:,jj);
-       
+            
             ut2 = LAF.renormI(blkdiag(invH,invH,invH)* ...
                               LAF.apply_rigid_xforms(v(:,jj),invrt));
             dut2 = ut2-u(:,ii);
@@ -34,6 +33,27 @@ classdef GrEval < handle
                 E(find(T==maxc)) = 0;
             end            
         end         
+        
+        function E = calc_error_impl(u,H,motion_model,cutoff)
+            v = LAF.renormI(blkdiag(H,H,H)*u);
+            [rt,ii,jj] = HG.laf2xNxN_to_RtxNxN(v,'motion_model',motion_model);
+            
+            invrt = Rt.invert(rt);
+            M = size(rt,2);
+            invH = inv(H);
+
+            ut1 = LAF.renormI(blkdiag(invH,invH,invH)* ...
+                              LAF.apply_rigid_xforms(v(:,ii),rt));
+            dut1 = ut1-u(:,jj);
+            
+            ut2 = LAF.renormI(blkdiag(invH,invH,invH)* ...
+                              LAF.apply_rigid_xforms(v(:,jj),invrt));
+            dut2 = ut2-u(:,ii);
+            
+            d2 = sum([dut1;dut2].^2);
+
+            E = d2 > cutoff;
+        end         
     end
     
     methods
@@ -46,10 +66,12 @@ classdef GrEval < handle
             this.T = 21.026*this.sigma^2;
         end        
         
-        function [loss,E] = calc_loss(this,dr,G,H)
-            u = [dr(:).u];
-            E = msplitapply(@(u) GrEval.calc_error_impl(u,H,this.motion_model,this.T), ...
-                            u,findgroups(G)); 
+        function [loss,E] = calc_loss(this,dr,G,H)         
+            E = ...
+                cmp_splitapply(@(dr) { GrEval.calc_error_impl([dr(:).u], ...
+                                                            H,this.motion_model,this.T) }, ...
+                               dr,findgroups(G)); 
+            E = [E{:}];
             E(isnan(E)) = 1;
             loss = sum(E);
         end        

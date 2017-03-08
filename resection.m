@@ -1,8 +1,10 @@
-function M = resection(u,G,motion_model)
+function M = resection(u,Hinf,G,motion_model)
+v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
+
 [g_rt,Gu] = cmp_splitapply(@(v,ind,G) ...
                            deal( { laf2xNxN_to_RtxNxN_wrapper(v,ind,motion_model) }, ...
                                  { repmat(G(1),1,nchoosek(numel(G),2)) }), ...
-                           u,1:size(u,2),G,G);
+                           v,1:size(v,2),G,G);
 Rt = [g_rt{:}];
 Gu = [Gu{:}];
 

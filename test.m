@@ -11,7 +11,7 @@ greedy_repeats_init();
 %listA = {'rhino1.jpg'};
 %listA = {'crochet9.png'};
 %listA = {'crochet.png'};
-%listA = {'building_us.jpg'};
+listA = {'building_us.jpg'};
 %listA = { 'calib_prague3.jpg' };
 %listA = {'circular_window.png'};
 %listA = {'PSWT12.JPG'};
@@ -22,8 +22,10 @@ greedy_repeats_init();
 %listA = { 'DSC_0810.jpg' }
 %listA = { 'fireengine1.jpg' };
 %listA = {'liz_taylor.jpg'};
-
-listA = {'object0149.view01.png'};
+%listA = {'object0149.view01.png'};
+%listA = {'lviv5.jpg'};
+%listA = {'minnesota-tennis-courts-aerial.jpg'}
+%listA = {'img_3303.jpg'}
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
@@ -52,45 +54,51 @@ dr = dr(randperm(numel(dr)));
 tmp = mat2cell(drid2,1,ones(1,numel(drid2)));
 [dr(:).drid] = tmp{:};
 
-gr_params = {'desc_linkage', 'single', ...
-             'desc_cutoff', 250,... 
-             'vq_distortion', 5, ...
-             'cc', [img.width/2 img.height/2], ...
-             'motion_model', 'HG.laf2xN_to_txN', ...
-             'img', img.data };
+u = [dr(:).u];
 
-[res,stats,res0] = greedy_repeats(dr,gr_params{:});
-rimg = render_results([dr(:).u],res,img);
+gr_params = { 'desc_linkage', 'single', ...
+              'desc_cutoff', 150,... 
+              'vq_distortion', 5, ...
+              'cc', [img.width/2 img.height/2], ...
+              'motion_model', 'HG.laf2xN_to_txN', ...
+              'img', img.data, ...
+              'num_planes', 1 };
 
-draw_results(img,rimg);
 
-ires = res;
-ores = res;
-ires.u_corr = ires.u_corr(logical(res.G),:);
-ores.u_corr = ores.u_corr(~logical(res.G),:);
+[res_list,stats_list,res0] = greedy_repeats(dr,gr_params{:});
 
-%draw_motions(ires,img.data,'dr',dr,'Color','c');
-
-ores0 = res0;
-ores0.u_corr = ores0.u_corr(~logical(res0.G),:);
-if ~isempty(ores0.u_corr)
-    draw_motions(ores0,img.data,'dr',dr);
+for k = 1:numel(res_list)
+    rimg = render_results([dr(:).u],res_list{k},img);
+    draw_results(img,rimg);
 end
-drawnow('update') ;
-%output_results(img,res);
-
-if ~isempty(ores.u_corr)
-    draw_motions(ores,img.data,'dr',dr);
-end
-drawnow('update') ;
-
-
-figure;
-subplot(2,2,1);
-plot(stats.rho_0);
-subplot(2,2,2);
-plot(stats.l2_0);
-subplot(2,2,3);
-plot(stats.rho);
-subplot(2,2,4);
-plot(stats.l2);
+ 
+%ires = res;
+%ores = res;
+%ires.u_corr = ires.u_corr(logical(res.G),:);
+%ores.u_corr = ores.u_corr(~logical(res.G),:);
+%
+%%draw_motions(ires,img.data,'dr',dr,'Color','c');
+%
+%ores0 = res0;
+%%ores0.u_corr = ores0.u_corr(~logical(res0.G),:);
+%if ~isempty(ores0.u_corr)
+%    draw_motions(ores0,img.data,'dr',dr);
+%end
+%drawnow('update') ;
+%%output_results(img,res);
+%
+%if ~isempty(ores.u_corr)
+%    draw_motions(ores,img.data,'dr',dr);
+%end
+%drawnow('update') ;
+%
+%
+%figure;
+%subplot(2,2,1);
+%plot(stats.rho_0);
+%subplot(2,2,2);
+%plot(stats.l2_0);
+%subplot(2,2,3);
+%plot(stats.rho);
+%subplot(2,2,4);
+%plot(stats.l2);

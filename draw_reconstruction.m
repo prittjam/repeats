@@ -4,8 +4,8 @@ cfg.dr = [];
 
 invH = inv(res.Hinf);
 
-y_ii = LAF.apply_rigid_xforms(res.U(:,res.u_corr.G_u),res.Rt_i(res.u_corr.G_i));
-y_jj = LAF.apply_rigid_xforms(y_ii,[res.Rt_ij(res.u_corr.G_ij)]);
+y_ii = LAF.apply_rigid_xforms(res.U(:,res.u_corr.G_u),res.Rt_i(:,res.u_corr.G_i));
+y_jj = LAF.apply_rigid_xforms(y_ii,[res.Rt_ij(:,res.u_corr.G_ij)]);
 
 y_ii = LAF.renormI(blkdiag(invH,invH,invH)*y_ii);
 y_jj = LAF.renormI(blkdiag(invH,invH,invH)*y_jj);

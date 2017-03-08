@@ -24,8 +24,8 @@ freq = hist(G,1:max(G));
 [~,idxb] = ismember(find(freq == 1),G);
 G(idxb) = nan;
 
-G0 = findgroups(G);
-G = msplitapply(@(dr,G) rm_duplicates([dr(:).u],G),dr,G0,G0);
+G = findgroups(G);
+%G = msplitapply(@(dr,G) rm_duplicates([dr(:).u],G),dr,G0,G0);
 
 function G = rm_duplicates(u,G)
 K = size(u,2);

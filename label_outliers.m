@@ -1,5 +1,5 @@
 function G = label_outliers(err)
-sigma = max([1.4826*mad(err) 2]);
+sigma = max([1.4826*mad(err) 1]);
 err = reshape_err(err);
 err2 = sum(err.^2);
 G = err2 < 21.026*sigma^2;
