@@ -39,7 +39,6 @@ classdef GrEval < handle
             [rt,ii,jj] = HG.laf2xNxN_to_RtxNxN(v,'motion_model',motion_model);
             
             invrt = Rt.invert(rt);
-            M = size(rt,2);
             invH = inv(H);
 
             ut1 = LAF.renormI(blkdiag(invH,invH,invH)* ...

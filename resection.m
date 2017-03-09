@@ -1,4 +1,4 @@
-function M = resection(u,Hinf,G,motion_model)
+function M = resection(u,G,Hinf,motion_model)
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
 
 [g_rt,Gu] = cmp_splitapply(@(v,ind,G) ...

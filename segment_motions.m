@@ -1,8 +1,8 @@
-function [G_rt,Rt] = segment_motions2(u,M,Hinf,varargin)
-cfg.sigma = 2;
+function [G_rt,Rt] = segment_motions(u,M,Hinf,varargin)
+cfg.sigma = 1;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-vq_distortion = 20*cfg.sigma^2;
+vq_distortion = 21.026*cfg.sigma^2;
 
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
 N = height(M);

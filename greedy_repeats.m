@@ -8,8 +8,16 @@ cfg.num_planes = 1;
 
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-u = [dr(:).u];
 G_app = group_desc(dr,varargin{:});
+
+for k = 1:cfg.num_planes
+    [model0,u_corr0] = generate_model(dr,G_app,cfg.motion_model,leftover{:});
+    [model,stats] = refine_model([dr(:).u],u_corr0,cfg.cc,model0);
+    G_app = rm_inliers(u_corr,G_app);
+    res_list{k} = res;
+    stats_list{k} = stats;
+end
+
 
 %keyboard;
 
@@ -40,20 +48,3 @@ G_app = group_desc(dr,varargin{:});
 %imshow(cfg.img);
 %LAF.draw_groups(gca,u,G_app,'LineWidth',3);
 %
-
-for k = 1:cfg.num_planes
-    [model0,u_corr0] = generate_model(dr,G_app,motion_model)
-    refine_model();
-    
-    res.rd_div = struct('q',res.q, ...
-                        'cc', cfg.cc);
-    res.u_corr = u_corr;
-    res.G = G;
-    rmfield(res,'q');
-
-    G_app = rm_inliers(u_corr,G_app);
-    
-    res_list{k} = res;
-    stats_list{k} = stats;
-end
-
