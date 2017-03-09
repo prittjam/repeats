@@ -11,11 +11,12 @@ greedy_repeats_init();
 %listA = {'rhino1.jpg'};
 %listA = {'crochet9.png'};
 %listA = {'crochet.png'};
+%listA = {'crochet-011.jpg'};
 %listA = {'building_us.jpg'};
 %listA = { 'calib_prague3.jpg' };
-%listA = {'circular_window.png'};
+listA = {'circular_window.png'};
 %listA = {'PSWT12.JPG'};
-listA = {'kitkat.jpg'};
+%listA = {'kitkat.jpg'};
 %listA  = {'OLD_rot_001.jpg'};
 %listA  = {'wall.jpg'};
 %listA = {'EsherA.jpg'};
@@ -26,6 +27,9 @@ listA = {'kitkat.jpg'};
 %listA = {'lviv5.jpg'};
 %listA = {'minnesota-tennis-courts-aerial.jpg'}
 %listA = {'img_3303.jpg'}
+%listA = { 'prague91.jpg' };
+%listA = { 'wall.jpg' };
+
 
 imparams = { 'img_set', 'dggt', ...
              'img_names', { listA{:} }, ...
@@ -58,17 +62,15 @@ u = [dr(:).u];
 
 gr_params = { 'desc_linkage', 'single', ...
               'desc_cutoff', 150,... 
-              'vq_distortion', 5, ...
               'cc', [img.width/2 img.height/2], ...
               'motion_model', 'HG.laf2xN_to_RtxN', ...
               'img', img.data, ...
               'num_planes', 1 };
 
+[model_list,u_corr_list,stats_list] = greedy_repeats(dr,gr_params{:});
 
-[res_list,stats_list,res0] = greedy_repeats(dr,gr_params{:});
-
-for k = 1:numel(res_list)
-    rimg = render_results([dr(:).u],res_list{k},img);
+for k = 1:numel(model_list)
+    rimg = render_results([dr(:).u],u_corr_list{k},model_list{k},img);
     draw_results(img,rimg);
 end
  

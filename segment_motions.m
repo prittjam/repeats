@@ -24,7 +24,7 @@ K =  d2 < vq_distortion;
 nMatches = max(sum(K),sum(K,2)');
 is_valid = find(nMatches > 1);
 K = K(is_valid,is_valid);
-K = tril(K,0);
+%K = tril(K,0);
 
 disp(['Entering vq']);
 w = lp_vq(K);

@@ -1,4 +1,4 @@
-function [res_list,stats_list,res0] = greedy_repeats(dr,varargin)
+function [model_list,u_corr_list,stats_list] = greedy_repeats(dr,varargin)
 cfg.motion_model = 'HG.laf2xN_to_RtxN';
 cfg.img = [];
 cfg.cc = [];
@@ -12,10 +12,13 @@ G_app = group_desc(dr,varargin{:});
 
 for k = 1:cfg.num_planes
     [model0,u_corr0] = generate_model(dr,G_app,cfg.motion_model,leftover{:});
-    [model,stats] = refine_model([dr(:).u],u_corr0,cfg.cc,model0);
-    G_app = rm_inliers(u_corr,G_app);
-    res_list{k} = res;
+    [model,stats,u_corr]= refine_model([dr(:).u],u_corr0,cfg.cc,model0);
+
+    model_list{k} = model;
+    u_corr_list{k} = u_corr;
     stats_list{k} = stats;
+    
+    G_app = rm_inliers(u_corr,G_app);
 end
 
 
