@@ -8,9 +8,8 @@ function u = rd_div(u,ic,la)
 
 %ic = (is+1) /2;
 
-v = ones(size(u));
-
 if abs(la) > eps
+    v = ones(size(u));
     sc = 1/(2*sum(ic));
     v(1:2,:) = bsxfun(@minus,diag([sc, sc])*u(1:2,:), ...
                       [sc*ic(1) sc*ic(2)]');

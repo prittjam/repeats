@@ -24,6 +24,4 @@ c = cos(theta);
 s = sin(theta);
 t = mu_jj-[c.*mu_ii(1,:)-s.*mu_ii(2,:); ...
            s.*mu_ii(1,:)+c.*mu_ii(2,:)];
-
-Rt = struct('theta',mat2cell(theta,1,ones(1,numel(theta))), ...
-            't',mat2cell(t,2,ones(1,size(t,2)))); 
+Rt = [theta;t];

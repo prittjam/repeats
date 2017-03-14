@@ -9,5 +9,4 @@ mu_jj = (u_jj(1:2,:)+u_jj(4:5,:)+u_jj(7:8,:))/3;
 
 t = mu_jj-mu_ii;
 
-Rt = struct('theta',mat2cell(zeros(1,N),1,ones(1,N)), ...
-            't',mat2cell(t,2,ones(1,N))); 
+Rt = [zeros(1,N);t];
