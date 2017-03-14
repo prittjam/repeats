@@ -24,7 +24,7 @@ if ~exist('+MMS','dir')
 end
 
 if ~exist('+RANSAC')
-    addpath([src_path]);
+    addpath([src_path, '/ransac']);
 end
 
 if ~exist('itriu','file')

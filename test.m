@@ -14,7 +14,7 @@ greedy_repeats_init();
 %listA = {'crochet-011.jpg'};
 %listA = {'building_us.jpg'};
 %listA = { 'calib_prague3.jpg' };
-listA = {'circular_window.png'};
+ listA = {'circular_window.png'};
 %listA = {'PSWT12.JPG'};
 %listA = {'kitkat.jpg'};
 %listA  = {'OLD_rot_001.jpg'};
@@ -28,6 +28,8 @@ listA = {'circular_window.png'};
 %listA = {'minnesota-tennis-courts-aerial.jpg'}
 %listA = {'img_3303.jpg'}
 %listA = { 'prague91.jpg' };
+%listA = { 'prague23.jpg' };
+
 %listA = { 'wall.jpg' };
 
 
@@ -69,11 +71,13 @@ gr_params = { 'desc_linkage', 'single', ...
 
 [model_list,u_corr_list,stats_list] = greedy_repeats(dr,gr_params{:});
 
-for k = 1:numel(model_list)
-    rimg = render_results([dr(:).u],u_corr_list{k},model_list{k},img);
-    draw_results(img,rimg);
-end
- 
+%for k = 1:numel(model_list)
+%    keyboard;figure;
+%    draw_reconstruction(gca,u_corr_list{k},model_list{k});
+%    rimg = render_results([dr(:).u],u_corr_list{k},model_list{k},img);
+%    draw_results(img,rimg);
+%end
+% 
 %ires = res;
 %ores = res;
 %ires.u_corr = ires.u_corr(logical(res.G),:);

@@ -45,17 +45,12 @@ classdef MleImpl < handle
             this.cc = cc;
             
             rtxn_idx = find(this.u_corr.MotionModel == 'HG.laf2xN_to_RtxN');
-            
-            [G_u,uG_u] = findgroups(this.u_corr.G_u);
-            [G_i,uG_i] = findgroups([this.u_corr.G_i]);
-            [G_ij,uG_ij] = findgroups(this.u_corr.G_ij);
-
+                        
             this.Hinf0 = Hinf0;
+            this.U0 = U0;
+            this.Rt_i0 = Rt_i0;
+            this.Rt_ij0 = Rt_ij0;
             this.q0 = q0;
-            this.U0 = U0(:,uG_u);
-
-            this.Rt_i0 = Rt_i0(:,uG_i);
-            this.Rt_ij0 = Rt_ij0(:,uG_ij);
             
             q_idx = 1;
 
@@ -79,9 +74,9 @@ classdef MleImpl < handle
                 uGi_theta = [];
                 uGij_theta = [];
             else
-                [Gi_theta,uGi_theta] = findgroups(G_i(rtxn_idx));
+                [Gi_theta,uGi_theta] = findgroups(u_corr.G_i(rtxn_idx));
                 dtheta_i_idx = [1:numel(uGi_theta)]+dt_ij_idx(end);
-                [Gij_theta,uGij_theta] = findgroups(G_ij(rtxn_idx));
+                [Gij_theta,uGij_theta] = findgroups(u_corr.G_ij(rtxn_idx));
                 dtheta_ij_idx = [1:numel(uGij_theta)]+dtheta_i_idx(end);
             end
             
@@ -92,7 +87,7 @@ classdef MleImpl < handle
                        'theta_i', dtheta_i_idx,'theta_ij',dtheta_ij_idx, ...
                        'active', struct('theta_i', uGi_theta, 'theta_ij', uGij_theta));
 
-            this.predict =  struct('G_u',G_u,'G_i',G_i,'G_ij',G_ij, ...
+            this.predict =  struct('G_u',u_corr.G_u,'G_i',u_corr.G_i,'G_ij',u_corr.G_ij, ...
                                    'active', struct('u_corr_i',rtxn_idx));
            
             if isempty(this.params.theta_ij)
@@ -147,8 +142,6 @@ classdef MleImpl < handle
             else
                 N = this.params.theta_ij(end);
             end
-
-            Jpat = sparse(M,N);
             
             dq = this.params.q;
             dH = this.params.H;
@@ -183,13 +176,11 @@ classdef MleImpl < handle
             dtheta_ij_ii = active_responses;
             dtheta_ij_jj = reshape(repmat(dtheta_ij(this.predict.G_ij(this.predict.active.u_corr_i)),6,2),1,[]);
 
-            ind = sub2ind(size(Jpat), ...
-                          [dq_ii dH_ii(:)' dU_ii dti_ii dt_ij_ii ...
-                           dtheta_i_ii dtheta_ij_ii], ...
-                          [dq_jj dH_jj(:)' dU_jj dti_jj dt_ij_jj ...
-                           dtheta_i_jj dtheta_ij_jj]);
-            
-            Jpat(ind) = 1;        
+            Jpat = ...
+                sparse([dq_ii dH_ii(:)' dU_ii dti_ii dt_ij_ii ...
+                        dtheta_i_ii dtheta_ij_ii], ...
+                       [dq_jj dH_jj(:)' dU_jj dti_jj dt_ij_jj ...
+                        dtheta_i_jj dtheta_ij_jj],1,M,N);
         end
         
         function err = calc_err(this,dz)
