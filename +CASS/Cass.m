@@ -57,7 +57,7 @@ classdef Cass < handle
             
             opts = rmfield(cass_cfg, {'keyspace','table'});
             opts = [fieldnames(opts)'; struct2cell(opts)'];
-            
+
             storage = CassandraDataStore(cass_cfg.keyspace, ...
                                          cass_cfg.table, ...
                                          keys, values, opts{:});
