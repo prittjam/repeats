@@ -4,17 +4,10 @@ classdef MleImpl < handle
         predict = [];
 
         x = [];        
-        
-        cc = [];
-        u_corr = [];
 
-        Hinf0 = [];
-        q0 = 0;
-        U0 = [];
-        Rt_i0 = [];
-        Rt_ij0 = [];
-        
+        model0;
         dz0 = [];
+
         K = 0;
     end
     
@@ -25,26 +18,21 @@ classdef MleImpl < handle
                                         Rt_i(:,mle_impl.predict.G_i));
             yj = LAF.apply_rigid_xforms(yi, ...
                                         Rt_ij(:,mle_impl.predict.G_ij));
-            invH = inv(Hinf);
-            ylaf = LAF.renormI(blkdiag(invH,invH,invH)*[yi yj]);
+            Hinv = inv(Hinf);
+            ylaf = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)*[yi yj]);
             yu = reshape(ylaf,3,[]);
-            yd = CAM.rd_div(yu(1:2,:),mle_impl.cc,mle_impl.q0);
+            yd = CAM.rd_div(yu(1:2,:),mle_impl.model0.cc,q);
             err = reshape(yd-mle_impl.x,[],1);
         end
     end
 
     methods(Access = public)
-        function this = MleImpl(u,u_corr,cc,res0,varargin)
-            this.pack(u,u_corr,cc,res0.Hinf,res0.q,res0.U,res0.Rt_i,res0.Rt_ij);
+        function this = MleImpl(u,u_corr,model0,varargin)
+            this.pack(u,u_corr,model0);
         end
         
-        function [] = pack(this,u,u_corr,cc,Hinf0,q0,U0,Rt_i0,Rt_ij0)
-            this.cc = cc;
-            this.Hinf0 = Hinf0;
-            this.U0 = U0;
-            this.Rt_i0 = Rt_i0;
-            this.Rt_ij0 = Rt_ij0;
-            this.q0 = q0;
+        function [] = pack(this,u,u_corr,model0)
+            this.model0 = model0;
             this.K = height(u_corr);
             
             x_laf = [u(:,u_corr{:,'i'}) u(:,u_corr{:,'j'})];
@@ -52,8 +40,6 @@ classdef MleImpl < handle
             this.x = x(1:2,:); 
             
             rtxn_idx = find(u_corr.MotionModel == 'HG.laf2xN_to_RtxN');
-                        
-
             
             q_idx = 1;
 
@@ -63,10 +49,10 @@ classdef MleImpl < handle
                 H_idx = [1:8]+q_idx(end);
             end
 
-            U_idx = [1:6*size(this.U0,2)]+H_idx(end);
+            U_idx = [1:6*size(this.model0.U,2)]+H_idx(end);
 
-            dt_i_idx = [1:2*size(this.Rt_i0,2)]+U_idx(end);
-            dt_ij_idx = [1:2*size(this.Rt_ij0,2)]+dt_i_idx(end);
+            dt_i_idx = [1:2*size(this.model0.Rt_i,2)]+U_idx(end);
+            dt_ij_idx = [1:2*size(this.model0.Rt_ij,2)]+dt_i_idx(end);
             
             [G_theta,uG_theta] = ...
                 findgroups(u_corr(rtxn_idx,:).MotionModel);         
@@ -109,27 +95,27 @@ classdef MleImpl < handle
             dtheta_i = reshape(dz(this.params.theta_i),1,[]);
             dtheta_ij = reshape(dz(this.params.theta_ij),1,[]);
             
-            q = this.q0+dq;
+            q = this.model0.q+dq;
             
-            U = this.U0+dU;
+            U = this.model0.U+dU;
 
-            theta_i = this.Rt_i0(1,:);
-            t_i = this.Rt_i0(2:3,:)+dt_i;
+            theta_i = this.model0.Rt_i(1,:);
+            t_i = this.model0.Rt_i(2:3,:)+dt_i;
             
-            theta_ij = this.Rt_ij0(1,:);            
-            t_ij = this.Rt_ij0(2:3,:)+dt_ij;
+            theta_ij = this.model0.Rt_ij(1,:);            
+            t_ij = this.model0.Rt_ij(2:3,:)+dt_ij;
             
             if isempty(this.params.theta_ij)    
-                Hinf = this.Hinf0;
+                Hinf = this.model0.Hinf;
                 Hinf(3,:) = Hinf(3,:)+dH';
             else
                 Hinf = [1+dH(1)   dH(4)   dH(7); ...
                         dH(2)    1+dH(5)  dH(8); ...
-                        dH(3)     dH(6)     1  ]*this.Hinf0;
+                        dH(3)     dH(6)     1  ]*this.model0.Hinf;
                 theta_i(1,this.params.active.theta_i) = ...
-                    this.Rt_i0(1,this.params.active.theta_i)+dtheta_i;
+                    this.model0.Rt_i(1,this.params.active.theta_i)+dtheta_i;
                 theta_ij(1,this.params.active.theta_ij) = ...
-                    this.Rt_ij0(1,this.params.active.theta_ij)+dtheta_ij;
+                    this.model0.Rt_ij(1,this.params.active.theta_ij)+dtheta_ij;
             end
             
             Rt_i = [theta_i;t_i];
@@ -193,7 +179,7 @@ classdef MleImpl < handle
             err = MleImpl.errfun(dz,this);
         end
                 
-        function [res,stats] = fit(this,varargin)
+        function [model,stats] = fit(this,varargin)
             cfg.rho = 'l2';
             cfg = cmp_argparse(cfg,varargin{:});
             cfg.rho = str2func(cfg.rho);
@@ -211,11 +197,10 @@ classdef MleImpl < handle
 
             l2 = this.calc_err(dz);
 
-            [Hinf,q,U,Rt_i,Rt_ij] = this.unpack(dz);
+            model = this.model0;
 
-            res = struct('Hinf', Hinf, ...
-                         'q',q, 'U', U, ...
-                         'Rt_i',Rt_i,'Rt_ij',Rt_ij);
+            [model.Hinf,model.q, ...
+             model.U,model.Rt_i,model.Rt_ij] = this.unpack(dz);
             
             stats = struct('dz', dz, ...
                            'resnorm', resnorm, ...

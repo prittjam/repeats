@@ -11,9 +11,9 @@ cfg.num_planes = 1;
 G_app = group_desc(dr,varargin{:});
 
 for k = 1:cfg.num_planes
-    [model0,u_corr0] = generate_model(dr,G_app,cfg.motion_model,leftover{:});
-    [model,stats,u_corr]= refine_model([dr(:).u],u_corr0,cfg.cc,model0);
-
+    [u_corr0,model0] = generate_model(dr,G_app,cfg.motion_model,cfg.cc,leftover{:});
+    [u_corr,model,stats] = refine_model([dr(:).u],u_corr0,model0);
+    
     model_list{k} = model;
     u_corr_list{k} = u_corr;
     stats_list{k} = stats;
