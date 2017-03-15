@@ -1,4 +1,3 @@
-% The Software is provided "as is", without warranty of any kind.
 % Copyright (c) 2017 James Pritts
 % 
 % Permission is hereby granted, free of charge, to any person obtaining a copy
