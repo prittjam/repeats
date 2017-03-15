@@ -43,10 +43,9 @@ w = rm_duplicate_codes(K,w0);
 code_ind = is_valid_jj(find(w>0));
 d2c = d2(:,code_ind);
 [min_d2c,G] = min(d2c,[],2);
-
-G(min_d2c > vq_distortion) = nan;
-
-G_rt = findgroups(find(G));
+valid_motions = min_d2c < vq_distortion;
+G_rt = nan(size(G));
+G_rt(valid_motions) = findgroups(G(valid_motions));
 
 theta_uw = msplitapply(@(theta)  unwrap(theta), u_corr.theta, G_rt);
 u_corr{~isnan(G_rt),'theta'} = theta_uw(~isnan(G_rt));

@@ -15,6 +15,7 @@ classdef MleImpl < handle
         Rt_ij0 = [];
         
         dz0 = [];
+        K = 0;
     end
     
     methods(Static)
@@ -38,19 +39,21 @@ classdef MleImpl < handle
         end
         
         function [] = pack(this,u,u_corr,cc,Hinf0,q0,U0,Rt_i0,Rt_ij0)
-            this.u_corr = u_corr(u_corr.G_ij > 0,:);
-            x_laf = [u(:,this.u_corr{:,'i'}) u(:,this.u_corr{:,'j'})];
-            x = reshape(x_laf,3,[]);
-            this.x = x(1:2,:); 
             this.cc = cc;
-            
-            rtxn_idx = find(this.u_corr.MotionModel == 'HG.laf2xN_to_RtxN');
-                        
             this.Hinf0 = Hinf0;
             this.U0 = U0;
             this.Rt_i0 = Rt_i0;
             this.Rt_ij0 = Rt_ij0;
             this.q0 = q0;
+            this.K = height(u_corr);
+            
+            x_laf = [u(:,u_corr{:,'i'}) u(:,u_corr{:,'j'})];
+            x = reshape(x_laf,3,[]);
+            this.x = x(1:2,:); 
+            
+            rtxn_idx = find(u_corr.MotionModel == 'HG.laf2xN_to_RtxN');
+                        
+
             
             q_idx = 1;
 
@@ -66,7 +69,7 @@ classdef MleImpl < handle
             dt_ij_idx = [1:2*size(this.Rt_ij0,2)]+dt_i_idx(end);
             
             [G_theta,uG_theta] = ...
-                findgroups(this.u_corr(rtxn_idx,:).MotionModel);         
+                findgroups(u_corr(rtxn_idx,:).MotionModel);         
 
             if isempty(rtxn_idx)
                 dtheta_i_idx = [];
@@ -134,7 +137,7 @@ classdef MleImpl < handle
         end
         
         function Jpat = make_Jpat(this)
-            K = height(this.u_corr);
+            K = this.K;
             M = 12*K;
 
             if isempty(this.params.theta_ij)
