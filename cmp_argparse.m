@@ -1,4 +1,4 @@
-function [conf, args] = vl_argparse(conf, args, varargin)
+function [conf, args] = cmp_argparse(conf, args, varargin)
 % VL_ARGPARSE  Parse list of parameter-value pairs
 %   CONF = VL_ARGPARSE(CONF, ARGS) updates the structure CONF based on
 %   the specified parameter-value pairs ARGS={PAR1, VAL1, ... PARN,
@@ -38,7 +38,7 @@ function [conf, args] = vl_argparse(conf, args, varargin)
 %if ~isstruct(conf), error('CONF must be a structure') ; end
 
 if nargin == 1
-    args = [];
+    args = {  };
     return;
 end
 
@@ -79,3 +79,7 @@ for ai = 1:2:length(args)
 end
 
 args = remainingArgs ;
+
+if isempty(args)
+    args = {  };
+end
