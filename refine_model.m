@@ -1,11 +1,14 @@
-function [u_corr,l2_model,l2_stats] = refine_model(u,u_corr0,model0)
-[u_corr,model] = get_valid_motions(u_corr0,model0);
-mle_impl = MleImpl(u,u_corr,model);
+function [l2_corresp,l2_model,l2_stats] = refine_model(u,corresp0,model0)
+[corresp,model] = get_valid_motions(corresp0,model0);
+mle_impl = MleImpl(u,corresp,model);
 [robust_model,robust_stats] = mle_impl.fit('rho','geman_mcclure');
 
 G = label_inliers(robust_stats.l2);
-[robust_u_corr,robust_model] = get_valid_motions(u_corr(G,:),robust_model);
 
+[robust_corresp,robust_model] = get_valid_motions(corresp(G,:),robust_model);
 
-mle_impl = MleImpl(u,robust_u_corr,robust_model);
+mle_impl = MleImpl(u,robust_corresp,robust_model);
 [l2_model,l2_stats] = mle_impl.fit('rho','l2');
+
+G = label_inliers(l2_stats.l2);
+[l2_corresp,l2_model] = get_valid_motions(robust_corresp(G,:),l2_model);

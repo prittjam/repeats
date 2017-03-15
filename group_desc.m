@@ -25,23 +25,6 @@ freq = hist(G,1:max(G));
 G(idxb) = nan;
 
 G = findgroups(G);
-nG = hist(G,1:max(G)); 
-
-%sz_max_group = 25;
-%big_groups = find(nG > sz_max_group);
-%
-%maxG = max(G)+1;
-%for k = 1:numel(big_groups)
-%    idx = find(G == big_groups(k));
-%    num_split = ceil(numel(idx)/sz_max_group);
-%    num_elems = ceil(numel(idx)/num_split);
-%    [~,bb] = meshgrid(1:num_elems,maxG:maxG+num_split-1);
-%    G(idx) = bb(1:numel(idx));
-%    maxG = max(G)+num_split;
-%end
-%
-G = findgroups(G);
-nG = hist(G,1:max(G)); 
 
 %G = msplitapply(@(dr,G) rm_duplicates([dr(:).u],G),dr,G0,G0);
 
@@ -57,3 +40,22 @@ if ~isempty(ind)
         G = nan(size(G));
     end
 end
+
+
+%nG = hist(G,1:max(G)); 
+%
+%%sz_max_group = 25;
+%%big_groups = find(nG > sz_max_group);
+%%
+%%maxG = max(G)+1;
+%%for k = 1:numel(big_groups)
+%%    idx = find(G == big_groups(k));
+%%    num_split = ceil(numel(idx)/sz_max_group);
+%%    num_elems = ceil(numel(idx)/num_split);
+%%    [~,bb] = meshgrid(1:num_elems,maxG:maxG+num_split-1);
+%%    G(idx) = bb(1:numel(idx));
+%%    maxG = max(G)+num_split;
+%%end
+%%
+%G = findgroups(G);
+%

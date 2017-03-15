@@ -21,7 +21,7 @@ Hinv = inv(Hinf);
 rt = [u_corr.theta(ind,:)'; u_corr.tij(ind,:)'];
 invrt = Rt.invert(rt);
 
-[aa,bb] = meshgrid(1:M,1:numel(ind));
+[aa,bb] = ndgrid(1:M,1:N);
 
 ut_j = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
                    LAF.apply_rigid_xforms(v(:,u_corr.i(aa,:)),rt(:,bb)));
@@ -33,6 +33,7 @@ d2 = sum([ut_j-u(:,u_corr.j(aa,:)); ...
 d2 = reshape(d2,M,N);
 
 K = double(d2 < vq_distortion);
+
 is_valid_ii = find(any(K,2));
 is_valid_jj = find(any(K,1));
 K = K(is_valid_ii,is_valid_jj);
@@ -43,9 +44,10 @@ w = rm_duplicate_codes(K,w0);
 code_ind = is_valid_jj(find(w>0));
 d2c = d2(:,code_ind);
 [min_d2c,G] = min(d2c,[],2);
-valid_motions = min_d2c < vq_distortion;
+
+valid_pairs = min_d2c < vq_distortion;
 G_rt = nan(size(G));
-G_rt(valid_motions) = findgroups(G(valid_motions));
+G_rt(valid_pairs) = findgroups(G(valid_pairs));
 
 theta_uw = msplitapply(@(theta)  unwrap(theta), u_corr.theta, G_rt);
 u_corr{~isnan(G_rt),'theta'} = theta_uw(~isnan(G_rt));
