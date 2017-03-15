@@ -1,7 +1,7 @@
 function [timg] = rectify(img,H,varargin)
 assert(all(size(H) == [3 3]));
 
-cfg.align = 'No';
+cfg.align = 'Yes';
 cfg.good_points = [];
 cfg.transforms = {};
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
