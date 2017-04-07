@@ -18,7 +18,7 @@ classdef laf2x2_to_Hinf
         function this = laf2x2_to_Hinf_model(labeling)
         end
         
-        function M = fit(this,dr,labeling)
+        function M = fit(this,dr,G)
             u = [dr(G>0).u];
             G = findgroups(G(G > 0));
             M = { HG.laf2x2_to_Hinf(u,G) };
