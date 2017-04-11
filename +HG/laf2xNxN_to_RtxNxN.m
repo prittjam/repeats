@@ -1,6 +1,8 @@
 function [Rt,ii,jj,is_inverted] = laf2xNxN_to_RtxNxN(u,varargin)
 cfg.do_inversion = false;
+cfg.is_reflected = [];
 cfg.motion_model = 'laf2xN_to_RtxN';
+
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 N = size(u,2);

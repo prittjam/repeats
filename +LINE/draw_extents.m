@@ -1,38 +1,29 @@
 function [lh,pts2] = draw_extents(ax1,l,varargin)
-%axes(ax1);
 v = axis;
+c = [mean([v(1) v(2)]); mean([v(3) v(4)])];
+
 n = size(l,2);
 
-top = repmat(cross([v(1) v(3) 1]',[v(2) v(3) 1]'),1,n);
-bottom = repmat(cross([v(1) v(4) 1]',[v(2) v(4) 1]'),1,n);
+bottom = repmat(cross([v(1) v(3) 1]',[v(2) v(3) 1]'),1,n);
+top = repmat(cross([v(1) v(4) 1]',[v(2) v(4) 1]'),1,n);
 left = repmat(cross([v(1) v(3) 1]',[v(1) v(4) 1]'),1,n);
 right = repmat(cross([v(2) v(3) 1]',[v(2) v(4) 1]'),1,n);
 
-pts = [LINE.intersect(l,top);...
-       LINE.intersect(l,bottom);...
-       LINE.intersect(l,left);...
-       LINE.intersect(l,right)];
+pts = [PT.renormI(cross(l,top,1)); 
+       PT.renormI(cross(l,bottom,1));  ...
+       PT.renormI(cross(l,left,1)); 
+       PT.renormI(cross(l,right,1))];
 
-[~,ind1] = min(pts(1:2:end,:));
-[~,ind2] = max(pts(1:2:end,:));
+pts = reshape(pts([1 2 4 5 7 8 10 11],:),2,[]);
 
-ind1i = [2*ind1-1; ...
-         2*ind1];
-ind1j = [1:size(ind1,2); ...
-         1:size(ind1,2)];
-ind1 = sub2ind(size(pts),ind1i,ind1j);
+r = reshape(sqrt(sum(bsxfun(@minus,pts,c).^2)),4,[]);
+[~,I] = sort(r,1);
 
-ind2i = [2*ind2-1; ...
-         2*ind2];
-ind2j = [1:size(ind2,2); ...
-         1:size(ind2,2)];
-ind2 = sub2ind(size(pts),ind2i,ind2j);
+idx = reshape([I';I'],1,[]) < 3;
 
-pts2 =  reshape([pts(ind1) pts(ind2)],2,[]);
+tmp = pts(idx);
+x = reshape(tmp(1:2:end),[],1);
+y = reshape(tmp(2:2:end),[],1);
 
-hold on;
-lh = plot(ax1,reshape(pts2(1,:),2,[]),reshape(pts2(2,:),2,[]),varargin{:});
-hold off;
-
+line(x,y);
 axis tight;
-axis equal;

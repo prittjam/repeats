@@ -1,4 +1,4 @@
-function [K nx ny ccd_sz f] = make_small_ccd(ef,nx,ny)
+function [K nx ny cc ccd_sz f] = make_small_ccd(ef,nx,ny)
 if nargin < 3
     nx = 960; 
     ny = 800;

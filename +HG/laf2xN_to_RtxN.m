@@ -18,7 +18,7 @@ for k = 1:3
                            v_ii(1,:).*v_jj(1,:)+v_ii(2,:).*v_jj(2,:)),2*pi);
 end
 
-theta = mean(unwrap(theta));
+theta = atan2(mean(sin(theta)),mean(cos(theta)));
 
 c = cos(theta);
 s = sin(theta);
