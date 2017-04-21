@@ -14,6 +14,7 @@ classdef MleImpl < handle
     methods(Static)
         function err = errfun(dz,mle_impl)
             [Hinf,q,U,Rt_i,Rt_ij] = mle_impl.unpack(dz);            
+
             yi = LAF.apply_rigid_xforms(U(:,mle_impl.predict.G_u),...
                                         Rt_i(:,mle_impl.predict.G_i));
             yj = LAF.apply_rigid_xforms(yi, ...
@@ -21,8 +22,8 @@ classdef MleImpl < handle
             Hinv = inv(Hinf);
             ylaf = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)*[yi yj]);
             yu = reshape(ylaf,3,[]);
-            yd = CAM.rd_div(yu(1:2,:),mle_impl.model0.cc,q);
-            err = reshape(yd-mle_impl.x,[],1);
+            yd = CAM.rd_div(yu,mle_impl.model0.cc,q);
+            err = reshape(yd(1:2,:)-mle_impl.x,[],1);
         end
     end
 
@@ -40,13 +41,17 @@ classdef MleImpl < handle
             this.x = x(1:2,:); 
             
             rtxn_idx = find(u_corr.MotionModel == 'HG.laf2xN_to_RtxN');
+            has_rotations = ~isempty(rtxn_idx);
+            has_reflections = ...
+                numel(unique([this.model0.Rt_i(4,:) ...
+                              this.model0.Rt_ij(4,:)]))==2;
             
             q_idx = 1;
 
-            if isempty(rtxn_idx)
-                H_idx = [1:3]+q_idx(end);
-            else
+            if has_rotations || has_reflections
                 H_idx = [1:8]+q_idx(end);
+            else
+                H_idx = [1:3]+q_idx(end);
             end
 
             U_idx = [1:6*size(this.model0.U,2)]+H_idx(end);
@@ -96,7 +101,7 @@ classdef MleImpl < handle
             dtheta_ij = reshape(dz(this.params.theta_ij),1,[]);
             
             q = this.model0.q+dq;
-            
+
             U = this.model0.U+dU;
 
             theta_i = this.model0.Rt_i(1,:);
@@ -105,10 +110,10 @@ classdef MleImpl < handle
             theta_ij = this.model0.Rt_ij(1,:);            
             t_ij = this.model0.Rt_ij(2:3,:)+dt_ij;
             
-            if isempty(this.params.theta_ij)    
+            if numel(dH) == 3
                 Hinf = this.model0.Hinf;
                 Hinf(3,:) = Hinf(3,:)+dH';
-            else
+            elseif numel(dH) == 8
                 Hinf = [1+dH(1)   dH(4)   dH(7); ...
                         dH(2)    1+dH(5)  dH(8); ...
                         dH(3)     dH(6)     1  ]*this.model0.Hinf;
@@ -117,9 +122,14 @@ classdef MleImpl < handle
                 theta_ij(1,this.params.active.theta_ij) = ...
                     this.model0.Rt_ij(1,this.params.active.theta_ij)+dtheta_ij;
             end
-            
-            Rt_i = [theta_i;t_i];
-            Rt_ij = [theta_ij;t_ij];
+
+            Rt_i = [theta_i; ...
+                    t_i;...
+                    this.model0.Rt_i(4,:)];
+
+            Rt_ij = [theta_ij; ...
+                     t_ij; ...
+                     this.model0.Rt_ij(4,:)];
         end
         
         function Jpat = make_Jpat(this)
@@ -190,7 +200,7 @@ classdef MleImpl < handle
             Jpat = this.make_Jpat();
 
             options = optimoptions('lsqnonlin','Display','iter', ...
-                                   'MaxIter',30,'JacobPattern', Jpat);
+                                   'MaxIter',50,'JacobPattern', Jpat);
             [dz,resnorm,rho] = ...
                 lsqnonlin(@(dz) cfg.rho(MleImpl.errfun(dz,this),sigma), ...
                           this.dz0,[],[],options);

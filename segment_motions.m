@@ -8,9 +8,8 @@ v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
 M = height(u_corr);
 
 num_codes = 1e3;
-
-if height(u_corr) > num_codes
-    ind = unique(ceil(rand(num_codes,1)*M));
+if M > num_codes
+    ind = randsample(M,num_codes);
 else
     ind = 1:M;
 end
@@ -18,16 +17,17 @@ end
 N = numel(ind);
 
 Hinv = inv(Hinf);
-rt = [u_corr.theta(ind,:)'; u_corr.tij(ind,:)'];
-invrt = Rt.invert(rt);
+rt = [u_corr.theta(ind,:)'; ...
+      u_corr.tij(ind,:)'; ...
+      u_corr.a11(ind,:)'];
 
 [aa,bb] = ndgrid(1:M,1:N);
-
 ut_j = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
                    LAF.apply_rigid_xforms(v(:,u_corr.i(aa,:)),rt(:,bb)));
+invrt = Rt.invert(rt);
 ut_i = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                   LAF.apply_rigid_xforms(v(:,u_corr.j(aa,:)),invrt(:,bb)));
-
+                   LAF.apply_rigid_xforms(v(:,u_corr.j(aa,:)), ...
+                                          invrt(:,bb)));
 d2 = sum([ut_j-u(:,u_corr.j(aa,:)); ...
           ut_i-u(:,u_corr.i(aa,:))].^2);
 d2 = reshape(d2,M,N);
@@ -52,5 +52,9 @@ G_rt(valid_pairs) = findgroups(G(valid_pairs));
 theta_uw = msplitapply(@(theta)  unwrap(theta), u_corr.theta, G_rt);
 u_corr{~isnan(G_rt),'theta'} = theta_uw(~isnan(G_rt));
 
-rt = cmp_splitapply(@(u) mean(u,1), [u_corr.theta u_corr.tij] ,G_rt)';
+rt = ...
+    cmp_splitapply(@(u) ...
+                   [ atan2(mean(sin(u(:,1))),mean(cos(u(:,1)))) mean(u(:,2:3),1) median(u(:,4)) ], ...
+                   [u_corr.theta u_corr.tij u_corr.a11], G_rt)';
+
 G_rt = reshape(G_rt,[],1);

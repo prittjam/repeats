@@ -1,68 +1,49 @@
-function  dr = make_dr(varargin)
-addpath('../');
+function [pts,cam,gt] = make_dr(varargin)
+cfg.ccd_sigma = 0.0;
+cfg.lambda = 0.0;
+cfg.nx = 1000;
+cfg.ny = 1000;
 
-cfg.num_planes = 1;
+cfg = cmp_argparse(cfg,varargin{:});
 
-[cfg,~] = cmp_argparse(cfg,varargin{:});
- 
-img_key = reshape(dec2hex(uint32(ceil(double(intmax)*rand(1,4)))),1,32);
-%img_cache = image_cache(cvdb_open(),img_key);
+sp = SIM.random_scene_plane(); 
+pattern = SIM.random_coplanar_pattern();
+pts = pattern.make();
 
-for k = 1:cfg.num_planes
-   sp{k} = SIM.random_scene_plane(); 
-   pattern{k} = SIM.random_coplanar_pattern(sp{k});
-   pattern{k}.make(sp{k},varargin{:});
-end
+[K,cam] = CAM.make_ccd(4.15,4.8,cfg.nx,cfg.ny);
 
-n = size(pattern{1}.X,2);
-w = max(sp{1}.X(2,:))-min(sp{1}.X(2,:));
-h = max(sp{1}.X(3,:))-min(sp{1}.X(3,:));
-g = [0 0 -1]'; % gravity direction
-[P0 nx ny q_gt cc ccd_sigma] = ...
-    SIM.make_cam(PT.to_euclidean(sp{1}.M*[g;1]), ...
-                 w,h,w*50/36,varargin{:});
-P = P0*sp{1}.M;
+cam_dist = 1.5*sqrt(pattern.h^2+pattern.w^2)/2/sin(cam.hfov/2);
 
-num_lafs = zeros(1,cfg.num_planes);
+X = [pts(:).X];
+muX = mean(X(1:3,:),2);
 
-for k = 1:cfg.num_planes
-    num_lafs(k) = num_lafs(k)+numel(unique(pattern{k}.ctg.clust_ctgs))-1;
-end
-nlafs = sum(num_lafs);
-elabel = nlafs+1;
+phi = rand(1,1)*1*pi;
+theta = 45*pi/180;
 
-labels = [];
-for k = 1:cfg.num_planes
-    elabel0 = find(pattern{k}.ctg.outlier_ctgs);
-    ioutlier = find(pattern{k}.labels == elabel0);
-    labels = pattern{k}.labels;
-    pattern{k}.labels(ioutlier) = elabel;
-end
+c = muX+[cam_dist*sin(theta)*cos(phi); ...
+         cam_dist*sin(theta)*sin(phi); ...
+         cam_dist*cos(theta)];
 
-for k = 2:cfg.num_planes
-   pattern{k}.labels = pattern{k}.labels+num_lafs(k-1);
-end
+coa = [mvnrnd(muX(1:2),diag([(pattern.h/3)^2 (pattern.w/3)^2]))';0];
 
+look_at = (coa-c)/norm(coa-c);
+look_up = [0 1 0]'-dot([0 1 0]',look_at)*look_at;
+look_up = look_up/norm(look_up);
+look_right = cross(look_at,look_up);
 
-ctg = struct('plane_ctgs',zeros(1,nlafs+1), ...
-             'clust_ctgs',zeros(1,nlafs+1), ...
-             'outlier_ctgs',zeros(1,nlafs+1));
-ctg.plane_ctgs(1:nlafs) = 1;
-ctg.clust_ctgs(1:nlafs) = 1:nlafs;
-ctg.outlier_ctgs(end) = 1;
+R = [look_right'; look_up'; look_at'];
+cam.P = K*[R -R*c];
 
-udn_laf = [];
-for k = 1:cfg.num_planes
-    u = renormI(P*pattern{k}.X);
-    ud = CAM.distort_div(u,cc,q_gt);
-    ud_laf = reshape(ud,9,[]);
-    %    udn = ud+[normrnd(0,ccd_sigma,[2 n]);zeros(1,n)];
-    udn = ud;
-    udn_laf = cat(2,udn_laf,reshape(udn,9,[]));
-end
+N = size(X,2);
 
-[desc,xdesc,drid] = SIM.make_sifts(labels,ctg,varargin{:});
-dr = struct('u',mat2cell(udn_laf,9,ones(1,size(udn_laf,2))), ...
-            'desc',mat2cell(desc,128,ones(1,size(udn_laf,2))), ...
-            'xdesc',mat2cell(xdesc,128,ones(1,size(udn_laf,2))), ...
-            'drid', mat2cell(drid,1,ones(1,numel(drid))));
+u = PT.renormI(cam.P*X);
+
+tmp = mat2cell(u,3,ones(1,N));
+[pts(:).u] = tmp{:};
+
+[linf,v] = calc_gt(pts,cam);
+
+gt = struct('linf',linf, 'v',v, ...
+            'lambda', cfg.lambda, ...
+            'ccd_sigma', cfg.ccd_sigma);
+

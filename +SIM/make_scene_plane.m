@@ -43,14 +43,15 @@ z2 = [1 0 0]';
 x2 = cross(z2,g);
 y2 = cross(z2,x2);
 
-M1 = [1  0 -w/2; ...
-      0 -1  h/2; ...
-      0  0    0; ...
-      0  0    1];  
-M0 = [ [x2 y2 z2] [0 0 h/2]'; ...
-       [0 0 0 1] ];
-
-model_xform = M0*M1;
+%M1 = [1  0 -w/2; ...
+%      0 -1  h/2; ...
+%      0  0    0; ...
+%      0  0    1];  
+%M0 = [ [x2 y2 z2] [0 0 h/2]'; ...
+%       [0 0 0 1] ];
+%
+model_xform = eye(4);
+%model_xform = M0*M1;
 
 [u,xu] = sim.make_template(num_pts,w2,h2);
 
@@ -100,6 +101,7 @@ for r = 1:num_rows
             labels(ind(pb2)) = ind2(pb2);
             labels(ind(~pb2)) = num_lafs+1;
         else
+            keyboard;
             X = cat(2,X,model_xform*T{r,c}*u);
             num_inliers = num_inliers+num_lafs;
             s0(sub2ind(size(s0),[1:num_lafs],ind)) = true;

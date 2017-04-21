@@ -4,7 +4,7 @@ cache_params = { 'read_cache',false, ...
                  'write_cache',false };
 greedy_repeats_init();
 cfg = CFG.get(imparams{:});
-img = Img('url','haus2.jpg');       
+img = Img('url','DSC_0810.jpg');       
 cid_cache = CASS.CidCache(img.cid,cache_params{:}); 
 
 cc = [img.width/2 img.height/2];

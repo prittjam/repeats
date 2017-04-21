@@ -27,6 +27,10 @@ if ~exist('+RANSAC')
     addpath([src_path, '/ransac']);
 end
 
+if ~exist('medoidshift','file')
+    addpath([src_path, '/medoidshift']);
+end
+
 if ~exist('itriu','file')
     halfvec = fullfile(cur_path, '/HalfVectorization');
     addpath(halfvec);

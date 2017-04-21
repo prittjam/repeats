@@ -39,12 +39,7 @@ while true
     end
 end 
 
-theta = rand(1,1)*pi+pi;
-phi = rand(1,1)*pi/2;
 
-r = [cam_dist*sin(phi)*cos(theta); ...
-     cam_dist*sin(phi)*sin(theta); ...
-     cam_dist*cos(phi)];
 g = g/norm(g);
 z3 = -r/norm(r,2);
 x3 = cross(g,z3);
