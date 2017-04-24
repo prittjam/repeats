@@ -1,14 +1,4 @@
-% Copyright (c) 2017 James Pritts, Denys Rozumnyi
-% 
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, subject to the following conditions:
-% 
-% The above copyright notice and this permission notice shall be included in 
-% all copies or substantial portions of the Software.
-%
-% The Software is provided "as is", without warranty of any kind.
-function [conf, args] = vl_argparse(conf, args, varargin)
+function [conf, args] = cmp_argparse(conf, args, varargin)
 % VL_ARGPARSE  Parse list of parameter-value pairs
 %   CONF = VL_ARGPARSE(CONF, ARGS) updates the structure CONF based on
 %   the specified parameter-value pairs ARGS={PAR1, VAL1, ... PARN,

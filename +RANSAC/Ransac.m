@@ -1,13 +1,5 @@
 % Copyright (c) 2017 James Pritts
 % 
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, subject to the following conditions:
-% 
-% The above copyright notice and this permission notice shall be included in 
-% all copies or substantial portions of the Software.
-%
-% The Software is provided "as is", without warranty of any kind.
 classdef Ransac < handle
     properties 
         model
@@ -39,13 +31,13 @@ classdef Ransac < handle
             this.eval = eval;
         end
         
-        function res = calc_res(this,meas,labeling,M)
+        function res = calc_res(this,meas,corresp,M)
             loss = inf(numel(M),1);
             err = inf(numel(M),this.K);
             cs = nan(numel(M),this.K);
 
             for k = 1:numel(M)
-                [loss(k),err(k,:)] = this.eval.calc_loss(meas,labeling,M{k});
+                [loss(k),err(k,:)] = this.eval.calc_loss(meas,corresp,M{k});
                 cs(k,:) = this.eval.calc_cs(err);
             end
             
@@ -55,13 +47,13 @@ classdef Ransac < handle
                          'loss', loss(k), 'cs', cs(k,:));
         end
         
-        function lo_res = do_lo(this,meas,labeling,res)
-            M = this.lo.fit(meas,labeling,res);
-            lo_res = this.calc_res(meas,labeling,M);
+        function lo_res = do_lo(this,meas,corresp,res)
+            M = this.lo.fit(meas,corresp,res);
+            lo_res = this.calc_res(meas,corresp,M);
             this.stats.lo_count = this.stats.lo_count+1;
         end
 
-        function  [optM,opt_res,stats] = fit(this,meas,labeling)
+        function  [optM,opt_res,stats] = fit(this,meas,corresp)
             tic;
 
             this.stats = struct('time_elapsed', 0, ...
@@ -73,34 +65,38 @@ classdef Ransac < handle
             this.K = this.sampler.calc_num_responses();
             N = inf;
 
-            res = struct('labeling', [], ...
-                         'loss', inf);
+            res = struct('loss', inf);
             lo_res = res;
             opt_res = res;
-            
+
+            has_model = false;
             while true         
                 for k = 1:this.max_num_retries
-                    s = this.sampler.sample(meas,this.model.mss);
+                    idx = this.sampler.sample(meas,this.model.mss);
                     is_sample_good = ...
-                        this.model.is_sample_good(meas,s);
+                        this.model.is_sample_good(meas,corresp,idx);
                     if is_sample_good
-                        M = this.model.fit(meas,s);
+                        M = this.model.fit(meas,corresp,idx);
                         if ~isempty(M)
+                            has_model = true;
                             break;
                         end
                     end
                 end
                 
                 assert(is_sample_good, ...
-                       'Could not draw a non-degenerate sample!');                
+                       'Could not draw a non-degenerate sample!'); 
+                assert(has_model, ...
+                       'Could not generate a model!');                     
+                    
                 this.stats.sample_count = this.stats.sample_count+k;
                 
                 model_count = 0;
-                is_model_good = this.model.is_sample_good(meas,s);
+                is_model_good = this.model.is_sample_good(meas,corresp,idx);
 
                 if sum(~is_model_good) > 0
-                    M = this.model.fix(meas,labeling,M(~is_model_good));
-                    if isempty(model_list) 
+                    M = this.model.fix(meas,corresp,M(~is_model_good));
+                    if isempty(M) 
                         continue;
                     end;
                 end
@@ -113,7 +109,8 @@ classdef Ransac < handle
                 cs = nan(numel(M),this.K);
 
                 for k = 1:numel(M)
-                    [loss(k),err(k,:)] = this.eval.calc_loss(meas,labeling,M{k});
+                    [loss(k),err(k,:)] = ...
+                        this.eval.calc_loss(meas,corresp,M{k});
                     cs(k,:) = this.eval.calc_cs(err);
                 end
                 
@@ -129,7 +126,7 @@ classdef Ransac < handle
                     end
                     
                     if ~isempty(this.lo) && (this.stats.trial_count >= 50)
-                        lo_res = this.do_lo(meas,labeling,res);
+                        lo_res = this.do_lo(meas,corresp,res);
                     end
                     
                     if lo_res.loss < opt_res.loss
@@ -139,7 +136,7 @@ classdef Ransac < handle
                     % Update estimate of est_trial_count, the number
                     % of trial_count to ensure we pick, with
                     % probability p, a data set with no outliers.
-                    N = this.sampler.update_trial_count(labeling,opt_res.cs);
+                    N = this.sampler.update_trial_count(corresp,opt_res.cs);
                 end   
                 
                 this.stats.trial_count = this.stats.trial_count+1;
@@ -150,7 +147,7 @@ classdef Ransac < handle
             end
             
             if ~isempty(this.lo) && (this.stats.lo_count == 0)
-                opt_res = this.do_lo(meas,labeling,res);
+                opt_res = this.do_lo(meas,corresp,res);
             end
 
             optM = opt_res.M;
