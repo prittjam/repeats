@@ -65,7 +65,8 @@ classdef Ransac < handle
             this.K = this.sampler.calc_num_responses();
             N = inf;
 
-            res = struct('loss', inf);
+            res = struct('loss', inf, ...
+                         'cs', zeros(1,numel(corresp)));
             lo_res = res;
             opt_res = res;
 
@@ -111,7 +112,7 @@ classdef Ransac < handle
                 for k = 1:numel(M)
                     [loss(k),err(k,:)] = ...
                         this.eval.calc_loss(meas,corresp,M{k});
-                    cs(k,:) = this.eval.calc_cs(err);
+                    cs(k,:) = this.eval.calc_cs(err(k,:));
                 end
                 
                 [~,mink] = min(loss);
@@ -119,7 +120,8 @@ classdef Ransac < handle
                 res0 = struct('M', M{mink}, 'err', err(mink,:), ...
                               'loss', loss(mink), 'cs', cs(mink,:));
 
-                if res0.loss < res.loss
+                if (res0.loss < res.loss) && (sum(res0.cs) >= sum(res.cs))
+                    old_res = res;
                     res = res0;
                     if res.loss < opt_res.loss
                         opt_res = res;

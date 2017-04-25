@@ -25,12 +25,11 @@ classdef laf1x2_to_lvks
 %                v3 = v3(is_valid);
 %                l1 = l1(is_valid);
 %                l2 = l2(is_valid);
-                
+
+                M{i}.Hv = eye(3)+M{i}.s*M{i}.v*M{i}.l';
+                M{i}.Hv = inv(this.A)*M{i}.Hv*this.A;
                 M{i}.l = this.A'*M{i}.l;
                 M{i}.v = this.A'*M{i}.v;
-                M{i}.Hv = eye(3)+M{i}.s*M{i}.v*M{i}.l';
-                
-
             end
         end
         
