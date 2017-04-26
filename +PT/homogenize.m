@@ -1,2 +1,2 @@
-function x2 = to_homogeneous(x)
+function x2 = homogenize(x)
     x2 = [x;ones(1,size(x,2))];

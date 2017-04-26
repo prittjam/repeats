@@ -1,6 +1,6 @@
 function flag = are_colinear(u,T)
 if nargin < 2
-    T = 0.1;
+    T = 0.05;
 end 
 assert(size(u,1)==3);
 m = size(u,1);

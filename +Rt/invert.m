@@ -1,4 +1,7 @@
 function Rt = invert(Rt)
     Rt(1,:) = -Rt(1,:);
-    Rt(2:3,:) = PT.apply_rigid_xforms(-1*Rt(2:3,:),Rt(1,:), ...
-                                      zeros(2,size(Rt,2))); 
+    c = cos(Rt(1,:));
+    s = sin(Rt(1,:));
+    a11 = Rt(4,:);
+    Rt(2:3,:) = -[ a11.*c.*Rt(2,:)-a11.*s.*Rt(3,:); ...
+                   s.*Rt(2,:)+c.*Rt(3,:) ]; 

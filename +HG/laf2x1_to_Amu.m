@@ -1,6 +1,6 @@
 function Ha = laf2x1_to_Amu(u,G)
 X = cmp_splitapply(@(x) ({x}),u,G);    
-Ha= laf2x2_to_Amu_internal(X);   
+Ha = laf2x2_to_Amu_internal(X);   
 
 function A = laf2x2_to_Amu_internal(X)
 m = sum(cellfun(@get_size,X));

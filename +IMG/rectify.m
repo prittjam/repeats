@@ -1,18 +1,20 @@
 function [timg] = rectify(img,H,varargin)
 assert(all(size(H) == [3 3]));
 
-cfg.align = 'Yes';
+cfg.align = 'Similarity';
 cfg.good_points = [];
 cfg.transforms = {};
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 S = eye(3,3);
-if strcmpi(cfg.align,'Yes')
-    if isempty(cfg.good_points)
-        S = calc_scale(img,H,cfg.transforms{:});
-    else
-        S = calc_align(cfg.good_points,H,cfg.transforms{:});
-    end
+
+switch lower(cfg.align)
+  case 'similarity'
+    assert(~isempty(cfg.good_points), ...
+           ['You cannot align the rectification without inliers!']);
+    S = calc_align(cfg.good_points,H,cfg.transforms{:});
+  case 'scale'
+    S = calc_scale(img,H,cfg.transforms{:});
 end
 
 H1 = S*H;
