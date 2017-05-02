@@ -14,9 +14,12 @@ Gr = mat2cell(Gr,1,ones(1,numel(Gr)));
 [dr(:).reflected] = Gr{:};
 
 dr = add_dr_scale(dr);
+Gapp = group_desc(dr);
+Gapp = mat2cell(Gapp,1,ones(1,numel(Gapp)));
+[dr(:).Gapp] = Gapp{:};
 
 for k = 1:cfg.num_planes
-    [u_corr0,model0] = generate_model(dr,Gapp,cfg.motion_model,cfg.cc,leftover{:});
+    [u_corr0,model0] = generate_model(dr,cfg.motion_model,cfg.cc,leftover{:});
     [u_corr,model,stats] = refine_model([dr(:).u],u_corr0,model0);
     
     model_list{k} = model;

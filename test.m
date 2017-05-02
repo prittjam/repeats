@@ -85,6 +85,7 @@ gr_params = { 'desc_linkage', 'single', ...
 
 [model_list,u_corr_list,stats_list] = greedy_repeats(dr,gr_params{:});
 
+
 for k = 1:numel(model_list)
     [rimg,ud_img] = render_results([dr(:).u],u_corr_list{k}, ...
                                    model_list{k},img);

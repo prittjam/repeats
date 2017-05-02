@@ -1,4 +1,5 @@
 function ransac = make_ransac(G_app,motion_model)
+keyboard;
 sampler = GrSampler(G_app);
 
 switch motion_model
