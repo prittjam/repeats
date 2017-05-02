@@ -120,7 +120,9 @@ classdef Ransac < handle
                 res0 = struct('M', M{mink}, 'err', err(mink,:), ...
                               'loss', loss(mink), 'cs', cs(mink,:));
 
-                if (res0.loss < res.loss) && (sum(res0.cs) >= sum(res.cs))
+                if (sum(res0.cs) > 0) && ...
+                        (res0.loss < res.loss) && ...
+                        (sum(res0.cs) >= sum(res.cs))
                     old_res = res;
                     res = res0;
                     if res.loss < opt_res.loss

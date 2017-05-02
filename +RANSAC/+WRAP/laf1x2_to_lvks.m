@@ -4,11 +4,13 @@ classdef laf1x2_to_lvks
     properties
         mss = 1;
         A = [];
+        invA = [];
     end
     
     methods
         function this = laf1x2_to_lvks(cc)
             this.A = CAM.make_fitz_normalization(cc);
+            this.invA = inv(this.A);
         end
 
         function M = fit(this,dr,corresp,idx)
@@ -17,19 +19,10 @@ classdef laf1x2_to_lvks
             ung = reshape(un,18,[]);
             M = HG.laf1x2_to_lvks(ung);
             for i = 1:numel(M)
-%                is_valid = find(abs(k) < 1);
-%                s = s(is_valid);
-%                k = k(is_valid);
-%                v1 = v1(is_valid);
-%                v2 = v2(is_valid);
-%                v3 = v3(is_valid);
-%                l1 = l1(is_valid);
-%                l2 = l2(is_valid);
-
                 M{i}.Hv = eye(3)+M{i}.s*M{i}.v*M{i}.l';
                 M{i}.Hv = inv(this.A)*M{i}.Hv*this.A;
                 M{i}.l = this.A'*M{i}.l;
-                M{i}.v = this.A'*M{i}.v;
+                M{i}.v = inv(this.A)*M{i}.v;
             end
         end
         
