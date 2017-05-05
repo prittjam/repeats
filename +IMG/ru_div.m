@@ -1,12 +1,16 @@
-function [timg,T] = ru_div(img,cc,q,varargin)
+function [timg,T,trect] = ru_div(img,q,varargin)
 nx = size(img,2);
 ny = size(img,1);
+
+cfg = struct('cc', [(nx+0.5)/2 (ny+0.5)/2]');
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
+
 border = [0.5    0.5; ...
           nx+0.5 0.5; ...
           nx+0.5 ny+0.5; ...
           0.5    ny+0.5];
 
-T = CAM.make_ru_div_tform(cc,q);
+T = CAM.make_ru_div_tform(cfg.cc,q);
 
 tbounds = tformfwd(T,border);
 
@@ -19,4 +23,6 @@ timg = imtransform(img,T,'bicubic', ...
                    'XYScale',1, ...
                    'XData',[minx maxx], ...
                    'YData',[miny maxy], ...
-                   varargin{:});
+                   leftover{:});
+
+trect = [minx maxx miny maxy];
