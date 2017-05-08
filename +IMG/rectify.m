@@ -2,7 +2,7 @@ function [timg] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
 
     cfg.align = 'Similarity';
-    cfg.rd_xform = maketform('affine',eye(3));
+    cfg.ru_xform = maketform('affine',eye(3));
     cfg.good_points = [];
 
     [cfg,leftover] = cmp_argparse(cfg,varargin{:});
@@ -15,71 +15,54 @@ function [timg] = rectify(img,H,varargin)
               nx+0.5 ny+0.5; ...
               0.5    ny+0.5];
 
-    tborder = tformfwd(cfg.rd_xform,border);
+    ru_border = tformfwd(cfg.ru_xform,border);
 
-    minx = min(tborder(:,1));
-    maxx = max(tborder(:,1));
-    miny = min(tborder(:,2));
-    maxy = max(tborder(:,2));
+    minx = min(ru_border(:,1));
+    maxx = max(ru_border(:,1));
+    miny = min(ru_border(:,2));
+    maxy = max(ru_border(:,2));
 
-    [pts,rect_lines] = ...
-        LINE.intersect_rect(H(3,:)',[minx maxx miny maxy]);
-    in = inpolygon(pts(1,:),pts(2,:), ...
-                   tborder(:,1)+[-1 1 1 -1]', ...
-                   tborder(:,2)+[-1 -1 1 1]');
+    rect = [minx maxx miny maxy];
 
-    if any(in)
-        assert(sum(in)==2,['The vanishing line must cross the image ' ...
-                           'border twice']);
-        endpts = pts(:,in);
-        [~,ind] = sort(endpts(1,:));
-        endpts = endpts(:,ind)
+    [endpts,rect_lines] = LINE.intersect_rect(H(3,:)',rect);
 
-        keyboard;
+    in_image = ~isempty(endpts);
+    
+    if in_image
+        assert(size(endpts,2)==2,...
+               ['The vanishing line must cross the image border twice']);
         
+        [~,ind] = sort(endpts(1,:));
+        endpts = endpts(:,ind);
+
         l = LINE.inhomogenize(cross(endpts(:,1),endpts(:,2)));
 
-        v = tformfwd(cfg.rd_xform,cfg.good_points(1:2,:)');
-        mu = PT.inhomogenize(mean(cfg.good_points,2));
+        v = tformfwd(cfg.ru_xform,cfg.good_points(1:2,:)');
+        mu = PT.homogenize(mean(v',2));
 
         if dot(l,mu) < 0
             l = -l;
         end
-        
-        newpt = endpts(:,1)+[50*l(1:2);1];
+
+        newpt = endpts(:,1)+[200*l(1:2);1];
         l(3) = -dot(l(1:2),newpt(1:2));
-        
-        in2 = dot(repmat(l,1,4),[tborder';ones(1,4)]);
-        
-        idx = find(in);
-        
-        pt1 = PT.renormI(cross(l,rect_lines(:,idx(1))));
-        pt2 = PT.renormI(cross(l,rect_lines(:,idx(2))));
 
-        l2 = LINE.make_orthogonal([rect_lines(:,idx(1)) rect_lines(:,idx(2))], ...
-                                  [pt1 pt2]);
+        [pts,rect_lines] = LINE.intersect_rect(l,rect);
         
-
-        %        pt3 = cross(rect_lines(
+        idx = find(dot(repmat(l,1,4),[ru_border';ones(1,4)]) > 0);
+        xx = [pts(1,:) ru_border(idx,1)'];
+        yy = [pts(2,:) ru_border(idx,2)'];
+        K = convhull(xx,yy);
+        xx = xx(K);
+        yy = yy(K);
         
-        %    new_border = 
-        
-
-        
-        sx = sort([minx pt1(1,:) pt2(1,:) maxx]);
-        sy = sort([miny pt1(2,:) pt2(2,:) maxy]);
-
-        minx = sx(2);
-        maxx = sx(3);
-        miny = sy(2);
-        maxy = sy(3);
-    else
-        l = H(3,:);
+        cropped_ru_border = [xx;yy]';
+        border = tforminv(cfg.ru_xform,cropped_ru_border);        
     end
-
+    
     T0 = maketform('composite', ...
                    maketform('projective',H'), ...
-                   cfg.rd_xform);
+                   cfg.ru_xform);
 
     switch lower(cfg.align)
       case 'affinity'
@@ -98,16 +81,25 @@ function [timg] = rectify(img,H,varargin)
 
     tbounds = tformfwd(T,border);
 
-    minx = min(tbounds(:,1));
-    maxx = max(tbounds(:,1));
-    miny = min(tbounds(:,2));
-    maxy = max(tbounds(:,2));
-
+    minx = floor(min(tbounds(:,1)));
+    maxx = ceil(max(tbounds(:,1)))
+    miny = floor(min(tbounds(:,2)));
+    maxy = ceil(max(tbounds(:,2)));
+        
     timg = imtransform(img,T,'XYScale',1, ...
                        'XData',[minx maxx], ...
                        'YData',[miny maxy], ...
                        leftover{:});
-
+    
+    if in_image
+        BW = roipoly([minx maxx], ...
+                     [miny maxy], ...
+                     zeros(maxy-miny+1,maxx-minx+1,3), ...
+                     tbounds(:,1),tbounds(:,2));
+        BW = repmat(~BW,1,1,3);
+        timg(BW(:)) = 255;
+    end
+    
 function T = align_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
