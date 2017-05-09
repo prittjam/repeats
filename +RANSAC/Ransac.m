@@ -9,8 +9,6 @@ classdef Ransac < handle
     end
     
     properties
-        max_num_retries = 100;
-       
         stats = struct('time_elapsed', 0, ...
                        'trial_count', 0, ...
                        'sample_count', 0, ...
@@ -70,7 +68,7 @@ classdef Ransac < handle
 
             has_model = false;
             while true         
-                for k = 1:this.max_num_retries
+                for k = 1:this.sampler.max_num_retries
                     idx = this.sampler.sample(meas,this.model.mss);
                     is_sample_good = ...
                         this.model.is_sample_good(meas,corresp,idx);
