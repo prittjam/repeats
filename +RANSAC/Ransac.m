@@ -9,8 +9,6 @@ classdef Ransac < handle
     end
     
     properties
-        p = 0.99;
-        
         max_num_retries = 100;
        
         stats = struct('time_elapsed', 0, ...

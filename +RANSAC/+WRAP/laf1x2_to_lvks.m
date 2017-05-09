@@ -20,9 +20,9 @@ classdef laf1x2_to_lvks
             M = HG.laf1x2_to_lvks(ung);
             for i = 1:numel(M)
                 M{i}.Hv = eye(3)+M{i}.s*M{i}.v*M{i}.l';
-                M{i}.Hv = inv(this.A)*M{i}.Hv*this.A;
+                M{i}.Hv = this.invA*M{i}.Hv*this.A;
                 M{i}.l = this.A'*M{i}.l;
-                M{i}.v = inv(this.A)*M{i}.v;
+                M{i}.v = this.invA*M{i}.v;
             end
         end
         
