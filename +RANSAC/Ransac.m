@@ -89,55 +89,63 @@ classdef Ransac < handle
                 this.stats.sample_count = this.stats.sample_count+k;
                 
                 model_count = 0;
-                is_model_good = this.model.is_sample_good(meas,corresp,idx);
-
-                if sum(~is_model_good) > 0
-                    M = this.model.fix(meas,corresp,M(~is_model_good));
-                    if isempty(M) 
-                        continue;
-                    end;
-                end
-
-                this.stats.model_count = this.stats.model_count+numel(M);
-
-                loss = inf(numel(M),1);
-
-                err = inf(numel(M),this.K);
-                cs = nan(numel(M),this.K);
-
+                
+                is_model_good = false(1,numel(M));
                 for k = 1:numel(M)
-                    [loss(k),err(k,:)] = ...
-                        this.eval.calc_loss(meas,corresp,M{k});
-                    cs(k,:) = this.eval.calc_cs(err(k,:));
+                    is_model_good(k) = ...
+                        this.model.is_model_good(meas,corresp,idx,M{k});
                 end
                 
-                [~,mink] = min(loss);
+                if ~all(is_model_good)
+                    bad_ind = find(~is_model_good);
+                    for k = bad_ind
+                        M{k} = ...
+                            this.model.fix(meas,corresp,idx,M{k});
+                    end
+                    is_model_good = cellfun(@(m) ~isempty(m),M);
+                    M = M(is_model_good);
+                end
                 
-                res0 = struct('M', M{mink}, 'err', err(mink,:), ...
-                              'loss', loss(mink), 'cs', cs(mink,:));
+                if ~isempty(M)
+                    this.stats.model_count = this.stats.model_count+numel(M);
 
-                if (sum(res0.cs) > 0) && ...
-                        (res0.loss < res.loss) && ...
-                        (sum(res0.cs) >= sum(res.cs))
-                    old_res = res;
-                    res = res0;
-                    if res.loss < opt_res.loss
-                        opt_res = res;
+                    loss = inf(numel(M),1);
+                    err = inf(numel(M),this.K);
+                    cs = nan(numel(M),this.K);
+
+                    for k = 1:numel(M)
+                        [loss(k),err(k,:)] = this.eval.calc_loss(meas,corresp,M{k});
+                        cs(k,:) = this.eval.calc_cs(err(k,:));
                     end
                     
-                    if ~isempty(this.lo) && (this.stats.trial_count >= 50)
-                        lo_res = this.do_lo(meas,corresp,res);
-                    end
+                    [~,mink] = min(loss);
                     
-                    if lo_res.loss < opt_res.loss
-                        opt_res = lo_res;
-                    end
-                    
-                    % Update estimate of est_trial_count, the number
-                    % of trial_count to ensure we pick, with
-                    % probability p, a data set with no outliers.
-                    N = this.sampler.update_trial_count(corresp,opt_res.cs);
-                end   
+                    res0 = struct('M', M{mink}, 'err', err(mink,:), ...
+                                  'loss', loss(mink), 'cs', cs(mink,:));
+
+                    if (sum(res0.cs) > 0) && ...
+                            (res0.loss < res.loss) && ...
+                            (sum(res0.cs) >= sum(res.cs))
+                        old_res = res;
+                        res = res0;
+                        if res.loss < opt_res.loss
+                            opt_res = res;
+                        end
+                        
+                        if ~isempty(this.lo) && (this.stats.trial_count >= 50)
+                            lo_res = this.do_lo(meas,corresp,res);
+                        end
+                        
+                        if lo_res.loss < opt_res.loss
+                            opt_res = lo_res;
+                        end
+                        
+                        % Update estimate of est_trial_count, the number
+                        % of trial_count to ensure we pick, with
+                        % probability p, a data set with no outliers.
+                        N = this.sampler.update_trial_count(corresp,opt_res.cs);
+                    end   
+                end
                 
                 this.stats.trial_count = this.stats.trial_count+1;
                 
