@@ -4,8 +4,11 @@ function [timg] = rectify(img,H,varargin)
     cfg.align = 'Similarity';
     cfg.ru_xform = maketform('affine',eye(3));
     cfg.good_points = [];
-
+    cfg.fill = [255 255 255]';
+    
     [cfg,leftover] = cmp_argparse(cfg,varargin{:});
+
+    leftover = { 'Fill', cfg.fill };
 
     nx = size(img,2);
     ny = size(img,1);
@@ -82,7 +85,7 @@ function [timg] = rectify(img,H,varargin)
     tbounds = tformfwd(T,border);
 
     minx = floor(min(tbounds(:,1)));
-    maxx = ceil(max(tbounds(:,1)))
+    maxx = ceil(max(tbounds(:,1)));
     miny = floor(min(tbounds(:,2)));
     maxy = ceil(max(tbounds(:,2)));
         
@@ -96,8 +99,9 @@ function [timg] = rectify(img,H,varargin)
                      [miny maxy], ...
                      zeros(maxy-miny+1,maxx-minx+1,3), ...
                      tbounds(:,1),tbounds(:,2));
-        BW = repmat(~BW,1,1,3);
-        timg(BW(:)) = 255;
+        BW3 = repmat(~BW,1,1,3);
+        fill = BW3.*permute(cfg.fill,[3 2 1]);
+        timg(find(BW3)) = fill(find(BW3));
     end
     
 function T = align_by_similarity(u,T0)
