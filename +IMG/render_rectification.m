@@ -1,4 +1,4 @@
-function varargout = render_results(u,u_corr,model,img,cc)
+function varargout = render_rectification(u,u_corr,model,img,cc)
 alignment = 'Similarity';
 
 ind = find(~isnan(u_corr{:,'G_ij'}));
@@ -14,6 +14,7 @@ if ~has_rotations && has_reflections
     alignment = 'Scale';
 end
    
+keyboard;
 
 if model.q == 0
     assert(model.q == 0, 'Distortion coefficient is non-zero!');
