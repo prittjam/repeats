@@ -89,7 +89,7 @@ gr_params = { 'desc_linkage', 'single', ...
 for k = 1:numel(model_list)
     [rimg,ud_img] = render_results([dr(:).u],u_corr_list{k}, ...
                                    model_list{k},img);
-    output_results(img,rimg,ud_img);
+    IMG.output_rectification(img,rimg,ud_img);
     h = draw_results(img,rimg);    
     draw_reconstruction(h(1),u_corr_list{k},model_list{k});
 end
