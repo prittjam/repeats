@@ -31,6 +31,11 @@ if ~exist('medoidshift','file')
     addpath([src_path, '/medoidshift']);
 end
 
+if ~exist('segment_motions','file')
+    repeat_lo_path = fullfile(src_path, '/repeat_lo');
+    addpath(repeat_lo_path);
+end
+
 if ~exist('itriu','file')
     halfvec = fullfile(cur_path, '/HalfVectorization');
     addpath(halfvec);

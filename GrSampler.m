@@ -5,6 +5,8 @@ classdef GrSampler < handle
         
         min_trial_count = 1
         max_trial_count = 1e4
+        max_num_retries = 100;
+        
         confidence = 0.99
 
         freq = []
@@ -34,7 +36,7 @@ classdef GrSampler < handle
             num_responses = numel(this.labeling);
         end
             
-        function s = sample(this,dr,k,varargin)
+        function idx = sample(this,dr,k,varargin)
             s = zeros(1,this.N);
 
             while true
@@ -44,11 +46,9 @@ classdef GrSampler < handle
                 end
             end
 
-            idx = find(this.labeling == c(1));
-            s(idx(randperm(numel(idx),k))) = 1;
-            
-            idx = find(this.labeling == c(2));
-            s(idx(randperm(numel(idx),k))) = 2;  
+            idx1 = find(this.labeling == c(1));
+            idx2 = find(this.labeling == c(2));
+            idx = [idx1(randperm(numel(idx1),k)) idx2(randperm(numel(idx2),k)) ];
         end
         
         function trial_count = update_trial_count(this,labeling0,cs)

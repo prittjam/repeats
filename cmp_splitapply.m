@@ -184,7 +184,7 @@ end
 
 
 function finalOut = localapply(fun,dataVars,gdim,nout)
-    import matlab.internal.tableUtils.ordinalString;
+    import matlab.internal.datatypes.ordinalString;
 
     % Call function passing parameters
     [numGroups,numVars] = size(dataVars);

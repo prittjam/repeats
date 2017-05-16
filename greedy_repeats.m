@@ -26,5 +26,6 @@ for k = 1:cfg.num_planes
     u_corr_list{k} = u_corr;
     stats_list{k} = stats;
     
-    Gapp = rm_inliers(u_corr,Gapp);
+    %    Gapp = rm_inliers(u_corr,Gapp);
+    %    [dr(:).Gapp] = Gapp{:};
 end

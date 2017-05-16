@@ -37,7 +37,7 @@ else
                                'Fill', [255 255 255]');
    
     if nargout == 2
-        varargout{2} = IMG.ru_div(img.data,cc,model.q, ...
+        varargout{2} = IMG.ru_div(img.data,model.q, ...
                                   'Fill', [255 255 255]'); 
     end
 end

@@ -1,11 +1,12 @@
 function [u_corr,model,ransac_res,ransac_stats] = ...
-        generate_model(dr,G_app,motion_model,cc,varargin)
+        generate_model(dr,motion_model,cc,varargin)
 
     u = [dr(:).u];
-
-    ransac = make_ransac([dr(:).Gapp],motion_model);
-    [Hinf0,ransac_res,ransac_stats] = ransac.fit(dr,G_app);
-    G_sv = verify_geometry(G_app,ransac_res.cs);
+    Gapp = [dr(:).Gapp];
+    
+    ransac = make_ransac(Gapp,motion_model);
+    [Hinf0,ransac_res,ransac_stats] = ransac.fit(dr,Gapp);
+    G_sv = verify_geometry(Gapp,ransac_res.cs);
     u_corr = resection(u,G_sv,Hinf0,motion_model);
 
     [U0,Rt_i,u_corr.G_i] = section(u,u_corr,Hinf0);
