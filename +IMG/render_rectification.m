@@ -14,8 +14,6 @@ if ~has_rotations && has_reflections
     alignment = 'Scale';
 end
    
-keyboard;
-
 if model.q == 0
     assert(model.q == 0, 'Distortion coefficient is non-zero!');
     varargout{1} = IMG.rectify(img.data,model.Hinf, ...
