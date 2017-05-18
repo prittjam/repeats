@@ -12,7 +12,7 @@ classdef GrEval < handle
 
             [ii,jj] = itril([N N],-1);
             rt = feval(motion_model,[v(:,ii);v(:,jj)]);            
-
+            
             [rt,is_inverted] = unique_ro(rt);
                 
             [jj(is_inverted),ii(is_inverted)] = deal(ii(is_inverted), ...
@@ -38,7 +38,17 @@ classdef GrEval < handle
             if max_freq > 1
                 E(find(G == maxG)) = 0;
             end
-        end         
+        end 
+        
+        function [] = test()
+            figure;
+            kkk = 2;
+            LAF.draw(gca,v(:,[ii(kkk) jj(kkk)]),'Color','b')
+            zz = LAF.apply_rigid_xforms(v(:,ii(kkk)),rt(:,kkk)); 
+            hold on; 
+            LAF.draw(gca,zz,'Color','g');
+            hold off;
+        end
     end
     
     methods

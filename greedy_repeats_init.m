@@ -39,7 +39,6 @@ end
 if ~exist('msplitapply','file')
     matlab_extras_path = fullfile(src_path, '/matlab_extras');
     addpath(matlab_extras_path);
-    keyboard;
 end
 
 if ~exist('itriu','file')

@@ -10,9 +10,9 @@ function [] = test()
 %listA = {'crochet9.png'};
 %listA = {'crochet-011.jpg'};
 %listA = { 'calib_prague3.jpg' };
-%listA = {'circular_window.png'};
+
 %listA = {'PSWT12.JPG'};
-%listA = {'kitkat.jpg'};
+
 %listA  = {'OLD_rot_001.jpg'};
 %listA  = {'wall.jpg'};
 %listA = { 'DSC_0810.jpg' }
@@ -24,17 +24,33 @@ function [] = test()
 %listA = { 'prague23.jpg' };
 %listA = { 'wall.jpg' };
 %listA = { 'two_planes.jpg' };
-%listA = { 'fairey2.png' };
-%listA = {'EsherA.jpg'};
+
+
 %listA = {'crochet.png'};
 %listA = {'crochet9.png'};
 
-
+%
+%ex = struct('img_names', {'circular_window.png'}, ...
+%            'motion_model', 'HG.laf2xN_to_RtxN');
+%%%%
+%ex = struct('img_names', {'crochet9.png'}, ...
+%            'motion_model', 'HG.laf2xN_to_RtxN');
+%%%
+%ex = struct('img_names', {'crochet.png'}, ...
+%            'motion_model', 'HG.laf2xN_to_RtxN');
+%
+%ex = struct('img_names',  {'kitkat.jpg'}, ...
+%            'motion_model', 'HG.laf2xN_to_RtxN');            
+%ex = struct('img_names',  {'EsherA.jpg'}, ...
+%            'motion_model', 'HG.laf2xN_to_RtxN');            
+%%ex = struct('img_names', {'SY_darts.jpg'}, ...
+%            'motion_model', 'HG.laf2xN_to_RtxN');
+%%
 %ex = struct('img_names', {'building_us.jpg'}, ...
 %            'motion_model', 'HG.laf2xN_to_txN');
-%
-%ex = struct('img_names', {'minnesota-tennis-courts-aerial.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_txN');
+%%
+ex = struct('img_names', {'minnesota-tennis-courts-aerial.jpg'}, ...
+            'motion_model', 'HG.laf2xN_to_txN');
 %
 %ex = struct('img_names', {'object0149.view01.png'}, ...
 %            'motion_model', 'HG.laf2xN_to_txN');
@@ -49,9 +65,9 @@ function [] = test()
 %ex = struct('img_names', {'calib_prague29.jpg'}, ...
 %            'motion_model', 'HG.laf2xN_to_txN');
 
-ex = struct('img_names', {'cathedral.jpg'}, ...
-            'motion_model', 'HG.laf2xN_to_RtxN');
-
+%ex = struct('img_names', {'cathedral.jpg'}, ...
+%            'motion_model', 'HG.laf2xN_to_RtxN');
+%%%%
 imparams = { 'img_set', 'dggt', ...
              'max_num_cores', 1, ...
              'dr_type','all', ...
@@ -79,16 +95,15 @@ dr = get_dr(img,cid_cache, ...
 gr_params = { 'desc_linkage', 'single', ...
               'desc_cutoff', 160,... 
               'cc', [img.width/2 img.height/2], ...
-              'motion_model', ex.motion_model, ...
               'img', img.data, ...
+              'motion_model', ex.motion_model, ...
               'num_planes', 1 };
 
 [model_list,u_corr_list,stats_list] = greedy_repeats(dr,gr_params{:});
 
-
 for k = 1:numel(model_list)
-    [rimg,ud_img] = render_results([dr(:).u],u_corr_list{k}, ...
-                                   model_list{k},img);
+    [rimg,ud_img] = IMG.render_rectification([dr(:).u],u_corr_list{k}, ...
+                                             model_list{k},img);
     IMG.output_rectification(img,rimg,ud_img);
     h = draw_results(img,rimg);    
     draw_reconstruction(h(1),u_corr_list{k},model_list{k});
