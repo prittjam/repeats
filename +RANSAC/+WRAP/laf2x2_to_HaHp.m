@@ -18,12 +18,12 @@ classdef laf2x2_to_HaHp
         function this = laf2x2_to_HaHp()
         end
 
-        function M = fit(this,dr,G)
-            u = [dr(G > 0).u];
-            G = G(G>0);
-            Hp = HG.laf2x2_to_Hinf(u,G);
-            v = LAF.renormI(blkdiag(Hp,Hp,Hp)*u);
-            Ha = HG.laf2x1_to_Amu(v,G);
+        function M = fit(this,dr,G,idx)
+            x = [dr(idx).u];
+            G = findgroups(G(idx));
+            Hp = HG.laf2x2_to_Hinf(x,G);
+            xp = LAF.renormI(blkdiag(Hp,Hp,Hp)*x);
+            Ha = HG.laf2x1_to_Amu(xp,G);
             if ~isempty(Ha)
                 M = { Ha*Hp } ;
             else
@@ -31,19 +31,18 @@ classdef laf2x2_to_HaHp
             end
         end
 
-        function flag = is_sample_good(this,dr,labeling)
-            u = [dr(labeling > 0).u];
-            flag = not(LAF.are_colinear(u));
+        function is_good = is_sample_good(this,dr,corresp,idx)
+            x = [dr(idx).u];
+            is_good = not(LAF.are_colinear(x));
         end    
 
-        function flag = is_model_good(this,dr,labeling,M) 
-            flag = false(1,numel(M));
-            for k = 1:numel(M)
-                u = splitapply(@(x)({dr.u}),dr,labeling);
-                H = M{k};
-                l = H(3,:)';
-                flag = PT.are_same_orientation(u,l); 
-            end
+        function is_good = is_model_good(this,dr,G,idx,M) 
+            x = [dr(idx).u]; 
+            is_good = LAF.are_same_orientation(x,M(3,:)'); 
         end        
+        
+        function M = fix(this,dr,corresp,idx,model)
+            M = [];
+        end
     end
 end 

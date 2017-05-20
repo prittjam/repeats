@@ -44,12 +44,16 @@ classdef Ransac < handle
         end
         
         function lo_res = do_lo(this,meas,corresp,res)
-            M = this.lo.fit(meas,corresp,res);
-            lo_res = this.calc_res(meas,corresp,M);
-            this.stats.lo_count = this.stats.lo_count+1;
+            if ~isempty(this.lo)
+                M = this.lo.fit(meas,corresp,res);
+                lo_res = this.calc_res(meas,corresp,M);
+                this.stats.lo_count = this.stats.lo_count+1;
+            else
+                lo_res = res;
+            end
         end
 
-        function  [optM,opt_res,stats] = fit(this,meas,corresp)
+        function  [optM,opt_res,res,stats] = fit(this,meas,corresp)
             tic;
 
             this.stats = struct('time_elapsed', 0, ...
@@ -65,7 +69,7 @@ classdef Ransac < handle
                          'cs', zeros(1,numel(corresp)));
             lo_res = res;
             opt_res = res;
-
+            
             has_model = false;
             while true         
                 for k = 1:this.sampler.max_num_retries
@@ -120,23 +124,20 @@ classdef Ransac < handle
                     
                     [~,mink] = min(loss);
                     
-                    res0 = struct('M', M{mink}, 'err', err(mink,:), ...
-                                  'loss', loss(mink), 'cs', cs(mink,:));
+                    res0 = struct('M', M{mink}, ...
+                                  'err', err(mink,:), ...
+                                  'loss', loss(mink), ...
+                                  'cs', cs(mink,:), ...
+                                  'mss', idx);
 
                     if (sum(res0.cs) > 0) && ...
                             (res0.loss < res.loss) && ...
                             (sum(res0.cs) >= sum(res.cs))
-                        old_res = res;
                         res = res0;
-                        if res.loss < opt_res.loss
-                            opt_res = res;
-                        end
+                        lo_res = this.do_lo(meas,corresp,res); 
                         
-                        if ~isempty(this.lo) && (this.stats.trial_count >= 50)
-                            lo_res = this.do_lo(meas,corresp,res);
-                        end
-                        
-                        if lo_res.loss < opt_res.loss
+                        if (lo_res.loss < opt_res.loss) && ...
+                            (sum(lo_res.cs) >= sum(opt_res.cs))
                             opt_res = lo_res;
                         end
                         
@@ -154,7 +155,7 @@ classdef Ransac < handle
                 end
             end
             
-            if ~isempty(this.lo) && (this.stats.lo_count == 0)
+            if this.stats.lo_count == 0
                 opt_res = this.do_lo(meas,corresp,res);
             end
 
