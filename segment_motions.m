@@ -1,9 +1,10 @@
-function [G_rt,rt] = segment_motions(u,u_corr,Hinf,varargin)
+function [G_rt,rt] = segment_motions(u,u_corr,model,varargin)
 cfg.sigma = 1;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 vq_distortion = 21.026*cfg.sigma^2;
 
-v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u);
+Hinf = model.Hinf;
+v = LAF.ru_div(LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u),model.cc,model.q);
 
 M = height(u_corr);
 
@@ -22,12 +23,12 @@ rt = [u_corr.theta(ind,:)'; ...
       u_corr.a11(ind,:)'];
 
 [aa,bb] = ndgrid(1:M,1:N);
-ut_j = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                   LAF.apply_rigid_xforms(v(:,u_corr.i(aa,:)),rt(:,bb)));
+ut_j = LAF.rd_div(LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
+                              LAF.apply_rigid_xforms(v(:,u_corr.i(aa,:)),rt(:,bb))),model.cc,model.q);
 invrt = Rt.invert(rt);
-ut_i = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                   LAF.apply_rigid_xforms(v(:,u_corr.j(aa,:)), ...
-                                          invrt(:,bb)));
+ut_i = LAF.rd_div(LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
+                              LAF.apply_rigid_xforms(v(:,u_corr.j(aa,:)), ...
+                                                  invrt(:,bb))),model.cc,model.q);
 d2 = sum([ut_j-u(:,u_corr.j(aa,:)); ...
           ut_i-u(:,u_corr.i(aa,:))].^2);
 d2 = reshape(d2,M,N);
