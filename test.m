@@ -65,6 +65,8 @@ greedy_repeats_init();
 ex = struct('img_names', {'cathedral.jpg'}, ...
             'motion_model', 'Rt');
 
+output_prefix = 'res';
+
 imparams = { 'img_set', 'dggt', ...
              'max_num_cores', 1, ...
              'dr_type','all', ...
@@ -101,9 +103,16 @@ gr_params = { 'desc_linkage', 'single', ...
 for k = 1:numel(model_list)
     [rimg,ud_img] = IMG.render_rectification([dr(:).u],u_corr_list{k}, ...
                                              model_list{k},img);
-    IMG.output_rectification(img,rimg,ud_img);
+    
+    IMG.output_rectification(img,rimg,ud_img,output_prefix);
     h = draw_results(img,rimg);    
-    draw_reconstruction(h(1),u_corr_list{k},model_list{k});
+    f = figure;
+    imshow(img.data);
+    output_reconstruction(img,u_corr_list{k},model_list{k},output_prefix)
+
+%    matlab2tikz('figurehandle',gcf, ...
+%                'filename','fig.tex' , ...
+%                'standalone', false);
 end
 
 %img = Img('url','download2.jpg');       
