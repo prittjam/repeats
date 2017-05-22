@@ -1,5 +1,6 @@
 function h1 = draw(ax1,u,varargin)
 cfg.labels = [];
+cfg.draw_centroid = false;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 if ~any(strcmpi('color',leftover))
@@ -22,6 +23,11 @@ if ~isempty(cfg.labels)
     labels = regexp(label_str,'(\w+)','tokens');
     mu = [(u(1:2,:)+u(4:5,:)+u(7:8,:))/3];
     text(mu(1,:),mu(2,:),labels);
+end
+
+if cfg.draw_centroid
+    mu = (u(1:2,:)+u(4:5,:)+u(7:8,:))/3;
+    plot(mu(1,:),mu(2,:),'r+');
 end
 
 hold(ax1,'off');

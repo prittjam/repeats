@@ -20,7 +20,6 @@ classdef MserToLaf < Gen
                 [regs, affpts, cfg] = ...
                     mexlafs(img, {mser_list{k}.rle}, 0, ...
                             KEY.class_to_struct(upg_cfg_list{k}));
-                
                 upg = struct;
                 % output map of upgrades to dr
                 upg.upg2dr  = [affpts.id]';

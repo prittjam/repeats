@@ -37,6 +37,5 @@ su = LAF.shrink(u,1.5);
 LAF.draw(ax0,su,'Color',color(:,1),'LineWidth',linewidth,varargin{:});
 
 function [] = print_group_labels(ax0,u,color,id)
-keyboard;
 mu = [(u(1:2,:)+u(4:5,:)+u(7:8,:))/3];
 text(ax0,mu(1,:)',mu(2,:)',num2str(id(1)),'Color',color(:,1));

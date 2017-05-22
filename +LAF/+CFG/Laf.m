@@ -44,7 +44,7 @@ classdef Laf < CfgBase
 
 
         % LAF_CG_CURV_MIN      ///< 1: cov. matrix (CM) of DR + center of gravity (CoG) of DR + point of maximal concave curvature
-        lafConstructsToUse_LAF__LAF_CG_CURV_MIN = 0;
+        lafConstructsToUse_LAF__LAF_CG_CURV_MIN = 1;
 
         % LAF_CG_CURV_MAX,     ///< 2: CM of DR + CoG of DR + point of maximal convex curvature
         lafConstructsToUse_LAF__LAF_CG_CURV_MAX = 1;
