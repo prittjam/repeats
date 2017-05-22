@@ -2,16 +2,17 @@ classdef GrEval < handle
     properties    
         sigma = 1;
         iff = [];
-        motion_model = @HG.laf2xN_to_RtxN;
+        motion_model = [];
+        motion_solver = @HG.laf2xN_to_RtxN;
         T = [];
     end
     
     methods(Static)        
-        function E = calc_error_impl(u,v,invH,motion_model,cutoff)
+        function E = calc_error_impl(u,v,invH,motion_solver,cutoff)
             N = size(u,2);
 
             [ii,jj] = itril([N N],-1);
-            rt = feval(motion_model,[v(:,ii);v(:,jj)]);            
+            rt = feval(motion_solver,[v(:,ii);v(:,jj)]);            
             
             [rt,is_inverted] = unique_ro(rt);
                 
@@ -59,6 +60,13 @@ classdef GrEval < handle
                                      true, ...
                                      @() false(1,numel(x)));
             this.T = 20*this.sigma^2;
+            
+            switch this.motion_model
+              case 't'
+                this.motion_solver = @HG.laf2xN_to_txN;
+              case 'Rt'
+                this.motion_solver = @HG.laf2xN_to_RtxN;
+            end
         end        
         
         function [loss,E] = calc_loss(this,dr,G,H)         
@@ -74,7 +82,7 @@ classdef GrEval < handle
             for g = uG
                 ind = find(G == g);
                 E(ind) = GrEval.calc_error_impl(u(:,ind),v(:,ind), ...
-                                                invH,this.motion_model,this.T);
+                                                invH,this.motion_solver,this.T);
             end
             
             %            E = ...

@@ -8,9 +8,13 @@ function [u_corr,model,ransac_res,ransac_stats] = ...
     [Hinf0,ransac_res,ransac_stats] = ransac.fit(dr,Gapp);
 
     G_sv = verify_geometry(Gapp,ransac_res.cs);
-    u_corr = resection(u,G_sv,Hinf0,motion_model);
+
+    model0.Hinf = Hinf0;
+    model0.cc = cc;
+    model0.q = 0.0;
+    u_corr = resection(u,G_sv,model0,motion_model);
    
-    [U0,Rt_i,u_corr.G_i] = section(u,u_corr,Hinf0);
-    [u_corr.G_ij,Rt_ij] = segment_motions(u,u_corr,Hinf0,varargin{:});
-    model = struct('Hinf',Hinf0,'q',0.0,'U',U0, ...
-                   'Rt_i',Rt_i,'Rt_ij',Rt_ij,'cc',cc);
+    [U0,Rt_i,u_corr.G_i] = section(u,u_corr,model0.Hinf);
+    [u_corr.G_ij,Rt_ij] = segment_motions(u,u_corr,model0,varargin{:});
+    model = struct('Hinf',model0.Hinf,'q',model0.q,'U',U0, ...
+                   'Rt_i',Rt_i,'Rt_ij',Rt_ij,'cc',model0.cc);

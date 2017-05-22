@@ -1,5 +1,5 @@
 function [] = test()
-%greedy_repeats_init();
+greedy_repeats_init();
 
 % listA = {'226148941_00d29de16b_o.jpg'};
 % listA = { 'SY_darts.jpg' };
@@ -24,50 +24,47 @@ function [] = test()
 %listA = { 'prague23.jpg' };
 %listA = { 'wall.jpg' };
 %listA = { 'two_planes.jpg' };
-
-
 %listA = {'crochet.png'};
 %listA = {'crochet9.png'};
 
 %
 %ex = struct('img_names', {'circular_window.png'}, ...
-%            'motion_model', 'HG.laf2xN_to_RtxN');
+%            'motion_model', 'Rt');
 %%%%
 %ex = struct('img_names', {'crochet9.png'}, ...
-%            'motion_model', 'HG.laf2xN_to_RtxN');
+%            'motion_model', 'Rt');
 %%%
 %ex = struct('img_names', {'crochet.png'}, ...
-%            'motion_model', 'HG.laf2xN_to_RtxN');
+%            'motion_model', 'Rt');
 %
 %ex = struct('img_names',  {'kitkat.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_RtxN');            
+%            'motion_model', 'Rt');            
 %ex = struct('img_names',  {'EsherA.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_RtxN');            
+%            'motion_model', 'Rt');            
 %%ex = struct('img_names', {'SY_darts.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_RtxN');
+%            'motion_model', 'Rt');
 %%
 %ex = struct('img_names', {'building_us.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_txN');
+%            'motion_model', 't');
 %%
-ex = struct('img_names', {'minnesota-tennis-courts-aerial.jpg'}, ...
-            'motion_model', 'HG.laf2xN_to_txN');
-%
+%ex = struct('img_names', {'minnesota-tennis-courts-aerial.jpg'}, ...
+%            'motion_model', 't');
+%%
 %ex = struct('img_names', {'object0149.view01.png'}, ...
-%            'motion_model', 'HG.laf2xN_to_txN');
+%            'motion_model', 't');
 %
-
 %ex = struct('img_names', {'prague71.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_txN');
+%            'motion_model', 't');
 %
 %ex = struct('img_names', {'calib_prague21.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_txN');
+%            'motion_model', 't');
 %
 %ex = struct('img_names', {'calib_prague29.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_txN');
+%            'motion_model', 't');
 
-%ex = struct('img_names', {'cathedral.jpg'}, ...
-%            'motion_model', 'HG.laf2xN_to_RtxN');
-%%%%
+ex = struct('img_names', {'cathedral.jpg'}, ...
+            'motion_model', 'Rt');
+
 imparams = { 'img_set', 'dggt', ...
              'max_num_cores', 1, ...
              'dr_type','all', ...

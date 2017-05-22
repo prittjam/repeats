@@ -2,9 +2,9 @@ function ransac = make_ransac(G_app,motion_model)
 sampler = GrSampler(G_app);
 
 switch motion_model
-  case 'HG.laf2xN_to_txN'
+  case 't'
     model = RANSAC.WRAP.laf2x2_to_HaHp();
-  case 'HG.laf2xN_to_RtxN'
+  case 'Rt'
     model = RANSAC.WRAP.laf2x2_to_HaHp();
 end
 
