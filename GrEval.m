@@ -40,16 +40,6 @@ classdef GrEval < handle
                 E(find(G == maxG)) = 0;
             end
         end 
-        
-        function [] = test()
-            figure;
-            kkk = 2;
-            LAF.draw(gca,v(:,[ii(kkk) jj(kkk)]),'Color','b')
-            zz = LAF.apply_rigid_xforms(v(:,ii(kkk)),rt(:,kkk)); 
-            hold on; 
-            LAF.draw(gca,zz,'Color','g');
-            hold off;
-        end
     end
     
     methods

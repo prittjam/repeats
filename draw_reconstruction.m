@@ -9,8 +9,10 @@ y_ii = LAF.apply_rigid_xforms(model.U(:,corresp.G_u), ...
                               model.Rt_i(:,corresp.G_i));
 y_jj = LAF.apply_rigid_xforms(y_ii,[model.Rt_ij(:,corresp.G_ij)]);
 
-y_ii = LAF.renormI(blkdiag(invH,invH,invH)*y_ii);
-y_jj = LAF.renormI(blkdiag(invH,invH,invH)*y_jj);
+y_ii = LAF.rd_div(LAF.renormI(blkdiag(invH,invH,invH)*y_ii), ...
+                  model.cc,model.q);
+y_jj = LAF.rd_div(LAF.renormI(blkdiag(invH,invH,invH)*y_jj), ...
+                  model.cc,model.q);
 
 LAF.draw_groups(ax,y_ii,corresp.(cfg.grouping)');
 LAF.draw_groups(ax,y_jj,corresp.(cfg.grouping)');
