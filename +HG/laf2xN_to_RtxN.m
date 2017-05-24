@@ -6,6 +6,7 @@ u_ii = u(1:9,:);
 u_jj = u(10:18,:);
 s1 = LAF.is_right_handed(u_ii);
 s2 = LAF.is_right_handed(u_jj);
+
 hands_switched = xor(s1,s2);
 u_ii(:,hands_switched) = LAF.reflect_yaxis(u_ii(:,hands_switched));
 
