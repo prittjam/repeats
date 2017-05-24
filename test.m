@@ -43,7 +43,7 @@ listA = {'crochet9.png'};
 %            'motion_model', 'Rt');            
 %ex = struct('img_names', {'SY_darts.jpg'}, ...
 %            'motion_model', 'Rt');
-%%%
+%%%%
 %ex = struct('img_names', {'building_us.jpg'}, ...
 %            'motion_model', 't');
 %%%
@@ -64,10 +64,10 @@ listA = {'crochet9.png'};
 
 %ex = struct('img_names', {'cathedral.jpg'}, ...
 %            'motion_model', 'Rt');
-%
+%%
 ex = struct('img_names', {'flower1.jpg'}, ...
             'motion_model', 'Rt');
-
+%
 output_prefix = 'res';
 
 imparams = { 'img_set', 'test', ...
@@ -100,6 +100,8 @@ gr_params = { 'desc_linkage', 'single', ...
               'img', img.data, ...
               'motion_model', ex.motion_model, ...
               'num_planes', 1 };
+
+
 
 [model_list,u_corr_list,stats_list] = greedy_repeats(dr,gr_params{:});
 

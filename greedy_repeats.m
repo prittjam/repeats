@@ -15,13 +15,21 @@ Gr = mat2cell(Gr,1,ones(1,numel(Gr)));
 
 dr = add_dr_scale(dr);
 Gapp = DR.group_desc(dr);
+
+figure;
+imshow(cfg.img);
+LAF.draw_groups(gca,[dr(:).u],Gapp);
+
 Gapp = mat2cell(Gapp,1,ones(1,numel(Gapp)));
 [dr(:).Gapp] = Gapp{:};
+
+
+
 
 for k = 1:cfg.num_planes
     [u_corr0,model0] = generate_model(dr,cfg.motion_model,cfg.cc,leftover{:});
     [u_corr,model,stats] = refine_model([dr(:).u],u_corr0,model0);
-    [u_corr,model,stats] = prune_model([dr(:).u],u_corr,model);
+    [u_corr,model] = prune_model(u_corr,model);
     
     model_list{k} = model;
     u_corr_list{k} = u_corr;
