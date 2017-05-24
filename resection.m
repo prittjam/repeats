@@ -1,6 +1,6 @@
 function M = resection(u,G,model,motion_model)
 Hinf = model.Hinf;
-v = LAF.ru_div(LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u),model.cc,model.q);
+v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(u,model.cc,model.q));
 
 switch motion_model
   case 't'

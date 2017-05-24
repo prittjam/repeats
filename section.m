@@ -1,6 +1,6 @@
 function [U,Rt,G_rti] = section(u,M,model)
 Hinf = model.Hinf;
-v = LAF.ru_div(LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*u),model.cc,model.q);
+v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(u,model.cc,model.q));
 
 w = LAF.translate(v(:,M.i),-v(4:5,M.i));
 U = cmp_splitapply(@(w) w(:,1),w,M.G_u');
