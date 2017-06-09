@@ -185,10 +185,11 @@ end
 
 function finalOut = localapply(fun,dataVars,gdim,nout)
     if verLessThan('matlab','9.2')
-        import matlab.internal.tableUtils.ordinalString;     
+        import_str= 'matlab.internal.tableUtils.ordinalString';     
     else
-        import matlab.internal.datatypes.ordinalString;
+        import_str = 'matlab.internal.datatypes.ordinalString';
     end
+    import(import_str);
         % Call function passing parameters
     [numGroups,numVars] = size(dataVars);
     funOut = cell(numGroups,nout);
