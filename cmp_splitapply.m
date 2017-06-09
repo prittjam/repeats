@@ -184,9 +184,12 @@ end
 
 
 function finalOut = localapply(fun,dataVars,gdim,nout)
-    import matlab.internal.datatypes.ordinalString;
-
-    % Call function passing parameters
+    if verLessThan('matlab','9.2')
+        import matlab.internal.datatypes.ordinalString;
+    else
+        import matlab.internal.tableUtils.ordinalString;     
+    end
+        % Call function passing parameters
     [numGroups,numVars] = size(dataVars);
     funOut = cell(numGroups,nout);
     if (gdim > 1)
