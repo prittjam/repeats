@@ -1,33 +1,33 @@
-function w = ru_div(u,cc,la)
-%UDERAD - removes additive radial distortion from coordinates
-%     function u = uderad(u, cc, la)
-%     where cc is image centre and la is the parameter of the
-%     radial distortion (see AWF: Simult. lin. est...)
-%
-%SEE ALSO: URAD, INORMU
+function v = ru_div(u,cc,q,varargin)
+if abs(q) > 1e-10
+    A = make_A(cc,varargin{:});
+    
+    m = size(u,1);
 
-if abs(la) > eps
-    dim = size(u,1);
-    if (dim == 2)
+    if (m == 2)
         u = [u;ones(1,size(u,2))];
     end
-
-    sc = sum(2*cc);
-    A = [1/sc   0  -cc(1)/sc; ...
-         0   1/sc  -cc(2)/sc; ...
-         0     0       1];
-
+    
     v = A*u;
-
-    dv = 1+la*(v(1,:).^2+v(2,:).^2);
-    v(1,:)  = v(1,:)./dv; 
-    v(2,:)  = v(2,:)./dv; 
-
-    w = inv(A)*v;
+    dv = 1+q*(v(1,:).^2+v(2,:).^2);
+    v(1:2,:)  = v(1:2,:)./dv; 
+    v = inv(A)*v;
  
-    if (dim == 2)
-        w = w(1:2,:);
+    if (m == 2)
+        v = v(1:2,:);
     end
 else
-    w = u; 
+    v = u;
 end
+
+function A = make_A(cc,varargin)
+cfg.rescale = false;
+cfg = cmp_argparse(cfg,varargin{:});    
+if cfg.rescale
+    sc = sum(2*cc);
+else
+    sc = 1;
+end    
+A = [1/sc   0  -cc(1)/sc; ...
+     0   1/sc  -cc(2)/sc; ...
+     0     0       1];

@@ -26,3 +26,4 @@ timg = imtransform(img,T,'bicubic', ...
                    leftover{:});
 
 trect = [minx maxx miny maxy];
+

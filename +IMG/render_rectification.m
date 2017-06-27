@@ -4,6 +4,7 @@ alignment = 'Similarity';
 ind = find(~isnan(u_corr{:,'G_ij'}));
 v = reshape(u(:,unique(u_corr{ind,'i'})),3,[]);
 
+keyboard;
 rtxn_idx = find(u_corr.MotionModel == 'HG.laf2xN_to_RtxN');
 has_rotations = ~isempty(rtxn_idx);
 has_reflections = ...
