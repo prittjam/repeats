@@ -1,0 +1,16 @@
+function X = sample(arc_list,nx,ny,varargin)
+cfg.num_points = 3;
+cfg = cmp_argparse(cfg,varargin{:});
+
+for k = 1:numel(arc_list)
+    x = sample_circle(arc_list(k),0.5,nx+0.5,1000);
+    border = [0.5 0.5; ...
+              nx  0.5; ...
+              nx  ny; ...
+              0.5 ny; ...
+              0.5 0.5];
+    in = find(inpolygon(x(1,:),x(2,:),border(:,1)',border(:,2)'));
+    ind = randperm(numel(in),cfg.num_points);
+    X{k} = [x(:,in(ind)); ...
+            ones(1,numel(ind))];
+end
