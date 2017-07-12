@@ -14,6 +14,11 @@ end
 
 addpath(cur_path);
 
+if ~exist('+LINE','dir')
+    lines_path = fullfile(cur_path, 'external/lines');
+    addpath(lines_path);
+end
+
 if ~exist('MleImpl','file')
     mle_path = fullfile(src_path, '/repeat_lo');
     addpath(mle_path);
