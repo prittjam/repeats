@@ -14,6 +14,11 @@ end
 
 addpath(cur_path);
 
+if ~exist('MleImpl','file')
+    mle_path = fullfile(src_path, '/repeat_lo');
+    addpath(mle_path);
+end
+
 if ~exist('+helpers','dir')
     ckvs_path = fullfile(src_path, '/ckvs');
     addpath(ckvs_path);
