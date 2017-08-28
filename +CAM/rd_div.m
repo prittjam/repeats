@@ -5,6 +5,8 @@ if abs(q) > 1e-10
     m = size(u,1);
     if (m == 2)
         v = PT.homogenize(u);
+    else
+        v = u;
     end
 
     v = A*v;
