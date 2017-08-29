@@ -5,16 +5,14 @@ classdef SysCfg
 
     methods
         function this = SysCfg()
-            if (exist('extrema') == 3)
-                this.map = containers.Map({'Mserp','Mserm','HessianAffine', ... 
-                                    'Laf', 'Sift', 'DistinctAffPt'}, ...
-                                          {'make_extrema','make_extrema','make_hessian_affine', ...
+                this.map = ...
+                    containers.Map({'Mserp','Mserm','HessianAffine', ... 
+                                    'Laf','Sift','DistinctAffPt','Dollar'}, ...
+                                   {'make_extrema','make_extrema', ...
+                                    'make_hessian_affine', ...
                                     'make_mser_to_laf','make_affpt_to_sift', ... 
-                                    'make_distinct' });
-            else
-                throw(MException('','Cannot find feature mex'));
+                                    'make_distinct', 'make_dollar'});
             end
-        end
 
         function chain = cfgs_to_gens(this,cfg_list)
             gen_str = cell(1,numel(cfg_list));
@@ -49,4 +47,8 @@ end
 
 function dist = make_distinct()
     dist = COVDET.AffPtToDistinctAffPt();
+end
+
+function dollar = make_dollar()
+    dollar = EDGE.Dollar();
 end

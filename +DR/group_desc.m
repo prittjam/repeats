@@ -2,6 +2,7 @@ function [Gapp,Gr] = group_desc(dr,varargin)
 cfg.desc_cutoff = 150;
 cfg.desc_linkage = 'single';
 cfg.group_reflections = true;
+cfg.rm_duplicates = false;
 
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
@@ -36,8 +37,10 @@ G(idxb) = nan;
 
 Gapp = reshape(findgroups(G),1,[]);
 
-Gapp = findgroups(msplitapply(@(dr,G) rm_duplicates([dr(:).u],G),dr,Gapp,Gapp));
-
+if cfg.rm_duplicates
+    Gapp = findgroups(msplitapply(@(dr,G) rm_duplicates([dr(:).u],G),dr,Gapp,Gapp));
+end
+    
 Gr = reshape(is_reflected(findgroups([dr.uname])),1,[]);
 
 if ~cfg.group_reflections
