@@ -1,53 +1,102 @@
-function hboxes = make_grouped_boxplot(res,solver_list,field_name,group_name,varargin)
+function [] = make_grouped_boxplot(res,data_field,group_list,varargin)
 cfg.ylim = [];
+cfg.xlabel = [];
+cfg.ylabel = [];
+cfg.truth = [];
+cfg.yticks = [];
+
 cfg = cmp_argparse(cfg,varargin{:});
 
-for k1 = 1:numel(solver_list)
-    solver_ind = find(ismember(res.solver,solver_list{k1}));
-    res2 = res(solver_ind,:);
-    [g,usigma] = findgroups(res2.(group_name));
-    ug = unique(g);
-    x_strings = arrayfun(@(x) num2str(x), usigma, ...
-                         'UniformOutput',false);        
-    ind = reshape(1:numel(ug)*(numel(solver_list)+1), ...
-                  numel(solver_list)+1,[]);
-    res3 = cmp_splitapply(@(x) { x },res2.(field_name),g);
-    data_groups(:,ind(k1+1,:)) = [res3{:}];
+item_names = arrayfun(@(x) char(x),unique(res.(group_list{end})), ...
+                      'UniformOutput',false);
+
+for k = 1:numel(group_list)
+    group_field = group_list{k};
+    [G{k},uval{k}] = findgroups(res.(group_field));
+    
+    if iscategorical(uval{k})
+        uval{k} = grp2idx(uval{k});
+        res.(group_field) = grp2idx(res.(group_field));
+    end
 end
 
-data_groups(:,ind(1,:)) = nan;
-data_groups = [data_groups nan(size(data_groups,1),1)];
-    
-grouped_labels = x_strings;
-part_ind = find(all(isnan(data_groups))); 
-data_ind = find(any(~isnan(data_groups)));
-num_items = numel(solver_list);
+num_categories = numel(uval{1});
+num_groups = numel(uval{2});
+num_items = numel(uval{3});
 
 colors = distinguishable_colors(num_items);
-colors = [colors;1 1 1];
-colors = repmat(colors,numel(x_strings),1);
-colors = [1 1 1;colors];
 
-figure;
-xlim([0 size(data_groups,2)]);
-
-ax = gca;
-boxplot(ax,data_groups, ...
-        'colors',colors, ...
-        'Symbol','+');
-ylim(cfg.ylim);
-
-bounds = axis;
-hold on;
-for k = part_ind(2:end-1)
-    line([k k],[bounds(3) bounds(4)],'Color','0.8 0.8 0.8');
+groups = allcomb(uval{:});
+for k1 = 1:size(groups,1)
+    in = ismember(res{:,{group_list{:}}}, ...
+                  groups(k1,:),'Rows');
+    ind = find(in);
+    data(:,k1) = res{ind,data_field};
 end
-hold off;
 
-xticks(mean(reshape(data_ind,num_items,[]),1));
-xticklabels(grouped_labels);
+figure('Color',[1 1 1],'Position',[178 457 1400 521]);
+main_ax = axes; % create a temporary axes
+% we get the measurements of the plotting area:
+pos = main_ax.Position;
+% and divide it to our data:
+width = pos(3)/num_categories; % the width of each group
+% the bottom left corner of each group:
+corner = linspace(pos(1),pos(3)+pos(1),num_categories+1);
+clf % clear the area!
+% Now we plot everything in a loop:
 
-boxes = findobj(gcf, 'Tag', 'Box');
-hboxes = boxes(end-1:-1:(end-1-num_items+1));
+categories = uval{1};
+for k = 1:num_categories
+    ax = axes;
+    boxplot(ax,data(:,(num_groups*num_items)*(k-1)+ ...
+                    1:(num_groups*num_items)*k), ...
+            'Colors', repmat(colors,num_groups,1));
+    mean([1:num_groups]);
+    step_size = (num_groups+1)/2;
 
-axes(ax);
+    ax.XTick =  1:num_groups*num_items;
+    ax.XTickLabel = arrayfun(@(x) num2str(x), ...
+                             groups((num_groups*num_items)*(k-1)+ ...
+                                    1:(num_groups*num_items)*k,2), ...
+                             'UniformOutput',false); 
+    xrule = ax.XAxis;
+    xrule.FontSize = 10;
+
+    % set the ylim to include all data:
+    ax.YLim = cfg.ylim;
+    
+    box off
+    
+    if k == 1
+        ylabel(cfg.ylabel,'Interpreter','Latex');
+        yticks(cfg.yticks);
+        tickstr = arrayfun(@(x) num2str(x), cfg.yticks, ...
+                           'UniformOutput',false);
+        yticklabels(tickstr);
+        yrule = ax.YAxis;
+        yrule.FontSize = 14;
+    else
+        ax.YTick = [];
+    end
+
+    xlabel(num2str(categories(k)), ...
+           'FontSize',14); % the labels for the
+                                    % num_categories
+    ax.Position = [corner(k) 0.11 width 0.8];
+
+    if ~isempty(cfg.truth)
+        hold on;
+        bounds = axis;
+        line([bounds(1) bounds(2)],[cfg.truth cfg.truth],'Color','c');
+        hold off;
+    end
+    
+    if k == num_categories
+        boxes = findobj(gca, 'Tag', 'Box');
+        tmp = boxes(end:-1:end-num_items+1);
+        legend(tmp, item_names{:});
+    end
+end
+% and finally we place the title:
+main_ax = axes('Position',[corner(1) 0.11 width*num_categories 0.815]);
+axis off
