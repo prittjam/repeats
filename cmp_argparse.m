@@ -38,7 +38,7 @@ function [conf, args] = cmp_argparse(conf, args, varargin)
 %if ~isstruct(conf), error('CONF must be a structure') ; end
 
 if nargin == 1
-    args = [];
+    args = {  };
     return;
 end
 
@@ -79,3 +79,7 @@ for ai = 1:2:length(args)
 end
 
 args = remainingArgs ;
+
+if isempty(args)
+    args = {  };
+end

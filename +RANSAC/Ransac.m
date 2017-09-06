@@ -45,8 +45,7 @@ classdef Ransac < handle
         
         function lo_res = do_lo(this,meas,corresp,res)
             if ~isempty(this.lo)
-                M = this.lo.fit(meas,corresp,res);
-                lo_res = this.calc_res(meas,corresp,M);
+                lo_res = this.lo.fit(meas,corresp,res);
                 this.stats.lo_count = this.stats.lo_count+1;
             else
                 lo_res = res;
@@ -62,11 +61,11 @@ classdef Ransac < handle
                                 'model_count', 0, ...
                                 'lo_count', 0);
 
-            this.K = this.sampler.calc_num_responses();
+            this.K = size(corresp,2);
             N = inf;
 
             res = struct('loss', inf, ...
-                         'cs', zeros(1,numel(corresp)));
+                         'cs', zeros(1,this.K));
             lo_res = res;
             opt_res = res;
             
@@ -135,12 +134,10 @@ classdef Ransac < handle
                             (sum(res0.cs) >= sum(res.cs))
                         res = res0;
                         lo_res = this.do_lo(meas,corresp,res); 
-                        
-                        if (lo_res.loss < opt_res.loss) && ...
-                            (sum(lo_res.cs) >= sum(opt_res.cs))
+                        if (lo_res.loss < opt_res.loss)
                             opt_res = lo_res;
+                            lo_res.loss
                         end
-                        
                         % Update estimate of est_trial_count, the number
                         % of trial_count to ensure we pick, with
                         % probability p, a data set with no outliers.
