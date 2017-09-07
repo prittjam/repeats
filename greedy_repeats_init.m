@@ -13,20 +13,16 @@ end
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
 addpath(cur_path);
+addpath(genpath('external'));
 
-if ~exist('+LINE','dir')
-    lines_path = fullfile(cur_path, 'external/lines');
-    addpath(lines_path);
-end
+%if ~exist('+LINE','dir')
+%    lines_path = fullfile(cur_path, 'external/lines');
+%    addpath(lines_path);
+%end
 
 if ~exist('MleImpl','file')
     mle_path = fullfile(src_path, '/repeat_lo');
     addpath(mle_path);
-end
-
-if ~exist('+helpers','dir')
-    ckvs_path = fullfile(src_path, '/ckvs');
-    addpath(ckvs_path);
 end
 
 if ~exist('+MMS','dir')
@@ -35,25 +31,6 @@ end
 
 if ~exist('+RANSAC')
     addpath([src_path, '/ransac']);
-end
-
-if ~exist('medoidshift','file')
-    addpath([src_path, '/medoidshift']);
-end
-
-if ~exist('segment_motions','file')
-    repeat_lo_path = fullfile(src_path, '/repeat_lo');
-    addpath(repeat_lo_path);
-end
-
-if ~exist('msplitapply','file')
-    matlab_extras_path = fullfile(src_path, '/matlab_extras');
-    addpath(matlab_extras_path);
-end
-
-if ~exist('itriu','file')
-    halfvec = fullfile(cur_path, '/HalfVectorization');
-    addpath(halfvec);
 end
 
 if ~exist('cvtk2_init','file')
@@ -77,9 +54,6 @@ if ~exist('+DR','dir')
     cd(cur_path);
 end
 
-if ~exist('export_fig')
-    addpath(fullfile([src_path 'export_fig']));
-end
 
 if ~exist('get_dr')
     addpath(fullfile([src_path 'vl']));
