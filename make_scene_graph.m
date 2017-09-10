@@ -1,4 +1,4 @@
-function [dG,rvertices] = prune_model(v,xform_list)
+function [dG,rvertices] = make_scene_graph(v,xform_list)
 corresp = [[xform_list(:).i];[xform_list(:).j]]';
 %g = reshape(findgroups(corresp(:)),[],2);
 w = sqrt(sum([v(4:5,corresp(:,1))-v(4:5,corresp(:,2))].^2));
