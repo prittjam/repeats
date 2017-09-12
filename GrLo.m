@@ -35,7 +35,7 @@ classdef GrLo < handle
             Hp = HG.laf2x2_to_Hinf(u,G);            
  
             v = LAF.renormI(blkdiag(Hp,Hp,Hp)*u);
-            Ha = feval(this.metric_solver,dr,v,G);
+            Ha = this.fit_Rt(dr,v,G);
 
             if isempty(Ha)
                 model0 = struct('Hinf',Hp, ...
@@ -48,17 +48,28 @@ classdef GrLo < handle
             end
 
             u = [dr(:).u];
+            
             G_sv = nan(1,numel(dr));
             G_sv(inl) = findgroups([dr(inl).Gapp]);
-            
+
             Hinf = model0.Hinf; 
             v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(u,model0.cc,model0.q));
             [xform_list,motion_model_list] = ...
                 resection(u,v,G_sv,this.motion_model); 
             Gm = segment_motions(u,v,model0,xform_list);
-            [rtree,rvertices] = ...
-                prune_model(v,xform_list(~isnan(Gm)));
-            new_refine_model(rtree,rvertices);
+            good_ind = find(~isnan(Gm));
+            good_xform_list = xform_list(good_ind);
+            Gm = Gm(good_ind);
+            Gs = nan(1,numel(dr));
+            inl2 = unique([xform_list.i xform_list.j]);
+            Gs(inl) = findgroups([dr(inl2).Gapp]);
+            [rtree,rvertices] = make_scene_graph(v,Gs,Gm,good_xform_list);
+            Rtij = fit_motion_centroids(Gm,good_xform_list);
+            rtree = composite_xforms(rtree,rvertices,Rtij);
+            X = cmp_splitapply(@(x) x(:,1),v,reshape(rtree.Nodes.Gs,1,[]));
+            draw_reconstruction(gca,rtree,X);
+            
+            new_refine_model(rtree,rvertices,X,Rtij);
             
 %            mle_model0 = model0;
 %            mle_model0.U = U1;
