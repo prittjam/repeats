@@ -1,7 +1,7 @@
 function [] = greedy_repeats_init(src_path,opt_path)
-set(0,'DefaultFigureRenderer','OpenGL');
-set(0,'DefaultFigureRendererMode', 'manual');
-
+%set(0,'DefaultFigureRenderer','OpenGL');
+%set(0,'DefaultFigureRendererMode', 'manual');
+%
 if nargin < 1
     src_path = '~/src/';
 end
@@ -15,11 +15,6 @@ end
 addpath(cur_path);
 addpath(genpath('external'));
 
-%if ~exist('+LINE','dir')
-%    lines_path = fullfile(cur_path, 'external/lines');
-%    addpath(lines_path);
-%end
-
 if ~exist('MleImpl','file')
     mle_path = fullfile(src_path, '/repeat_lo');
     addpath(mle_path);
@@ -27,10 +22,6 @@ end
 
 if ~exist('+MMS','dir')
     addpath(fullfile([opt_path 'mex']));
-end
-
-if ~exist('+RANSAC')
-    addpath([src_path, '/ransac']);
 end
 
 if ~exist('cvtk2_init','file')

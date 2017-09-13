@@ -5,8 +5,8 @@ Y = X(:,inlGs);
 Rti = [rtree.Nodes.Rti(inl,:)]';
 Yii = LAF.apply_rigid_xforms(Y,Rti);
 invH = inv(H);
-x = LAF.renormI(blkdiag(invH,invH,invH)*Yii);
-LAF.draw_groups(gca,x,inlGs,'LineWidth',3);
+x = LAF.renormI(blkdiag(invH,invH,invH)*[X Yii]);
+LAF.draw_groups(gca,x,[1:size(X,2) inlGs],'LineWidth',3);
 
 %cfg.dr = [];
 %cfg.grouping = 'G_u';

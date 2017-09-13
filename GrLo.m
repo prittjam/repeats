@@ -56,23 +56,39 @@ classdef GrLo < handle
             v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(u,model0.cc,model0.q));
             [xform_list,motion_model_list] = ...
                 resection(u,v,G_sv,this.motion_model); 
+            
+%            figure;
+%            LAF.draw(gca,v);
+%            figure;
+%            ii = [xform_list(:).i];
+%            for k = 1:numel(xform_list)
+%                mtx = Rt.params_to_mtx(xform_list(k).Rt);
+%                LAF.draw(gca,blkdiag(mtx,mtx,mtx)*v(:,ii(k)));
+%            end
+%
             Gm = segment_motions(u,v,model0,xform_list);
             good_ind = find(~isnan(Gm));
             good_xform_list = xform_list(good_ind);
             Gm = Gm(good_ind);
+
+%            ii = [good_xform_list(:).i];
+%            for k = 1:max(Gm);
+%                idx = find(Gm==k);
+%                mtx = Rt.params_to_mtx(good_xform_list(idx(1)).Rt);
+%                LAF.draw(gca,blkdiag(mtx,mtx,mtx)*v(:,[good_xform_list(idx).i]));
+%            end
+%
             Gs = nan(1,numel(dr));
-            inl2 = unique([xform_list.i xform_list.j]);
+            inl2 = unique([good_xform_list.i good_xform_list.j]);
 
             Gs(inl2) = findgroups([dr(inl2).Gapp]);
             [rtree,rvertices] = make_scene_graph(v,Gs,Gm,good_xform_list);
             Rtij = fit_motion_centroids(Gm,good_xform_list);
             X = v(:,rvertices);
-            test_draw_reconstruction(rtree,rvertices,Rtij,X,Hinf);
-            %            rtree = composite_xforms(rtree,rvertices,Rtij);
-            %            X = c\mp_splitapply(@(x)
-            %            x(:,1),v,reshape(rtree.Nodes.Gs,1,[]));a
+            [rtree,x] = composite_xforms(rtree,rvertices,Rtij,X);
             draw_reconstruction(gca,rtree,X,Hinf);
-            
+
+            keyboard;
             %            test_draw_reconstruction(gca,rtree,Rtij,Hinf,X,);
             
             new_refine_model(rtree,rvertices,X,Rtij);
