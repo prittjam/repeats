@@ -1,13 +1,12 @@
-function [] = draw_reconstruction(ax,rtree,X)
+function [] = draw_reconstruction(ax,rtree,X,H)
 inl = find(~isnan(rtree.Nodes.Gs));
-Y = X(:,rtree.Nodes.Gs(inl));
+inlGs = reshape(rtree.Nodes.Gs(inl),1,[]);
+Y = X(:,inlGs);
 Rti = [rtree.Nodes.Rti(inl,:)]';
 Yii = LAF.apply_rigid_xforms(Y,Rti);
-
-figure;
-LAF.draw(gca,Yii);
-
-keyboard;
+invH = inv(H);
+x = LAF.renormI(blkdiag(invH,invH,invH)*Yii);
+LAF.draw_groups(gca,x,inlGs,'LineWidth',3);
 
 %cfg.dr = [];
 %cfg.grouping = 'G_u';

@@ -62,12 +62,18 @@ classdef GrLo < handle
             Gm = Gm(good_ind);
             Gs = nan(1,numel(dr));
             inl2 = unique([xform_list.i xform_list.j]);
-            Gs(inl) = findgroups([dr(inl2).Gapp]);
+
+            Gs(inl2) = findgroups([dr(inl2).Gapp]);
             [rtree,rvertices] = make_scene_graph(v,Gs,Gm,good_xform_list);
             Rtij = fit_motion_centroids(Gm,good_xform_list);
-            rtree = composite_xforms(rtree,rvertices,Rtij);
-            X = cmp_splitapply(@(x) x(:,1),v,reshape(rtree.Nodes.Gs,1,[]));
-            draw_reconstruction(gca,rtree,X);
+            X = v(:,rvertices);
+            test_draw_reconstruction(rtree,rvertices,Rtij,X,Hinf);
+            %            rtree = composite_xforms(rtree,rvertices,Rtij);
+            %            X = c\mp_splitapply(@(x)
+            %            x(:,1),v,reshape(rtree.Nodes.Gs,1,[]));a
+            draw_reconstruction(gca,rtree,X,Hinf);
+            
+            %            test_draw_reconstruction(gca,rtree,Rtij,Hinf,X,);
             
             new_refine_model(rtree,rvertices,X,Rtij);
             

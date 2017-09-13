@@ -75,8 +75,10 @@ gr_params = { 'cc', cc, ...
               'motion_model', ex.motion_model, ...
               'num_planes', 1 };
 
-dr = DR.get(img,cid_cache, {'type',cfg.dr.dr_type});
+dr = DR.get(img,cid_cache, {'type',cfg.dr.dr_type,'reflection',false});
 dr = group_desc(dr);
+
+figure;imshow(img.data);
 [model_list,stats_list] = greedy_repeats(dr,gr_params{:});
 
 for k = 1:numel(model_list)
@@ -85,7 +87,6 @@ for k = 1:numel(model_list)
     
     %    IMG.output_rectification(img.data,rimg,ud_img,output_prefix);
     h = draw_results(img,rimg);    
-    f = figure;
     imshow(img.data);
     output_reconstruction(img.data,model_list{k}.u_corr, ...
                           model_list{k},output_prefix);

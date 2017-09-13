@@ -16,7 +16,7 @@ classdef GrEval < handle
             
             [rt,is_inverted] = unique_ro(rt);
                 
-            [jj(is_inverted),ii(is_inverted)] = deal(ii(is_inverted), ...
+            [jj(is_inverted),ii(is_inverted)] = yxdeal(ii(is_inverted), ...
                                                      jj(is_inverted));
             
             invrt = Rt.invert(rt);
