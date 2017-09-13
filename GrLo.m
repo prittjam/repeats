@@ -65,7 +65,7 @@ classdef GrLo < handle
 %                mtx = Rt.params_to_mtx(xform_list(k).Rt);
 %                LAF.draw(gca,blkdiag(mtx,mtx,mtx)*v(:,ii(k)));
 %            end
-%
+% 
             Gm = segment_motions(u,v,model0,xform_list);
             good_ind = find(~isnan(Gm));
             good_xform_list = xform_list(good_ind);
