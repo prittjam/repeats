@@ -1,38 +1,42 @@
-function [dG,rvertices] = make_scene_graph(v,xform_list)
+function [dG,rvertices] = make_scene_graph(v,Gapp,Gm,xform_list)
+num_nodes = numel(Gapp);
+node_table = table(Gapp',nan(num_nodes,1), ...
+                   repmat([0 0 0 1],num_nodes,1), ...
+                   'VariableNames', {'Gapp' 'Gs' 'Rti'});
+num_edges = numel(xform_list);
 corresp = [[xform_list(:).i];[xform_list(:).j]]';
-%g = reshape(findgroups(corresp(:)),[],2);
 w = sqrt(sum([v(4:5,corresp(:,1))-v(4:5,corresp(:,2))].^2));
-%G = graph(g(:,1),g(:,2),w,'OmitSelfLoops');
-G = graph([xform_list(:).i],[xform_list(:).j],w,'OmitSelfLoops');
-[T,pred] = minspantree(G,'Type','forest');
+G = graph(corresp(:,1),corresp(:,2),w,'OmitSelfLoops');
+[T,pred] = minspantree(G,'Type','forest'); 
 
 s = pred(pred~=0);
 t = find(pred~=0);
 
 [ind,ind_st] = ismember(corresp,[s;t]','rows');
-ind = find(ind);
-[rind,rind_ts] = ismember(corresp,[t;s]','rows');
-rind = find(rind);
+ind_st = nonzeros(ind_st);
+invertedst = false(numel(ind_st),1);
+Gmst = Gm(find(ind));
 
-K = numel(rind);
-rxform_list = ...
-    struct('i', mat2cell([xform_list(rind).i],1,ones(1,K)), ...
-           'j', mat2cell([xform_list(rind).j],1,ones(1,K)), ...
-           'Rt', mat2cell(Rt.invert([xform_list(rind).Rt]),4,ones(1,K)), ...
-           'inverted', mat2cell(~[xform_list(rind).inverted],1, ...
-                                ones(1,K)));
+[corresp(:,2),corresp(:,1)] = deal(corresp(:,1),corresp(:,2));
+[rind,rind_ts] = ismember(corresp,[s;t]','rows');
+rind_ts = nonzeros(rind_ts);
+invertedts = true(numel(rind_ts),1);
+Gmts = Gm(find(rind));
 
-small_xform_list(nonzeros(ind_st)) = xform_list(ind);
-small_xform_list(nonzeros(rind_ts)) = rxform_list;
+edge_table = table([s(ind_st) s(rind_ts);t(ind_st) t(rind_ts)]', ...
+                   [Gmst; Gmts], ...
+                   [invertedst; invertedts], ...
+                   'VariableNames', {'EndNodes' 'Gm' 'inverted'}); 
 
-node_table = table(repmat([0 0 0 1],size(v,2),1), ...
-                   'VariableNames', {'Rti'});
-edge_table = table([s;t]', ...
-                   [small_xform_list(:).Rt]', ...
-                   'VariableNames',{'EndNodes' 'Rtij'});
+%edge_table = table([s(ind_st); t(ind_st)]', ...
+%                   Gmst,  invertedst, ...
+%                   'VariableNames', {'EndNodes' 'Gm' 'inverted'}); 
+%
 dG = digraph(edge_table,node_table);
+%plot(dG,'NodeLabel',[1:num_nodes]);
+%figure;plot(T)
 
-rvertices = intersect(find(pred==0),pred(t));
+rvertices = intersect(find(pred==0),pred);
 
 %
 %%y_ii = LAF.apply_rigid_xforms(model0.U(:,corresp.G_u), ...

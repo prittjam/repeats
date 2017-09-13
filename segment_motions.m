@@ -45,12 +45,5 @@ d2c = d2(:,code_ind);
 Gm(min_d2c > vq_distortion) = nan;
 Gm = findgroups(Gm);
 
-%theta_uw = msplitapply(@(theta)  unwrap(theta), u_corr.theta, G_rt);
-%u_corr{~isnan(G_rt),'theta'} = theta_uw(~isnan(G_rt));
-%
-%rt = ...
-%    cmp_splitapply(@(u) ...
-%                   [ atan2(mean(sin(u(:,1))),mean(cos(u(:,1)))) mean(u(:,2:3),1) median(u(:,4)) ], ...
-%                   [u_corr.theta u_corr.tij u_corr.a11], G_rt)';
-%
-%G_rt = reshape(G_rt,[],1);
+assert(numel(Gm)==numel(xform_list), ...
+       'You got problems buddy.');
