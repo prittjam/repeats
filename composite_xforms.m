@@ -1,4 +1,4 @@
-function [rtree,x] = composite_xforms(rtree,rvertices,Rtij,X,Gs)
+function [rtree,x] = composite_xforms(rtree,rvertices,Rtij,X)
 mtx_Rtij = zeros(3,3,size(Rtij,2));
 
 for k = 1:size(Rtij,2)
