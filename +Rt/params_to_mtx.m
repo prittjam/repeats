@@ -1,0 +1,6 @@
+function M = params_to_mtx(Rt)
+c = cos(Rt(1));
+s = sin(Rt(1));
+M =  [ Rt(4)*c -s Rt(2); ...
+       Rt(4)*s  c Rt(3); ...
+       0 0 1];
