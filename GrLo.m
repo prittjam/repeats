@@ -47,15 +47,15 @@ classdef GrLo < handle
                                 'q', 0.0);
             end
 
-            u = [dr(:).u];
+            x = [dr(:).u];
             
             G_sv = nan(1,numel(dr));
             G_sv(inl) = findgroups([dr(inl).Gapp]);
 
             Hinf = model0.Hinf; 
-            v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(u,model0.cc,model0.q));
+            xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
             [xform_list,motion_model_list] = ...
-                resection(u,v,G_sv,this.motion_model); 
+                resection(x,xp,G_sv,this.motion_model); 
             
 %            figure;
 %            LAF.draw(gca,v);
@@ -66,7 +66,7 @@ classdef GrLo < handle
 %                LAF.draw(gca,blkdiag(mtx,mtx,mtx)*v(:,ii(k)));
 %            end
 % 
-            Gm = segment_motions(u,v,model0,xform_list);
+            Gm = segment_motions(x,xp,model0,xform_list);
             good_ind = find(~isnan(Gm));
             good_xform_list = xform_list(good_ind);
             Gm = Gm(good_ind);
@@ -82,16 +82,20 @@ classdef GrLo < handle
             inl2 = unique([good_xform_list.i good_xform_list.j]);
 
             Gs(inl2) = findgroups([dr(inl2).Gapp]);
-            [rtree,rvertices] = make_scene_graph(v,Gs,Gm,good_xform_list);
+            [rtree,rvertices] = make_scene_graph(xp,Gs,Gm,good_xform_list);
             Rtij = fit_motion_centroids(Gm,good_xform_list);
-            X = v(:,rvertices);
-            [rtree,x] = composite_xforms(rtree,rvertices,Rtij,X);
+            X = xp(:,rvertices);
+            rtree = composite_xforms(rtree,rvertices,Rtij,X);
             draw_reconstruction(gca,rtree,X,Hinf);
+            mle_impl = MleImpl2(this.cc,x,rtree,rvertices, ...
+                                0.0,Hinf,X,Rtij);
+            [mle_model,mle_stats] = mle_impl.fit('rho','l2');
 
-            keyboard;
+            
+
             %            test_draw_reconstruction(gca,rtree,Rtij,Hinf,X,);
             
-            new_refine_model(rtree,rvertices,X,Rtij);
+
             
 %            mle_model0 = model0;
 %            mle_model0.U = U1;
