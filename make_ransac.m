@@ -10,5 +10,6 @@ end
 
 %eval = GrEval('motion_model',motion_model);
 eval = GrEval2();
-lo = GrLo([dr(:).Gapp],cc,'motion_model',motion_model);
+lo = GrLo([dr(:).Gapp],cc, ...
+          'motion_model',motion_model);
 ransac = RANSAC.Ransac(model,sampler,eval,'lo',lo);

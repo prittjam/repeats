@@ -28,6 +28,7 @@ classdef GrLo < handle
             end
         end
         
+        
         function lo_res = fit(this,dr,corresp,res)
             inl = unique(corresp(:,logical(res.cs)));
             G = findgroups([dr(inl).Gapp]);
@@ -52,45 +53,23 @@ classdef GrLo < handle
             G_sv = nan(1,numel(dr));
             G_sv(inl) = findgroups([dr(inl).Gapp]);
 
-            Hinf = model0.Hinf; 
-            xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
-            [xform_list,motion_model_list] = ...
-                resection(x,xp,G_sv,this.motion_model); 
+            [good_corresp,Rtij00] = ...
+                resection(x,model0,G_sv,this.motion_model); 
+            [rtree,X,Rtij0,Tlist] = ...
+                make_scene_graph(x,good_corresp,model0,Rtij00);
+            Gm = segment_motions(x,model0,rtree.Edges.EndNodes',Rtij0);
+            [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
             
-%            figure;
-%            LAF.draw(gca,v);
-%            figure;
-%            ii = [xform_list(:).i];
-%            for k = 1:numel(xform_list)
-%                mtx = Rt.params_to_mtx(xform_list(k).Rt);
-%                LAF.draw(gca,blkdiag(mtx,mtx,mtx)*v(:,ii(k)));
-%            end
-% 
-            Gm = segment_motions(x,xp,model0,xform_list);
-            good_ind = find(~isnan(Gm));
-            good_xform_list = xform_list(good_ind);
-            Gm = Gm(good_ind);
-
-%            ii = [good_xform_list(:).i];
-%            for k = 1:max(Gm);
-%                idx = find(Gm==k);
-%                mtx = Rt.params_to_mtx(good_xform_list(idx(1)).Rt);
-%                LAF.draw(gca,blkdiag(mtx,mtx,mtx)*v(:,[good_xform_list(idx).i]));
-%            end
-%
             Gs = nan(1,numel(dr));
-            inl2 = unique([good_xform_list.i good_xform_list.j]);
-
+            inl2 = unique(rtree.Edges.EndNodes);
             Gs(inl2) = findgroups([dr(inl2).Gapp]);
-            [rtree,rvertices] = make_scene_graph(xp,Gs,Gm,good_xform_list);
-            Rtij = fit_motion_centroids(Gm,good_xform_list);
-            X = xp(:,rvertices);
-            rtree = composite_xforms(rtree,rvertices,Rtij,X);
-            draw_reconstruction(gca,rtree,X,Hinf);
-            mle_impl = MleImpl2(this.cc,x,rtree,rvertices, ...
-                                0.0,Hinf,X,Rtij);
+
+            mle_impl = MleImpl2(this.cc,x,rtree,Gs,Tlist, ...
+                                Gm,is_inverted,0.0,...
+                                model0.Hinf,X,Rtij);
             [mle_model,mle_stats] = mle_impl.fit('rho','l2');
 
+            %            draw_reconstruction(gca,rtree,X,Hinf);
             
 
             %            test_draw_reconstruction(gca,rtree,Rtij,Hinf,X,);
