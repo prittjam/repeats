@@ -1,4 +1,8 @@
-function [xform_list,motion_model_list] = resection(u,v,G,motion_model)
+function [good_corresp,Rtij] = resection(x,model0,G,motion_model)
+cfg = struct('sigma',1);
+
+vq_distortion = 21.026*cfg.sigma^2;
+
 switch motion_model
   case 't'
     motion_solver = 'HG.laf2xN_to_txN';    
@@ -6,32 +10,48 @@ switch motion_model
     motion_solver = 'HG.laf2xN_to_RtxN';
 end
 
-xform_list = ...
-    cmp_splitapply(@(v,ind) ...
-                   deal( { laf2xNxN_to_RtxNxN(v,ind,motion_solver,true) }), ...
-                   v,1:size(v,2),G);
-xform_list = [xform_list{:}];
-N = numel(xform_list);
+Hinf = model0.Hinf;
+Hinv = inv(model0.Hinf);
 
-switch motion_model
-  case 't'
-    motion_model_list = categorical(ones(N,1),[1 2],{'t','Rt'});
-  case 'Rt'
-    motion_model_list = categorical(2*ones(N,1),[1 2],{'t','Rt'});
-end
+xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
+
+xform_list = ...
+    cmp_splitapply(@(xp,ind) ...
+                   deal( { laf2xNxN_to_RtxNxN(xp,ind,motion_solver,true) }), ...
+                   xp,1:size(xp,2),G);
+xform_list = [xform_list{:}];
+
+corresp = [xform_list(:).i; ...
+           xform_list(:).j];
+Rtij = [xform_list(:).Rt];
+
+ut_j = ...
+    LAF.rd_div(LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
+                           LAF.apply_rigid_xforms(xp(:,corresp(1,:)),Rtij)), ...
+               model0.cc,model0.q);
+invrt = Rt.invert(Rtij);
+ut_i = ...
+    LAF.rd_div(LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
+                           LAF.apply_rigid_xforms(xp(:,corresp(2,:)),invrt)), ...
+                           model0.cc,model0.q);
+d2 = sum([ut_j-x(:,corresp(2,:)); ...
+          ut_i-x(:,corresp(1,:))].^2);
+inl = find(double(d2 < vq_distortion));
+good_corresp = corresp(:,inl);
+Rtij = Rtij(:,inl);
+
+
+%switch motion_model
+%  case 't'
+%    motion_model_list = categorical(ones(N,1),[1 2],{'t','Rt'});
+%  case 'Rt'
+%    motion_model_list = categorical(2*ones(N,1),[1 2],{'t','Rt'});
+%end
 
 function xform_list = laf2xNxN_to_RtxNxN(x,ind,motion_solver,do_inversion)
 N = size(x,2);
 [ii,jj] = itril([N N],-1);
-
 rt = feval(motion_solver,[x(:,ii);x(:,jj)]);
-is_inverted = false(1,N);
-
-if do_inversion
-    [rt,is_inverted] = unique_ro(rt);
-    [jj(is_inverted),ii(is_inverted)] = ...
-        deal(ii(is_inverted),jj(is_inverted));
-end
 
 xform_list = struct('Rt',mat2cell(rt,4,ones(1,size(rt,2))), ...
                     'i', mat2cell(ind(ii),1,ones(1,numel(ii))), ...
