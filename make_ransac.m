@@ -1,5 +1,5 @@
 function ransac = make_ransac(dr,corresp,cc,motion_model)
-sampler = ElationSampler(dr,corresp,2);
+sampler = GrSampler(dr,corresp,2);
 
 switch motion_model
   case 't'

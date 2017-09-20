@@ -27,22 +27,6 @@ classdef Ransac < handle
             this.eval = eval;
         end
         
-        function res = calc_res(this,meas,corresp,M)
-            loss = inf(numel(M),1);
-            err = inf(numel(M),this.K);
-            cs = nan(numel(M),this.K);
-
-            for k = 1:numel(M)
-                [loss(k),err(k,:)] = this.eval.calc_loss(meas,corresp,M{k});
-                cs(k,:) = this.eval.calc_cs(err);
-            end
-            
-            [~,mink] = min(loss);
-        
-            res = struct('M', M{k}, 'err', err(k,:), ...
-                         'loss', loss(k), 'cs', cs(k,:));
-        end
-        
         function lo_res = do_lo(this,meas,corresp,res)
             if ~isempty(this.lo)
                 lo_res = this.lo.fit(meas,corresp,res);
@@ -61,11 +45,9 @@ classdef Ransac < handle
                                 'model_count', 0, ...
                                 'lo_count', 0);
 
-            this.K = size(corresp,2);
             N = inf;
-
             res = struct('loss', inf, ...
-                         'cs', zeros(1,this.K));
+                         'cs', 0);
             lo_res = res;
             opt_res = res;
             
@@ -96,16 +78,16 @@ classdef Ransac < handle
                 is_model_good = false(1,numel(M));
                 for k = 1:numel(M)
                     is_model_good(k) = ...
-                        this.model.is_model_good(meas,corresp,idx,M{k});
+                        this.model.is_model_good(meas,corresp,idx,M(k));
                 end
                 
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
-                        M{k} = ...
+                        M(k) = ...
                             this.model.fix(meas,corresp,idx,M{k});
                     end
-                    is_model_good = cellfun(@(m) ~isempty(m),M);
+                    is_model_good = arrayfun(@(m) ~isempty(m),M);
                     M = M(is_model_good);
                 end
                 
@@ -113,20 +95,18 @@ classdef Ransac < handle
                     this.stats.model_count = this.stats.model_count+numel(M);
 
                     loss = inf(numel(M),1);
-                    err = inf(numel(M),this.K);
-                    cs = nan(numel(M),this.K);
 
                     for k = 1:numel(M)
-                        [loss(k),err(k,:)] = this.eval.calc_loss(meas,corresp,M{k});
-                        cs(k,:) = this.eval.calc_cs(err(k,:));
+                        [loss(k),err{k}] = this.eval.calc_loss(meas,corresp,M(k));
+                        cs{k} = this.eval.calc_cs(err{k});
                     end
                     
                     [~,mink] = min(loss);
                     
-                    res0 = struct('M', M{mink}, ...
-                                  'err', err(mink,:), ...
+                    res0 = struct('M', M(mink), ...
+                                  'err', err{mink}, ...
                                   'loss', loss(mink), ...
-                                  'cs', cs(mink,:), ...
+                                  'cs', cs{mink}, ...
                                   'mss', idx);
 
                     if (sum(res0.cs) > 0) && ...

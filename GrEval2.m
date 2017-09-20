@@ -8,7 +8,8 @@ classdef GrEval2 < handle
             this = cmp_argparse(this,varargin{:});
         end        
         
-        function [loss,E] = calc_loss(this,dr,corresp,H)         
+        function [loss,E] = calc_loss(this,dr,corresp,M)         
+            H = M.H;
             v = LAF.renormI(blkdiag(H,H,H)*[dr(:).u]);
             
             D2 = [sum((v(1:2,:)-v(4:5,:)).^2); ...
