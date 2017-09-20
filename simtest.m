@@ -16,5 +16,5 @@ assert(all(LAF.is_right_handed(x)), ...
        ['There are left-handed affine frames']); 
 dr = struct('u',mat2cell(x,9,ones(1,size(x,2))), ...
             'Gapp',mat2cell(G,1,ones(1,size(x,2))));
-generate_model(dr,'t',cam.cc);
+greedy_repeats(dr,cam.cc,'t');
 

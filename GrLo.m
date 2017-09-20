@@ -17,7 +17,7 @@ classdef GrLo < handle
     end
 
     methods
-        function this = GrLo(labeling,cc,varargin)
+        function this = GrLo(cc,varargin)
             this.cc = cc;
             [this,~] = cmp_argparse(this,varargin{:});
             switch this.motion_model

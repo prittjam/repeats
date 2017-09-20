@@ -84,10 +84,12 @@ classdef Ransac < handle
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
-                        M(k) = ...
-                            this.model.fix(meas,corresp,idx,M{k});
+                        Mfix = this.model.fix(meas,corresp,idx,M(k));
+                        if ~isempty(Mfix)
+                            is_model_good(k) = true;
+                            M(k) = Mfix
+                        end
                     end
-                    is_model_good = arrayfun(@(m) ~isempty(m),M);
                     M = M(is_model_good);
                 end
                 

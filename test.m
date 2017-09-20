@@ -81,7 +81,7 @@ dr = DR.get(img,cid_cache, ...
 dr = group_desc(dr);
 
 figure;imshow(img.data);
-[model_list,stats_list] = greedy_repeats(dr,gr_params{:});
+[res_list,stats_list] = greedy_repeats(dr,cc,'t');
 
 for k = 1:numel(model_list)
     [rimg,ud_img] = ...
