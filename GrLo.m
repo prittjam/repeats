@@ -67,7 +67,7 @@ classdef GrLo < handle
             mle_impl = ...
                 MleImpl2(this.cc,x,rtree,Gs,Tlist, ...
                          Gm,is_inverted,0.0,model0.Hinf,X,Rtij);
-            [mle_model,mle_stats] = mle_impl.fit('rho','l2');
+            [mle_model,mle_stats] = mle_impl.fit();
             inl = find(mle_model.Gs);
            
             % sigma = max([1.4826*mad(err) 1]);
