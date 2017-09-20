@@ -1,12 +1,9 @@
-function [rtree,X,Rtij,Tlist] = make_new_scene_graph(x,corresp,model0,Rtij0)
+function [rtree,X,Rtij,Tlist] = make_scene_graph(x,corresp,model0,Rtij0)
 Hinf = model0.Hinf;
-xp = ...
-    LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc, ...
-                                                  model0.q));
-xp2 = LAF.apply_rigid_xforms(xp(:,corresp(1,:)),Rtij0);
-dist = xp2-xp(:,corresp(2,:));
 
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
+xp2 = LAF.apply_rigid_xforms(v(:,corresp(1,:)),Rtij0);
+dist = sum((xp2-v(:,corresp(2,:))).^2);
 
 num_edges = size(corresp,2);
 
@@ -32,6 +29,12 @@ rtree = digraph(edge_table);
 rvertices = intersect(find(pred==0),pred);
 
 Rtij = Rtij(:,rtree.Edges.Ind);
+
+invH = inv(Hinf);
+
+xp2 = LAF.apply_rigid_xforms(v(:,s),Rtij);
+dist = sum((xp2-v(:,t)).^2);
+
 
 X = v(:,rvertices);
 

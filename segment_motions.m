@@ -1,4 +1,4 @@
-function Gm = new_segment_motions(x,model,corresp,rt0,varargin)
+function Gm = segment_motions(x,model,corresp,rt0,varargin)
 cfg.sigma = 1;
 cfg.num_codes = 1e3;
 
@@ -12,7 +12,6 @@ Hinv = inv(Hinf);
 xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model.cc, ...
                                                   model.q));
 xp2 = LAF.apply_rigid_xforms(xp(:,corresp(1,:)),rt0);
-dist = xp2-xp(:,corresp(2,:));
 
 M = size(corresp,2);
 if M > cfg.num_codes
