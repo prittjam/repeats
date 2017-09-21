@@ -154,8 +154,9 @@ classdef PatternPrinter < handle
             err0 = this.calc_err();
             options = optimoptions('lsqnonlin','Display','iter', 'MaxIter',15);
             %            Jpat = this.make_Jpat();
+            lb = transpose([0 -inf(1,numel(dz0)-1)]);
             [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
-                                         this.dz0,[],[],options);
+                                         this.dz0,lb,[],options);
             [q,H,X,Rtij] = this.unpack(dz);
             [Gs,Rti] = composite_xforms(this.Tlist, ...
                                         this.Gm,this.inverted, ...
