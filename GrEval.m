@@ -1,4 +1,4 @@
-classdef GrEval2 < handle
+classdef GrEval < handle
     properties    
         T = log(1.1);
     end

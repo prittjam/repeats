@@ -14,7 +14,7 @@ corresp = cmp_splitapply(@(u) { VChooseK(u,2)' }, ...
                          1:numel(dr),[dr(:).Gapp]);
 corresp = [ corresp{:} ];
 sampler = GrSampler(dr,corresp,2);
-eval = GrEval2();
+eval = GrEval();
 lo = GrLo(cc,'motion_model',motion_model);
 ransac = RANSAC.Ransac(solver,sampler,eval,'lo',lo);
 
