@@ -158,10 +158,14 @@ classdef PatternPrinter < handle
                 lb = transpose([-1e-2 -inf(1,numel(this.dz0)-1)]);
                 ub = transpose([0 inf(1,numel(this.dz0)-1)]);
                 [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
-                                             this.dz0,lb,ub,options);
+                                             this.dz0,lb,ub, ...
+                                             options);
             else
                 dz = this.dz0;
+                err = err0;
+                resnorm = sum(err.^2);
             end
+
             [q,H,X,Rtij] = this.unpack(dz);
             [Gs,Rti] = composite_xforms(this.Tlist, ...
                                         this.Gm,this.inverted, ...
