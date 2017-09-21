@@ -87,7 +87,7 @@ classdef Ransac < handle
                         Mfix = this.model.fix(meas,corresp,idx,M(k));
                         if ~isempty(Mfix)
                             is_model_good(k) = true;
-                            M(k) = Mfix
+                            M(k) = Mfix;
                         end
                     end
                     M = M(is_model_good);
@@ -118,7 +118,6 @@ classdef Ransac < handle
                         lo_res = this.do_lo(meas,corresp,res); 
                         if (lo_res.loss < opt_res.loss)
                             opt_res = lo_res;
-                            lo_res.loss
                         end
                         % Update estimate of est_trial_count, the number
                         % of trial_count to ensure we pick, with

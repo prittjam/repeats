@@ -62,6 +62,9 @@ classdef GrSampler < handle
             N = ceil(log(1-this.confidence)/log(1-p3*p3));
             ub = min([N this.max_trial_count]);
             trial_count = max([ub this.min_trial_count]);
+            
+            disp(['Inlier percentage: ' num2str(p3*p3*100,'%2.2f') ...
+                  ' |  # trials needed: ' num2str(trial_count)]);
         end
 
     end
