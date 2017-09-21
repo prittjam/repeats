@@ -1,4 +1,4 @@
-classdef MleImpl2 < handle
+classdef RepeatPrinter < handle
     properties    
         x = [];
         
@@ -39,7 +39,7 @@ classdef MleImpl2 < handle
     end
 
     methods(Access = public)
-        function this = MleImpl2(cc,x,rtree,Gs,Tlist, ...
+        function this = RepeatPrinter(cc,x,rtree,Gs,Tlist, ...
                                  Gm,is_inverted, ...
                                  q,Hinf,X,Rtij,varargin)
             this = cmp_argparse(this,varargin{:});
@@ -147,14 +147,14 @@ classdef MleImpl2 < handle
             if nargin < 2
                 dz = this.dz0;
             end
-            err = MleImpl2.errfun(dz,this);
+            err = RepeatPrinter.errfun(dz,this);
         end 
                 
         function [M,stats] = fit(this,varargin)
             err0 = this.calc_err();
             options = optimoptions('lsqnonlin','Display','iter', 'MaxIter',15);
             %            Jpat = this.make_Jpat();
-            [dz,resnorm,err] = lsqnonlin(@(dz) MleImpl2.errfun(dz,this), ...
+            [dz,resnorm,err] = lsqnonlin(@(dz) RepeatPrinter.errfun(dz,this), ...
                                          this.dz0,[],[],options);
             [q,H,X,Rtij] = this.unpack(dz);
             [Gs,Rti] = composite_xforms(this.Tlist, ...
