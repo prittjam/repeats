@@ -153,7 +153,6 @@ classdef MleImpl2 < handle
         function [M,stats] = fit(this,varargin)
             err0 = this.calc_err();
             options = optimoptions('lsqnonlin','Display','iter', 'MaxIter',15);
-
             %            Jpat = this.make_Jpat();
             [dz,resnorm,err] = lsqnonlin(@(dz) MleImpl2.errfun(dz,this), ...
                                          this.dz0,[],[],options);
