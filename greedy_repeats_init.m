@@ -2,22 +2,16 @@ function [] = greedy_repeats_init(src_path,opt_path)
 %set(0,'DefaultFigureRenderer','OpenGL');
 %set(0,'DefaultFigureRendererMode', 'manual');
 %
+[cur_path, name, ext] = fileparts(mfilename('fullpath'));
+
+addpath(genpath(cur_path))
+
 if nargin < 1
     src_path = '~/src/';
 end
 
 if nargin < 2
     opt_path = '~/opt/';
-end
-
-[cur_path, name, ext] = fileparts(mfilename('fullpath'));
-
-addpath(cur_path);
-addpath(genpath('external'));
-
-if ~exist('MleImpl','file')
-    mle_path = fullfile(src_path, '/repeat_lo');
-    addpath(mle_path);
 end
 
 if ~exist('+MMS','dir')
