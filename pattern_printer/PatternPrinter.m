@@ -152,11 +152,16 @@ classdef PatternPrinter < handle
                 
         function [M,stats] = fit(this,varargin)
             err0 = this.calc_err();
-            options = optimoptions('lsqnonlin','Display','iter', 'MaxIter',15);
-            %            Jpat = this.make_Jpat();
-            lb = transpose([0 -inf(1,numel(dz0)-1)]);
-            [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
-                                         this.dz0,lb,[],options);
+            if numel(this.dz0) <= numel(err0)
+                options = optimoptions('lsqnonlin','Display','iter', 'MaxIter',15);
+                %            Jpat = this.make_Jpat();
+                lb = transpose([-1e-2 -inf(1,numel(this.dz0)-1)]);
+                ub = transpose([0 inf(1,numel(this.dz0)-1)]);
+                [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
+                                             this.dz0,lb,ub,options);
+            else
+                dz = this.dz0;
+            end
             [q,H,X,Rtij] = this.unpack(dz);
             [Gs,Rti] = composite_xforms(this.Tlist, ...
                                         this.Gm,this.inverted, ...
@@ -172,7 +177,7 @@ classdef PatternPrinter < handle
                            'err', err, ...
                            'err0', err0, ...
                            'sqerr0', sum(reshape(err0,6,[]).^2), ...
-                           'sqerr', sum(reshape(err,6,[]).^2));
+                           'sqerr', sum(reshape(err,6,[]).^2));            
         end
     end
 end

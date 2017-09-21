@@ -69,15 +69,16 @@ classdef GrLo < handle
                                Gm,is_inverted,0.0,model0.Hinf,X,Rtij, ...
                                'motion_model',this.motion_model);
             [mle_model,mle_stats] = pattern_printer.fit();
+            
             inl = find(mle_model.Gs);
-           
+            
             % sigma = max([1.4826*mad(err) 1]);
             sigma = 1;
             T = 21.026*sigma^2;
             err2 = T*ones(1,numel(dr));
             err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
             loss = sum(err2);
-
+            
             lo_res = struct('M', mle_model, ...
                             'loss', loss, ...
                             'err', err2, ...

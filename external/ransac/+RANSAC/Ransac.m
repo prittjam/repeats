@@ -28,11 +28,10 @@ classdef Ransac < handle
         end
         
         function lo_res = do_lo(this,meas,corresp,res)
+            lo_res = [];
             if ~isempty(this.lo)
                 lo_res = this.lo.fit(meas,corresp,res);
                 this.stats.lo_count = this.stats.lo_count+1;
-            else
-                lo_res = res;
             end
         end
 
