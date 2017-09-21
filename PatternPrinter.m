@@ -1,4 +1,4 @@
-classdef RepeatPrinter < handle
+classdef PatternPrinter < handle
     properties    
         x = [];
         
@@ -39,7 +39,7 @@ classdef RepeatPrinter < handle
     end
 
     methods(Access = public)
-        function this = RepeatPrinter(cc,x,rtree,Gs,Tlist, ...
+        function this = PatternPrinter(cc,x,rtree,Gs,Tlist, ...
                                  Gm,is_inverted, ...
                                  q,Hinf,X,Rtij,varargin)
             this = cmp_argparse(this,varargin{:});
@@ -147,14 +147,14 @@ classdef RepeatPrinter < handle
             if nargin < 2
                 dz = this.dz0;
             end
-            err = RepeatPrinter.errfun(dz,this);
+            err = PatternPrinter.errfun(dz,this);
         end 
                 
         function [M,stats] = fit(this,varargin)
             err0 = this.calc_err();
             options = optimoptions('lsqnonlin','Display','iter', 'MaxIter',15);
             %            Jpat = this.make_Jpat();
-            [dz,resnorm,err] = lsqnonlin(@(dz) RepeatPrinter.errfun(dz,this), ...
+            [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
                                          this.dz0,[],[],options);
             [q,H,X,Rtij] = this.unpack(dz);
             [Gs,Rti] = composite_xforms(this.Tlist, ...
