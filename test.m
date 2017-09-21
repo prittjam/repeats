@@ -77,20 +77,24 @@ dr = DR.get(img,cid_cache, ...
 dr = group_desc(dr);
 
 figure;imshow(img.data);
-[model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
 
-for k = 1:numel(model_list)
-    [rimg,ud_img] = ...
-        IMG.render_rectification([dr(:).u],model_list(k),img.data);
-    figure;imshow(rimg);
-    %    IMG.output_rectification(img.data,rimg,ud_img,output_prefix);
-    %    h = draw_results(img,rimg);    
-%    imshow(img.data);
-%    output_reconstruction(img.data,model_list{k}.u_corr, ...
-%                          model_list{k},output_prefix);
-%    %    matlab2tikz('figurehandle',gcf, ...
-    %                'filename','fig.tex' , ...
-    %                'standalone', false);
+for k = 1:10
+    [model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
+
+    for k = 1:numel(model_list)
+        [rimg,ud_img] = ...
+            IMG.render_rectification([dr(:).u],model_list(k),img.data);
+        figure;imshow(rimg);
+        %    IMG.output_rectification(img.data,rimg,ud_img,output_prefix);
+        %    h = draw_results(img,rimg);    
+        %    imshow(img.data);
+        %    output_reconstruction(img.data,model_list{k}.u_corr, ...
+        %                          model_list{k},output_prefix);
+        %    %    matlab2tikz('figurehandle',gcf, ...
+        %                'filename','fig.tex' , ...
+        %                'standalone', false);
+    end
+
 end
 
 %img = Img('url','download2.jpg');       
