@@ -168,8 +168,7 @@ classdef PatternPrinter < handle
                 lb = transpose([-1e-2 -inf(1,numel(this.dz0)-1)]);
                 ub = transpose([0 inf(1,numel(this.dz0)-1)]);
                 
-                options = optimoptions('lsqnonlin','Display','iter', ...
-                                       'MaxIterations',10);
+                options = optimoptions('lsqnonlin','Display','iter');
                 [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
                                              this.dz0,lb,ub, ...
                                              options);
