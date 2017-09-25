@@ -44,6 +44,7 @@ classdef Ransac < handle
                                 'model_count', 0, ...
                                 'lo_count', 0);
 
+            optM = [];
             N = inf;
             res = struct('loss', inf, ...
                          'cs', 0);
@@ -136,7 +137,10 @@ classdef Ransac < handle
                 opt_res = this.do_lo(meas,corresp,res);
             end
 
-            optM = opt_res.M;
+            if isfield(opt_res,'M')
+                optM = opt_res.M;
+            end
+            
             this.stats.time_elapsed = toc;               
             stats = this.stats;
         end
