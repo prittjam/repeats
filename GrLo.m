@@ -56,33 +56,41 @@ classdef GrLo < handle
             [good_corresp,Rtij00] = ...
                 resection(x,model0,G_sv,this.motion_model); 
 
-            Hinf = model0.Hinf;
-            [rtree,X,Rtij0,Tlist] = ...
-                make_scene_graph(x,good_corresp,model0,Rtij00);
-            Gm = segment_motions(x,model0,rtree.Edges.EndNodes',Rtij0);
-            [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
-            Gs = nan(1,numel(dr));
-            inl2 = unique(rtree.Edges.EndNodes);
-            Gs(inl2) = findgroups([dr(inl2).Gapp]);
-            pattern_printer = ...
-                PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
-                               Gm,is_inverted,0.0,model0.Hinf,X,Rtij, ...
-                               'motion_model',this.motion_model);
-            [mle_model,mle_stats] = pattern_printer.fit();
+            if ~isempty(good_corresp)
+                Hinf = model0.Hinf;
+                [rtree,X,Rtij0,Tlist] = ...
+                    make_scene_graph(x,good_corresp,model0,Rtij00);
+                Gm = segment_motions(x,model0,rtree.Edges.EndNodes',Rtij0);
+                [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
+                Gs = nan(1,numel(dr));
+                inl2 = unique(rtree.Edges.EndNodes);
+                Gs(inl2) = findgroups([dr(inl2).Gapp]);
+                pattern_printer = ...
+                    PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
+                                   Gm,is_inverted,0.0,model0.Hinf,X,Rtij, ...
+                                   'motion_model',this.motion_model);
+                [mle_model,mle_stats] = pattern_printer.fit();
+                
+                inl = find(mle_model.Gs);
+                
+                % sigma = max([1.4826*mad(err) 1]);
+                sigma = 1;
+                T = 21.026*sigma^2;
+                err2 = T*ones(1,numel(dr));
+                err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
+                loss = sum(err2);
             
-            inl = find(mle_model.Gs);
-            
-            % sigma = max([1.4826*mad(err) 1]);
-            sigma = 1;
-            T = 21.026*sigma^2;
-            err2 = T*ones(1,numel(dr));
-            err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
-            loss = sum(err2);
-            
-            lo_res = struct('M', mle_model, ...
-                            'loss', loss, ...
-                            'err', err2, ...
-                            'cs', err2 < T);
+                lo_res = struct('M', mle_model, ...
+                                'loss', loss, ...
+                                'err', err2, ...
+                                'cs', err2 < T);
+            else
+                err2 = inf*ones(1,numel(dr));
+                lo_res = struct('M', [], ...
+                                'loss', inf, ...
+                                'err', err2, ...
+                                'cs', false(1,numel(dr)));
+            end
         end
     end
 end

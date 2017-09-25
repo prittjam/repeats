@@ -12,9 +12,11 @@ x = PT.renormI(P*[scene(:).X]);
 G = [scene(:).G];
 G = findgroups(G(1:3:end));
 x = reshape(x,9,[]);
+ccd_sigma = 0.5;
+xn = reshape(CAM.add_noise(reshape(x,3,[]),ccd_sigma),9,[]);
 assert(all(LAF.is_right_handed(x)), ...
        ['There are left-handed affine frames']); 
-dr = struct('u',mat2cell(x,9,ones(1,size(x,2))), ...
+dr = struct('u',mat2cell(xn,9,ones(1,size(x,2))), ...
             'Gapp',mat2cell(G,1,ones(1,size(x,2))));
 greedy_repeats(dr,cam.cc,'t');
 

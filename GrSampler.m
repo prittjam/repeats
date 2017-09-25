@@ -59,7 +59,12 @@ classdef GrSampler < handle
             p2 = hygepdf(2,this.freq(ind),cs_freq(ind),2);
             p3 = dot(this.p(ind),p2);
             
-            N = ceil(log(1-this.confidence)/log(1-p3*p3));
+            if p3 > 0
+                N = ceil(log(1-this.confidence)/log(1-p3*p3));
+            else
+                N = inf;
+            end
+            
             ub = min([N this.max_trial_count]);
             trial_count = max([ub this.min_trial_count]);
             
