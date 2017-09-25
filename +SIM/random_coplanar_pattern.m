@@ -13,9 +13,9 @@ classdef random_coplanar_pattern < SIM.coplanar_pattern
             h = dims(1);
             w = dims(2);
             
-            params = [3 10; ...   % number of instance rows
-                      3 10; ...  % number of instance columns           
-                      1 5];  % number of lafs in template [nlafs];
+            params = [2 2; ...   % number of instance rows
+                      2 2; ...  % number of instance columns           
+                      2 2];  % number of lafs in template [nlafs];
             
             rv = params(:,1)+round((params(:,2)-params(:,1)).*rand(3,1));
             
