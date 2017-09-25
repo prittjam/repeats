@@ -7,13 +7,17 @@ corresp = cmp_splitapply(@(u) { VChooseK(u,2)' }, ...
                          1:numel(dr),[dr(:).Gapp]);
 corresp = [ corresp{:} ];
 
-ransac = make_ransac(dr,cc,motion_model,corresp);
+[ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp);
 
 for k = 1:num_planes
-    [model_list(k),stats_list(k)] = ransac.fit(dr,corresp);
+    [model0,~,~,stats_list(k)] = ransac.fit(dr,corresp);
+    [loss,E] = eval.calc_loss(dr,corresp,model0);
+    cs = eval.calc_cs(E);
+    res = struct('cs',cs);
+    [model_list(k),lo_res] = lo.fit(dr,corresp,res);
 end
 
-function ransac = make_ransac(dr,cc,motion_model,corresp)
+function [ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp)
 switch motion_model
   case 't'
     solver = RANSAC.WRAP.laf2x2_to_HaHp();

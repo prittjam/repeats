@@ -29,7 +29,7 @@ classdef GrLo < handle
         end
         
         
-        function lo_res = fit(this,dr,corresp,res)
+        function [mle_model,mle_res,mle_stats] = fit(this,dr,corresp,res)
             inl = unique(corresp(:,logical(res.cs)));
             G = findgroups([dr(inl).Gapp]);
             u = [dr(inl).u];
@@ -80,16 +80,16 @@ classdef GrLo < handle
                 err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
                 loss = sum(err2);
             
-                lo_res = struct('M', mle_model, ...
-                                'loss', loss, ...
-                                'err', err2, ...
-                                'cs', err2 < T);
+                mle_res = struct('loss', loss, ...
+                                 'err', err2, ...
+                                 'cs', err2 < T);
             else
+                mle_stats = [];
+                mle_model = [];
                 err2 = inf*ones(1,numel(dr));
-                lo_res = struct('M', [], ...
-                                'loss', inf, ...
-                                'err', err2, ...
-                                'cs', false(1,numel(dr)));
+                mle_res = struct('loss', inf, ...
+                                 'err', err2, ...
+                                 'cs', false(1,numel(dr)));
             end
         end
     end
