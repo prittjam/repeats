@@ -109,39 +109,51 @@ classdef PatternPrinter < handle
         end
         
         function Jpat = make_Jpat(this)
+            [Gs,Rti] = ...
+                composite_xforms(this.Tlist, ...
+                                 this.Gm,this.inverted, ...
+                                 this.Rtij0,this.X0,size(this.x,2));
+            [Xp,inl] = sfm(this.X0,Gs,Rti);
+            Gs = Gs(inl);
+            
             active_vertices = unique(this.rtree.Edges.EndNodes);
-            M = 6*numel(active_vertices);
-            [dq_ii dq_jj] = meshgrid(1:M,this.params.q);
-            [dH_ii dH_jj] = meshgrid(1:M,this.params.H);
+            m = 6*numel(active_vertices);
+            n = this.params.Rtij(end);
 
-            AA = [];BB = [];
-            for k = 1:numel(this.Tlist)
-                [TR,D] = shortestpathtree(this.rtree,this.Tlist{k}(1), ...
-                                          'OutputForm','cell');
-                sz = cellfun(@(x) numel(x),TR);
-                idx = find(sz > 0);
-                for k2 = 1:numel(idx)
-                    [aa,bb] = meshgrid(6*(k2-1)+[1:6]',TR{idx(k2)}+this.params.H(end));
-                    AA = cat(1,AA,aa);
-                    BB = cat(1,BB,bb);
-                end
-
-                idx2 = find(sz > 1);
-                keyboard;
-                for k2 = 1:numel(idx2)
-                    edg_idx = [1:numel(TR{idx2(k2)})-1; ...
-                               2:numel(TR{idx2(k2)})]';
-                    tr = TR{idx2(k2)};
-                    b = this.edge_data.Gm(sub2ind(size(this.edge_data.Gm), ...
-                                                  tr(edg_idx(:,1)),tr(edg_idx(:,2))));
-                    [aa,bb] = meshgrid(6*(k2-1)+[1:6]',TR{idx(k2)}+this.params.H(end));
-                    AA = cat(1,AA,aa);
-                    BB = cat(1,BB,bb);                    
-                end
+            [dq_ii dq_jj] = meshgrid(1:m,this.params.q);
+            [dH_ii dH_jj] = meshgrid(1:m,this.params.H);
+            dG_ii = [];
+            dG_jj = [];
+            for k = 1:numel(Gs)
+                [aa,bb] = meshgrid(6*(k-1)+transpose([1:6]), ...
+                                   6*(Gs(k)-1)'+transpose([1:6])+this.params.H(end));
+                dG_ii = cat(1,dG_ii,aa(:));
+                dG_jj = cat(1,dG_jj,bb(:));
             end
-            Jpat = [];
-        end
+            
+            dRti_dj_ii = [];
+            dRti_dj_jj = [];
 
+            for k = 1:numel(this.Tlist)
+                T = this.Tlist{k};
+                [~,idx] = ismember(unique(T(:)),inl,'rows');
+                gmlist = this.Gm(sub2ind(size(this.Gm),...
+                                         T(:,1),T(:,2)));
+                gmlist = unique(full(gmlist));
+                [aa,bb] = meshgrid(6*(idx-1)'+[1:6]', ...
+                                   this.num_Rt_params*(gmlist-1)+ ...
+                                   [1:this.num_Rt_params]+this.params.X(end));
+                dRti_dj_ii = cat(1,dRti_dj_ii,aa(:));
+                dRti_dj_jj = cat(1,dRti_dj_jj,bb(:));                
+            end
+
+            v = ones(numel([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii]),1);
+            Jpat = ...
+                sparse([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii], ...
+                       [dq_jj(:); dH_jj(:); dG_jj;dRti_dj_jj], ...
+                       v,m,n);
+        end
+            
         
         function err = calc_err(this,dz)
             if nargin < 2
@@ -153,10 +165,11 @@ classdef PatternPrinter < handle
         function [M,stats] = fit(this,varargin)
             err0 = this.calc_err();
             if numel(this.dz0) <= numel(err0)
-                options = optimoptions('lsqnonlin','Display','iter', 'MaxIter',15);
-                %            Jpat = this.make_Jpat();
                 lb = transpose([-1e-2 -inf(1,numel(this.dz0)-1)]);
                 ub = transpose([0 inf(1,numel(this.dz0)-1)]);
+                
+                options = optimoptions('lsqnonlin','Display','iter', ...
+                                       'MaxIterations',10);
                 [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
                                              this.dz0,lb,ub, ...
                                              options);
@@ -169,7 +182,7 @@ classdef PatternPrinter < handle
             [q,H,X,Rtij] = this.unpack(dz);
             [Gs,Rti] = composite_xforms(this.Tlist, ...
                                         this.Gm,this.inverted, ...
-                                        Rtij,X,size(this.x,2));
+                                        Rtij,X,size(this.x,2)); 
             [Xp,inl] = sfm(X,Gs,Rti);
             
             M = struct('q',q,'cc', this.cc, ...
