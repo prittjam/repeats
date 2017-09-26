@@ -69,7 +69,8 @@ classdef GrLo < handle
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
                                    Gm,is_inverted,0.0,model0.Hinf,X,Rtij, ...
                                    'motion_model',this.motion_model);
-                [mle_model,mle_stats] = pattern_printer.fit();
+                [mle_model,mle_stats] = ...
+                    pattern_printer.fit('MaxIterations',10);
                 
                 inl = find(mle_model.Gs);
                 
@@ -94,14 +95,3 @@ classdef GrLo < handle
         end
     end
 end
-%
-%            cs = false(1,numel(corresp));
-%            [Lia,Locb] = ismember(u_corr1{find(G),{'i','j'}}, ...
-%                                  ,'rows');
-%            cs(Locb(Lia)) = true; 
-%            [Lia,Locb] = ismember(u_corr1{find(G),{'j','i'}}, ...
-%                                  corresp','rows');
-%            cs(Locb(Lia)) = true; 
-%            
-%            loss = (numel(cs)-sum(cs))*T+sum(err2);
-%            mle_model.u_corr = u_corr1;

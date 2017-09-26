@@ -1,7 +1,7 @@
 classdef GrSampler < handle
     properties
-        min_trial_count = 1
-        max_trial_count = 1e4
+        min_trial_count = 50;
+        max_trial_count = 1e4;
         max_num_retries = 100;
         
         confidence = 0.99
@@ -67,8 +67,8 @@ classdef GrSampler < handle
             
             ub = min([N this.max_trial_count]);
             trial_count = max([ub this.min_trial_count]);
-            
-            disp(['Inlier percentage: ' num2str(p3*p3*100,'%2.2f') ...
+
+            disp(['Inlier percentage: ' num2str(p3*p3*100,'%04.1f') ...
                   ' |  # trials needed: ' num2str(trial_count)]);
         end
 
