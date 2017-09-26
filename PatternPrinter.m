@@ -40,8 +40,8 @@ classdef PatternPrinter < handle
 
     methods(Access = public)
         function this = PatternPrinter(cc,x,rtree,Gs,Tlist, ...
-                                 Gm,is_inverted, ...
-                                 q,Hinf,X,Rtij,varargin)
+                                       Gm,is_inverted, ...
+                                       q,Hinf,X,Rtij,varargin)
             this = cmp_argparse(this,varargin{:});
             
             this.rtree = rtree;
@@ -109,10 +109,9 @@ classdef PatternPrinter < handle
         end
         
         function Jpat = make_Jpat(this)
-            [Gs,Rti] = ...
-                composite_xforms(this.Tlist, ...
-                                 this.Gm,this.inverted, ...
-                                 this.Rtij0,this.X0,size(this.x,2));
+            [Gs,Rti] = composite_xforms(this.Tlist, ...
+                                        this.Gm,this.inverted, ...
+                                        this.Rtij0,this.X0,size(this.x,2));
             [Xp,inl] = sfm(this.X0,Gs,Rti);
             Gs = Gs(inl);
             
@@ -122,31 +121,43 @@ classdef PatternPrinter < handle
 
             [dq_ii dq_jj] = meshgrid(1:m,this.params.q);
             [dH_ii dH_jj] = meshgrid(1:m,this.params.H);
-            dG_ii = [];
-            dG_jj = [];
+            dG_ii = [];dG_jj = [];
+
             for k = 1:numel(Gs)
-                [aa,bb] = meshgrid(6*(k-1)+transpose([1:6]), ...
-                                   6*(Gs(k)-1)'+transpose([1:6])+this.params.H(end));
-                dG_ii = cat(1,dG_ii,aa(:));
-                dG_jj = cat(1,dG_jj,bb(:));
+                [aa,bb] = meshgrid(6*(k-1)+transpose([1:2]), ...
+                                   6*(Gs(k)-1)'+transpose([1:2])+this.params.H(end));
+                [cc,dd] = meshgrid(6*(k-1)+transpose([3:4]), ...
+                                   6*(Gs(k)-1)'+transpose([3:4])+ ...
+                                   this.params.H(end));
+                [ee,ff] = meshgrid(6*(k-1)+transpose([5:6]), ...
+                                   6*(Gs(k)-1)'+transpose([5:6])+ ...
+                                   this.params.H(end));                
+                dG_ii = cat(1,dG_ii,aa(:),cc(:),ee(:));
+                dG_jj = cat(1,dG_jj,bb(:),dd(:),ff(:));
             end
             
             dRti_dj_ii = [];
             dRti_dj_jj = [];
-
+            
             for k = 1:numel(this.Tlist)
                 T = this.Tlist{k};
-                [~,idx] = ismember(unique(T(:)),inl,'rows');
-                gmlist = this.Gm(sub2ind(size(this.Gm),...
-                                         T(:,1),T(:,2)));
-                gmlist = unique(full(gmlist));
-                [aa,bb] = meshgrid(6*(idx-1)'+[1:6]', ...
-                                   this.num_Rt_params*(gmlist-1)+ ...
-                                   [1:this.num_Rt_params]+this.params.X(end));
-                dRti_dj_ii = cat(1,dRti_dj_ii,aa(:));
-                dRti_dj_jj = cat(1,dRti_dj_jj,bb(:));                
+                TR  = ...
+                    shortestpathtree(this.rtree,T(1),'OutputForm','cell');
+                idx = find(~cellfun(@isempty,TR));
+                TR = TR(idx); 
+                [~,Locb] = ismember(idx,inl);
+                Locb = reshape(nonzeros(Locb),1,[]);
+                for k2 = 1:numel(Locb)
+                    tr = TR{k2};
+                    gm = this.Gm(sub2ind(size(this.Gm),tr(1:end-1),tr(2:end)));
+                    [aa,bb] = meshgrid(6*(Locb(k2)-1)+transpose([1:6]), ...
+                                       this.num_Rt_params*(gm-1)+...
+                                       transpose(1:this.num_Rt_params)+...
+                                       this.params.X(end));
+                    dRti_dj_ii = cat(1,dRti_dj_ii,aa(:));
+                dRti_dj_jj = cat(1,dRti_dj_jj,bb(:));
+                end
             end
-
             v = ones(numel([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii]),1);
             Jpat = ...
                 sparse([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii], ...
@@ -154,7 +165,6 @@ classdef PatternPrinter < handle
                        v,m,n);
         end
             
-        
         function err = calc_err(this,dz)
             if nargin < 2
                 dz = this.dz0;
@@ -163,15 +173,21 @@ classdef PatternPrinter < handle
         end 
                 
         function [M,stats] = fit(this,varargin)
-            err0 = this.calc_err();
+            err0 = this.errfun(this.dz0,this);
+            Jpat = this.make_Jpat();
+
             if numel(this.dz0) <= numel(err0)
                 lb = transpose([-1e-2 -inf(1,numel(this.dz0)-1)]);
                 ub = transpose([0 inf(1,numel(this.dz0)-1)]);
-                
-                options = optimoptions('lsqnonlin','Display','iter');
+                options = optimoptions(@lsqnonlin, ...
+                                       'Algorithm', 'trust-region-reflective', ...
+                                       'Display','none', ...
+                                       'JacobPattern',Jpat, ...
+                                       'Display', 'iter', ...
+                                       varargin{:});
                 [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
-                                             this.dz0,lb,ub, ...
-                                             options);
+                                              this.dz0,lb,ub, ...
+                                              options);
             else
                 dz = this.dz0;
                 err = err0;
