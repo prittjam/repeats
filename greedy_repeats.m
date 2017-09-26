@@ -14,7 +14,8 @@ for k = 1:num_planes
     [loss,E] = eval.calc_loss(dr,corresp,model0);
     cs = eval.calc_cs(E);
     res = struct('cs',cs);
-    [model_list(k),lo_res] = lo.fit(dr,corresp,res);
+    [model_list(k),lo_res] = lo.fit(dr,corresp,res, ...
+                                    'MaxIterations',inf);
 end
 
 function [ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp)

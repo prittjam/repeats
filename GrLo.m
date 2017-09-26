@@ -3,6 +3,7 @@ classdef GrLo < handle
         motion_model = [];
         metric_solver = [];
         cc = [];
+        max_iter = 10;
     end
     
     methods(Access = private)
@@ -29,7 +30,10 @@ classdef GrLo < handle
         end
         
         
-        function [mle_model,mle_res,mle_stats] = fit(this,dr,corresp,res)
+        function [mle_model,mle_res,mle_stats] = fit(this,dr,corresp,res,varargin)
+            cfg = struct('MaxIterations',10);
+            cfg = cmp_argparse(cfg,varargin{:});
+            
             inl = unique(corresp(:,logical(res.cs)));
             G = findgroups([dr(inl).Gapp]);
             u = [dr(inl).u];
@@ -70,7 +74,7 @@ classdef GrLo < handle
                                    Gm,is_inverted,0.0,model0.Hinf,X,Rtij, ...
                                    'motion_model',this.motion_model);
                 [mle_model,mle_stats] = ...
-                    pattern_printer.fit('MaxIterations',10);
+                    pattern_printer.fit('MaxIterations',cfg.MaxIterations);
                 
                 inl = find(mle_model.Gs);
                 
