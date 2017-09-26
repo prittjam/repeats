@@ -2,11 +2,11 @@ function [] = test()
 greedy_repeats_init();
 %ex = struct('img_names','OLD_rot_001.jpg', ...
 %            'motion_model', 'Rt');
-ex = struct('img_names', {'circular_window.png'}, ...
-            'motion_model', 'Rt');
-%%%%%%%%%%%%%
-%ex = struct('img_names', {'crochet9.png'}, ...
+%ex = struct('img_names', {'circular_window.png'}, ...
 %            'motion_model', 'Rt');
+%%%%%%%%%%%%%%
+ex = struct('img_names', {'crochet9.png'}, ...
+            'motion_model', 'Rt');
 %%%%%%%%%
 % ex = struct('img_names', {'crochet.png'}, ...
 %            'motion_model', 'Rt');
@@ -78,7 +78,7 @@ dr = group_desc(dr);
 
 figure;imshow(img.data);
 
-for k = 1:10
+for k = 1:1
     [model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
 
     for k = 1:numel(model_list)

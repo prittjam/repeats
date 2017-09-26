@@ -143,7 +143,7 @@ classdef PatternPrinter < handle
                 T = this.Tlist{k};
                 TR  = ...
                     shortestpathtree(this.rtree,T(1),'OutputForm','cell');
-                idx = find(~cellfun(@isempty,TR));
+                idx = find(~cellfun('isempty',TR));
                 TR = TR(idx); 
                 [~,Locb] = ismember(idx,inl);
                 Locb = reshape(nonzeros(Locb),1,[]);
