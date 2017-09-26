@@ -80,7 +80,6 @@ figure;imshow(img.data);
 
 for k = 1:1
     [model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
-
     for k = 1:numel(model_list)
         [rimg,ud_img] = ...
             IMG.render_rectification([dr(:).u],model_list(k),img.data);
