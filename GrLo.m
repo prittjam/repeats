@@ -4,6 +4,9 @@ classdef GrLo < handle
         metric_solver = [];
         cc = [];
         max_iter = 10;
+        
+        vqT = 21.026;
+        reprojT = 21.026;
     end
     
     methods(Access = private)
@@ -18,8 +21,9 @@ classdef GrLo < handle
     end
 
     methods
-        function this = GrLo(cc,varargin)
+        function this = GrLo(cc,motion_model,varargin)
             this.cc = cc;
+            this.motion_model = motion_model;
             [this,~] = cmp_argparse(this,varargin{:});
             switch this.motion_model
               case 't'
@@ -58,13 +62,15 @@ classdef GrLo < handle
             G_sv(inl) = findgroups([dr(inl).Gapp]);
 
             [good_corresp,Rtij00] = ...
-                resection(x,model0,G_sv,this.motion_model); 
+                resection(x,model0,G_sv,this.motion_model, ...
+                          'vqT',this.vqT); 
 
             if ~isempty(good_corresp)
                 Hinf = model0.Hinf;
                 [rtree,X,Rtij0,Tlist] = ...
                     make_scene_graph(x,good_corresp,model0,Rtij00);
-                Gm = segment_motions(x,model0,rtree.Edges.EndNodes',Rtij0);
+                Gm = segment_motions(x,model0,rtree.Edges.EndNodes',Rtij0, ...
+                                     'vqT',this.vqT);
                 [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
                 Gs = nan(1,numel(dr));
                 inl2 = unique(rtree.Edges.EndNodes);
@@ -78,16 +84,13 @@ classdef GrLo < handle
                 
                 inl = find(mle_model.Gs);
                 
-                % sigma = max([1.4826*mad(err) 1]);
-                sigma = 1;
-                T = 21.026*sigma^2;
-                err2 = T*ones(1,numel(dr));
+                err2 = this.reprojT*ones(1,numel(dr));
                 err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
                 loss = sum(err2);
             
                 mle_res = struct('loss', loss, ...
                                  'err', err2, ...
-                                 'cs', err2 < T);
+                                 'cs', err2 < this.reprojT);
             else
                 mle_stats = [];
                 mle_model = [];

@@ -3,11 +3,17 @@ if nargin < 4
     num_planes = 1;
 end
 
+sigma = 1;
+threshold_list = { 'extentT', log(1.1)/2, ...
+                   'vqT',  21.026*sigma^2/2, ...
+                   'reprojT', 21.026*sigma^2/2 };
+
 corresp = cmp_splitapply(@(u) { VChooseK(u,2)' }, ...
                          1:numel(dr),[dr(:).Gapp]);
 corresp = [ corresp{:} ];
 
-[ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp);
+[ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp, ...
+                               threshold_list);
 
 for k = 1:num_planes
     [model0,~,~,stats_list(k)] = ransac.fit(dr,corresp);
@@ -18,7 +24,7 @@ for k = 1:num_planes
                                     'MaxIterations',inf);
 end
 
-function [ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp)
+function [ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp,varargin)
 switch motion_model
   case 't'
     solver = RANSAC.WRAP.laf2x2_to_HaHp();
@@ -27,6 +33,6 @@ switch motion_model
 end
 
 sampler = GrSampler(dr,corresp,2);
-eval = GrEval();
-lo = GrLo(cc,'motion_model',motion_model);
+eval = GrEval(varargin{:});
+lo = GrLo(cc,motion_model,varargin{:});
 ransac = RANSAC.Ransac(solver,sampler,eval,'lo',lo);

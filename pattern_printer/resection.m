@@ -1,7 +1,6 @@
-function [good_corresp,Rtij] = resection(x,model0,G,motion_model)
-cfg = struct('sigma',1);
-
-vq_distortion = 21.026*cfg.sigma^2;
+function [good_corresp,Rtij] = resection(x,model0,G,motion_model,varargin)
+cfg = struct('vqT',21.026);
+cfg = cmp_argparse(cfg,varargin{:});
 
 switch motion_model
   case 't'
@@ -9,6 +8,7 @@ switch motion_model
   case 'Rt'
     motion_solver = 'HG.laf2xN_to_RtxN';
 end
+
 Hinf = model0.Hinf;
 Hinv = inv(model0.Hinf);
 
@@ -36,7 +36,7 @@ ut_i = ...
 
 d2 = sum([ut_j-x(:,corresp(2,:)); ...
           ut_i-x(:,corresp(1,:))].^2);
-inl = find(double(d2 < vq_distortion));
+inl = find(double(d2 < cfg.vqT));
 good_corresp = corresp(:,inl);
 Rtij = Rtij(:,inl);
 

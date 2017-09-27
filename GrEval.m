@@ -1,11 +1,11 @@
 classdef GrEval < handle
     properties    
-        T = log(1.1);
+        extentT = log(1.1);
     end
     
     methods
-        function this = GrEval2(varargin)
-            this = cmp_argparse(this,varargin{:});
+        function this = GrEval(varargin)
+            [this,~] = cmp_argparse(this,varargin{:});
         end        
         
         function [loss,E] = calc_loss(this,dr,corresp,M)         
@@ -19,13 +19,13 @@ classdef GrEval < handle
 
             E = max(abs(lr)); 
 
-            E(isnan(E)) = this.T;
-            E(E > this.T) = this.T;
+            E(isnan(E)) = this.extentT;
+            E(E > this.extentT) = this.extentT;
             loss = sum(E);
         end        
         
         function cs = calc_cs(this,E)
-            cs = E < this.T;
+            cs = E < this.extentT;
         end                        
     end
 end
