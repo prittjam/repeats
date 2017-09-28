@@ -1,7 +1,7 @@
 function [timg,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
 
-    cfg.align = 'Similarity';
+    cfg.registration = 'Similarity';
     cfg.ru_xform = maketform('affine',eye(3));
     cfg.good_points = [];
     cfg.fill = [255 255 255]';
@@ -67,19 +67,19 @@ function [timg,T,A] = rectify(img,H,varargin)
                    maketform('projective',H'), ...
                    cfg.ru_xform);
 
-    switch lower(cfg.align)
+    switch lower(cfg.registration)
       case 'affinity'
         assert(~isempty(cfg.good_points), ...
-               ['You cannot align the rectification without inliers!']);
-        [T,A] = align_by_affinity(cfg.good_points,T0);
+               ['You cannot register the rectification without inliers!']);
+        [T,A] = register_by_affinity(cfg.good_points,T0);
         
       case 'similarity'
         assert(~isempty(cfg.good_points), ...
-               ['You cannot align the rectification without inliers!']);
-        [T,A] = align_by_similarity(cfg.good_points,T0);
+               ['You cannot register the rectification without inliers!']);
+        [T,A] = register_by_similarity(cfg.good_points,T0);
         
       case 'scale'
-        [T,A] = align_by_scale(img,T0);
+        [T,A] = register_by_scale(img,T0);
     end
 
     tbounds = tformfwd(T,border);
@@ -104,7 +104,7 @@ function [timg,T,A] = rectify(img,H,varargin)
         timg(find(BW3)) = fill(find(BW3));
     end
     
-function [T,A] = align_by_similarity(u,T0)
+function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
     A = HG.pt2x2_to_sRt([transpose(v);u]);
@@ -112,7 +112,7 @@ function [T,A] = align_by_similarity(u,T0)
                   maketform('affine',transpose(A)), ...
                   T0);
 
-function [T,A] = align_by_affinity(u,T0)
+function [T,A] = register_by_affinity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
     A = HG.pt3x2_to_A([transpose(v);u]);
@@ -120,7 +120,7 @@ function [T,A] = align_by_affinity(u,T0)
                   maketform('affine',transpose(A)), ...
                   T0);
 
-function [T,S] = align_by_scale(img,T0)
+function [T,S] = register_by_scale(img,T0)
     nx = size(img,2);
     ny = size(img,1);
 
