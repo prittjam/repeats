@@ -18,6 +18,13 @@ if ~exist('+MMS','dir')
     addpath(fullfile([opt_path 'mex']));
 end
 
+if ~exist('cvtk2_init','file')
+    cvtk_path = fullfile(src_path, '/cvtk2');
+    cd(cvtk_path);
+    feval('cvtk2_init');
+    cd(cur_path);
+end
+
 if ~exist('cvdb_init','file')
     cvdb_path = fullfile(src_path, '/cvdb');
     cd(cvdb_path);
