@@ -27,12 +27,12 @@ classdef Ransac < handle
             this.eval = eval;
         end
         
-        function lo_res = do_lo(this,meas,corresp,res)
+        function [loM,lo_res] = do_lo(this,meas,corresp,res)
+            loM = [];
+            lo_res = [];
             if ~isempty(this.lo)
-                lo_res = this.lo.fit(meas,corresp,res);
+                [loM,lo_res] = this.lo.fit(meas,corresp,res);
                 this.stats.lo_count = this.stats.lo_count+1;
-            else
-                lo_res = res;
             end
         end
 
@@ -48,6 +48,7 @@ classdef Ransac < handle
             N = inf;
             res = struct('loss', inf, ...
                          'cs', 0);
+            optM = [];
             lo_res = res;
             opt_res = res;
             
@@ -115,8 +116,9 @@ classdef Ransac < handle
                             (res0.loss < res.loss) && ...
                             (sum(res0.cs) >= sum(res.cs))
                         res = res0;
-                        lo_res = this.do_lo(meas,corresp,res); 
+                        [loM,lo_res] = this.do_lo(meas,corresp,res); 
                         if (lo_res.loss < opt_res.loss)
+                            optM = loM;
                             opt_res = lo_res;
                         end
                         % Update estimate of est_trial_count, the number
@@ -134,10 +136,9 @@ classdef Ransac < handle
             end
             
             if this.stats.lo_count == 0
-                opt_res = this.do_lo(meas,corresp,res);
+                [optM,opt_res] = this.do_lo(meas,corresp,res);
             end
-
-            optM = opt_res.M;
+            
             this.stats.time_elapsed = toc;               
             stats = this.stats;
         end
