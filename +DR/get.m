@@ -1,4 +1,4 @@
-function [fdr,res] = get_dr(img,cid_cache,varargin)
+function [fdr,res] = get(img,cid_cache,varargin)
 fdr = [];
 res = [];
 
@@ -68,7 +68,8 @@ if nargout == 1
 end
 
 if isempty(fdr) 
-    [res_list,~,name_list] = cid_cache.get_chains(dr_chains,'',@extract,img);
+    [res_list,~,name_list] = ...
+        cid_cache.get_chains(dr_chains,'',@extract,img);
     if cfg.reflection
         rimg = img.transform(@IMG.reflect);
         [res_list2,~,name_list2] = ...
