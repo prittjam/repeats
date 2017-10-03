@@ -1,8 +1,7 @@
-function un = add_noise(u,ccd_sigma)
-N = size(u,2);
+function xn = add_noise(x,ccd_sigma)
+N = size(x,2);
 if (ccd_sigma > 0)
-    un = u+[normrnd(0,ccd_sigma,[2 N]); ...
-              zeros(1,N)];
+    xn = x+transpose(mvnrnd([0 0 0],diag([ccd_sigma ccd_sigma 0]),size(x,2)));
 else 
-    un = u;
+    xn = x;
 end
