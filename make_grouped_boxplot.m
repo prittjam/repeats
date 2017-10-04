@@ -7,7 +7,8 @@ cfg.yticks = [];
 
 cfg = cmp_argparse(cfg,varargin{:});
 
-item_names = arrayfun(@(x) char(x),unique(res.(group_list{end})), ...
+item_names = arrayfun(@(x) char(x), ...
+                      unique(res.(group_list{end})), ...
                       'UniformOutput',false);
 
 for k = 1:numel(group_list)
@@ -22,7 +23,11 @@ end
 
 num_categories = numel(uval{1});
 num_groups = numel(uval{2});
-num_items = numel(uval{3});
+if numel(uval) < 3
+    num_items = 1;
+else
+    num_items = numel(uval{3});
+end
 
 colors = distinguishable_colors(num_items);
 
@@ -33,6 +38,7 @@ for k1 = 1:size(groups,1)
     ind = find(in);
     data(:,k1) = res{ind,data_field};
 end
+
 
 figure('Color',[1 1 1],'Position',[178 457 1400 521]);
 main_ax = axes; % create a temporary axes
@@ -54,16 +60,23 @@ for k = 1:num_categories
     mean([1:num_groups]);
     step_size = (num_groups+1)/2;
 
-    ax.XTick =  1:num_groups*num_items;
-    ax.XTickLabel = arrayfun(@(x) num2str(x), ...
-                             groups((num_groups*num_items)*(k-1)+ ...
-                                    1:(num_groups*num_items)*k,2), ...
-                             'UniformOutput',false); 
+    if num_items > 1
+        ax.XTick =  1:num_groups*num_items;
+        ax.XTickLabel = arrayfun(@(x) num2str(x), ...
+                                 groups((num_groups*num_items)*(k-1)+ ...
+                                        1:(num_groups*num_items)*k,2), ...
+                                 'UniformOutput',false); 
+    else
+        ax.XTick = [];
+    end
+
     xrule = ax.XAxis;
     xrule.FontSize = 10;
 
     % set the ylim to include all data:
-    ax.YLim = cfg.ylim;
+    if ~isempty(cfg.ylim)
+        ax.YLim = cfg.ylim;
+    end
     
     box off
     
@@ -79,9 +92,7 @@ for k = 1:num_categories
         ax.YTick = [];
     end
 
-    xlabel(num2str(categories(k)), ...
-           'FontSize',14); % the labels for the
-                                    % num_categories
+    xlabel(num2str(categories(k)),'FontSize',14); 
     ax.Position = [corner(k) 0.11 width 0.8];
 
     if ~isempty(cfg.truth)
