@@ -5,12 +5,15 @@ X = [pts(:).X];
 w = max(X(1,:))-min(X(1,:));
 h = max(X(2,:))-min(X(2,:));
 
-cam_dist = 1.5*sqrt(h^2+w^2)/2/sin(cam.hfov/2);
+cam_dist = w/2/sin(cam.hfov/2);
 
 muX = mean(X(1:3,:),2);
 
 phi = rand(1,1)*2*pi;
 theta = 60*pi/180;
+
+phi =0;
+theta = 0;
 
 c = muX+[cam_dist*sin(theta)*cos(phi); ...
          cam_dist*sin(theta)*sin(phi); ...
@@ -24,6 +27,11 @@ look_down = -look_up/norm(look_up);
 look_right = cross(look_down,look_at);
 
 R = [look_right'; look_down'; look_at'];
+%keyboard;
+R = eye(3);
 P = cam.K*[R -R*c];
 
+keyboard;
+figure;
+render_scene(P,[scene(:).X]);
 

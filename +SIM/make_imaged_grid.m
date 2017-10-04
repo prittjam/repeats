@@ -14,7 +14,6 @@ cam.P = P;
 X = [scene(:).X];
 u = PT.renormI(P*X);
 
-
 ud = CAM.rd_div(u,cam.cc,cfg.lambda);
 udn = CAM.add_noise(ud,cfg.ccd_noise);
 scene_num = 1;
