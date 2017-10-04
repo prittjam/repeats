@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef random_coplanar_pattern < SIM.coplanar_pattern
+classdef random_coplanar_pattern < GRID.coplanar_pattern
     properties
         border = [];
         w = [];
@@ -30,7 +30,7 @@ classdef random_coplanar_pattern < SIM.coplanar_pattern
             
             num_lafs = rv(3);
             
-            this@SIM.coplanar_pattern(w2,h2,dx,dy, ...
+            this@GRID.coplanar_pattern(w2,h2,dx,dy, ...
                                       num_lafs,num_rows,num_cols);
             this.border = [0 w w 0; 0 0 h h; 0 0 0 0; 1 1 1 1];            
             this.h = dims(1);            
