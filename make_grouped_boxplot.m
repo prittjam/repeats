@@ -105,7 +105,6 @@ for k = 1:num_categories
     if k == num_categories
         boxes = findobj(gca, 'Tag', 'Box');
         tmp = boxes(end:-1:end-num_items+1);
-        keyboard;
         leg1 = legend(tmp, item_names{:});
         set(leg1,'Interpreter','Latex');
     end
