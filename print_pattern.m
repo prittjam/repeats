@@ -1,0 +1,6 @@
+function xp = print_pattern(model)
+[Xp,inl] = sfm(model_list(k).X, ...
+               model_list(k).Gs, ...
+               model_list(k).Rti);
+Hinv = inv(model_list(k).H);
+xp = LAF.renormI(blkdiag(Hinv,Hinv,Hinv)*Xp);
