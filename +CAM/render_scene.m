@@ -4,7 +4,7 @@ function [] = render_scene(P,X)
 look_right = R(1,:);
 look_down = R(2,:);
 look_at = R(3,:);
-R = [look_right'; look_down'; look_at'];
+R = [look_right; look_down; look_at];
 P2 = K*[R -R*c];
 
 figure;
