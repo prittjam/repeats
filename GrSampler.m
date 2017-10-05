@@ -35,19 +35,6 @@ classdef GrSampler < handle
                     break
                 end
             end
-%            while true
-%                t = mnrnd(2,this.p,1);
-%                indt = find(t);
-%                c = repelem(indt,t(indt));
-%                idx1 = find(this.labeling == c(1));
-%                idx2 = find(this.labeling == c(2));
-%                idx = [idx1(randperm(numel(idx1),k)) ...
-%                       idx2(randperm(numel(idx2),k)) ];
-%                
-%                if numel(unique(idx)) == 4
-%                    break
-%                end
-%            end
         end
         
         function trial_count = update_trial_count(this,corresp,cs)

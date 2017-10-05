@@ -21,15 +21,15 @@ for k = 1:num_planes
     cs = eval.calc_cs(E);
     res = struct('cs',cs);
     [model_list(k),lo_res] = lo.fit(dr,corresp,res, ...
-                                    'MaxIterations',inf);
+                                    'MaxIterations',30);
 end
 
 function [ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp,varargin)
 switch motion_model
   case 't'
-    solver = SOLVER.laf2x2_to_HaHp();
+    solver = SOLVER.laf2x2_to_AHinf();
   case 'Rt'
-    solver = SOLVER.laf2x2_to_HaHp();
+    solver = SOLVER.laf2x2_to_AHinf();
 end
 
 sampler = GrSampler(dr,corresp,2);

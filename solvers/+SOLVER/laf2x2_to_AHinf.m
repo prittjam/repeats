@@ -1,15 +1,15 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf2x2_to_HaHp
+classdef laf2x2_to_AHinf
     properties
         mcs = 2;
         mss = 2;
     end
     
     methods
-        function this = laf2x2_to_HaHp()
+        function this = laf2x2_to_AHinf()
         end
-
+        
         function M = fit(this,dr,corresp,idx)            
             m  = reshape(corresp(:,idx),1,[]);
 
