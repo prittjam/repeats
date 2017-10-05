@@ -1,10 +1,7 @@
 function Gm = segment_motions(x,model,corresp,rt0,varargin)
-cfg.sigma = 1;
+cfg.vqT = 21.026;
 cfg.num_codes = 1e3;
-
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
-
-vq_distortion = 21.026*cfg.sigma^2;
 
 Hinf = model.Hinf;
 Hinv = inv(Hinf);
@@ -42,7 +39,7 @@ ut_i = LAF.rd_div(LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
 d2 = sum([ut_j-x(:,c2);  ...
           ut_i-x(:,c1)].^2);
 d2 = reshape(d2,M,N);
-K = double(d2 < vq_distortion);
+K = double(d2 < cfg.vqT);
 
 is_valid_ii = find(any(K,2));
 
@@ -54,7 +51,7 @@ code_ind = find(w>0);
 d2c = d2(:,code_ind);
 [min_d2c,Gm] = min(d2c,[],2);
 
-Gm(min_d2c > vq_distortion) = nan;
+Gm(min_d2c > cfg.vqT) = nan;
 Gm = findgroups(Gm);
 
 assert(sum(~isnan(Gm))==size(corresp,2), ...
