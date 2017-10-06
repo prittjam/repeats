@@ -1,9 +1,10 @@
-function [] = make_grouped_boxplot(res,data_field,group_list,varargin)
+function main_ax = make_grouped_boxplot(res,data_field,group_list,varargin)
 cfg.ylim = [];
 cfg.xlabel = [];
 cfg.ylabel = [];
 cfg.truth = [];
 cfg.yticks = [];
+cfg.location = [];
 
 cfg = cmp_argparse(cfg,varargin{:});
 
@@ -23,13 +24,8 @@ end
 
 num_categories = numel(uval{1});
 num_groups = numel(uval{2});
-if numel(uval) < 3
-    num_items = 1;
-else
-    num_items = numel(uval{3});
-end
 
-colors = distinguishable_colors(num_items);
+colors = distinguishable_colors(num_groups);
 
 groups = allcomb(uval{:});
 for k1 = 1:size(groups,1)
@@ -41,37 +37,33 @@ end
 
 
 figure('Color',[1 1 1],'Position',[178 457 1400 521]);
+
 main_ax = axes; % create a temporary axes
+set(main_ax,'XColor','w','YColor','w','TickDir','out')
+xrule = main_ax.XAxis;
+xrule.FontSize = 14;
+xlabel(main_ax,'Noise', ...
+       'Interpreter','Latex', ...
+       'Color','k'); 
+
 % we get the measurements of the plotting area:
 pos = main_ax.Position;
 % and divide it to our data:
 width = pos(3)/num_categories; % the width of each group
 % the bottom left corner of each group:
 corner = linspace(pos(1),pos(3)+pos(1),num_categories+1);
-clf % clear the area!
-% Now we plot everything in a loop:
 
 categories = uval{1};
+
 for k = 1:num_categories
     ax = axes;
-    boxplot(ax,data(:,(num_groups*num_items)*(k-1)+ ...
-                    1:(num_groups*num_items)*k), ...
-            'Colors', repmat(colors,num_groups,1));
-    mean([1:num_groups]);
-    step_size = (num_groups+1)/2;
-
-    if num_items > 1
-        ax.XTick =  1:num_groups*num_items;
-        ax.XTickLabel = arrayfun(@(x) num2str(x), ...
-                                 groups((num_groups*num_items)*(k-1)+ ...
-                                        1:(num_groups*num_items)*k,2), ...
-                                 'UniformOutput',false); 
-    else
-        ax.XTick = [];
-    end
-
+    boxplot(ax,data(:,num_groups*(k-1)+1:(num_groups)*k), ...
+            'Colors', repmat(colors,num_groups,1), ...
+            'Symbol','k+');
+    ax.XTick = mean(reshape(1:num_groups,2,[]));
+    ax.XTickLabel = num2str(categories(k)); 
     xrule = ax.XAxis;
-    xrule.FontSize = 10;
+    xrule.FontSize = 14;
 
     % set the ylim to include all data:
     if ~isempty(cfg.ylim)
@@ -92,8 +84,7 @@ for k = 1:num_categories
         ax.YTick = [];
     end
 
-    xlabel(num2str(categories(k)),'FontSize',14); 
-    ax.Position = [corner(k) 0.11 width 0.8];
+    ax.Position = [corner(k) 0.125 width 0.775];
 
     if ~isempty(cfg.truth)
         hold on;
@@ -101,14 +92,15 @@ for k = 1:num_categories
         line([bounds(1) bounds(2)],[cfg.truth cfg.truth],'Color','c');
         hold off;
     end
-    
-    if k == num_categories
-        boxes = findobj(gca, 'Tag', 'Box');
-        tmp = boxes(end:-1:end-num_items+1);
-        leg1 = legend(tmp, item_names{:});
+
+    if k == 1
+        boxes = flipud(findobj(gca, 'Tag', 'Box'));
+        tmp = boxes(1:numel(boxes));
+        leg1 = legend(tmp, item_names{:}, ...
+                      'Location',cfg.location);
+        set(leg1, 'FontSize', 12);
         set(leg1,'Interpreter','Latex');
     end
 end
-% and finally we place the title:
-main_ax = axes('Position',[corner(1) 0.11 width*num_categories 0.815]);
-axis off
+
+%axis off
