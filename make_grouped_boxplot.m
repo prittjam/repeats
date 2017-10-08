@@ -60,7 +60,7 @@ for k = 1:num_categories
     boxplot(ax,data(:,num_groups*(k-1)+1:(num_groups)*k), ...
             'Colors', repmat(colors,num_groups,1), ...
             'Symbol','k+');
-    ax.XTick = mean(reshape(1:num_groups,2,[]));
+    ax.XTick = num_groups/2;
     ax.XTickLabel = num2str(categories(k)); 
     xrule = ax.XAxis;
     xrule.FontSize = 14;
