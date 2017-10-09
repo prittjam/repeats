@@ -11,11 +11,9 @@ cfg = cmp_argparse(cfg,varargin{:});
 item_names = arrayfun(@(x) [char(x)], ...
                       unique(res.(group_list{end})), ...
                       'UniformOutput',false);
-
 for k = 1:numel(group_list)
     group_field = group_list{k};
     [G{k},uval{k}] = findgroups(res.(group_field));
-    
     if iscategorical(uval{k})
         uval{k} = grp2idx(uval{k});
         res.(group_field) = grp2idx(res.(group_field));
@@ -66,7 +64,6 @@ for k = 1:num_categories
     ax.XTickLabel = num2str(categories(k)); 
     xrule = ax.XAxis;
     xrule.FontSize = 14;
-
 
     % set the ylim to include all data:
     if ~isempty(cfg.ylim)
