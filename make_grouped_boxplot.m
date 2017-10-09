@@ -37,11 +37,13 @@ end
 
 
 figure('Color',[1 1 1],'Position',[178 457 1400 521]);
-
 main_ax = axes; % create a temporary axes
 set(main_ax,'XColor','w','YColor','w','TickDir','out')
 xrule = main_ax.XAxis;
 xrule.FontSize = 14;
+main_ax.XTick = [];
+main_ax.XTickLabel = []; 
+axis off
 xlabel(main_ax,'Noise', ...
        'Interpreter','Latex', ...
        'Color','k'); 
@@ -56,7 +58,7 @@ corner = linspace(pos(1),pos(3)+pos(1),num_categories+1);
 categories = uval{1};
 
 for k = 1:num_categories
-    ax = axes;
+    ax = axes;  
     boxplot(ax,data(:,num_groups*(k-1)+1:(num_groups)*k), ...
             'Colors', repmat(colors,num_groups,1), ...
             'Symbol','k+');
@@ -64,6 +66,7 @@ for k = 1:num_categories
     ax.XTickLabel = num2str(categories(k)); 
     xrule = ax.XAxis;
     xrule.FontSize = 14;
+
 
     % set the ylim to include all data:
     if ~isempty(cfg.ylim)
@@ -98,9 +101,7 @@ for k = 1:num_categories
         tmp = boxes(1:numel(boxes));
         leg1 = legend(tmp, item_names{:}, ...
                       'Location',cfg.location);
-        set(leg1, 'FontSize', 12);
+        set(leg1, 'FontSize', 14);
         set(leg1,'Interpreter','Latex');
     end
 end
-
-%axis off
