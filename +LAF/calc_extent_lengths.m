@@ -1,0 +1,3 @@
+function d = calc_extent_lengths(u)
+d = [sqrt(sum((u(1:2,:)-u(4:5,:)).^2)); ...
+     sqrt(sum((u(7:8,:)-u(4:5,:)).^2))];
