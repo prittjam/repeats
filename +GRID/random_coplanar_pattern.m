@@ -15,7 +15,7 @@ classdef random_coplanar_pattern < GRID.coplanar_pattern
             
             params = [10 15; ...   % number of instance rows
                       10 15; ...  % number of instance columns           
-                      1 1];  % number of lafs in template [nlafs];
+                      1 2];  % number of lafs in template [nlafs];
             
             rv = params(:,1)+round((params(:,2)-params(:,1)).*rand(3,1));
             
