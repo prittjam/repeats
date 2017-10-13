@@ -6,6 +6,7 @@ cfg.truth = [];
 cfg.yticks = [];
 cfg.location = [];
 cfg.colors = [];
+cfg.symbol = 'k';
 
 cfg = cmp_argparse(cfg,varargin{:});
 
@@ -42,7 +43,7 @@ figure;
 ax = axes; % create a temporary axes
 set(ax,'fontsize',10);
 boxplot(ax,data, 'Colors', cfg.colors, ...
-        'Symbol','k+');
+        'Symbol',cfg.symbol);
 
 xticks((0:num_groups-1)*(num_groups)+(num_groups+1)/2);
 xticklabels(num2str(categories));
