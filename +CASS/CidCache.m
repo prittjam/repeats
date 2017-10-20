@@ -76,7 +76,7 @@ classdef CidCache < handle
             end
         end
         
-        function [res,is_found] = get_chains(this,chains,init_parents,fmake,varargin)
+        function [res,is_found,name_list] = get_chains(this,chains,init_parents,fmake,varargin)
             if nargin < 3
                 init_parents = '';
             elseif ~isempty(init_parents)
@@ -84,15 +84,16 @@ classdef CidCache < handle
             end
             is_found = cell(1,numel(chains));
             res = cell(numel(chains),1);
-            
+            name_list = {};
+
             for k = 1:numel(chains)
                 name = init_parents;
                 res{k} = cell(1,numel(chains{k}));
                 is_found{k} = false(1,numel(chains{k}));
                 for k1 = 1:numel(chains{k})
-                    name = [name chains{k}{k1}.get_uname() ':'];
-                    [res{k}{k1},is_found{k}(k1)] = ...
-                        this.get('dr',name(1:end-1));
+                    name_list{k}{k1} = [name chains{k}{k1}.get_uname()];
+                    name = [name_list{k}{k1} ':'];
+                    [res{k}{k1},is_found{k}(k1)] = this.get('dr',name(1:end-1));
                 end
             end
             
