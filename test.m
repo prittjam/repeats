@@ -81,7 +81,7 @@ for k = 1:1
         rimg= ...
             IMG.render_rectification([dr(:).u],model_list(k),img.data);
         figure;imshow(rimg);
-        IMG.output_rectification(img.url,rimg,output_prefix);
+        IMG.output_rectification(img.url,rimg,output_prefix); 
         
 %        h = draw_results(img,rimg);    
 %        output_reconstruction(img.data,model_list{k}.u_corr, ...
