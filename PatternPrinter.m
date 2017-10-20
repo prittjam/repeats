@@ -207,6 +207,7 @@ classdef PatternPrinter < handle
             end
 
             [q,H,X,Rtij] = this.unpack(dz);
+
             [Gs,Rti,Gm] = composite_xforms(this.Tlist, ...
                                         this.Gm,this.inverted, ...
                                         Rtij,X,size(this.x,2)); 
