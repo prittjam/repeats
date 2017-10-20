@@ -2,9 +2,9 @@ function [] = test()
 greedy_repeats_init();
 %ex = struct('img_names','OLD_rot_001.jpg', ...
 %            'motion_model', 'Rt');
-ex = struct('img_names', {'circular_window.png'}, ...
-            'motion_model', 'Rt');
-%%%%%%%%%%%%%%%
+%ex = struct('img_names', {'circular_window.png'}, ...
+%            'motion_model', 'Rt');
+%%%%%%%%%%%%%%%%
 %ex = struct('img_names', {'crochet9.png'}, ...
 %            'motion_model', 'Rt');
 %
@@ -14,7 +14,8 @@ ex = struct('img_names', {'circular_window.png'}, ...
 % ex = struct('img_names', {'crochet.png'}, ...
 %            'motion_model', 'Rt');
 %%%%%%%%%%
-
+ex = struct('img_names', {'kitkat.jpg'}, ...
+            'motion_model', 'Rt');
 
 %%%\%%%%%%%%%%%%%%
 %ex = struct('img_names', {'building_us.jpg'}, ...
@@ -77,23 +78,23 @@ figure;imshow(img.data);
 for k = 1:1
     [model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
     for k = 1:numel(model_list)
-        [rimg,ud_img] = ...
+        rimg= ...
             IMG.render_rectification([dr(:).u],model_list(k),img.data);
         figure;imshow(rimg);
-            IMG.output_rectification(img.data,rimg,ud_img,output_prefix);
-            h = draw_results(img,rimg);    
-            imshow(img.data);
-            output_reconstruction(img.data,model_list{k}.u_corr, ...
-                                  model_list{k},output_prefix);
-            matlab2tikz('figurehandle',gcf, ...
-                        'filename','fig.tex' , ...
-                        'standalone', false);
+        IMG.output_rectification(img.url,rimg,output_prefix);
+        
+%        h = draw_results(img,rimg);    
+%        output_reconstruction(img.data,model_list{k}.u_corr, ...
+%                              model_list{k},output_prefix);
+%        matlab2tikz('figurehandle',gcf, ...
+%                    'filename','fig.tex' , ...
+%                    'standalone', false);
+    
     end
-
 end
 
 %img = Img('url','download2.jpg');       
 %cid_cache = CASS.CidCache(img.cid,cache_params{:}); 
-[~,name,~] = fileparts(img.url);
-save(['res/' name], 'dr','model_list','stats_list','img');
-%keyboard;
+%[~,name,~] = fileparts(img.url);
+%save(['res/' name], 'dr','model_list','stats_list','img');
+%%keyboard;
