@@ -11,6 +11,7 @@ for k1 = 1:numel(Tlist)
     Gs(T(1,1)) = k1;
     for k2 = 1:size(T,1);
         gm = Gm(T(k2,1),T(k2,2));
+
         Gmj([T(k2,1) T(k2,2)]) = gm;
         if inverted(T(k2,1),T(k2,2))
             mtxRti(:,:,T(k2,2)) = ...
