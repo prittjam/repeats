@@ -172,7 +172,9 @@ classdef CidCache < handle
             end
             if ~is_found && nargin > 3
                 val = feval(fmake,varargin{:});
-                this.put(table,name,val);
+                if item.write_cache
+                    this.put(table,name,val);
+                end
                 is_found = true;
             end
         end
