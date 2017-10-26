@@ -74,5 +74,7 @@ line(xx,yy,'Color',[0.8 0.8 0.8]);
 %set(leg1, 'FontSize', 10);
 %set(leg1,'Interpreter','Latex');
 
-axis square;
+%axis square;
 %legend('boxoff');
+
+pbaspect([16 9 1]);
