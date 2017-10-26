@@ -56,7 +56,7 @@ classdef coplanar_pattern < handle
             G = reshape(G,1,[]);
             rows = reshape(rows,1,[]);
             cols = reshape(cols,1,[]);
-
+            
             X = [];
             for c = 1:this.num_cols
                 for r = 1:this.num_rows
@@ -67,7 +67,7 @@ classdef coplanar_pattern < handle
                         cat(2,this.X2,M*T{r,c}*reshape(x,3,[]));
                 end
             end
-            this.X = X;
+            
             pts = struct('X', mat2cell(X,4,ones(1,size(X,2))), ...
                          'G', mat2cell(G,1,ones(1,numel(G))), ...
                          'rows', mat2cell(rows,1,ones(1,numel(rows))), ...
