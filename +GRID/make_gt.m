@@ -8,7 +8,9 @@ m = [scene(:).rows; ...
      scene(:).cols]';
 [~,ind] = ismember([rows;cols]',m,'rows'); 
 
-x = PT.renormI(P*[scene(ind([1 2])).X scene(ind([3 4])).X]);
+X = [scene(ind([1 2])).X scene(ind([3 4])).X];
+X = X(5:8,:);
+x = PT.renormI(P*X);
 
 [xn,A] = normalize(x,cam);
 

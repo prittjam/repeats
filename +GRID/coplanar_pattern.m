@@ -45,33 +45,50 @@ classdef coplanar_pattern < handle
             end
         end
         
-        function pts = make(this)
+        function feat = make(this,varargin)
+            cfg = struct('feature_type','laf');
+            cfg = cmp_argparse(cfg,varargin{:});
+            
             [u,x] = this.make_template();
             T = this.make_template_xforms();
             ind2 = [1:this.num_lafs];
 
             M = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-            [G,rows,cols] = ndgrid(1:3*this.num_lafs,1:this.num_rows,1: ...
-                                   this.num_cols);
-            G = reshape(G,1,[]);
-            rows = reshape(rows,1,[]);
-            cols = reshape(cols,1,[]);
             
-            X = [];
             for c = 1:this.num_cols
                 for r = 1:this.num_rows
                     ind = this.num_lafs*this.num_cols*(r-1)+ ...
                           this.num_lafs*(c-1)+[1:this.num_lafs];
-                    X = cat(2,X,M*T{r,c}*reshape(u,3,[]));
-                    this.X2 = ...
-                        cat(2,this.X2,M*T{r,c}*reshape(x,3,[]));
+                    this.X = cat(2,this.X,M*T{r,c}*reshape(u,3,[]));
                 end
             end
             
-            pts = struct('X', mat2cell(X,4,ones(1,size(X,2))), ...
-                         'G', mat2cell(G,1,ones(1,numel(G))), ...
-                         'rows', mat2cell(rows,1,ones(1,numel(rows))), ...
-                         'cols', mat2cell(cols,1,ones(1,numel(cols))));
+            switch cfg.feature_type
+              case 'point'
+                  [G,rows,cols] = ndgrid(1:3*this.num_lafs,1:this.num_rows,1: ...
+                                         this.num_cols);
+                  G = reshape(G,1,[]);
+                  rows = reshape(rows,1,[]);
+                  cols = reshape(cols,1,[]);
+                  
+                  feat = struct('X', mat2cell(this.X,4,ones(1,size(this.X,2))), ...
+                                'G', mat2cell(G,1,ones(1,numel(G))), ...
+                                'rows', mat2cell(rows,1,ones(1,numel(rows))), ...
+                                'cols', mat2cell(cols,1,ones(1,numel(cols))));
+              case 'laf'
+                [G,rows,cols] = ndgrid(1:this.num_lafs, ...
+                                       1:this.num_rows, ...
+                                       1:this.num_cols);
+                G = reshape(G,1,[]);
+                rows = reshape(rows,1,[]);
+                cols = reshape(cols,1,[]);
+                Xlaf = reshape(this.X,12,[]);
+
+                feat = struct('X', mat2cell(Xlaf,12,ones(1,size(Xlaf,2))), ...
+                              'G', mat2cell(G,1,ones(1,numel(G))), ...
+                              'rows', mat2cell(rows,1,ones(1,numel(rows))), ...
+                              'cols', mat2cell(cols,1,ones(1,numel(cols))));
+            end
         end
     end
 end
