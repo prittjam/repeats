@@ -55,7 +55,7 @@ classdef Ransac < handle
             has_model = false;
             while true         
                 for k = 1:this.sampler.max_num_retries
-                    idx = this.sampler.sample(meas,this.model.mss);
+                    idx = this.sampler.sample(meas,corresp);
                     is_sample_good = ...
                         this.model.is_sample_good(meas,corresp,idx);
                     if is_sample_good
