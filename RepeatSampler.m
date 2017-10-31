@@ -11,6 +11,7 @@ classdef RepeatSampler < handle
 
         freq = []
         Z = []
+        k = []
     end
     
     methods
@@ -23,6 +24,7 @@ classdef RepeatSampler < handle
             this.Z = arrayfun(@(x) nchoosek(x,2),this.freq);
             this.p = this.Z/sum(this.Z);
             this.N = sum(this.Z);
+            this.k = k;
             
             assert(this.N == size(corresp,2), ...
                    'Number of total correspondences is incorrect');
@@ -30,8 +32,8 @@ classdef RepeatSampler < handle
 
         function ind = sample(this,dr,k,varargin)
             while true
-                ind = reshape(randsample(this.N,2),1,[]);
-                if numel(unique(ind)) == 4
+                ind = reshape(randsample(this.N,this.k),1,[]);
+                if numel(unique(ind)) == 2*this.k
                     break
                 end
             end
@@ -47,7 +49,7 @@ classdef RepeatSampler < handle
             p3 = dot(this.p(ind),p2);
             
             if p3 > 0
-                N = ceil(log(1-this.confidence)/log(1-p3*p3));
+                N = ceil(log(1-this.confidence)/log(1-p3^(this.k)));
             else
                 N = inf;
             end
@@ -55,7 +57,7 @@ classdef RepeatSampler < handle
             ub = min([N this.max_trial_count]);
             trial_count = max([ub this.min_trial_count]);
 
-            disp(['Inlier percentage: ' num2str(p3*p3*100,'%04.1f') ...
+            disp(['Expected inlier percentage: ' num2str(p3*100,'%04.1f') ...
                   ' |  # trials needed: ' num2str(trial_count)]);
         end
 
