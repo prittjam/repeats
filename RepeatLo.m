@@ -1,4 +1,4 @@
-classdef GrLo < handle
+classdef RepeatLo < handle
     properties
         motion_model = [];
         metric_solver = [];
@@ -21,7 +21,7 @@ classdef GrLo < handle
     end
 
     methods
-        function this = GrLo(cc,motion_model,varargin)
+        function this = RepeatLo(cc,motion_model,varargin)
             this.cc = cc;
             this.motion_model = motion_model;
             [this,~] = cmp_argparse(this,varargin{:});

@@ -1,4 +1,4 @@
-classdef GrSampler < handle
+classdef RepeatSampler < handle
     properties
         min_trial_count = 50;
         max_trial_count = 1e4;
@@ -14,7 +14,7 @@ classdef GrSampler < handle
     end
     
     methods
-        function this = GrSampler(dr,corresp,k,varargin)
+        function this = RepeatSampler(dr,corresp,k,varargin)
             [this,~] = cmp_argparse(this,varargin{:});
 
             this.labeling0 = [dr(:).Gapp];

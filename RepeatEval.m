@@ -1,10 +1,10 @@
-classdef GrEval < handle
+classdef RepeatEval < handle
     properties    
         extentT = log(1.1);
     end
     
     methods
-        function this = GrEval(varargin)
+        function this = RepeatEval(varargin)
             [this,~] = cmp_argparse(this,varargin{:});
         end        
         
