@@ -84,7 +84,7 @@ cfg = CFG.get(imparams{:});
 %init_dbs(cache_params{:});
 
 img = Img('url', ...
-          '/home/prittjam/src/gtrepeat/dggt/kitkat.jpg'); 
+          '/home/prittjam/src/greedy_repeats/DSC_4155.JPG'); 
 
 cid_cache = CASS.CidCache(img.cid, ...
                           cache_params{:});

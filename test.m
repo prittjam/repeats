@@ -71,6 +71,7 @@ cc = ([img.width img.height]'+1)/2;
 dr = DR.get(img,cid_cache, ...
                 { 'type',cfg.dr.dr_type, ...
                   'reflection', true });
+keyboard;
 dr = group_desc(dr);
 
 figure;imshow(img.data);

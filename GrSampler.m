@@ -31,7 +31,7 @@ classdef GrSampler < handle
         function ind = sample(this,dr,k,varargin)
             while true
                 ind = reshape(randsample(this.N,2),1,[]);
-                if numel(unique(ind)) == 2
+                if numel(unique(ind)) == 4
                     break
                 end
             end
