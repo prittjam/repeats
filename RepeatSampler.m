@@ -30,11 +30,11 @@ classdef RepeatSampler < handle
                    'Number of total correspondences is incorrect');
         end
 
-        function ind = sample(this,dr,k,varargin)
+        function idx = sample(this,dr,corresp,varargin)
             while true
-                ind = reshape(randsample(this.N,this.k),1,[]);
-                if numel(unique(ind)) == 2*this.k
-                    break
+                idx = randsample(this.N,this.k);
+                if numel(unique(corresp(:,idx))) == 2*this.k
+                    break;
                 end
             end
         end
@@ -62,4 +62,4 @@ classdef RepeatSampler < handle
         end
 
     end
-end
+end 
