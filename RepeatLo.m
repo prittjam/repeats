@@ -69,7 +69,7 @@ classdef RepeatLo < handle
             [good_corresp,Rtij00] = ...
                 resection(x,M0,G_sv,this.motion_model, ...
                           'vqT',this.vqT); 
-
+            
             mle_stats = [];
             mle_model = [];
             err2 = inf*ones(1,numel(dr));
@@ -79,7 +79,7 @@ classdef RepeatLo < handle
             
             if ~isempty(good_corresp)
                 [rtree,X,Rtij0,Tlist] = ...
-                    make_scene_graph(x,good_corresp,M0,Rtij00);
+                    make_scene_graph(x,good_corresp,M0,Rtij00,'vqT',this.vqT);
                 Gm = segment_motions(x,M0,rtree.Edges.EndNodes',Rtij0, ...
                                      'vqT',this.vqT);
                 [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
@@ -96,7 +96,10 @@ classdef RepeatLo < handle
                 err0 = pattern_printer.calc_err();
                 sq_err = sum(sum(reshape(err0,6,[]).^2));
                 
-                sq_err_tmp = sum(reshape(err0,6,[]).^2)
+                sq_err_tmp = sum(reshape(err0,6,[]).^2);
+                
+                figure;plot(sq_err_tmp);
+
                 if (sq_err > 1e6)
                     keyboard;
                 end
