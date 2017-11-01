@@ -34,26 +34,30 @@ classdef RepeatLo < handle
         end
         
         
-        function [mle_model,mle_res,mle_stats] = fit(this,dr,corresp,res,varargin)
+        function [mle_model,mle_res,mle_stats] = fit(this,dr,corresp,M00,res,varargin)
             cfg = struct('MaxIterations',10);
             cfg = cmp_argparse(cfg,varargin{:});
             
             inl = unique(corresp(:,logical(res.cs)));
-            G = findgroups([dr(inl).Gapp]);
-            u = [dr(inl).u];
-            Hp = HG.laf2x2_to_Hinf(u,G);            
+            if ~isfield(M00,'q')
+                G = findgroups([dr(inl).Gapp]);
+                u = [dr(inl).u];
+                Hp = HG.laf2x2_to_Hinf(u,G);            
  
-            v = LAF.renormI(blkdiag(Hp,Hp,Hp)*u);
-            Ha = this.fit_Rt(dr,v,G);
+                v = LAF.renormI(blkdiag(Hp,Hp,Hp)*u);
+                Ha = this.fit_Rt(dr,v,G);
 
-            if isempty(Ha)
-                model0 = struct('Hinf',Hp, ...
+                if isempty(Ha)
+                    M0 = struct('Hinf',Hp, ...
                                 'cc', this.cc, ...
                                 'q', 0.0);
+                else
+                    M0 = struct('Hinf',Ha*Hp, ...
+                                'cc', this.cc, ...
+                                'q', 0.0);
+                end
             else
-                model0 = struct('Hinf',Ha*Hp, ...
-                                'cc', this.cc, ...
-                                'q', 0.0);
+                M0 = M00;
             end
 
             x = [dr(:).u];
@@ -62,14 +66,13 @@ classdef RepeatLo < handle
             G_sv(inl) = findgroups([dr(inl).Gapp]);
 
             [good_corresp,Rtij00] = ...
-                resection(x,model0,G_sv,this.motion_model, ...
+                resection(x,M0,G_sv,this.motion_model, ...
                           'vqT',this.vqT); 
 
             if ~isempty(good_corresp)
-                Hinf = model0.Hinf;
                 [rtree,X,Rtij0,Tlist] = ...
-                    make_scene_graph(x,good_corresp,model0,Rtij00);
-                Gm = segment_motions(x,model0,rtree.Edges.EndNodes',Rtij0, ...
+                    make_scene_graph(x,good_corresp,M0,Rtij00);
+                Gm = segment_motions(x,M0,rtree.Edges.EndNodes',Rtij0, ...
                                      'vqT',this.vqT);
                 [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
                 Gs = nan(1,numel(dr));
@@ -77,7 +80,7 @@ classdef RepeatLo < handle
                 Gs(inl2) = findgroups([dr(inl2).Gapp]);
                 pattern_printer = ...
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
-                                   Gm,is_inverted,0.0,model0.Hinf,X,Rtij, ...
+                                   Gm,is_inverted,0.0,M0.Hinf,X,Rtij, ...
                                    'motion_model',this.motion_model);
                 [mle_model,mle_stats] = ...
                     pattern_printer.fit('MaxIterations',cfg.MaxIterations);
