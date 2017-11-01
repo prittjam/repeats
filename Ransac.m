@@ -116,14 +116,14 @@ classdef Ransac < handle
                                   'loss', loss(mink), ...
                                   'cs', cs{mink}, ...
                                   'mss', idx);
-
                     if (sum(res0.cs) > 0) && ...
                             (res0.loss < res.loss) && ...
                             (sum(res0.cs) >= sum(res.cs))
                         M = M0;
                         res = res0;
-                        [loM,lo_res] = this.do_lo(meas,corresp,M,res); 
+                        [loM,lo_res] = this.do_lo(meas,corresp,M0,res0); 
                         if (lo_res.loss < opt_res.loss)
+
                             optM = loM;
                             opt_res = lo_res;
                         end
@@ -142,7 +142,7 @@ classdef Ransac < handle
             end
             
             if this.stats.lo_count == 0
-                [optM,opt_res] = this.do_lo(meas,corresp,res);
+                [optM,opt_res] = this.do_lo(meas,corresp,M,res);
             end
             
             this.stats.time_elapsed = toc;               
