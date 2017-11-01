@@ -18,6 +18,7 @@ Rtij = zeros(4,numedges(T));
 [ind,ind_st] = ...
     ismember(corresp',[s;t]','rows');
 Rtij(:,nonzeros(ind_st)) = Rtij0(:,find(ind));
+
 [corresp(2,:),corresp(1,:)] = deal(corresp(1,:),corresp(2,:));
 [rind,rind_ts] = ...
     ismember(corresp',[s;t]','rows');
@@ -27,15 +28,7 @@ edge_table = table([s;t]', ...
                    'VariableNames', {'EndNodes' 'Ind'}); 
 rtree = digraph(edge_table);
 rvertices = intersect(find(pred==0),pred);
-
 Rtij = Rtij(:,rtree.Edges.Ind);
-
-invH = inv(Hinf);
-
-xp2 = LAF.apply_rigid_xforms(v(:,s),Rtij);
-dist = sum((xp2-v(:,t)).^2);
-
-
 X = v(:,rvertices);
 
 for k1 = 1:numel(rvertices)

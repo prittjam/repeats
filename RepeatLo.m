@@ -39,6 +39,7 @@ classdef RepeatLo < handle
             cfg = cmp_argparse(cfg,varargin{:});
             
             inl = unique(corresp(:,logical(res.cs)));
+
             if ~isfield(M00,'q')
                 G = findgroups([dr(inl).Gapp]);
                 u = [dr(inl).u];
@@ -89,7 +90,17 @@ classdef RepeatLo < handle
                 pattern_printer = ...
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
                                    Gm,is_inverted,M0.q,M0.Hinf,X,Rtij, ...
-                                   'motion_model',this.motion_model);
+                                   'motion_model', ...
+                                   this.motion_model);
+                
+                err0 = pattern_printer.calc_err();
+                sq_err = sum(sum(reshape(err0,6,[]).^2));
+                
+                sq_err_tmp = sum(reshape(err0,6,[]).^2)
+                if (sq_err > 1e6)
+                    keyboard;
+                end
+                
                 [mle_model,mle_stats] = ...
                     pattern_printer.fit('MaxIterations',cfg.MaxIterations);
                 
@@ -103,8 +114,6 @@ classdef RepeatLo < handle
                     mle_res = struct('loss', loss, ...
                                      'err', err2, ...
                                      'cs', err2 < this.reprojT);
-                else
-                    keyboard;
                 end
             end
         end
