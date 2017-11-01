@@ -27,16 +27,16 @@ classdef Ransac < handle
             this.eval = eval;
         end
         
-        function [loM,lo_res] = do_lo(this,meas,corresp,res)
+        function [loM,lo_res] = do_lo(this,meas,corresp,M,res)
             loM = [];
             lo_res = [];
             if ~isempty(this.lo)
-                [loM,lo_res] = this.lo.fit(meas,corresp,res);
+                [loM,lo_res] = this.lo.fit(meas,corresp,M,res);
                 this.stats.lo_count = this.stats.lo_count+1;
             end
         end
 
-        function  [optM,opt_res,res,stats] = fit(this,meas,corresp)
+        function  [optM,opt_res,M,res,stats] = fit(this,meas,corresp)
             tic;
 
             this.stats = struct('time_elapsed', 0, ...
@@ -59,8 +59,13 @@ classdef Ransac < handle
                     is_sample_good = ...
                         this.model.is_sample_good(meas,corresp,idx);
                     if is_sample_good
-                        M = this.model.fit(meas,corresp,idx);
-                        if ~isempty(M)
+                        try
+                            model_list = this.model.fit(meas, ...
+                                                        corresp,idx);
+                        catch
+                            model_list = [];
+                        end
+                        if ~isempty(model_list)
                             has_model = true;
                             break;
                         end
@@ -76,38 +81,38 @@ classdef Ransac < handle
                 
                 model_count = 0;
                 
-                is_model_good = false(1,numel(M));
-                for k = 1:numel(M)
+                is_model_good = false(1,numel(model_list));
+                for k = 1:numel(model_list)
                     is_model_good(k) = ...
-                        this.model.is_model_good(meas,corresp,idx,M(k));
+                        this.model.is_model_good(meas,corresp,idx,model_list(k));
                 end
                 
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
-                        Mfix = this.model.fix(meas,corresp,idx,M(k));
+                        Mfix = this.model.fix(meas,corresp,idx,model_list(k));
                         if ~isempty(Mfix)
                             is_model_good(k) = true;
-                            M(k) = Mfix;
+                            model_list(k) = Mfix;
                         end
                     end
-                    M = M(is_model_good);
+                    model_list = model_list(is_model_good);
                 end
                 
-                if ~isempty(M)
-                    this.stats.model_count = this.stats.model_count+numel(M);
+                if ~isempty(model_list)
+                    this.stats.model_count = this.stats.model_count+numel(model_list);
 
-                    loss = inf(numel(M),1);
+                    loss = inf(numel(model_list),1);
 
-                    for k = 1:numel(M)
-                        [loss(k),err{k}] = this.eval.calc_loss(meas,corresp,M(k));
+                    for k = 1:numel(model_list)
+                        [loss(k),err{k}] = this.eval.calc_loss(meas,corresp,model_list(k));
                         cs{k} = this.eval.calc_cs(err{k});
                     end
                     
                     [~,mink] = min(loss);
                     
-                    res0 = struct('M', M(mink), ...
-                                  'err', err{mink}, ...
+                    M0 = model_list(mink);
+                    res0 = struct('err', err{mink}, ...
                                   'loss', loss(mink), ...
                                   'cs', cs{mink}, ...
                                   'mss', idx);
@@ -115,8 +120,9 @@ classdef Ransac < handle
                     if (sum(res0.cs) > 0) && ...
                             (res0.loss < res.loss) && ...
                             (sum(res0.cs) >= sum(res.cs))
+                        M = M0;
                         res = res0;
-                        [loM,lo_res] = this.do_lo(meas,corresp,res); 
+                        [loM,lo_res] = this.do_lo(meas,corresp,M,res); 
                         if (lo_res.loss < opt_res.loss)
                             optM = loM;
                             opt_res = lo_res;
