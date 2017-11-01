@@ -5,5 +5,5 @@ for k = 1:num_planes
     cs = ransac.eval.calc_cs(E);
     res = struct('cs',cs);
     [model_list(k),lo_res] = ransac.lo.fit(dr,corresp,model0, ...
-                                           res,'MaxIterations',30);
+                                           res,'MaxIterations',100);
 end

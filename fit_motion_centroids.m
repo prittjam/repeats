@@ -8,4 +8,8 @@ v = [atan2(mean(sin(u(1,:))), mean(cos(u(1,:)))); ...
      mean(u(2:3,:),2); ...
      u(4,1)];
 
-assert(all(u(4,:) == u(4,1)),'reflections are mixed');
+if ~(all(u(4,:) == u(4,1)))
+    keyboard;
+end
+    
+%assert(all(u(4,:) == u(4,1)),'reflections are mixed');

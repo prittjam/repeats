@@ -69,6 +69,13 @@ classdef RepeatLo < handle
                 resection(x,M0,G_sv,this.motion_model, ...
                           'vqT',this.vqT); 
 
+            mle_stats = [];
+            mle_model = [];
+            err2 = inf*ones(1,numel(dr));
+            mle_res = struct('loss', inf, ...
+                             'err', err2, ...
+                             'cs', false(1,numel(dr))); 
+            
             if ~isempty(good_corresp)
                 [rtree,X,Rtij0,Tlist] = ...
                     make_scene_graph(x,good_corresp,M0,Rtij00);
@@ -78,6 +85,7 @@ classdef RepeatLo < handle
                 Gs = nan(1,numel(dr));
                 inl2 = unique(rtree.Edges.EndNodes);
                 Gs(inl2) = findgroups([dr(inl2).Gapp]);
+               
                 pattern_printer = ...
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
                                    Gm,is_inverted,M0.q,M0.Hinf,X,Rtij, ...
@@ -91,16 +99,13 @@ classdef RepeatLo < handle
                 err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
                 loss = sum(err2);
             
-                mle_res = struct('loss', loss, ...
-                                 'err', err2, ...
-                                 'cs', err2 < this.reprojT);
-            else
-                mle_stats = [];
-                mle_model = [];
-                err2 = inf*ones(1,numel(dr));
-                mle_res = struct('loss', inf, ...
-                                 'err', err2, ...
-                                 'cs', false(1,numel(dr)));
+                if isreal(loss)
+                    mle_res = struct('loss', loss, ...
+                                     'err', err2, ...
+                                     'cs', err2 < this.reprojT);
+                else
+                    keyboard;
+                end
             end
         end
     end
