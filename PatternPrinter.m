@@ -187,9 +187,10 @@ classdef PatternPrinter < handle
         function [M,stats] = fit(this,varargin)
             err0 = this.errfun(this.dz0,this);
             Jpat = this.make_Jpat();
-
+            
+            lb = -6/(2*sum(this.cc))^2;
             if numel(this.dz0) <= numel(err0)
-                lb = transpose([-1e-2 -inf(1,numel(this.dz0)-1)]);
+                lb = transpose([lb -inf(1,numel(this.dz0)-1)]);
                 ub = transpose([0 inf(1,numel(this.dz0)-1)]);
                 options = optimoptions(@lsqnonlin, ...
                                        'Algorithm', 'trust-region-reflective', ...
@@ -214,7 +215,7 @@ classdef PatternPrinter < handle
             [Xp,inl] = sfm(X,Gs,Rti);
             
             M = struct('q',q,'cc', this.cc, ...
-                       'H',H,'X',X, ...
+                       'Hinf',H,'X',X, ...
                        'Rti', Rti,'Gs',Gs, ...
                        'Gm',Gm);
             

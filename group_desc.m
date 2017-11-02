@@ -3,8 +3,9 @@ function dr = group_desc(dr)
     DR.group_desc(dr,{'desc_linkage', 'single', ...
                     'desc_cutoff', 160, ...
                     'group_reflections', true, ...
-                    'rm_duplicates', true});
+                    'rm_duplicates', false});
 Gr = mat2cell(Gr,1,ones(1,numel(Gr)));
 Gapp = mat2cell(Gapp,1,ones(1,numel(Gapp))); 
 [dr(:).reflected] = Gr{:};
 [dr(:).Gapp] = Gapp{:};
+keyboard;

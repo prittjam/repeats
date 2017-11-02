@@ -11,28 +11,30 @@ classdef RepeatSampler < handle
 
         freq = []
         Z = []
+        k = []
     end
     
     methods
-        function this = GrSampler(dr,corresp,k,varargin)
+        function this = RepeatSampler(dr,corresp,k,varargin)
             [this,~] = cmp_argparse(this,varargin{:});
 
-            this.labeling0 = [dr(:).Gapp];
+            this.labeling0 = [dr(:).Gsamp];
             
             this.freq = hist(this.labeling0,1:max(this.labeling0));
             this.Z = arrayfun(@(x) nchoosek(x,2),this.freq);
             this.p = this.Z/sum(this.Z);
             this.N = sum(this.Z);
+            this.k = k;
             
             assert(this.N == size(corresp,2), ...
                    'Number of total correspondences is incorrect');
         end
 
-        function ind = sample(this,dr,k,varargin)
+        function idx = sample(this,dr,corresp,varargin)
             while true
-                ind = reshape(randsample(this.N,2),1,[]);
-                if numel(unique(ind)) == 4
-                    break
+                idx = randsample(this.N,this.k);
+                if numel(unique(corresp(:,idx))) == 2*this.k
+                    break;
                 end
             end
         end
@@ -47,7 +49,7 @@ classdef RepeatSampler < handle
             p3 = dot(this.p(ind),p2);
             
             if p3 > 0
-                N = ceil(log(1-this.confidence)/log(1-p3*p3));
+                N = ceil(log(1-this.confidence)/log(1-p3^(this.k)));
             else
                 N = inf;
             end
@@ -55,9 +57,9 @@ classdef RepeatSampler < handle
             ub = min([N this.max_trial_count]);
             trial_count = max([ub this.min_trial_count]);
 
-            disp(['Inlier percentage: ' num2str(p3*p3*100,'%04.1f') ...
+            eip = p3*100;
+            disp(['Expected inlier percentage: ' num2str(eip,'%04.1f') ...
                   ' |  # trials needed: ' num2str(trial_count)]);
         end
-
     end
-end
+end 
