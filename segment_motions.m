@@ -11,11 +11,11 @@ xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model.cc, ...
 xp2 = LAF.apply_rigid_xforms(xp(:,corresp(1,:)),rt0);
 
 M = size(corresp,2);
-if M > cfg.num_codes
-    ind = randsample(M,cfg.num_codes);
-else
-    ind = 1:M;
-end
+%if M > cfg.num_codes
+%    ind = randsample(M,cfg.num_codes);
+%else
+ind = 1:M;
+    %end
 
 N = numel(ind);
 

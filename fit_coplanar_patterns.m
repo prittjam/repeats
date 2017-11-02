@@ -4,6 +4,7 @@ for k = 1:num_planes
     [loss,E] = ransac.eval.calc_loss(dr,corresp,model0);
     cs = ransac.eval.calc_cs(E);
     res = struct('cs',cs);
-    [model_list(k),lo_res] = ransac.lo.fit(dr,corresp,model0, ...
-                                           res,'MaxIterations',100);
+    [model_list(k),lo_res] = ...
+        ransac.lo.fit(dr,corresp,model0,res, ...
+                      'MaxIterations',100);
 end
