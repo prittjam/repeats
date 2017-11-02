@@ -8,7 +8,7 @@ classdef RepeatEval < handle
             [this,~] = cmp_argparse(this,varargin{:});
         end        
         
-        function [loss,E] = calc_loss(this,dr,corresp,M)         
+        function [loss,E] = calc_loss(this,x,corresp,M)         
             H = M.Hinf;
 
             if ~isfield(M,'q')
@@ -16,7 +16,7 @@ classdef RepeatEval < handle
             end
 
             v = LAF.renormI(blkdiag(H,H,H)* ...
-                            LAF.ru_div([dr(:).u],M.cc,M.q));
+                            LAF.ru_div(x,M.cc,M.q));
             
             D2 = [sum((v(1:2,:)-v(4:5,:)).^2); ...
                   sum((v(7:8,:)-v(4:5,:)).^2); ...

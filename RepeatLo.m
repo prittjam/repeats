@@ -34,10 +34,9 @@ classdef RepeatLo < handle
         end
         
         
-        function [mle_model,mle_res,mle_stats] = fit(this,dr,corresp,M00,res,varargin)
-            cfg = struct('MaxIterations',10);
-            cfg = cmp_argparse(cfg,varargin{:});
-            
+        function [mle_model,mle_res,mle_stats] = fit(this,x,corresp,M00,res,varargin)
+            Gsamp = varargin{1};
+            Gapp = varargin{2};
             inl = unique(corresp(:,logical(res.cs)));
 
             if ~isfield(M00,'q')
@@ -60,11 +59,10 @@ classdef RepeatLo < handle
             else
                 M0 = M00;
             end
-
-            x = [dr(:).u];
             
-            G_sv = nan(1,numel(dr));
-            G_sv(inl) = findgroups([dr(inl).Gapp]);
+            N = size(x,2);
+            G_sv = nan(1,N);
+            G_sv(inl) = findgroups(Gapp(inl));
 
             [good_corresp,Rtij00] = ...
                 resection(x,M0,G_sv,this.motion_model, ...
@@ -72,10 +70,10 @@ classdef RepeatLo < handle
             
             mle_stats = [];
             mle_model = [];
-            err2 = inf*ones(1,numel(dr));
+            err2 = inf*ones(1,numel(Gapp));
             mle_res = struct('loss', inf, ...
                              'err', err2, ...
-                             'cs', false(1,numel(dr))); 
+                             'cs', false(1,numel(Gapp))); 
             
             if ~isempty(good_corresp)
                 [rtree,X,Rtij0,Tlist] = ...
@@ -84,9 +82,9 @@ classdef RepeatLo < handle
                                      'vqT',this.vqT);
 
                 [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
-                Gs = nan(1,numel(dr));
+                Gs = nan(1,N);
                 inl2 = unique(rtree.Edges.EndNodes);
-                Gs(inl2) = findgroups([dr(inl2).Gapp]);
+                Gs(inl2) = findgroups(Gapp(inl2));
                
                 pattern_printer = ...
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
@@ -106,11 +104,11 @@ classdef RepeatLo < handle
                 end
 
                 [mle_model,mle_stats] = ...
-                    pattern_printer.fit('MaxIterations',cfg.MaxIterations);
+                    pattern_printer.fit('MaxIterations',this.max_iter);
                 
                 inl = find(mle_model.Gs);
                 
-                err2 = this.reprojT*ones(1,numel(dr));
+                err2 = this.reprojT*ones(1,N);
                 err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
                 loss = sum(err2);
             
