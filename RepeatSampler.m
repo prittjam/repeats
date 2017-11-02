@@ -15,10 +15,8 @@ classdef RepeatSampler < handle
     end
     
     methods
-        function this = RepeatSampler(dr,corresp,k,varargin)
-            [this,~] = cmp_argparse(this,varargin{:});
-
-            this.labeling0 = [dr(:).Gsamp];
+        function this = RepeatSampler(dr,corresp,k,Gsamp,varargin)
+            this.labeling0 = Gsamp;
             
             this.freq = hist(this.labeling0,1:max(this.labeling0));
             this.Z = arrayfun(@(x) nchoosek(x,2),this.freq);
