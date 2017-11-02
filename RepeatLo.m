@@ -37,32 +37,34 @@ classdef RepeatLo < handle
         function [mle_model,mle_res,mle_stats] = fit(this,x,corresp,M00,res,varargin)
             Gsamp = varargin{1};
             Gapp = varargin{2};
-            inl = unique(corresp(:,logical(res.cs)));
 
             if ~isfield(M00,'q')
-                G = findgroups([dr(inl).Gapp]);
-                u = [dr(inl).u];
-                Hp = HG.laf2x2_to_Hinf(u,G);            
- 
-                v = LAF.renormI(blkdiag(Hp,Hp,Hp)*u);
-                Ha = this.fit_Rt(dr,v,G);
-
-                if isempty(Ha)
-                    M0 = struct('Hinf',Hp, ...
-                                'cc', this.cc, ...
-                                'q', 0.0);
-                else
-                    M0 = struct('Hinf',Ha*Hp, ...
-                                'cc', this.cc, ...
-                                'q', 0.0);
-                end
+                q = 0
+                xu = x;
             else
-                M0 = M00;
+                q = M00.q;
+                xu = LAF.ru_div(x,M00.cc,M00.q);
             end
+
+            inl = unique(corresp(:,logical(res.cs)));
+            Hinf = HG.laf2x2_to_Hinf(xu(:,inl),Gsamp(inl));            
+            xp = LAF.renormI(blkdiag(Hp,Hp,Hp)*xu);
+            A = this.fit_Rt(xp,Gapp(inl));
+            
+            if isempty(A)
+                A = eye(3,3);
+                G = Gsamp;
+            else
+                G = Gapp;
+            end
+            
+            M0 = struct('Hinf', A*Hinf, ...
+                        'cc', this.cc, ...
+                        'q', q);
             
             N = size(x,2);
             G_sv = nan(1,N);
-            G_sv(inl) = findgroups(Gapp(inl));
+            G_sv(inl) = findgroups(G(inl));
 
             [good_corresp,Rtij00] = ...
                 resection(x,M0,G_sv,this.motion_model, ...
@@ -70,10 +72,10 @@ classdef RepeatLo < handle
             
             mle_stats = [];
             mle_model = [];
-            err2 = inf*ones(1,numel(Gapp));
+            err2 = inf*ones(1,numel(G));
             mle_res = struct('loss', inf, ...
                              'err', err2, ...
-                             'cs', false(1,numel(Gapp))); 
+                             'cs', false(1,numel(G))); 
             
             if ~isempty(good_corresp)
                 [rtree,X,Rtij0,Tlist] = ...
@@ -84,7 +86,7 @@ classdef RepeatLo < handle
                 [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
                 Gs = nan(1,N);
                 inl2 = unique(rtree.Edges.EndNodes);
-                Gs(inl2) = findgroups(Gapp(inl2));
+                Gs(inl2) = findgroups(G(inl2));
                
                 pattern_printer = ...
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
