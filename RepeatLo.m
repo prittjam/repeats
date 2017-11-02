@@ -40,16 +40,15 @@ classdef RepeatLo < handle
 
             if ~isfield(M00,'q')
                 q = 0
-                xu = x;
             else
                 q = M00.q;
-                xu = LAF.ru_div(x,M00.cc,M00.q);
             end
 
+            xu = LAF.ru_div(x,this.cc,q);
             inl = unique(corresp(:,logical(res.cs)));
-            Hinf = HG.laf2x2_to_Hinf(xu(:,inl),Gsamp(inl));            
-            xp = LAF.renormI(blkdiag(Hp,Hp,Hp)*xu);
-            A = this.fit_Rt(xp,Gapp(inl));
+            Hinf = HG.laf2x2_to_Hinf(xu,findgroups(Gsamp(inl)));
+            xp = LAF.renormI(blkdiag(Hp,Hp,Hp)*x);
+            A = HG.laf2x1_to_Amu(xp,findgroups(Gapp(inl)));
             
             if isempty(A)
                 A = eye(3,3);
