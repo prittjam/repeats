@@ -32,8 +32,7 @@ classdef RepeatLo < handle
                 this.metric_solver = @this.fit_Rt;
             end
         end
-        
-        
+
         function [mle_model,mle_res,mle_stats] = fit(this,x,corresp,M00,res,varargin)
             Gsamp = varargin{1};
             Gapp = varargin{2};
@@ -71,6 +70,7 @@ classdef RepeatLo < handle
             
             mle_stats = [];
             mle_model = [];
+
             err2 = inf*ones(1,numel(G));
             mle_res = struct('loss', inf, ...
                              'err', err2, ...
@@ -85,6 +85,7 @@ classdef RepeatLo < handle
                 [Rtij,is_inverted] = fit_motion_centroids(Gm,Rtij0);
                 Gs = nan(1,N);
                 inl2 = unique(rtree.Edges.EndNodes);
+
                 Gs(inl2) = findgroups(G(inl2));
                
                 pattern_printer = ...
