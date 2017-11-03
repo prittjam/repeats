@@ -12,4 +12,4 @@ if ~(all(u(4,:) == u(4,1)))
     keyboard;
 end
     
-%assert(all(u(4,:) == u(4,1)),'reflections are mixed');
+assert(all(u(4,:) == u(4,1)),'reflections are mixed');

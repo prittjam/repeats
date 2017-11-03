@@ -1,13 +1,19 @@
-function A = laf2x1_to_Amur(u,G,Gr)
-    left = cmp_splitapply(@(v,gr) { v(:,gr) },u,Gr,G);
-    right = cmp_splitapply(@(v,gr) { v(:,~gr) },u,Gr,G);
- 
-    good_ind = false(1,numel(left));
+function A = laf1x2_to_Amur(x,G)
+    Gr = ~LAF.is_right_handed(x);
+    left = cmp_splitapply(@(v,gr) { v(:,gr) },x,Gr,G);
+    right = cmp_splitapply(@(v,gr) { v(:,~gr) },x,Gr,G);
+
     for k = 1:numel(left)
-        good_ind(k) = ~(isempty(left{k}) || isempty(right{k}));
+        is_good(k) = ~(isempty(left{k}) || isempty(right{k}));
     end
-    
-    A = laf2x1_to_Amur_internal(left(good_ind),right(good_ind));
+
+    good_ind = find(is_good);
+    if ~isempty(good_ind)
+        A = laf2x1_to_Amur_internal(left(good_ind), ...
+                                    right(good_ind));
+    else
+        A = eye(3);
+    end
 
 function A = laf2x1_to_Amur_internal(aY,arY)
     if ~iscell(aY)

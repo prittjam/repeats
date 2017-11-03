@@ -36,26 +36,17 @@ classdef RepeatLo < handle
         function [mle_model,mle_res,mle_stats] = fit(this,x,corresp,M00,res,varargin)
             Gsamp = varargin{1};
             Gapp = varargin{2};
-
+            inl = unique(corresp(:,logical(res.cs)));            
+            
             if ~isfield(M00,'q')
                 q = 0
             else
                 q = M00.q;
             end
+            Hinf = M00.Hinf;
 
-            xu = LAF.ru_div(x,this.cc,q);
-            inl = unique(corresp(:,logical(res.cs)));
-            Hinf = HG.laf2x2_to_Hinf(xu,findgroups(Gsamp(inl)));
-            xp = LAF.renormI(blkdiag(Hp,Hp,Hp)*x);
-            A = HG.laf2x1_to_Amu(xp,findgroups(Gapp(inl)));
-            
-            if isempty(A)
-                A = eye(3,3);
-                G = Gsamp;
-            else
-                G = Gapp;
-            end
-            
+            G = Gsamp;
+            A = eye(3);
             M0 = struct('Hinf', A*Hinf, ...
                         'cc', this.cc, ...
                         'q', q);
@@ -101,15 +92,10 @@ classdef RepeatLo < handle
                 figure;
                 plot(sq_err_tmp);
 
-                if (sq_err > 1e6)
-                    keyboard;
-                end
 
                 [mle_model,mle_stats] = ...
                     pattern_printer.fit('MaxIterations',this.max_iter);
-                
-                inl = find(mle_model.Gs);
-                
+
                 err2 = this.reprojT*ones(1,N);
                 err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
                 loss = sum(err2);
