@@ -1,10 +1,7 @@
-function [model_list,stats_list] = fit_coplanar_patterns(x,Gsamp,Gapp,cc,num_planes)
-corresp = cmp_splitapply(@(u) { VChooseK(u,2)' }, ...
-                         1:numel(Gsamp),Gsamp);
-corresp = [ corresp{:} ];
+function [model_list,stats_list] = ...
+    fit_coplanar_patterns(solver,x,Gsamp,Gapp,cc,num_planes,varargin)
 
-factory = RansacFactory();
-ransac = factory.make(solver,x,corresp,cc,Gsamp,Gapp);
+[ransac,corresp] = make_ransac(solver,x,Gsamp,Gapp,cc,varargin);
 
 for k = 1:num_planes  
     [model0,res0,~,~,stats_list(k)] = ...
@@ -12,8 +9,7 @@ for k = 1:num_planes
     [loss,E] = ransac.eval.calc_loss(x,corresp,model0);
     cs = ransac.eval.calc_cs(E);
     res = struct('cs',cs);
-    keyboard;
-    ransac.lo.max_iter = 100;
+    ransac.lo.max_iter = 10;
     [model_list(k),lo_res] = ...
         ransac.lo.fit(x,corresp,model0,res,Gsamp,Gapp);
 end
