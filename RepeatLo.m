@@ -39,7 +39,7 @@ classdef RepeatLo < handle
             inl = unique(corresp(:,logical(res.cs)));            
             
             if ~isfield(M00,'q')
-                q = 0
+                q = 0;
             else
                 q = M00.q;
             end

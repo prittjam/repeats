@@ -10,16 +10,15 @@ classdef RepeatEval < handle
         
         function [loss,E] = calc_loss(this,x,corresp,M)         
             H = M.Hinf;
-            
             if ~isfield(M,'q')
-                q = 0;
+                xp = LAF.renormI(blkdiag(H,H,H)*x);                
+            else
+                xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,M.cc,M.q));                
             end
             
-            v = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,M.cc,M.q));
-            
-            D2 = [sum((v(1:2,:)-v(4:5,:)).^2); ...
-                  sum((v(7:8,:)-v(4:5,:)).^2); ...
-                  sum((v(7:8,:)-v(1:2,:)).^2)];
+            D2 = [sum((xp(1:2,:)-xp(4:5,:)).^2); ...
+                  sum((xp(7:8,:)-xp(4:5,:)).^2); ...
+                  sum((xp(7:8,:)-xp(1:2,:)).^2)];
             lr = 0.5*(log(D2(:,corresp(2,:)))-log(D2(:,corresp(1,:))));
 
             E = max(abs(lr)); 
