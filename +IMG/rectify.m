@@ -1,6 +1,6 @@
 function [timg,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
-
+    
     cfg.registration = 'Similarity';
     cfg.ru_xform = maketform('affine',eye(3));
     cfg.good_points = [];
