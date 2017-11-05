@@ -1,7 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-function P = make_viewpoint(pts,cam)
-X = [pts(:).X];
+function P = make_viewpoint(X,cam)
 w = max(X(1,:))-min(X(1,:));
 h = max(X(2,:))-min(X(2,:));
 
