@@ -43,6 +43,7 @@ classdef RepeatLo < handle
             else
                 q = M00.q;
             end
+            
             Hinf = M00.Hinf;
 
             G = Gsamp;
@@ -89,8 +90,8 @@ classdef RepeatLo < handle
                 sq_err = sum(sum(reshape(err0,6,[]).^2));
                 
                 sq_err_tmp = sum(reshape(err0,6,[]).^2);
-%                figure;
-%                plot(sq_err_tmp);
+                figure;
+                plot(sq_err_tmp);
 %
 
                 [mle_model,mle_stats] = ...
