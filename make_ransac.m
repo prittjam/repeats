@@ -4,6 +4,6 @@ corresp = cmp_splitapply(@(u) { VChooseK(u,2)' }, ...
 corresp = [ corresp{:} ];
 sampler = RepeatSampler(x,corresp,solver.mss,Gsamp);
 eval = RepeatEval();
-lo = RepeatLo(cc,'t','vqT',10);
+lo = RepeatLo(cc,'t','vqT',21);
 
 ransac = Ransac(solver,sampler,eval,'lo',lo);
