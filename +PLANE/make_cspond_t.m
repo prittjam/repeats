@@ -1,38 +1,25 @@
-function [X,G,border] = make_cspond_t(num_groups,num_cspond,w,h)
-x = LAF.make_random(num_groups);
-t = 0.9*rand(2,num_groups)-0.45;
+function X = make_cspond_t(N,w,h)
+x = LAF.make_random(N);
+t = 0.9*rand(2,N)-0.45;
 x1 = LAF.translate(x,t);
-theta = 2*pi*rand(1,num_groups);
+x2 = do_translate(x1);
+x = reshape([x1;x2],9,[]);
+M = [[w 0; 0 h] [0 0]';0 0 1];
+M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
+X = reshape(M2*M*reshape(x,3,[]),12,[]);
+
+function x2 = do_translate(x1)
+N = size(x1,2);
+theta = 2*pi*rand(1,N);
 n = [cos(theta);sin(theta)];
 a = [(-0.5-x1(4,:))./n(1,:);
      (0.5-x1(4,:))./n(1,:); ...
      (-0.5-x1(5,:))./n(2,:);
      (0.5-x1(5,:))./n(2,:)];
+[as,ind] = sort(a,1);
+l = as(2,:);
+u = as(3,:);
+x2 = zeros(size(x1));
+t = (u-l).*rand(1,N);
+x2 = LAF.translate(x1,t.*n);
 
-[~,ind] = sort(abs(a),1);
-
-x2 = zeros(size(x));
-for k = 1:num_groups
-    l = min(a(ind(1:2),k));
-    u = max(a(ind(1:2),k));
-    t = (u-l)*rand(1)+l;
-    x2(:,k) = LAF.translate(x1(:,k),t*n(:,k));
-end
-
-x = reshape([x1;x2],9,[]);
-
-figure;
-LAF.draw(gca,x);
-
-
-%M = [[w 0; 0 h] [0 0]';0 0 1];
-%xp2 = blkdiag(M,M,M)*xp;
-%
-%
-%M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-%X = reshape([1 0 0; 0 1 0; 0 0 0; 0 0 1]*reshape(xp2,3,[]),12,[]);
-%G = reshape(repmat([1:num_groups],num_cspond,1),1,[]);
-%
-%border = M2*M*[-0.5 0.5  0.5 -0.5  -0.5; ...
-%               -0.5 -0.5 0.5  0.5  -0.5; ...
-%                  1   1  1  1      1];
