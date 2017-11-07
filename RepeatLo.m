@@ -90,9 +90,6 @@ classdef RepeatLo < handle
                 sq_err = sum(sum(reshape(err0,6,[]).^2));
                 
                 sq_err_tmp = sum(reshape(err0,6,[]).^2);
-                figure;
-                plot(sq_err_tmp);
-%
 
                 [mle_model,mle_stats] = ...
                     pattern_printer.fit('MaxIterations',this.max_iter);
@@ -100,9 +97,10 @@ classdef RepeatLo < handle
                 err2 = this.reprojT*ones(1,N);
                 err2(~isnan(mle_model.Gs)) = mle_stats.sqerr;
                 
+                err2robust = err2;
                 err2robust(err2>this.reprojT) = this.reprojT;
                 loss = sum(err2robust);
-            
+                keyboard;
                 if isreal(loss)
                     mle_res = struct('loss', loss, ...
                                      'err', err2, ...
