@@ -100,7 +100,6 @@ classdef RepeatLo < handle
                 err2robust = err2;
                 err2robust(err2>this.reprojT) = this.reprojT;
                 loss = sum(err2robust);
-                keyboard;
                 if isreal(loss)
                     mle_res = struct('loss', loss, ...
                                      'err', err2, ...
