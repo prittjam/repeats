@@ -16,7 +16,7 @@ group_names = arrayfun(@(x) [char(x)], ...
 
 for k = 1:numel(group_list)
     group_field = group_list{k};
-    [G{k},uval{k}] = findgroups(res.(group_field));
+    [~,uval{k}] = findgroups(res.(group_field));
     if iscategorical(uval{k})
         uval{k} = grp2idx(uval{k});
         res.(group_field) = grp2idx(res.(group_field));
