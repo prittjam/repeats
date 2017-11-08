@@ -21,5 +21,5 @@ l = as(2,:);
 u = as(3,:);
 x2 = zeros(size(x1));
 t = (u-l).*(0.9*rand(1,N)+0.1);
-x2 = LAF.translate(x1,t.*n);
+x2 = LAF.translate(x1,bsxfun(@times,t,n));
 
