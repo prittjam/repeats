@@ -27,7 +27,8 @@ function [timg,T,A] = rectify(img,H,varargin)
 
     rect = [minx maxx miny maxy];
 
-    [endpts,rect_lines] = LINE.intersect_rect(H(3,:)',rect);
+    endpts = LINE.intersect_rect(H(3,:)',rect);
+
 
     in_image = ~isempty(endpts);
     
@@ -50,7 +51,8 @@ function [timg,T,A] = rectify(img,H,varargin)
         newpt = endpts(:,1)+[200*l(1:2);1];
         l(3) = -dot(l(1:2),newpt(1:2));
 
-        [pts,rect_lines] = LINE.intersect_rect(l,rect);
+        pts = LINE.intersect_rect(l,rect);
+
         
         idx = find(dot(repmat(l,1,4),[ru_border';ones(1,4)]) > 0);
         xx = [pts(1,:) ru_border(idx,1)'];
