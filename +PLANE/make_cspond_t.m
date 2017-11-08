@@ -20,6 +20,6 @@ a = [(-0.5-x1(4,:))./n(1,:);
 l = as(2,:);
 u = as(3,:);
 x2 = zeros(size(x1));
-t = (u-l).*rand(1,N);
+t = (u-l).*(0.9*rand(1,N)+0.1);
 x2 = LAF.translate(x1,t.*n);
 
