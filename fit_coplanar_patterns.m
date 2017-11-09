@@ -12,4 +12,15 @@ for k = 1:num_planes
     ransac.lo.max_iter = 10;
     [model_list(k),lo_res_list(k)] = ...
         ransac.lo.fit(x,corresp,model0,res,Gsamp,Gapp);
+    
+    Hinf = model_list(k).Hinf;
+    u = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*...
+                    LAF.ru_div(x,model_list(1).cc, ...
+                               model_list(1).q));
+    Grect = nan(size(Gapp));
+    Grect(lo_res_list(k).cs) = findgroups(Gapp(lo_res_list(k).cs));
+    Ha = HG.laf1x2_to_Amu(u,Grect);
+    if ~isempty(Ha)
+        model_list(k).Hinf = Ha*model_list(k).Hinf;
+    end
 end
