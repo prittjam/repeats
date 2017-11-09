@@ -12,24 +12,4 @@ bad_labels = find(freq < 2);
 Gsamp(ind) = nan;
 Gsamp = findgroups(Gsamp);
 
-keyboard;
-
 x = [dr(:).u];
-ind = find(Gsamp == 45);
-figure;
-LAF.draw(gca,x(:,ind([1 3])))
-
-tst = 
-
-LAF.is_right_handed(x(:,ind))
-
-
-
-
-function [] = group_rotations(x)
-A = LAF.pt3x3_to_A(x(:,ind(1:3)));
-zeros(1,numel(A));
-for k = 1:numel(A)
-    q = qr(A{k});
-     = q(1,1)
-end

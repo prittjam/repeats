@@ -39,13 +39,15 @@ classdef RepeatSampler < handle
         
         function trial_count = update_trial_count(this,corresp,cs)
             trial_count = inf;
-            cslabeling = this.labeling0.*cs;
-            cslabeling(find(cslabeling==0)) = nan;
-            cs_freq = hist(cslabeling,1:max(this.labeling0));
-            ind = cs_freq > 0;
-            p2 = hygepdf(2,this.freq(ind),cs_freq(ind),2);
-            p3 = dot(this.p(ind),p2);
-            
+            %            cslabeling = this.labeling0.*cs;
+            %            cslabeling(find(cslabeling==0)) = nan;
+            %            cs_freq = hist(cslabeling,1:max(this.labeling0));
+            %            ind = cs_freq > 0;
+            %            p2 = hygepdf(2,this.freq(ind),cs_freq(ind),2);
+            %            p3 = dot(this.p(ind),p2);
+            p3 = sum(cs)/size(corresp,2);
+
+
             if p3 > 0
                 N = ceil(log(1-this.confidence)/log(1-p3^(this.k)));
             else

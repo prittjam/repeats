@@ -33,11 +33,11 @@ classdef RepeatLo < handle
             end
         end
 
-        function [mle_model,mle_res,mle_stats] = fit(this,x,corresp,M00,res,varargin)
+        function [mle_model,mle_res,mle_stats] = fit(this,x,cspond,M00,res,varargin)
             Gsamp = varargin{1};
             Gapp = varargin{2};
-            inl = unique(corresp(:,logical(res.cs)));            
-            
+            inl = unique(cspond(:,logical(res.cs)));            
+
             if ~isfield(M00,'q')
                 q = 0;
             else
@@ -56,7 +56,7 @@ classdef RepeatLo < handle
             G_sv = nan(1,N);
             G_sv(inl) = findgroups(G(inl));
 
-            [good_corresp,Rtij00] = ...
+            [good_cspond,Rtij00] = ...
                 resection(x,M0,G_sv,this.motion_model, ...
                           'vqT',this.vqT); 
             
@@ -68,9 +68,9 @@ classdef RepeatLo < handle
                              'err', err2, ...
                              'cs', false(1,numel(G))); 
             
-            if ~isempty(good_corresp)
+            if ~isempty(good_cspond)
                 [rtree,X,Rtij0,Tlist] = ...
-                    make_scene_graph(x,good_corresp,M0,Rtij00,'vqT',this.vqT);
+                    make_scene_graph(x,good_cspond,M0,Rtij00,'vqT',this.vqT);
                 Gm = segment_motions(x,M0,rtree.Edges.EndNodes',Rtij0, ...
                                      'vqT',this.vqT);
 
@@ -79,7 +79,7 @@ classdef RepeatLo < handle
                 inl2 = unique(rtree.Edges.EndNodes);
 
                 Gs(inl2) = findgroups(G(inl2));
-               
+                
                 pattern_printer = ...
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
                                    Gm,is_inverted,M0.q,M0.Hinf,X,Rtij, ...
@@ -100,10 +100,26 @@ classdef RepeatLo < handle
                 err2robust = err2;
                 err2robust(err2>this.reprojT) = this.reprojT;
                 loss = sum(err2robust);
+
+                unary_cs = err2 < this.reprojT;
+                
+                induced_cspond = ...
+                    cmp_splitapply(@(x) { VChooseK(x,2)' }, ...
+                                   find(unary_cs), ...
+                                   findgroups(Gsamp(find(unary_cs))));
+                induced_cspond = [induced_cspond{:}];
+
+                [~,Lib1] = ismember(induced_cspond',cspond','rows');
+                %                [~,Lib2] = ismember([induced_cspond(2,:); ...
+                %                                    induced_cspond(1,:)]', cspond','rows');
+                cs = false(size(res.cs));
+                cs(Lib1) = true;
+               
                 if isreal(loss)
                     mle_res = struct('loss', loss, ...
                                      'err', err2, ...
-                                     'cs', err2 < this.reprojT);
+                                     'unary_cs', err2 < this.reprojT, ...
+                                     'cs', cs);
                 end
             end
         end

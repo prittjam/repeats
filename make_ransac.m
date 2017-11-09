@@ -5,6 +5,11 @@ corresp = [ corresp{:} ];
 sampler = RepeatSampler(x,corresp,solver.mss,Gsamp);
 %eval = RepeatEval();
 %eval = 
-lo = RepeatLo(cc,'t','vqT',21,'reprojT',21);
+if solver.mss == 1
+    eval = ElationEval1D(cc);
+else
+    eval = ElationEval2D(cc);
+end
 
+lo = RepeatLo(cc,'t','vqT',21,'reprojT',21);
 ransac = Ransac(solver,sampler,eval,'lo',lo);
