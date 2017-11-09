@@ -43,15 +43,25 @@ classdef RepeatLo < handle
             else
                 q = M00.q;
             end
-            
-            Hinf = M00.Hinf;
+                       
+            if (any(LAF.is_right_handed(x(:,inl))))
+                Grect = nan(size(Gapp));  
+                Grect(inl) = findgroups(Gapp(inl));
+                u = LAF.renormI(blkdiag(M00.Hinf,M00.Hinf,M00.Hinf)*...
+                                LAF.ru_div(x,this.cc,q));
+                A = HG.laf1x2_to_Amu(u,Grect);
+                if isempty(A)
+                    A = eye(3);
+                    G = Gsamp;
+                    disp('Metric upgrade failed');
+                else
+                    G = Gapp;
+                end
+            end
 
-            G = Gsamp;
-            A = eye(3);
-            M0 = struct('Hinf', A*Hinf, ...
+            M0 = struct('Hinf', A*M00.Hinf, ...
                         'cc', this.cc, ...
                         'q', q);
-            
             N = size(x,2);
             G_sv = nan(1,N);
             G_sv(inl) = findgroups(G(inl));
@@ -115,7 +125,6 @@ classdef RepeatLo < handle
                     %                                    induced_cspond(1,:)]', cspond','rows');
                     cs = false(size(res.cs));
                     cs(Lib1) = true;
-                    
                     
                     mle_res = struct('loss', loss, ...
                                      'err', err2, ...
