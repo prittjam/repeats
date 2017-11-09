@@ -59,7 +59,7 @@ yticklabels(tickstr);
 bounds = axis;
 if ~isempty(cfg.truth)
     line([bounds(1) bounds(2)], ...
-         [cfg.truth cfg.truth],'Color','c');
+         [cfg.truth cfg.truth],'Color',[0.3 0.3 0.3], 'LineStyle','--');
 end
 
 x = (1:num_groups-1)*(num_groups)+0.5;
