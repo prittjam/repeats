@@ -80,11 +80,11 @@ classdef PatternPrinter < handle
             q_idx = 1;
 %            switch this.motion_model
 %              case 't'
-%                H_idx = [1:3]+q_idx(end);
-%                X_idx = [1:6*size(X,2)]+H_idx(end);
-%%              case 'Rt'
-                H_idx = [1:8]+q_idx(end);
+                H_idx = [1:3]+q_idx(end);
                 X_idx = [1:6*size(X,2)]+H_idx(end);
+%%              case 'Rt'
+%                H_idx = [1:8]+q_idx(end);
+%                X_idx = [1:6*size(X,2)]+H_idx(end);
                 Rtij_idx = ...
                     [1:2*size(Rtij,2)]+X_idx(end);
                 this.num_Rt_params = 2;

@@ -11,5 +11,5 @@ else
     eval = ElationEval2D(cc);
 end
 
-lo = RepeatLo(cc,'t','vqT',21,'reprojT',21);
+lo = RepeatLo(cc,'t','vqT',15,'reprojT',15);
 ransac = Ransac(solver,sampler,eval,'lo',lo);

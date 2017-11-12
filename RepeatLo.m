@@ -36,47 +36,60 @@ classdef RepeatLo < handle
         function [mle_model,mle_res,mle_stats] = fit(this,x,cspond,M00,res,varargin)
             Gsamp = varargin{1};
             Gapp = varargin{2};
-            inl = unique(cspond(:,logical(res.cs)));            
+            
+            N = size(x,2);
+            inl_cspond = cspond(:,logical(res.cs)); 
 
+            scspond = inl_cspond(1,:);
+            tcspond = inl_cspond(2,:);
+            gr = graph(scspond,tcspond,ones(1,numel(scspond)),N);
+            Gcomp = conncomp(gr);
+            freq = hist(Gcomp,1:max(Gcomp));
+            [~,Gmax] = max(freq);
+            stons = find(freq==1);
+            Gcomp(find(ismember(Gcomp,stons))) = nan;
+            G = findgroups(Gcomp);
+
+%            tstinl = find(Gcomp==Gmax);
+%            figure;
+%            LAF.draw(gca,x(:,tstinl))
+%            
             if ~isfield(M00,'q')
                 q = 0;
             else
                 q = M00.q;
             end
-                       
-            if (any(LAF.is_right_handed(x(:,inl))))
-                Grect = nan(size(Gapp));  
-                Grect(inl) = findgroups(Gapp(inl));
-                u = LAF.renormI(blkdiag(M00.Hinf,M00.Hinf,M00.Hinf)*...
-                                LAF.ru_div(x,this.cc,q));
-                A = HG.laf1x2_to_Amu(u,Grect);
-                if isempty(A)
-                    A = eye(3);
-                    G = Gsamp;
-                    disp('Metric upgrade failed');
-                else
-                    G = Gapp;
-                end
-            end
-
+            A = eye(3,3);
+%            if (any(LAF.is_right_handed(x(:,inl))))
+%                Grect = nan(size(Gapp));  
+%                Grect(inl) = findgroups(Gapp(inl));
+%                u = LAF.renormI(blkdiag(M00.Hinf,M00.Hinf,M00.Hinf)*...
+%                                LAF.ru_div(x,this.cc,q));
+%                A = HG.laf1x2_to_Amu(u,Grect);
+%                if isempty(A)
+%                    A = eye(3);
+%                    G = Gsamp;
+%                    disp('Metric upgrade failed');
+%                else
+%                    G = Gapp;
+%                end
+%            end
+           
             M0 = struct('Hinf', A*M00.Hinf, ...
                         'cc', this.cc, ...
                         'q', q);
-            N = size(x,2);
-            G_sv = nan(1,N);
-            G_sv(inl) = findgroups(G(inl));
 
             [good_cspond,Rtij00] = ...
-                resection(x,M0,G_sv,this.motion_model, ...
+                resection(x,M0,G,this.motion_model, ...
                           'vqT',this.vqT); 
             
             mle_stats = [];
             mle_model = [];
 
-            err2 = inf*ones(1,numel(G));
+            err2 = inf*ones(1,N);
             mle_res = struct('loss', inf, ...
                              'err', err2, ...
-                             'cs', false(1,numel(G))); 
+                             'cs', false(1,N)); 
             
             if ~isempty(good_cspond)
                 [rtree,X,Rtij0,Tlist] = ...

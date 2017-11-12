@@ -10,7 +10,7 @@ for k = 1:num_planes
 %    cs = ransac.eval.calc_cs(E);
 %    res = struct('cs',cs);
 
-    ransac.lo.max_iter = 20;
+    ransac.lo.max_iter = 100;
     [model_list(k),lo_res_list(k)] = ...
         ransac.lo.fit(x,corresp,model0,res0,Gsamp,Gapp);
 end
