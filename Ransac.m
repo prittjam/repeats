@@ -117,11 +117,19 @@ classdef Ransac < handle
                                   'loss', loss(mink), ...
                                   'cs', cs{mink}, ...
                                   'mss', idx);
+
+                        
                     if (sum(res0.cs) > 0) && ...
                             (res0.loss < res.loss) && ...
                             (sum(res0.cs) >= sum(res.cs))
                         M = M0;
                         res = res0;
+
+                        if res0.loss < opt_res.loss
+                            optM = M0;
+                            opt_res = res0;
+                        end
+                        
                         [loM,lo_res] = this.do_lo(x,corresp,M0,res0,varargin{:}); 
                         if (lo_res.loss < opt_res.loss)
                             optM = loM;
