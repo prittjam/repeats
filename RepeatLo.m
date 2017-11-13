@@ -3,6 +3,7 @@ classdef RepeatLo < handle
         motion_model = [];
         metric_solver = [];
         cc = [];
+        eval = [];
         max_iter = 10;
         
         vqT = 21.026;
@@ -23,6 +24,7 @@ classdef RepeatLo < handle
     methods
         function this = RepeatLo(cc,motion_model,varargin)
             this.cc = cc;
+            this.eval = ElationEval2db(this.cc);
             this.motion_model = motion_model;
             [this,~] = cmp_argparse(this,varargin{:});
             switch this.motion_model
@@ -126,24 +128,32 @@ classdef RepeatLo < handle
 
                 unary_cs = err2 < this.reprojT;
 
-                if isreal(loss) && sum(unary_cs) > 0
-                    induced_cspond = ...
-                        cmp_splitapply(@(x) { VChooseK(x,2)' }, ...
-                                       find(unary_cs), ...
-                                       findgroups(Gsamp(find(unary_cs))));
-                    induced_cspond = [induced_cspond{:}];
-                    
-                    [~,Lib1] = ismember(induced_cspond',cspond','rows');
-                    %                [~,Lib2] = ismember([induced_cspond(2,:); ...
-                    %                                    induced_cspond(1,:)]', cspond','rows');
-                    cs = false(size(res.cs));
-                    cs(Lib1) = true;
-                    
-                    mle_res = struct('loss', loss, ...
-                                     'err', err2, ...
-                                     'unary_cs', err2 < this.reprojT, ...
-                                     'cs', cs);
-                end
+                mle_model.l = transpose(mle_model.Hinf(3,:));
+                [loss,E] = this.eval.calc_loss(x,cspond,mle_model);
+                cs = this.eval.calc_cs(E);
+                
+                mle_res = struct('loss', loss, ...
+                                 'err', err2, ...
+                                 'cs', cs);                
+
+%                if isreal(loss) && sum(unary_cs) > 0
+%                    induced_cspond = ...
+%                        cmp_splitapply(@(x) { VChooseK(x,2)' }, ...
+%                                       find(unary_cs), ...
+%                                       findgroups(Gsamp(find(unary_cs))));
+%                    induced_cspond = [induced_cspond{:}];
+%                    
+%                    [~,Lib1] = ismember(induced_cspond',cspond','rows');
+%                    %                [~,Lib2] = ismember([induced_cspond(2,:); ...
+%                    %                                    induced_cspond(1,:)]', cspond','rows');
+%                    cs = false(size(res.cs));
+%                    cs(Lib1) = true;
+%                    mle_res = struct('loss', loss, ...
+%                                     'err', err2, ...
+%                                     'unary_cs', err2 < this.reprojT, ...
+%                                     'cs', cs);                    
+%
+%                end
             end
         end
     end
