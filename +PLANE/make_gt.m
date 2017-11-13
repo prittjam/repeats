@@ -34,6 +34,11 @@ gt = struct('l', linf,'u', u, 'v', v, ...
             'q', q_gt, 'ccd_sigma', ccd_sigma, ...
             'cc', cc);
 
+%x1 = PT.renormI(H*Xlaf(1:3,1));
+%x2 = PT.renormI(H*Xlaf(1:3,2));
+%vvv = pt1x2_to_t([x1;x2],linf);
+%keyboard;
+%
 %X = [scene(ind([1 2])).X scene(iund([3 4])).X];
 %X = X(5:8,:);
 %x = PT.renormI(P*X);
