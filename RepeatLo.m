@@ -24,7 +24,7 @@ classdef RepeatLo < handle
     methods
         function this = RepeatLo(cc,motion_model,varargin)
             this.cc = cc;
-            this.eval = ElationEval2db(this.cc);
+            this.eval = ConjTransEval(this.cc);
             this.motion_model = motion_model;
             [this,~] = cmp_argparse(this,varargin{:});
             switch this.motion_model
