@@ -1,4 +1,4 @@
-Copyright (c) 2016, Jos (10584)
+Copyright (c) 2009, Paolo de Leva
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
