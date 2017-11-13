@@ -125,12 +125,13 @@ classdef Ransac < handle
                         M = M0;
                         res = res0;
 
-                        if res0.loss < opt_res.loss
-                            optM = M0;
-                            opt_res = res0;
+                        if res.loss < opt_res.loss
+                            optM = M;
+                            opt_res = res;
                         end
                         
                         [loM,lo_res] = this.do_lo(x,corresp,M0,res0,varargin{:}); 
+
                         if (lo_res.loss < opt_res.loss)
                             optM = loM;
                             opt_res = lo_res;
@@ -150,7 +151,11 @@ classdef Ransac < handle
             end
             
             if this.stats.lo_count == 0
-                [optM,opt_res] = this.do_lo(x,corresp,M,res);
+                [loM,lo_res] = this.do_lo(x,corresp,M,res,varargin{:}); 
+                if (lo_res.loss < opt_res.loss)
+                    optM = loM;
+                    opt_res = lo_res;
+                end
             end
             
             this.stats.time_elapsed = toc;               
