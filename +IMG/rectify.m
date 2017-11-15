@@ -133,7 +133,7 @@ function [T,S] = register_by_scale(img,T0)
     
     s1 = polyarea(border(:,1),border(:,2));
     s2 = polyarea(tborder(:,1),tborder(:,2));
-    s3 = 2*sqrt(s1/s2);
+    s3 = 3*sqrt(s2/s1);
 
     S = [s3 0 0; 0 s3 0; 0 0 1];
 
