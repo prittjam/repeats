@@ -1,4 +1,4 @@
-function [timg,T,trect] = ru_div(img,q,cc,varargin)
+function [timg,T,trect] = ru_div(img,cc,q,varargin)
 nx = size(img,2);
 ny = size(img,1);
 

@@ -23,5 +23,7 @@ tmp = pts(:,I(1:2));
 x = reshape(tmp(1:2:end),[],1);
 y = reshape(tmp(2:2:end),[],1);
 
-line(x,y,varargin{:});
+lh = line(x,y,varargin{:});
 axis tight;
+
+pts2 = [x y]';

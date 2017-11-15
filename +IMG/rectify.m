@@ -8,7 +8,7 @@ function [timg,T,A] = rectify(img,H,varargin)
     
     [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-    leftover = { 'Fill', cfg.fill };
+    leftover = { 'Fill', cfg.fill, leftover{:} };
 
     nx = size(img,2);
     ny = size(img,1);
@@ -28,7 +28,6 @@ function [timg,T,A] = rectify(img,H,varargin)
     rect = [minx maxx miny maxy];
 
     endpts = LINE.intersect_rect(H(3,:)',rect);
-
 
     in_image = ~isempty(endpts);
     
@@ -134,7 +133,7 @@ function [T,S] = register_by_scale(img,T0)
     
     s1 = polyarea(border(:,1),border(:,2));
     s2 = polyarea(tborder(:,1),tborder(:,2));
-    s3 = sqrt(s1/s2);
+    s3 = 2*sqrt(s1/s2);
 
     S = [s3 0 0; 0 s3 0; 0 0 1];
 
