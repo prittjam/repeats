@@ -1,4 +1,4 @@
-function Ha = laf2x1_to_Amu(u,G)
+function Ha = laf1x2_to_Amu(u,G)
 X = cmp_splitapply(@(x) ({x}),u,G);    
 Ha = laf2x2_to_Amu_internal(X);   
 
@@ -44,9 +44,9 @@ V2 = S*V;
 z = V2(:,end);
 z = z/z(1);
 
-if any(z([1,3:end]) < 0)
-    A = [];
-else
+%if any(z([1,3:end]) < 0)
+%    A = [];
+%else
     try
         a = chol([z(1) z(2); z(2) z(3)]);
     catch err
@@ -55,7 +55,7 @@ else
     end
     A = eye(3,3);
     A(1:2,1:2) = a;
-end
+%end
 
 function n = get_size(X)
 n = size(X,2);
