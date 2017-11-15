@@ -15,16 +15,15 @@ Hinf = model_list.Hinf;
 cc = model_list.cc;
 q = model_list.q;
 xr = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,cc,q));
-
 A = HG.laf1x2_to_Amu(xr,Grect);
 if ~isempty(A)
     model_list.Hinf = A*model_list.Hinf;  
-end
-%else
-%A = HG.laf1x2_to_Amur(xr,Grect);
-%if ~isempty(A)
-%    model_list.Hinf = A*model_list.Hinf;  
-%else
+else
+    A = HG.laf1x2_to_Amur(xr,Grect);
+    if ~isempty(A)
+        model_list.Hinf = A*model_list.Hinf;  
+        %else
 %    disp(['Metric upgrade failed']);
-%end
+    end
+end
     %end
