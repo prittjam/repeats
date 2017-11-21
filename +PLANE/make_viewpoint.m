@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-function P = make_viewpoint(cam,w,h)
+function [P,x] = make_viewpoint(cam,w,h)
 cam_dist = 1.5*w/2/tan(cam.hfov/2);
 
 phi = rand(1,1)*2*pi;
@@ -18,3 +18,9 @@ look_right = cross(look_down,look_at);
 
 R = [look_right'; look_down'; look_at'];
 P = cam.K*[R -R*c];
+
+X = [-w/2  w/2 w/2 -w/2 -w/2; ...
+     -h/2 -h/2 h/2  h/2 -h/2; ...
+        0    0   0    0    0; ...
+        1    1   1    1    1];
+x = PT.renormI(P*X);
