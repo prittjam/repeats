@@ -32,7 +32,7 @@ classdef PatternPrinter < handle
             [Xp,inl] = sfm(X,Gs,Rti);
             Hinv = inv(Hinf);
             xp = PT.renormI(Hinv*reshape(Xp,3,[]));
-            xpd = CAM.rd_div(xp,mle_impl.cc,q);
+            xpd = CAM.rd_div(xp,mle_impl.cc,q/sum(2*mle_impl.cc)^2);
             x = reshape(mle_impl.x(:,inl),3,[]);
             err = reshape(xpd(1:2,:)-x(1:2,:),[],1);
         end
@@ -72,7 +72,7 @@ classdef PatternPrinter < handle
         end
         
         function [] = pack(this,q,Hinf,X,Rtij)
-            this.q0 = q;
+            this.q0 = q*sum(2*this.cc)^2;
             this.Hinf0 = Hinf;
             this.X0 = X;
             this.Rtij0 = Rtij;
@@ -99,11 +99,12 @@ classdef PatternPrinter < handle
         
         function [q,Hinf,X,Rtij] = unpack(this,dz)
             dq = dz(this.params.q);
+            
             dH = dz(this.params.H);
             dX = zeros(9,size(this.X0,2));
             dX([1 2 4 5 7 8],:) = reshape(dz(this.params.X),6,[]);
             dRtij = reshape(dz(this.params.Rtij),this.num_Rt_params,[]);
-            
+ 
             q = this.q0+dq;
             X = this.X0+dX;
             
@@ -169,7 +170,7 @@ classdef PatternPrinter < handle
                                        transpose(1:this.num_Rt_params)+...
                                        this.params.X(end));
                     dRti_dj_ii = cat(1,dRti_dj_ii,aa(:));
-                dRti_dj_jj = cat(1,dRti_dj_jj,bb(:));
+                    dRti_dj_jj = cat(1,dRti_dj_jj,bb(:));
                 end
             end
             v = ones(numel([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii]),1);
@@ -190,8 +191,8 @@ classdef PatternPrinter < handle
             err0 = this.errfun(this.dz0,this);
             Jpat = this.make_Jpat();
             
-            lb = -6/(2*sum(this.cc))^2;
-
+            %            lb = -6/(2*sum(this.cc))^2;
+            lb=-6;
             if numel(this.dz0) <= numel(err0)
                 lb = transpose([lb -inf(1,numel(this.dz0)-1)]);
                 ub = transpose([0 inf(1,numel(this.dz0)-1)]);
@@ -216,8 +217,9 @@ classdef PatternPrinter < handle
                                         this.Gm,this.inverted, ...
                                         Rtij,X,size(this.x,2)); 
             [Xp,inl] = sfm(X,Gs,Rti);
+
             
-            M = struct('q',q,'cc', this.cc, ...
+            M = struct('q',q/sum(2*this.cc)^2,'cc', this.cc, ...
                        'Hinf',H,'X',X, ...
                        'Rti', Rti,'Gs',Gs, ...
                        'Gm',Gm);

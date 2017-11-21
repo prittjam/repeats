@@ -46,6 +46,7 @@ classdef RepeatLo < handle
 %            figure;
 %            LAF.draw(gca,x(:,tstinl))
 %            
+
             if ~isfield(M00,'q')
                 q = 0;
             else

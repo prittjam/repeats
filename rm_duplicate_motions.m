@@ -1,4 +1,4 @@
-function w = rm_duplicate_codes(K,w)
+function w = rm_duplicate_motions(K,w)
 for k = 1:numel(w)
     w1 = w;
     w1(k) = 0;
@@ -7,3 +7,4 @@ for k = 1:numel(w)
         w = w1;
     end
 end
+

@@ -11,9 +11,10 @@ v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
 num_edges = size(corresp,2);
 
 w = sqrt(sum([v(4:5,corresp(1,:))-v(4:5,corresp(2,:))].^2));
-edge_table = table([corresp(1,:);corresp(2,:)]', w', [1:num_edges]', ...
+edge_table = table([corresp(1,:);corresp(2,:)]', -w', [1:num_edges]', ...
                    'VariableNames',{'EndNodes','Weight','Ind'});
 G = graph(edge_table,'OmitSelfLoops');
+
 [T,pred] = minspantree(G,'Type','forest'); 
 
 s = pred(pred~=0);t = find(pred~=0);
