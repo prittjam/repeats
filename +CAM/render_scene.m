@@ -9,7 +9,8 @@ P2 = K*[R -R*c];
 
 figure;
 hold on;
-plot3(X(1,:),X(2,:),X(3,:),'b.');
+plot3(c(1),c(2),c(3),'ko');
+
 hold on;line([c(1) c(1)+20*look_right(1)], [c(2) c(2)+20*look_right(2)] ,[c(3) c(3)+20*look_right(3)],'color','r');hold off;
 hold on;line([c(1) c(1)+20*look_at(1)], [c(2) c(2)+20*look_at(2)] ,[c(3) c(3)+20*look_at(3)],'color','b');hold off;
 %)],'color','g');hold off;

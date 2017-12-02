@@ -13,6 +13,12 @@ function [timg,T,A] = rectify(img,H,varargin)
     nx = size(img,2);
     ny = size(img,1);
 
+%    border = [0.5    0.5; ...
+%              nx+0.5 0.5; ...    
+%              nx+0.5 ny+0.5; ...
+%              0.5    ny+0.5];
+%
+
     border = [0.5    0.5; ...
               nx+0.5 0.5; ...    
               nx+0.5 ny+0.5; ...
@@ -48,7 +54,7 @@ function [timg,T,A] = rectify(img,H,varargin)
             l = -l;
         end
 
-        newpt = endpts(:,1)+[200*l(1:2);1];
+        newpt = endpts(:,1)+[100*l(1:2);1];
         l(3) = -dot(l(1:2),newpt(1:2));
 
         pts = LINE.intersect_rect(l,rect);
@@ -141,3 +147,4 @@ function [T,S] = register_by_scale(img,T0)
     T = maketform('composite', ...
                   maketform('affine',S'), ...
                   T0);
+    
