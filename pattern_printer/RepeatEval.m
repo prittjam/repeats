@@ -1,20 +1,24 @@
-classdef GrEval < handle
+classdef RepeatEval < handle
     properties    
-        extentT = log(1.1);
+        extentT = log(1.05);
     end
     
     methods
-        function this = GrEval(varargin)
+        function this = RepeatEval(varargin)
             [this,~] = cmp_argparse(this,varargin{:});
         end        
         
-        function [loss,E] = calc_loss(this,dr,corresp,M)         
-            H = M.H;
-            v = LAF.renormI(blkdiag(H,H,H)*[dr(:).u]);
+        function [loss,E] = calc_loss(this,x,corresp,M)         
+            H = M.Hinf;
+            if ~isfield(M,'q')
+                xp = LAF.renormI(blkdiag(H,H,H)*x);                
+            else
+                xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,M.cc,M.q));                
+            end
             
-            D2 = [sum((v(1:2,:)-v(4:5,:)).^2); ...
-                  sum((v(7:8,:)-v(4:5,:)).^2); ...
-                  sum((v(7:8,:)-v(1:2,:)).^2)];
+            D2 = [sum((xp(1:2,:)-xp(4:5,:)).^2); ...
+                  sum((xp(7:8,:)-xp(4:5,:)).^2); ...
+                  sum((xp(7:8,:)-xp(1:2,:)).^2)];
             lr = 0.5*(log(D2(:,corresp(2,:)))-log(D2(:,corresp(1,:))));
 
             E = max(abs(lr)); 

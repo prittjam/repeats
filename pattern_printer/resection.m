@@ -8,7 +8,6 @@ switch motion_model
   case 'Rt'
     motion_solver = 'HG.laf2xN_to_RtxN';
 end
-
 Hinf = model0.Hinf;
 Hinv = inv(model0.Hinf);
 
@@ -38,8 +37,8 @@ d2 = sum([ut_j-x(:,corresp(2,:)); ...
           ut_i-x(:,corresp(1,:))].^2);
 inl = find(double(d2 < cfg.vqT));
 good_corresp = corresp(:,inl);
-Rtij = Rtij(:,inl);
 
+Rtij = Rtij(:,inl);
 
 function xform_list = laf2xNxN_to_RtxNxN(x,ind,motion_solver,do_inversion)
 N = size(x,2);
