@@ -1,14 +1,29 @@
 function [timg,T,trect] = ru_div(img,cc,q,varargin)
+cfg = struct('extents', [], ...
+             'bbox', []);
+[cfg,varargin] = cmp_argparse(cfg,varargin{:});
+
+T0 = CAM.make_ru_div_tform(cc,q);
+
 nx = size(img,2);
 ny = size(img,1);
 
-border = [0.5    0.5; ...
-          nx+0.5 0.5; ...
-          nx+0.5 ny+0.5; ...
-          0.5    ny+0.5];
+if ~isempty(cfg.bbox)
+    border = cfg.bbox;
+else
+    border = [0.5        0.5; ...
+              (nx-1)+0.5 0.5; ...    
+              (nx-1)+0.5 (ny-1)+0.5; ...
+              0.5        (ny-1)+0.5];
+end
 
-T = CAM.make_ru_div_tform(cc,q);
-
+if cfg.extents
+    [T,S] = register_by_extent(img,T0,cfg.extents);
+else
+    T = T0;
+    S = eye(3);
+end
+ 
 tbounds = tformfwd(T,border);
 
 minx = min(tbounds(:,1));
@@ -22,4 +37,32 @@ timg = imtransform(img,T,'bicubic', ...
                    'YData',[miny maxy], ...
                    varargin{:});
 
+if ~isempty(cfg.extents)
+    timg = imresize(timg,[ny nx]);
+end
+
 trect = [minx maxx miny maxy];
+
+function [T,S] = register_by_extent(img,T0,extents)
+    nx = size(img,2);
+    ny = size(img,1);
+   
+    border0 = [0.5       0.5; ...
+              (nx-1)+0.5 0.5; ...    
+              (nx-1)+0.5 (ny-1)+0.5; ...
+              0.5        (ny-1)+0.5];
+    tborder0 = tformfwd(T0,border0);
+    
+    xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
+    yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
+    
+    sx = abs(extents(1)/xextent);
+    sy = abs(extents(2)/yextent);
+
+    S = [sx  0 0;
+          0 sy 0;
+          0  0 1];
+    
+    T = maketform('composite', ...
+                  maketform('affine',S'), ...
+                  T0);
