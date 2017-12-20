@@ -51,11 +51,11 @@ code_ind = find(w>0);
 d2c = d2(:,code_ind);
 [min_d2c,Gm] = min(d2c,[],2);
 
-assert(all(min_d2c < cfg.vqT), ...
-       'Motion segmentation increased error.');
-
+%assert(all(min_d2c < cfg.vqT), ...
+%       'Motion segmentation increased error.');
+%
 Gm(min_d2c > cfg.vqT) = nan;
 Gm = findgroups(Gm);
 
-assert(sum(~isnan(Gm))==size(corresp,2), ...
-       'Some correspondences dont have motions.');
+%assert(sum(~isnan(Gm))==size(corresp,2), ...
+%       'Some correspondences dont have motions.');

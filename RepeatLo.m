@@ -48,10 +48,11 @@ classdef RepeatLo < handle
 %            
 
             if ~isfield(M00,'q')
-                q = 0;
+                q = -1e-9;
             else
                 q = M00.q;
             end
+
             A = eye(3,3);
 %            if (any(LAF.is_right_handed(x(:,inl))))
 %                Grect = nan(size(Gapp));  
@@ -67,7 +68,6 @@ classdef RepeatLo < handle
 %                    G = Gapp;
 %                end
 %            end
-           
             M0 = struct('Hinf', A*M00.Hinf, ...
                         'cc', this.cc, ...
                         'q', q);
