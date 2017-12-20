@@ -16,6 +16,7 @@ function [timg,T,A] = rectify(img,H,varargin)
     nx = size(img,2);
     ny = size(img,1);
 
+
     if ~isempty(cfg.bbox)
         border = cfg.bbox;
     else
@@ -54,7 +55,8 @@ function [timg,T,A] = rectify(img,H,varargin)
             l = -l;
         end
 
-        newpt = endpts(:,1)+[00*l(1:2);1];
+        newpt = endpts(:,1)+[100*l(1:2);1];
+
         l(3) = -dot(l(1:2),newpt(1:2));
 
         pts = LINE.intersect_rect(l,rect);

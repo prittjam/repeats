@@ -26,4 +26,8 @@ y = reshape(tmp(2:2:end),[],1);
 lh = line(x,y,varargin{:});
 axis tight;
 
+<<<<<<< HEAD
 pts2 = [x y]';
+=======
+pts2 = [x;y];
+>>>>>>> 4ad23f5c2fedb4b162a1e34fb838bcf8c647a3a8
