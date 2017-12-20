@@ -1,8 +1,9 @@
-function [model_list,stats_list] = greedy_repeats(dr,cc,motion_model,num_planes)
+function [model_list,stats_list] = ...
+    greedy_repeats(x,Gsamp,Gapp,cc,motion_model)
 if nargin < 4
     num_planes = 1;
 end
-
+keyboard;
 sigma = 1;
 threshold_list = { 'extentT', log(1.05), ...
                    'vqT',  21.026*sigma^2, ...
@@ -12,7 +13,7 @@ corresp = cmp_splitapply(@(u) { VChooseK(u,2)' }, ...
                          1:numel(dr),[dr(:).Gapp]);
 corresp = [ corresp{:} ];
 
-[ransac,eval,lo] = make_ransac(dr,cc,motion_model,corresp, ...
+[ransac,eval,lo] = make_ransac(x,cc,motion_model,corresp, ...
                                threshold_list);
 
 for k = 1:num_planes

@@ -71,19 +71,18 @@ cc = ([img.width img.height]'+1)/2;
 dr = DR.get(img,cid_cache, ...
                 { 'type',cfg.dr.dr_type, ...
                   'reflection', true });
-keyboard;
-dr = group_desc(dr);
+[x,Gsamp,Gapp] = group_desc(dr);
 
-figure;imshow(img.data);
+figure;
+imshow(img.data);
 
 for k = 1:1
-    [model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
+    [model_list,stats_list] = greedy_repeats(x,Gsamp,Gapp,cc,ex.motion_model);
     for k = 1:numel(model_list)
-        rimg= ...
-            IMG.render_rectification([dr(:).u],model_list(k),img.data);
-        figure;imshow(rimg);
+        rimg = IMG.render_rectification(x,model_list(k),img.data);
+        figure;
+        imshow(rimg);
         IMG.output_rectification(img.url,rimg,output_prefix); 
-        
 %        h = draw_results(img,rimg);    
 %        output_reconstruction(img.data,model_list{k}.u_corr, ...
 %                              model_list{k},output_prefix);
