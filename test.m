@@ -15,16 +15,16 @@ function [] = test()
 %ex_list(1) = struct('img_name', 'building_us.jpg', ...
 %                    'img_set', 'dggt');
 %%%
-%ex_list(1) = struct('img_name', 'GOPR0181.JPG', ...
-%                    'img_set', 'Hero 4 Black/tyn/scaled50');
+ex_list(1) = struct('img_name', 'GOPR0181.JPG', ...
+                    'img_set', 'Hero 4 Black/tyn/scaled50');
 %%%%%%%
 %ex_list(1) = struct('img_name', 'GOPR0416.png', ...
 %                    'img_set', 'Hero 4 Black/rotunda');
-%%%%%
+%%%%%%%
 
 %ex_list(1) = struct('img_name', 'GOPR0186.JPG', ...
 %                    'img_set', 'Hero 4 Black/scorner/scaled30');
-%%
+%%%
 %%%
 
 %ex_list(1) = struct('img_name', 'DSC_2157.JPG', ...
@@ -33,20 +33,20 @@ function [] = test()
 %%%%%%%
 %ex_list(1) = struct('img_name', 'building_us.jpg', ...
 %                    'img_set', 'dggt');
-%%%%ex_list(1) = struct('img_name', 'fireengine1.jpg' , ...
+%%%%%ex_list(1) = struct('img_name', 'fireengine1.jpg' , ...
 %%                    'img_set','dggt');
 %
 %
 %ex_list(1) = struct('img_name', 'rhino1.jpg', ...
 %                    'img_set','dggt');
-%%%
+%%%%
 
 %ex_list(1) = struct('img_name', 'GOPR0383.png', ...
 %                    'img_set', 'Hero4B/rotunda');
 %%
 
-ex_list(1) = struct('img_name', 'SY_darts.jpg' , ...
-                    'img_set', 'dggt');
+%ex_list(1) = struct('img_name', 'SY_darts.jpg' , ...
+%                    'img_set', 'dggt');
 greedy_repeats_init('..');
 
 imparams = { 'img_set', ex_list.img_set, ...
@@ -55,7 +55,7 @@ imparams = { 'img_set', ex_list.img_set, ...
              'img_names', { ex_list(1).img_name } };
  
 cache_params = { 'read_cache', true, ...
-                 'write_cache', true };
+                 'write_cache', false };
 
 init_dbs(cache_params{:});
 cfg = CFG.get(imparams{:});
@@ -99,7 +99,7 @@ solver = WRAP.laf3x2_to_ql(cc);
 
 [~,file_name,ext] = fileparts(img.url);
 
-save(['mat/' file_name '_4.mat'], ...
+save(['mat/' file_name '.mat'], ...
      'model_list','stats_list','cspond','x','img');
 
 figure;
@@ -107,7 +107,8 @@ imshow(img.data);
 for k2 = 1:numel(model_list)
     rimg= ...
         IMG.render_rectification(x,model_list(k2),img.data, ...
-                                 'Registration','affinity');
+                                 'Registration','affinity', ...
+                                 'extents',[size(img,2) size(img,1)]');
     figure;
     imshow(rimg);
     figure;

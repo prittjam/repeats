@@ -42,8 +42,3 @@ if ~exist('+DR','dir')
     feval('cmpfeat_init'); 
     cd(cur_path);
 end
-
-
-if ~exist('get_dr')
-    addpath(fullfile([src_path 'vl']));
-end

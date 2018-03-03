@@ -68,7 +68,9 @@ classdef RepeatLo < handle
 %                    G = Gapp;
 %                end
 %            end
-            M0 = struct('Hinf', A*M00.Hinf, ...
+            H = eye(3);
+            H(3,:) = transpose(M00.l);            
+            M0 = struct('Hinf', A*H, ...
                         'cc', this.cc, ...
                         'q', q);
 
