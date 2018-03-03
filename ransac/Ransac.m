@@ -8,16 +8,6 @@ classdef Ransac < handle
         lo = []
     end
     
-    properties
-        stats = struct('time_elapsed', 0, ...
-                       'trial_count', 0, ...
-                       'sample_count', 0, ...
-                       'model_count', 0, ...
-                       'lo_count', 0);
-
-        K = [];
-    end 
-    
     methods
         function this = Ransac(model,sampler,eval,varargin)
             [this,~] = cmp_argparse(this,varargin{:});
@@ -27,23 +17,24 @@ classdef Ransac < handle
             this.eval = eval;
         end
         
-        function [loM,lo_res] = do_lo(this,meas,corresp,res)
+        function [loM,lo_res,lo_stats] = do_lo(this,x,corresp,M,res,varargin)
             loM = [];
             lo_res = [];
             if ~isempty(this.lo)
-                [loM,lo_res] = this.lo.fit(meas,corresp,res);
-                this.stats.lo_count = this.stats.lo_count+1;
+                [loM,lo_res] = this.lo.fit(x,corresp,M,res, ...
+                                           varargin{:});
             end
         end
 
-        function  [optM,opt_res,res,stats] = fit(this,meas,corresp)
+        function  [optM,opt_res,stats] = fit(this,x,corresp,varargin)
             tic;
 
-            this.stats = struct('time_elapsed', 0, ...
-                                'trial_count', 0, ...
-                                'sample_count', 0, ...
-                                'model_count', 0, ...
-                                'lo_count', 0);
+            stats = struct('time_elapsed', 0, ...
+                           'trial_count', 0, ...
+                           'sample_count', 0, ...
+                           'model_count', 0, ...
+                           'lo', [], ...
+                           'ransac', []);
 
             N = inf;
             res = struct('loss', inf, ...
@@ -55,12 +46,18 @@ classdef Ransac < handle
             has_model = false;
             while true         
                 for k = 1:this.sampler.max_num_retries
-                    idx = this.sampler.sample(meas,corresp);
+                    idx = this.sampler.sample(x,corresp);
                     is_sample_good = ...
-                        this.model.is_sample_good(meas,corresp,idx);
+                        this.model.is_sample_good(x,corresp,idx);
                     if is_sample_good
-                        M = this.model.fit(meas,corresp,idx);
-                        if ~isempty(M)
+                        try
+                            model_list = this.model.fit(x, ...
+                                                        corresp,idx, ...
+                                                        varargin{:});
+                        catch
+                            model_list = [];
+                        end
+                        if ~isempty(model_list)
                             has_model = true;
                             break;
                         end
@@ -71,52 +68,69 @@ classdef Ransac < handle
                        'Could not draw a non-degenerate sample!'); 
                 assert(has_model, ...
                        'Could not generate a model!');                     
-                    
-                this.stats.sample_count = this.stats.sample_count+k;
                 
-                model_count = 0;
+                stats.sample_count = stats.sample_count+k;
                 
-                is_model_good = false(1,numel(M));
-                for k = 1:numel(M)
+                is_model_good = false(1,numel(model_list));
+                for k = 1:numel(model_list)
                     is_model_good(k) = ...
-                        this.model.is_model_good(meas,corresp,idx,M(k));
+                        this.model.is_model_good(x,corresp,idx,model_list(k));
                 end
                 
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
-                        Mfix = this.model.fix(meas,corresp,idx,M(k));
+                        Mfix = this.model.fix(x,corresp,idx,model_list(k));
                         if ~isempty(Mfix)
                             is_model_good(k) = true;
-                            M(k) = Mfix;
+                            model_list(k) = Mfix;
                         end
                     end
-                    M = M(is_model_good);
+                    model_list = model_list(is_model_good);
                 end
                 
-                if ~isempty(M)
-                    this.stats.model_count = this.stats.model_count+numel(M);
+                if ~isempty(model_list)
+                    stats.model_count = stats.model_count+numel(model_list);
 
-                    loss = inf(numel(M),1);
+                    loss = inf(numel(model_list),1);
 
-                    for k = 1:numel(M)
-                        [loss(k),err{k}] = this.eval.calc_loss(meas,corresp,M(k));
+                    for k = 1:numel(model_list)
+                        [loss(k),err{k}] = this.eval.calc_loss(x,corresp,model_list(k));
                         cs{k} = this.eval.calc_cs(err{k});
                     end
                     
                     [~,mink] = min(loss);
                     
-                    res0 = struct('M', M(mink), ...
-                                  'err', err{mink}, ...
+                    M0 = model_list(mink);
+                    res0 = struct('err', err{mink}, ...
                                   'loss', loss(mink), ...
                                   'cs', cs{mink}, ...
                                   'mss', idx);
 
+                    
                     if (sum(res0.cs) > 0) && ...
                             (res0.loss < res.loss) && ...
                             (sum(res0.cs) >= sum(res.cs))
+                        M = M0;
                         res = res0;
-                        [loM,lo_res] = this.do_lo(meas,corresp,res); 
+
+                        stats.ransac = cat(2,stats.ransac, ...
+                                           struct('M',M, ...
+                                                  'res',res, ...
+                                                  'model_count', stats.model_count, ...
+                                                  'trial_count', stats.trial_count));
+                        if res.loss < opt_res.loss
+                            optM = M;
+                            opt_res = res;
+                        end
+                        [loM,lo_res] = ...
+                            this.do_lo(x,corresp,M0,res0,varargin{:});
+                        lo_stats = struct('loM',loM, ...
+                                          'lo_res',lo_res, ...
+                                          'trial_count',stats.trial_count, ...
+                                          'model_count',stats.model_count); ...
+                            stats.lo = cat(2,stats.lo,lo_stats);
+
                         if (lo_res.loss < opt_res.loss)
                             optM = loM;
                             opt_res = lo_res;
@@ -128,19 +142,32 @@ classdef Ransac < handle
                     end   
                 end
                 
-                this.stats.trial_count = this.stats.trial_count+1;
+                stats.trial_count = stats.trial_count+1;
                 
-                if (this.stats.trial_count >= N)
+                if (stats.trial_count >= N)
                     break;
                 end
             end
             
-            if this.stats.lo_count == 0
-                [optM,opt_res] = this.do_lo(meas,corresp,res);
+            if numel(stats.lo) == 0
+                stats.ransac = cat(2,stats.ransac, ...
+                                   struct('M',M, ...
+                                          'res',res, ...
+                                          'model_count', stats.model_count, ...
+                                          'trial_count', stats.trial_count));
+                [loM,lo_res] = this.do_lo(x,corresp,M,res,varargin{:});
+                lo_stats = struct('loM',loM, ...
+                                  'lo_res',lo_res, ...
+                                  'trial_count',stats.trial_count, ...
+                                  'model_count',stats.model_count); 
+                stats.lo = cat(2,stats.lo,lo_stats);
+                if (lo_res.loss < opt_res.loss)
+                    optM = loM;
+                    opt_res = lo_res;
+                end
             end
             
-            this.stats.time_elapsed = toc;               
-            stats = this.stats;
+            stats.time_elapsed = toc;               
         end
     end
 end
