@@ -167,6 +167,7 @@ function [T,S] = register_by_scale(img,T0)
                   T0);
 
 function [T,S] = register_by_extent(img,T0,extents)
+    keyboard;
     nx = size(img,2);
     ny = size(img,1);
    
