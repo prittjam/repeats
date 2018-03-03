@@ -1,3 +1,0 @@
-function T = mtx_make_T(t)
-T = [eye(length(t)) t; ...
-     zeros(1,length(t)) 1]; 
