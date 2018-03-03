@@ -1,100 +1,116 @@
 function [] = test()
-greedy_repeats_init();
-%ex = struct('img_names','OLD_rot_001.jpg', ...
-%            'motion_model', 'Rt');
-%ex = struct('img_names', {'circular_window.png'}, ...
-%            'motion_model', 'Rt');
-%%%%%%%%%%%%%%%%
-%ex = struct('img_names', {'crochet9.png'}, ...
-%            'motion_model', 'Rt');
-%
-%ex = struct('img_names', {'crochet-011.jpg'}, ...
-%            'motion_model', 'Rt');
-%%%%%%%%%%%%
-% ex = struct('img_names', {'crochet.png'}, ...
-%            'motion_model', 'Rt');
-%%%%%%%%%%
-ex = struct('img_names', {'kitkat.jpg'}, ...
-            'motion_model', 'Rt');
-
-%%%\%%%%%%%%%%%%%%
-%ex = struct('img_names', {'building_us.jpg'}, ...
-%            'motion_model', 't');
-%%%%%%
-%ex = struct('img_names', {'minnesota-tennis-courts-aerial.jpg'}, ...
-%            'motion_model', 't');
+%listA = {'building_us.jpg'};
+%listA = {'rhino1.jpg'};
+%listA = { 'fireengine1.jpg' };
+%listA = {'134509092_4e69559100_o.jpg'};
+%listA = {'Transamerica_Pyramid_top.jpg'};
+%listA = {'img_9541.jpg'};
+%listA = {'cathedral.jpg'};
+%listA = {'two_planes.jpg'};
+%listA = {'ostrava.jpg'};
+%listA = {'img_3303.jpg'};
+%listA = {'checkerboard.jpg'};
+%listA = {'templehof11.jpg'};
 %%
-%ex = struct('img_names', {'object0149.view01.png'}, ...
-%            'motion_model', 't');
+%ex_list(1) = struct('img_name', 'building_us.jpg', ...
+%                    'img_set', 'dggt');
 %%%
-%ex = struct('img_names', {'prague71.jpg'}, ...
-%            'motion_model', 't');
-%
-%ex = struct('img_names', {'calib_prague21.jpg'}, ...
-%            'motion_model', 't');
-%
-%ex = struct('img_names', {'calib_prague29.jpg'}, ...
-%            'motion_model', 't');
+%ex_list(1) = struct('img_name', 'GOPR0181.JPG', ...
+%                    'img_set', 'Hero 4 Black/tyn/scaled50');
+%%%%%%%
+%ex_list(1) = struct('img_name', 'GOPR0416.png', ...
+%                    'img_set', 'Hero 4 Black/rotunda');
+%%%%%
 
-
-%%%%ex = struct('img_names', {'wall.jpg'}, ...
-%            'motion_model', 'Rt');
+%ex_list(1) = struct('img_name', 'GOPR0186.JPG', ...
+%                    'img_set', 'Hero 4 Black/scorner/scaled30');
 %%
-%ex = struct('img_names', {'fairey2.png'}, ...
-%            'motion_model', 'Rt');
-%%%%
-%%%%
-%%
-output_prefix = 'res';
+%%%
 
-imparams = { 'img_set', 'dggt', ...
+%ex_list(1) = struct('img_name', 'DSC_2157.JPG', ...
+%                    'img_set', 'Hero 4 Black/zderaz');
+%%%
+%%%%%%%
+%ex_list(1) = struct('img_name', 'building_us.jpg', ...
+%                    'img_set', 'dggt');
+%%%%ex_list(1) = struct('img_name', 'fireengine1.jpg' , ...
+%%                    'img_set','dggt');
+%
+%
+%ex_list(1) = struct('img_name', 'rhino1.jpg', ...
+%                    'img_set','dggt');
+%%%
+
+%ex_list(1) = struct('img_name', 'GOPR0383.png', ...
+%                    'img_set', 'Hero4B/rotunda');
+%%
+
+ex_list(1) = struct('img_name', 'SY_darts.jpg' , ...
+                    'img_set', 'dggt');
+greedy_repeats_init('..');
+
+imparams = { 'img_set', ex_list.img_set, ...
              'max_num_cores', 1, ...
-             'dr_type','all', ...
              'res_path','~/cvpr16', ...
-             'img_names', ex.img_names };
-
+             'img_names', { ex_list(1).img_name } };
+ 
 cache_params = { 'read_cache', true, ...
                  'write_cache', true };
 
+init_dbs(cache_params{:});
 cfg = CFG.get(imparams{:});
 
-init_dbs(cache_params{:});
 sqldb = SQL.SqlDb.getObj();
+
 img_set = sqldb.get_img_set(cfg.img_set.img_set, ...
                             cfg.img_set.img_names);
 img_metadata = img_set(1);
 cid_cache = CASS.CidCache(img_metadata.cid, cache_params{:});
+
 img = Img('data',cid_cache.get_img(), ...
           'cid',img_metadata.cid, ...
           'url',img_metadata.url);       
-cc = ([img.width img.height]'+1)/2;
+
 dr = DR.get(img,cid_cache, ...
-                { 'type',cfg.dr.dr_type, ...
-                  'reflection', true });
+                {'type','all', ...
+                'reflection',true});
+
+cc = [(img.width+1)/2 (img.height+1)/2];
+
 [x,Gsamp,Gapp] = group_desc(dr);
 
 figure;
+subplot(1,2,1);
 imshow(img.data);
+LAF.draw_groups(gca,x,Gapp);
+subplot(1,2,2);
+imshow(img.data);
+LAF.draw_groups(gca,x,Gsamp);
 
-for k = 1:1
-    [model_list,stats_list] = greedy_repeats(x,Gsamp,Gapp,cc,ex.motion_model);
-    for k = 1:numel(model_list)
-        rimg = IMG.render_rectification(x,model_list(k),img.data);
-        figure;
-        imshow(rimg);
-        IMG.output_rectification(img.url,rimg,output_prefix); 
-%        h = draw_results(img,rimg);    
-%        output_reconstruction(img.data,model_list{k}.u_corr, ...
-%                              model_list{k},output_prefix);
-%        matlab2tikz('figurehandle',gcf, ...
-%                    'filename','fig.tex' , ...
-%                    'standalone', false);
-    
-    end
-end
+%solver = WRAP.laf1x2_to_lu(cc);
+%solver = WRAP.laf1x2_to_qlu(cc); 
+%solver = WxRAP.laf1x2_to_qlsu(cc); 
+%solver = WRAP.laf2x2_to_qluv(cc); 
+%solver = WRAP.laf2x2_to_qlusv(cc); 
+solver = WRAP.laf3x2_to_ql(cc);
 
-%img = Img('url','download2.jpg');       
-%cid_cache = CASS.CidCache(img.cid,cache_params{:}); 
-%[~,name,~] = fileparts(img.url);
-%save(['res/' name], 'dr','model_list','stats_list','img');
-%%keyboard;
+[model_list,lo_res_list,stats_list,cspond] = ...
+    fit_coplanar_patterns(solver,x,Gsamp,Gapp,cc,1);
+
+[~,file_name,ext] = fileparts(img.url);
+
+save(['mat/' file_name '_4.mat'], ...
+     'model_list','stats_list','cspond','x','img');
+
+figure;
+imshow(img.data);
+for k2 = 1:numel(model_list)
+    rimg= ...
+        IMG.render_rectification(x,model_list(k2),img.data, ...
+                                 'Registration','affinity');
+    figure;
+    imshow(rimg);
+    figure;
+    uimg = IMG.ru_div(img.data,model_list.cc,model_list.q);
+    imshow(uimg);
+end    

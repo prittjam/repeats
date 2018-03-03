@@ -3,7 +3,7 @@ corresp = cmp_splitapply(@(u) { VChooseK(u,2)' }, ...
                          1:numel(Gsamp),Gsamp);
 corresp = [ corresp{:} ];
 sampler = RepeatSampler(x,corresp,solver.mss,Gsamp);
-eval = ConjTransEval(cc);
+eval = RepeatEval();
 
 lo = RepeatLo(cc,'t','vqT',10,'reprojT',10);
 ransac = Ransac(solver,sampler,eval,'lo',lo);
