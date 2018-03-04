@@ -98,7 +98,7 @@ classdef PatternPrinter < handle
             this.dz0 = zeros(this.params.Rtij(end),1);
         end
         
-        function [q,Hinf,X,Rtij] = unpack(this,dz)
+        function [q,Hinf,X,Rtij,A,l] = unpack(this,dz)
             dq = dz(this.params.q);
             
             dH = dz(this.params.H);
@@ -109,16 +109,19 @@ classdef PatternPrinter < handle
             q = this.q0+dq;
             X = this.X0+dX;
             Rtij = this.Rtij0;
+            A = eye(3);
             if numel(dH) == 3
-                Hinf = eye(3,3);
-                Hinf(3,:) = this.l0+dH';
+                l = this.l0+dH(1:3);
                 Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
             elseif numel(dH) == 6
-                Hinf = [this.A0(1)+dH(1) this.A0(2)+dH(2) 0; ... 
-                        0                this.A0(3)+dH(3) 0; ...
-                        this.l0(1)+dH(4) this.l0(2)+dH(5)    this.l0(3)+dH(6)];
+                A(1,1) = this.A0(1)+dH(1);
+                A(1,2) = this.A0(2)+dH(2);
+                A(2,2) = this.A0(3)+dH(3);
+                l = this.l0+dH(4:6);
                 Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;                
             end
+            Hinf = A;
+            Hinf(3,:) = transpose(l);
         end
         
         function Jpat = make_Jpat(this)
@@ -209,16 +212,16 @@ classdef PatternPrinter < handle
                 resnorm = sum(err.^2);
             end
 
-            [q,H,X,Rtij] = this.unpack(dz);
+            [q,~,X,Rtij,A,l] = this.unpack(dz);
 
             [Gs,Rti,Gm] = composite_xforms(this.Tlist, ...
-                                        this.Gm,this.inverted, ...
-                                        Rtij,X,size(this.x,2)); 
+                                           this.Gm,this.inverted, ...
+                                           Rtij,X,size(this.x,2)); 
             [Xp,inl] = sfm(X,Gs,Rti);
 
             
             M = struct('q',q/sum(2*this.cc)^2,'cc', this.cc, ...
-                       'H',H,'X',X, ...
+                       'A',A,'l',l,'X',X, ...
                        'Rti', Rti,'Gs',Gs, ...
                        'Gm',Gm);
             

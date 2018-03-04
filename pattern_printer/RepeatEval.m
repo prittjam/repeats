@@ -9,14 +9,9 @@ classdef RepeatEval < handle
         end        
         
         function [loss,E] = calc_loss(this,x,corresp,M)         
-            if ~isfield(M,'H')
-                H = M.A*[1 0 0;  ...
-                         0 1 0; ...
-                         transpose(M.l)];
-            else
-                H = M.H;
-            end
-
+            H = M.A*[1 0 0;  ...
+                     0 1 0; ...
+                     transpose(M.l)];
             if ~isfield(M,'q')
                 xp = LAF.renormI(blkdiag(H,H,H)*x);                
             else
