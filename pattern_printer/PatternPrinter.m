@@ -76,22 +76,21 @@ classdef PatternPrinter < handle
             this.Hinf0 = Hinf;
             this.X0 = X;
             this.Rtij0 = Rtij;
-            
             q_idx = 1;
-%            switch this.motion_model
-%              case 't'
+            switch this.motion_model
+              case 't'
                 H_idx = [1:3]+q_idx(end);
                 X_idx = [1:6*size(X,2)]+H_idx(end);
-%%              case 'Rt'
-%                H_idx = [1:8]+q_idx(end);
-%                X_idx = [1:6*size(X,2)]+H_idx(end);
                 Rtij_idx = ...
                     [1:2*size(Rtij,2)]+X_idx(end);
                 this.num_Rt_params = 2;
-%                Rtij_idx = ...
-%                    [1:3*size(Rtij,2)]+X_idx(end);
-%                this.num_Rt_params = 3;
-%                %            end
+              case 'Rt'
+                H_idx = [1:8]+q_idx(end);
+                X_idx = [1:6*size(X,2)]+H_idx(end);
+                Rtij_idx = ...
+                    [1:3*size(Rtij,2)]+X_idx(end);
+                this.num_Rt_params = 3;
+            end
             this.params =  struct('q', q_idx,'H', H_idx, ...
                                   'X', X_idx, 'Rtij', Rtij_idx);
             this.dz0 = zeros(this.params.Rtij(end),1);
@@ -107,7 +106,6 @@ classdef PatternPrinter < handle
  
             q = this.q0+dq;
             X = this.X0+dX;
-            
             Rtij = this.Rtij0;
             if numel(dH) == 3
                 Hinf = this.Hinf0;
@@ -117,9 +115,8 @@ classdef PatternPrinter < handle
                 Hinf = [1+dH(1)   dH(4)   dH(7); ...
                         dH(2)    1+dH(5)  dH(8); ...
                         dH(3)     dH(6)     1  ]*this.Hinf0;
-                %                Rtij(1:3,:) =
-                %                this.Rtij0(1:3,:)+dRtij;                
-                Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
+                Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;                
+                %                Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
             end
         end
         

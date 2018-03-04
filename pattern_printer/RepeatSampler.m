@@ -1,7 +1,7 @@
 classdef RepeatSampler < handle
     properties
         min_trial_count = 100;
-        max_trial_count = 500;
+        max_trial_count = 1000;
         max_num_retries = 100;
         
         confidence = 0.99
@@ -31,7 +31,8 @@ classdef RepeatSampler < handle
         function idx = sample(this,dr,corresp,varargin)
             while true
                 idx = randsample(this.N,this.k);
-                if numel(unique(corresp(:,idx))) == 2*this.k
+                if (numel(unique(corresp(:,idx))) == 2*this.k) && ...
+                    (numel(unique(this.labeling0(corresp(:,idx)))) == this.k)
                     break;
                 end
             end

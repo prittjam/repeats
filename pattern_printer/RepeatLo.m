@@ -41,35 +41,37 @@ classdef RepeatLo < handle
             
             N = size(x,2);
             G = separate_look_alikes(x,cspond,res);
-
+            keyboard;
 %            tstinl = find(Gcomp==Gmax);
 %            figure;
 %            LAF.draw(gca,x(:,tstinl))
 %            
-
             if ~isfield(M00,'q')
                 q = -1e-9;
             else
                 q = M00.q;
             end
-
-            A = eye(3,3);
-%            if (any(LAF.is_right_handed(x(:,inl))))
-%                Grect = nan(size(Gapp));  
-%                Grect(inl) = findgroups(Gapp(inl));
-%                u = LAF.renormI(blkdiag(M00.Hinf,M00.Hinf,M00.Hinf)*...
-%                                LAF.ru_div(x,this.cc,q));
-%                A = HG.laf1x2_to_Amu(u,Grect);
-%                if isempty(A)
-%                    A = eye(3);
-%                    G = Gsamp;
-%                    disp('Metric upgrade failed');
-%                else
-%                    G = Gapp;
-%                end
-%            end
+            
             H = eye(3);
             H(3,:) = transpose(M00.l);            
+            
+            A = eye(3,3);
+            
+            inl = reshape(cspond(:,res.cs),1,[]);
+            if (any(LAF.is_right_handed(x(:,inl))))
+                Grect = nan(size(Gapp));  
+                Grect(inl) = findgroups(Gapp(inl));
+                u = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,this.cc,q));
+                A = HG.laf1x2_to_Amu(u,Grect);
+                if isempty(A)
+                    A = eye(3);
+                    G = Gsamp;
+                    disp('Metric upgrade failed');
+                else
+                    G = Gapp;
+                end
+            end
+
             M0 = struct('Hinf', A*H, ...
                         'cc', this.cc, ...
                         'q', q);
