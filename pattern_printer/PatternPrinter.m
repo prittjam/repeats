@@ -3,7 +3,8 @@ classdef PatternPrinter < handle
         x = [];
         
         q0 = [];
-        Hinf0 = [];
+        A0 = [];
+        l0 = [];
         X0 = [];
         Rtij0 = [];
         
@@ -41,7 +42,7 @@ classdef PatternPrinter < handle
     methods(Access = public)
         function this = PatternPrinter(cc,x,rtree,Gs,Tlist, ...
                                        Gm,is_inverted, ...
-                                       q,Hinf,X,Rtij,varargin)
+                                       q,A0,l0,X,Rtij,varargin)
             this = cmp_argparse(this,varargin{:});
             
             this.rtree = rtree;
@@ -68,12 +69,13 @@ classdef PatternPrinter < handle
             this.x = x;
             this.Tlist = Tlist;
             
-            this.pack(q,Hinf,X,Rtij);
+            this.pack(q,A0,l0,X,Rtij);
         end
         
-        function [] = pack(this,q,Hinf,X,Rtij)
+        function [] = pack(this,q,A0,l0,X,Rtij)
             this.q0 = q*sum(2*this.cc)^2;
-            this.Hinf0 = Hinf;
+            this.A0 = [A0(1) A0(4) A0(5)];
+            this.l0 = l0;
             this.X0 = X;
             this.Rtij0 = Rtij;
             q_idx = 1;
@@ -85,7 +87,7 @@ classdef PatternPrinter < handle
                     [1:2*size(Rtij,2)]+X_idx(end);
                 this.num_Rt_params = 2;
               case 'Rt'
-                H_idx = [1:8]+q_idx(end);
+                H_idx = [1:6]+q_idx(end);
                 X_idx = [1:6*size(X,2)]+H_idx(end);
                 Rtij_idx = ...
                     [1:3*size(Rtij,2)]+X_idx(end);
@@ -108,15 +110,14 @@ classdef PatternPrinter < handle
             X = this.X0+dX;
             Rtij = this.Rtij0;
             if numel(dH) == 3
-                Hinf = this.Hinf0;
-                Hinf(3,:) = Hinf(3,:)+dH';
+                Hinf = eye(3,3);
+                Hinf(3,:) = this.l0+dH';
                 Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
-            elseif numel(dH) == 8
-                Hinf = [1+dH(1)   dH(4)   dH(7); ...
-                        dH(2)    1+dH(5)  dH(8); ...
-                        dH(3)     dH(6)     1  ]*this.Hinf0;
+            elseif numel(dH) == 6
+                Hinf = [this.A0(1)+dH(1) this.A0(2)+dH(2) 0; ... 
+                        0                this.A0(3)+dH(3) 0; ...
+                        this.l0(1)+dH(4) this.l0(2)+dH(5)    this.l0(3)+dH(6)];
                 Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;                
-                %                Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
             end
         end
         
@@ -217,7 +218,7 @@ classdef PatternPrinter < handle
 
             
             M = struct('q',q/sum(2*this.cc)^2,'cc', this.cc, ...
-                       'Hinf',H,'X',X, ...
+                       'H',H,'X',X, ...
                        'Rti', Rti,'Gs',Gs, ...
                        'Gm',Gm);
             

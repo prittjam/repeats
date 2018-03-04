@@ -2,7 +2,7 @@ function [rtree,X,Rtij,Tlist] = make_scene_graph(x,corresp,model0,Rtij0,varargin
 cfg = struct('vqT',21.026);
 cfg = cmp_argparse(cfg,varargin{:});
 
-Hinf = model0.Hinf;
+Hinf = model0.H;
 
 v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
 %xp2 = LAF.apply_rigid_xforms(v(:,corresp(1,:)),Rtij0);
@@ -42,7 +42,7 @@ end
 check_err(x,rtree,Rtij,model0,cfg.vqT);
 
 function is_good = check_err(x,rtree,Rtij,model0,vqT)
-Hinf = model0.Hinf;
+Hinf = model0.H;
 Hinv = inv(Hinf);
 corresp = transpose(rtree.Edges.EndNodes);
 ind = rtree.Edges.Ind;

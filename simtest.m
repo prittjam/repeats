@@ -9,7 +9,7 @@ w = 10;
 h = 10;
 [num_scenes,ccd_sigma_list,q_gt_list] = make_experiments(cc);
 rel_diff = @(s1,s2) 2*abs(s1-s2)/(abs(s1)+abs(s2));
-solver = WRAP.laf3x2_to_ql(cc);
+solver = WRAP.lafmxn_to_qAl(WRAP.laf3x2_to_ql(cc));
 
 for scene_num = 1:num_scenes
     f = 5*rand(1)+3;
@@ -34,7 +34,7 @@ for scene_num = 1:num_scenes
             axis ij;
             axis equal;
             corresp = reshape([1:16],2,[]);
-            M = solver.fit(xdlaf,corresp,[1 3 5]);
+            M = solver.fit(xdlaf,corresp,[1 3 5],Gsamp,Gapp);
             [model_list,lo_res_list,stats_list,cspond] = ...
                 fit_coplanar_patterns(solver,xdlaf,Gsamp,Gapp,cc,1);
             

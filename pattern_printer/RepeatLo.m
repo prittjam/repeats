@@ -6,8 +6,11 @@ classdef RepeatLo < handle
         eval = [];
         max_iter = 10;
         
-        vqT = 21.026;
-        reprojT = 21.026;
+%        vqT = 21.026;
+%        reprojT = 21.026;
+%    
+        vqT = 15;
+        reprojT = 15;
     end
     
     methods(Access = private)
@@ -40,8 +43,8 @@ classdef RepeatLo < handle
             Gapp = varargin{2};
             
             N = size(x,2);
-            G = separate_look_alikes(x,cspond,res);
-            keyboard;
+            %            G = separate_look_alikes(x,cspond,res);
+            G = Gapp
 %            tstinl = find(Gcomp==Gmax);
 %            figure;
 %            LAF.draw(gca,x(:,tstinl))
@@ -51,28 +54,29 @@ classdef RepeatLo < handle
             else
                 q = M00.q;
             end
-            
+
             H = eye(3);
             H(3,:) = transpose(M00.l);            
+            assert(istriu(M00.A), ...
+                   'metric upgrade is not upper triangular!');
+            H = M00.A*H;
             
-            A = eye(3,3);
-            
-            inl = reshape(cspond(:,res.cs),1,[]);
-            if (any(LAF.is_right_handed(x(:,inl))))
-                Grect = nan(size(Gapp));  
-                Grect(inl) = findgroups(Gapp(inl));
-                u = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,this.cc,q));
-                A = HG.laf1x2_to_Amu(u,Grect);
-                if isempty(A)
-                    A = eye(3);
-                    G = Gsamp;
-                    disp('Metric upgrade failed');
-                else
-                    G = Gapp;
-                end
-            end
+%            inl = reshape(cspond(:,res.cs),1,[]);
+%            if (any(LAF.is_right_handed(x(:,inl))))
+%                Grect = nan(size(Gapp));  
+%                Grect(inl) = findgroups(Gapp(inl));
+%                u = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,this.cc,q));
+%                A = HG.laf1x2_to_Amu(u,Grect);
+%                if isempty(A)
+%                    A = eye(3);
+%                    G = Gsamp;
+%                    disp('Metric upgrade failed');
+%                else
+%                    G = Gapp;
+%                end
+%            end
 
-            M0 = struct('Hinf', A*H, ...
+            M0 = struct('H', H, ...
                         'cc', this.cc, ...
                         'q', q);
 
@@ -102,7 +106,7 @@ classdef RepeatLo < handle
                 
                 pattern_printer = ...
                     PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
-                                   Gm,is_inverted,M0.q,M0.Hinf,X,Rtij, ...
+                                   Gm,is_inverted,M00.q,M00.A,M00.l,X,Rtij, ...
                                    'motion_model', ...
                                    this.motion_model);
                 
@@ -123,7 +127,7 @@ classdef RepeatLo < handle
 
                 unary_cs = err2 < this.reprojT;
 
-                mle_model.l = transpose(mle_model.Hinf(3,:));
+                %                mle_model.l = transpose(mle_model.Hinf(3,:));
                 [loss,E] = this.eval.calc_loss(x,cspond,mle_model);
                 cs = this.eval.calc_cs(E);
                 

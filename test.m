@@ -15,8 +15,6 @@ function [] = test()
 %ex_list(1) = struct('img_name', 'building_us.jpg', ...
 %                    'img_set', 'dggt');
 %
-%ex_list(1) = struct('img_name', 'kitkat.jpg', ...
-%                    'img_set', 'dggt');
 %%%%%
 %ex_list(1) = struct('img_name', 'GOPR0181.JPG', ...
 %                    'img_set', 'Hero 4 Black/tyn/scaled50');
@@ -43,7 +41,13 @@ function [] = test()
 %
 %ex_list(1) = struct('img_name', 'rhino1.jpg', ...
 %                    'img_set','dggt');
-%%%%
+%
+%ex_list(1) = struct('img_set','dggt', ...
+%                    'img_name', 'fairey2.png');
+%
+%ex_list(1) = struct('img_set','dggt', ...
+%                    'img_name', 'EsherA.jpg');
+%%%%%
 
 %ex_list(1) = struct('img_name', 'GOPR0383.png', ...
 %                    'img_set', 'Hero4B/rotunda');
@@ -51,15 +55,22 @@ function [] = test()
 
 %ex_list(1) = struct('img_name', 'SY_darts.jpg' , ...
 %                    'img_set', 'dggt');
-%%ex_list(1) = struct('img_names', {'cathedral.jpg'}, ...
+%%%ex_list(1) = struct('img_names', {'cathedral.jpg'}, ...
 %                    'motion_model', 'Rt');
+%%
+ex_list(1) = struct('img_name', 'kitkat.jpg', ...
+                    'img_set', 'dggt');
+
+%ex_list(1) = struct('img_name', 'cathedral.jpg', ...
+%                    'img_set', 'dggt');
 %
+%%%
 greedy_repeats_init('..');
 
 imparams = { 'img_set', ex_list.img_set, ...
              'max_num_cores', 1, ...
              'res_path','~/cvpr16', ...
-             'img_names', { ex_list(1).img_name } };
+             'img_names', { ex_list.img_name } };
  
 cache_params = { 'read_cache', true, ...
                  'write_cache', false };
@@ -80,7 +91,7 @@ img = Img('data',cid_cache.get_img(), ...
 
 dr = DR.get(img,cid_cache, ...
                 {'type','all', ...
-                'reflection',true});
+                'reflection',false});
 
 cc = [(img.width+1)/2 (img.height+1)/2];
 
@@ -99,7 +110,9 @@ LAF.draw_groups(gca,x,Gsamp);
 %solver = WxRAP.laf1x2_to_qlsu(cc); 
 %solver = WRAP.laf2x2_to_qluv(cc); 
 %solver = WRAP.laf2x2_to_qlusv(cc); 
-solver = WRAP.laf3x2_to_ql(cc);
+%solver = WRAP.laf3x2_to_ql(cc);
+solver = WRAP.lafmxn_to_qAl(WRAP.laf3x2_to_ql(cc));
+%solver = WRAP.laf2x2_to_AHinf();
 
 [model_list,lo_res_list,stats_list,cspond] = ...
     fit_coplanar_patterns(solver,x,Gsamp,Gapp,cc,1);
@@ -118,6 +131,7 @@ for k2 = 1:numel(model_list)
                                  'extents',[size(img.data,2) size(img.data,1)]');
     figure;
     imshow(rimg);
+    figure;
     uimg = IMG.ru_div(img.data,model_list.cc,model_list.q);
     imshow(uimg);
 end    

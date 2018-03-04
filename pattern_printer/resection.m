@@ -8,8 +8,8 @@ switch motion_model
   case 'Rt'
     motion_solver = 'HG.laf2xN_to_RtxN';
 end
-Hinf = model0.Hinf;
-Hinv = inv(model0.Hinf);
+Hinf = model0.H;
+Hinv = inv(model0.H);
 
 xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
 

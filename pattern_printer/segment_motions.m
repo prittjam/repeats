@@ -3,7 +3,7 @@ cfg.vqT = 21.026;
 cfg.num_codes = 1e3;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-Hinf = model.Hinf;
+Hinf = model.H;
 Hinv = inv(Hinf);
 
 xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model.cc, ...
