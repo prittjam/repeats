@@ -16,7 +16,6 @@ function [timg,T,A] = rectify(img,H,varargin)
     nx = size(img,2);
     ny = size(img,1);
 
-
     if ~isempty(cfg.bbox)
         border = cfg.bbox;
     else
@@ -76,6 +75,7 @@ function [timg,T,A] = rectify(img,H,varargin)
                    maketform('projective',H'), ...
                    cfg.ru_xform);
 
+    keep_aspect_ratio = false;
     switch lower(cfg.registration)
       case 'affinity'
         assert(~isempty(cfg.good_points), ...
@@ -86,6 +86,7 @@ function [timg,T,A] = rectify(img,H,varargin)
         assert(~isempty(cfg.good_points), ...
                ['You cannot register the rectification without inliers!']);
         [T,A] = register_by_similarity(cfg.good_points,T0);
+        keep_aspect_ratio = true;
       case 'scale'
         [T,A] = register_by_scale(img,T0);
       case 'none'
@@ -94,7 +95,7 @@ function [timg,T,A] = rectify(img,H,varargin)
     end
 
     if ~isempty(cfg.extents)
-        [T,A2] = register_by_extent(img,T,cfg.extents);
+        [T,A2] = register_by_extent(img,T,cfg.extents,keep_aspect_ratio);
         A = A2*A;
     end
     
@@ -166,8 +167,7 @@ function [T,S] = register_by_scale(img,T0)
                   maketform('affine',S'), ...
                   T0);
 
-function [T,S] = register_by_extent(img,T0,extents)
-    keyboard;
+function [T,S] = register_by_extent(img,T0,extents,keep_aspect_ratio)
     nx = size(img,2);
     ny = size(img,1);
    
@@ -179,7 +179,15 @@ function [T,S] = register_by_extent(img,T0,extents)
     
     xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
     yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
+
     
+    if keep_aspect_ratio
+        ar = xextent/yextent;
+        xextent = ar*yextent;
+    else
+        xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
+    end
+   
     sx = abs(extents(1)/xextent);
     sy = abs(extents(2)/yextent);
 
