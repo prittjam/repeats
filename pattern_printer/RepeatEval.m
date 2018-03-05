@@ -1,6 +1,6 @@
 classdef RepeatEval < handle
     properties    
-        extentT = log(1.05);
+        extentT = log(1.07);
     end
     
     methods
@@ -13,21 +13,30 @@ classdef RepeatEval < handle
                      0 1 0; ...
                      transpose(M.l)];
             if ~isfield(M,'q')
-                xp = LAF.renormI(blkdiag(H,H,H)*x);                
-            else
-                xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,M.cc,M.q));                
+                q = 0;
             end
 
+            xu = LAF.ru_div(x,M.cc,M.q);
+            xp = LAF.renormI(blkdiag(H,H,H)*xu);
+            
             D2 = [sum((xp(1:2,:)-xp(4:5,:)).^2); ...
                   sum((xp(7:8,:)-xp(4:5,:)).^2); ...
                   sum((xp(7:8,:)-xp(1:2,:)).^2)];
             lr = 0.5*(log(D2(:,corresp(2,:)))-...
                       log(D2(:,corresp(1,:))));
-            
             E = max(abs(lr)); 
 
             E(isnan(E)) = this.extentT;
             E(E > this.extentT) = this.extentT;
+
+            [~,side] = LAF.are_same_orientation(xu,M.l); 
+            side = double(side);
+            side(E == this.extentT) = nan; 
+            freq = hist(side,[0 1]);            
+            [~,ind] = min(freq);
+            is_bad = find(side == ind); 
+            E(is_bad) = this.extentT;
+
             loss = sum(E);
         end        
         

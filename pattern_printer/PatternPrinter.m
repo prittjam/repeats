@@ -74,20 +74,21 @@ classdef PatternPrinter < handle
         
         function [] = pack(this,q,A0,l0,X,Rtij)
             this.q0 = q*sum(2*this.cc)^2;
-            this.A0 = [A0(1) A0(4) A0(5)];
+            this.A0 = [1 A0(4)/A0(1) A0(5)/A0(1)];
             this.l0 = l0;
             this.X0 = X;
             this.Rtij0 = Rtij;
             q_idx = 1;
             switch this.motion_model
               case 't'
+                keyboard;
                 H_idx = [1:3]+q_idx(end);
                 X_idx = [1:6*size(X,2)]+H_idx(end);
                 Rtij_idx = ...
                     [1:2*size(Rtij,2)]+X_idx(end);
                 this.num_Rt_params = 2;
               case 'Rt'
-                H_idx = [1:6]+q_idx(end);
+                H_idx = [1:4]+q_idx(end);
                 X_idx = [1:6*size(X,2)]+H_idx(end);
                 Rtij_idx = ...
                     [1:3*size(Rtij,2)]+X_idx(end);
@@ -113,11 +114,11 @@ classdef PatternPrinter < handle
             if numel(dH) == 3
                 l = this.l0+dH(1:3);
                 Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
-            elseif numel(dH) == 6
-                A(1,1) = this.A0(1)+dH(1);
-                A(1,2) = this.A0(2)+dH(2);
-                A(2,2) = this.A0(3)+dH(3);
-                l = this.l0+dH(4:6);
+            elseif numel(dH) == 4
+                A(1,1) = 1;
+                A(1,2) = this.A0(2)+dH(1);
+                A(2,2) = this.A0(3)+dH(2);
+                l = this.l0+[dH(3:4);0];
                 Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;                
             end
             Hinf = A;
@@ -200,9 +201,16 @@ classdef PatternPrinter < handle
                 options = optimoptions(@lsqnonlin, ...
                                        'Algorithm', 'trust-region-reflective', ...
                                        'Display','none', ...
-                                       'JacobPattern',Jpat, ...
+                                       'JacobPattern', Jpat, ...
                                        'Display', 'iter', ...
                                        varargin{:});
+
+                %%                
+%                options = optimoptions(@lsqnonlin, ...
+%                                       'Algorithm', 'trust-region-reflective', ...
+%                                       'Display','none', ...
+%                                       'Display', 'iter', ...
+%                                       varargin{:});
                 [dz,resnorm,err] = lsqnonlin(@(dz) PatternPrinter.errfun(dz,this), ...
                                               this.dz0,lb,ub, ...
                                               options);
@@ -218,7 +226,6 @@ classdef PatternPrinter < handle
                                            this.Gm,this.inverted, ...
                                            Rtij,X,size(this.x,2)); 
             [Xp,inl] = sfm(X,Gs,Rti);
-
             
             M = struct('q',q/sum(2*this.cc)^2,'cc', this.cc, ...
                        'A',A,'l',l,'X',X, ...

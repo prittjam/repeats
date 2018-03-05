@@ -37,9 +37,9 @@ listA = {'crochet9.png'};
 %ex = struct('img_names', {'crochet.png'}, ...
 %            'motion_model', 'Rt');
 %%%
-ex = struct('img_names',  {'kitkat.jpg'}, ...
-            'motion_model', 'Rt');            
-%%%ex = struct('img_names',  {'EsherA.jpg'}, ...
+%ex = struct('img_names',  {'kitkat.jpg'}, ...
+%            'motion_model', 'Rt');            
+%%%%ex = struct('img_names',  {'EsherA.jpg'}, ...
 %            'motion_model', 'Rt');            
 %ex = struct('img_names', {'SY_darts.jpg'}, ...
 %            'motion_model', 'Rt');
@@ -68,55 +68,81 @@ ex = struct('img_names',  {'kitkat.jpg'}, ...
 %ex = struct('img_names', {'flower1.jpg'}, ...
 %            'motion_model', 'Rt');
 %%
+
 output_prefix = 'res';
 
 imparams = { 'img_set', 'dggt', ...
              'max_num_cores', 1, ...
              'dr_type','all', ...
-             'res_path','~/cvpr16', ...
-             'img_names', ex.img_names };
+             'res_path','~/cvpr16'};
  
-cache_params = { 'read_cache', false, ...
-                 'write_cache', false };
+cache_params = { 'read_cache', true, ...
+                 'write_cache', true };
 
 cfg = CFG.get(imparams{:});
 
 %init_dbs(cache_params{:});
 
-img = Img('url', ...
-          '/home/prittjam/src/greedy_repeats/DSC_4155.JPG'); 
+img = Img('url','img/statehouse.jpg'); 
 
 cid_cache = CASS.CidCache(img.cid, ...
                           cache_params{:});
-cc = ([img.width img.height]'+1)/2;
 gr_params = { 'img', img.data, ...
               'num_planes', 1 };
-
 dr = DR.get(img,cid_cache, ...
-                {'type',cfg.dr.dr_type});
-dr = group_desc(dr);
-[model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
+                {'type','all', ...
+                'reflection', false });
 
-for k = 1:1
-    [model_list,stats_list] = greedy_repeats(dr,cc,ex.motion_model);
-    for k = 1:numel(model_list)
-        rimg= ...
-            IMG.render_rectification([dr(:).u],model_list(k),img.data);
-        figure;imshow(rimg);
-        IMG.output_rectification(img.url,rimg,output_prefix); 
-        
-%        h = draw_results(img,rimg);    
-%        output_reconstruction(img.data,model_list{k}.u_corr, ...
-%                              model_list{k},output_prefix);
-%        matlab2tikz('figurehandle',gcf, ...
-%                    'filename','fig.tex' , ...
-%                    'standalone', false);
+cc = [(img.width+1)/2 (img.height+1)/2];
+
+[x,Gsamp,Gapp] = group_desc(dr);
+
+
+figure;
+subplot(1,2,1);
+imshow(img.data);
+LAF.draw_groups(gca,x,Gapp);
+subplot(1,2,2);
+imshow(img.data);
+LAF.draw_groups(gca,x,Gsamp);
+
+%solver = WRAP.laf1x2_to_lu(cc);
+%solver = WRAP.laf1x2_to_qlu(cc); 
+%solver = WxRAP.laf1x2_to_qlsu(cc); 
+%solver = WRAP.laf2x2_to_qluv(cc); 
+%solver = WRAP.laf2x2_to_qlusv(cc); 
+%solver = WRAP.laf3x2_to_ql(cc);
+%solver = WRAP.laf2x2_to_AHinf(); 
+solver = WRAP.lafmxn_to_qAl(WRAP.laf3x2_to_ql(cc));
+[model_list,lo_res_list,stats_list,cspond] = ...
+    fit_coplanar_patterns(solver,x,Gsamp,Gapp,cc,1);
+[~,file_name,ext] = fileparts(img.url);
+
+save(['mat/' file_name '.mat'], ...
+     'model_list','stats_list','cspond','x','img');
+
+figure;
+imshow(img.data);
+for k2 = 1:numel(model_list)
+    MM = model_list(k2);
+    MM.H = model_list(k2).A;
+    MM.H(3,:) = transpose(model_list.l);
+
     
-    end
-end
+    xp = LAF.renormI(blkdiag(MM.H,MM.H,MM.H)*LAF.ru_div(x,model_list.cc,model_list.q));
+    figure;LAF.draw(gca,xp(:,~isnan(MM.Gs)));
+    
+    rimg= ...
+        IMG.render_rectification(x,MM,img.data, ...
+                                 'Registration','Similarity', ...
+                                 'extents', ...
+                                 [size(img.data,2) size(img.data,1)]');
+    figure;
+    imshow(rimg);
+    keyboard;
 
-%img = Img('url','download2.jpg');       
-%cid_cache = CASS.CidCache(img.cid,cache_params{:}); 
-[~,name,~] = fileparts(img.url);
-save(['res/' name], 'dr','model_list','stats_list','img');
-%keyboard;
+    
+    figure;
+    uimg = IMG.ru_div(img.data,model_list.cc,model_list.q);
+    imshow(uimg);
+end    
