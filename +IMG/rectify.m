@@ -37,56 +37,53 @@ function [timg,T,A] = rectify(img,H,varargin)
     endpts = LINE.intersect_rect(H(3,:)',rect);
 
     in_image = ~isempty(endpts);
-    
-    if in_image
-        assert(size(endpts,2)==2,...
-               ['The vanishing line must cross the image border twice']);
-        
-        [~,ind] = sort(endpts(1,:));
-        endpts = endpts(:,ind);
 
-        l = LINE.inhomogenize(cross(endpts(:,1),endpts(:,2)));
-
-        v = tformfwd(cfg.ru_xform,cfg.good_points(1:2,:)');
-        mu = PT.homogenize(mean(v',2));
-
-        if dot(l,mu) < 0
-            l = -l;
-        end
-
-        newpt = endpts(:,1)+[100*l(1:2);1];
-
-        l(3) = -dot(l(1:2),newpt(1:2));
-
-        pts = LINE.intersect_rect(l,rect);
-        
-        idx = find(dot(repmat(l,1,4),[ru_border';ones(1,4)]) > 0);
-        xx = [pts(1,:) ru_border(idx,1)'];
-        yy = [pts(2,:) ru_border(idx,2)'];
-        K = convhull(xx,yy);
-        xx = xx(K);
-        yy = yy(K);
-        
-        cropped_ru_border = [xx;yy]';
-        border = tforminv(cfg.ru_xform,cropped_ru_border);        
-    end
+%    if in_image
+%        assert(size(endpts,2)==2,...
+%               ['The vanishing line must cross the image border twice']);
+%        
+%        [~,ind] = sort(endpts(1,:));
+%        endpts = endpts(:,ind);
+%
+%        l = LINE.inhomogenize(cross(endpts(:,1),endpts(:,2)));
+%
+%        v = tformfwd(cfg.ru_xform,cfg.good_points(1:2,:)');
+%        mu = PT.homogenize(mean(v',2));
+%
+%        if dot(l,mu) < 0
+%            l = -l;
+%        end
+%
+%        newpt = endpts(:,1)+[100*l(1:2);1];
+%
+%        l(3) = -dot(l(1:2),newpt(1:2));
+%
+%        pts = LINE.intersect_rect(l,rect);
+%        
+%        idx = find(dot(repmat(l,1,4),[ru_border';ones(1,4)]) > 0);
+%        xx = [pts(1,:) ru_border(idx,1)'];
+%        yy = [pts(2,:) ru_border(idx,2)'];
+%        K = convhull(xx,yy);
+%        xx = xx(K);
+%        yy = yy(K);
+%        
+%        cropped_ru_border = [xx;yy]';
+%        border = tforminv(cfg.ru_xform,cropped_ru_border);        
+%    end
     
     T0 = maketform('composite', ...
                    maketform('projective',H'), ...
                    cfg.ru_xform);
 
-    keep_aspect_ratio = false;
     switch lower(cfg.registration)
       case 'affinity'
         assert(~isempty(cfg.good_points), ...
                ['You cannot register the rectification without inliers!']);
         [T,A] = register_by_affinity(cfg.good_points,T0);
-        
       case 'similarity'
         assert(~isempty(cfg.good_points), ...
                ['You cannot register the rectification without inliers!']);
         [T,A] = register_by_similarity(cfg.good_points,T0);
-        keep_aspect_ratio = true;
       case 'scale'
         [T,A] = register_by_scale(img,T0);
       case 'none'
@@ -95,7 +92,7 @@ function [timg,T,A] = rectify(img,H,varargin)
     end
 
     if ~isempty(cfg.extents)
-        [T,A2] = register_by_extent(img,T,cfg.extents,keep_aspect_ratio);
+        [T,A2] = register_by_extent(img,T,cfg.extents);
         A = A2*A;
     end
     
@@ -106,6 +103,7 @@ function [timg,T,A] = rectify(img,H,varargin)
     miny = round(min(tbounds(:,2)));
     maxy = round(max(tbounds(:,2)));
 
+    keyboard;
 %    tnx = max(cfg.oborder(:,1))-min(cfg.oborder(:,1))+1;
 %    tny = max(cfg.oborder(:,2))-min(cfg.oborder(:,2))+1;
 %%    assert(maxx-minx+1==tnx,'problem in x dimension');
@@ -135,6 +133,7 @@ function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
     A = HG.pt2x2_to_sRt([transpose(v);u]);
+    keyboard;
     T = maketform('composite', ...
                   maketform('affine',transpose(A)), ...
                   T0);
@@ -167,34 +166,27 @@ function [T,S] = register_by_scale(img,T0)
                   maketform('affine',S'), ...
                   T0);
 
-function [T,S] = register_by_extent(img,T0,extents,keep_aspect_ratio)
+function [T,S] = register_by_extent(img,T0,extents)
     nx = size(img,2);
     ny = size(img,1);
-   
     border0 = [0.5       0.5; ...
               (nx-1)+0.5 0.5; ...    
               (nx-1)+0.5 (ny-1)+0.5; ...
               0.5        (ny-1)+0.5];
     tborder0 = tformfwd(T0,border0);
-    
     xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
     yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
-
-    
-    if keep_aspect_ratio
-        ar = xextent/yextent;
-        xextent = ar*yextent;
-    else
-        xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
-    end
-   
-    sx = abs(extents(1)/xextent);
-    sy = abs(extents(2)/yextent);
-
-    S = [sx  0 0;
-          0 sy 0;
-          0  0 1];
-    
+    s = min([extents(1)/xextent extents(2)/yextent]);
+    S = [s 0 0;
+         0 s 0;
+         0 0 1];
     T = maketform('composite', ...
                   maketform('affine',S'), ...
                   T0);
+%    tbounds = tformfwd(T,border0);
+%
+%    minx = round(min(tbounds(:,1)));
+%    maxx = round(max(tbounds(:,1)));
+%    miny = round(min(tbounds(:,2)));
+%    maxy = round(max(tbounds(:,2)));
+
