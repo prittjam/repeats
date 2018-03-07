@@ -42,6 +42,7 @@ end
 figure;
 ax = axes; % create a temporary axes
 set(ax,'fontsize',6);
+
 boxplot(ax,data, 'Colors', cfg.colors, ...
         'Symbol',cfg.symbol);
 
