@@ -52,6 +52,7 @@ function [] = stability(out_name,varargin)
             cspond_dict(sample_type_strings{k}) = X;
         end
         cspond_dict('laf1x2') = cspond_dict('laf2x2');
+
         for k = 1:numel(solver_list)
             optq_list = nan(1,25);
             opt_rms_list = nan(1,25);
@@ -59,8 +60,8 @@ function [] = stability(out_name,varargin)
             X = cspond_dict(solver_sample_type{k});
             %            solver_variants = {'gb','det'};
             solver_variants = {'det'};
-            truth = PLANE.make_gt(scene_num,P,q_gt,cam.cc, ...
-                                  0,X);
+            truth = PLANE.make_gt(scene_num,P,q_gt, ...
+                                  cam.cc,0,X);
             X4 = reshape(X,4,[]);
             x = PT.renormI(P*X4);
             xd = CAM.rd_div(reshape(x,3,[]),cam.cc,q_gt);

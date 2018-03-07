@@ -7,7 +7,7 @@ greedy_repeats_init();
 %listA = { 'sett4.jpg' };
 % listA = { '2063499388_567bd68634_o.jpg' };
 %listA = {'rhino1.jpg'};
-listA = {'crochet9.png'};
+%listA = {'crochet9.png'};
 %listA = {'crochet-011.jpg'};
 %listA = { 'calib_prague3.jpg' };
 
@@ -83,7 +83,7 @@ cfg = CFG.get(imparams{:});
 
 %init_dbs(cache_params{:});
 
-img = Img('url','img/statehouse.jpg'); 
+img = Img('url','img/barrels.jpg'); 
 
 cid_cache = CASS.CidCache(img.cid, ...
                           cache_params{:});
@@ -96,7 +96,6 @@ dr = DR.get(img,cid_cache, ...
 cc = [(img.width+1)/2 (img.height+1)/2];
 
 [x,Gsamp,Gapp] = group_desc(dr);
-
 
 figure;
 subplot(1,2,1);
@@ -127,14 +126,14 @@ for k2 = 1:numel(model_list)
     MM = model_list(k2);
     MM.H = model_list(k2).A;
     MM.H(3,:) = transpose(model_list.l);
-
     
     xp = LAF.renormI(blkdiag(MM.H,MM.H,MM.H)*LAF.ru_div(x,model_list.cc,model_list.q));
     figure;LAF.draw(gca,xp(:,~isnan(MM.Gs)));
-    
+
+    keyboard;
     rimg= ...
         IMG.render_rectification(x,MM,img.data, ...
-                                 'Registration','Similarity', ...
+                                 'Registration','none', ...
                                  'extents', ...
                                  [size(img.data,2) size(img.data,1)]');
     figure;
