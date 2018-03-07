@@ -122,7 +122,7 @@ function [] = sensitivity(out_name,varargin)
 %
 function [num_scenes,ccd_sigma_list,q_list]  = make_experiments(cc)
     num_scenes = 1000;   
-    num_scenes = 10;
+    num_scenes = 3;
     ccd_sigma_list = [0.1 0.5 1 2];
     %ccd_sigma_list = 0;
     q_list = arrayfun(@(x) x/(sum(2*cc)^2),-4);
