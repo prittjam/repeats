@@ -92,17 +92,19 @@ function [] = sensitivity(out_name,varargin)
                         end
 
                         if ~isempty(M)
-                            [optq_list(k2),opt_warp_list(k2)] = ...
-                                calc_opt_warp(truth,cam,M,P,hplane,wplane);
+                            [~,opt_warp_list(k2)] = ...
+                                calc_opt_warp(truth,cam,M,P,wplane,hplane);
+                            optq_list(k2) = ...
+                                calc_opt_q(truth,cam,M,P,wplane,hplane);
                         else
                             disp(['solver failure for ' name_list{k}]);
                         end
                     end
                     [~,best_ind] = min(opt_warp_list);
-
+                    [~,optq_ind] = min(abs(optq_list-truth.q));
                     res_row = { solver_names(k), ...
                                 ex_num, ...
-                                optq_list(best_ind), ...
+                                optq_list(optq_ind), ...
                                 nan, ...
                                 opt_warp_list(best_ind) };
                     res = [res;res_row]; 
@@ -121,11 +123,21 @@ function [] = sensitivity(out_name,varargin)
 function [num_scenes,ccd_sigma_list,q_list]  = make_experiments(cc)
     num_scenes = 1000;   
     num_scenes = 10;
-    %ccd_sigma_list = [0.1 0.5 1 2];
-    ccd_sigma_list = [0];
+    ccd_sigma_list = [0.1 0.5 1 2];
+    %ccd_sigma_list = 0;
     q_list = arrayfun(@(x) x/(sum(2*cc)^2),-4);
     
-
+function optq = calc_opt_q(gt,cam,M,P,w,h)
+    if isfield(M,'q1')
+        mq = ([M(:).q1]+[M(:).q2])/2;
+    elseif isfield(M,'q')
+        mq = [M(:).q];
+    else
+        mq = zeros(1,numel(M));
+    end        
+    [~,best_ind] = min(abs(mq-gt.q));
+    optq = mq(best_ind);
+    
 function [optq,opt_warp] = calc_opt_warp(gt,cam,M,P,w,h)    
     t = linspace(-0.5,0.5,10);
     [a,b] = meshgrid(t,t);
@@ -152,13 +164,15 @@ function [optq,opt_warp] = calc_opt_warp(gt,cam,M,P,w,h)
                 calc_bmvc16_err(x,gt.l,gt.q,M(k).l,mq(k),gt.cc);
         end
     elseif isfield(M(1),'Hu')
-        for k = 1:numel(M)
-            [U,S,V] = svd(M(k).Hu-eye(3));
-            S(2,2) = 0;S(3,3) = 0;
-            projH = U*S*transpose(V);
-            warp_list(k) = ...
-                calc_bmvc16_err(x,gt.l,gt.q,transpose(projH(3,:)),mq(k),gt.cc);
-        end
+%        for k = 1:numel(M)
+%            tmp = real(eig(M(k).Hu));
+%            [U,S,V] = svd(M(k).Hu-tmp(1)*eye(3));
+%            S(2,2) = 0;
+%            S(3,3) = 0;
+%            projH = U*S*transpose(V);
+%            warp_list(k) = ...
+%                calc_bmvc16_err(x,gt.l,gt.q,transpose(projH(3,:)),mq(k),gt.cc);
+%        end
     end
     
     [opt_warp,best_ind] = min(warp_list);    
