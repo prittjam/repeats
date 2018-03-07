@@ -125,10 +125,6 @@ function [timg,T,A] = rectify(img,H,varargin)
         timg(find(BW3)) = fill(find(BW3));
     end
     
-    if ~isempty(cfg.extents)
-        timg = imresize(timg,[ny nx]);
-    end
-    
 function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
