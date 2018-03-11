@@ -109,13 +109,14 @@ usolvers = unique(res(ind,:).solver);
 warp_colors = [1:3 5:7];
 for k = 1:numel(usolvers)
     hold on;
-    keyboard;
     Lif = ismember(res.solver,usolvers(k));
-    cdfplot(res(find(Lif),:).rewarp);
+    h = cdfplot(res(find(Lif),:).rewarp);
+    set(h, ...
+        'color',color_list(warp_colors(k),:));
     hold off;
 end
-
-
+xlim([0 50]);
+keyboard;
 
 %ax5 = make_grouped_boxplot(res(ind,:), {'rewarp'},{ 'sigma', 'solver'}, ...
 %                           'ylim', [0 40], ...
