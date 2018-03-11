@@ -1,12 +1,12 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef lafmxn_to_qAl < WRAP.LafRectSolver
+classdef lafmn_to_qAl < WRAP.LafRectSolver
     properties
         solver_impl = [];
     end
     
     methods
-        function this = lafmxn_to_qAl(solver_impl)
+        function this = lafmn_to_qAl(solver_impl)
             this = this@WRAP.LafRectSolver(3); 
             this.solver_impl = solver_impl;
         end

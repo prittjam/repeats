@@ -36,9 +36,9 @@ if ~exist('ColumnType','file')
     addpath([src_path '/ckvs']);
 end
 
-if ~exist('+DR','dir')
-    cmpfeat_path = fullfile(src_path, 'cmpfeat');
-    cd(cmpfeat_path);
-    feval('cmpfeat_init'); 
-    cd(cur_path);
-end
+%if ~exist('+DR','dir')
+%    cmpfeat_path = fullfile(src_path, 'cmpfeat');
+%    cd(cmpfeat_path);
+%    feval('cmpfeat_init'); 
+%    cd(cur_path);
+%end

@@ -1,12 +1,12 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf3x2_to_ql < WRAP.LafRectSolver
+classdef laf222_to_ql < WRAP.LafRectSolver
     properties
         cc = [];
     end
 
     methods
-        function this = laf3x2_to_ql(cc)
+        function this = laf222_to_ql(cc)
             this = this@WRAP.LafRectSolver(3);
             this.cc = cc;
         end

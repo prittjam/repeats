@@ -103,7 +103,6 @@ function [timg,T,A] = rectify(img,H,varargin)
     miny = round(min(tbounds(:,2)));
     maxy = round(max(tbounds(:,2)));
 
-    keyboard;
 %    tnx = max(cfg.oborder(:,1))-min(cfg.oborder(:,1))+1;
 %    tny = max(cfg.oborder(:,2))-min(cfg.oborder(:,2))+1;
 %%    assert(maxx-minx+1==tnx,'problem in x dimension');

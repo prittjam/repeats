@@ -1,12 +1,12 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf1x2_to_qlu < WRAP.LafRectSolver
+classdef laf2_to_qlu < WRAP.LafRectSolver
     properties
         solver_impl = [];
     end
     
     methods
-        function this = laf1x2_to_qlu(cc)
+        function this = laf2_to_qlu(cc)
             this = this@WRAP.LafRectSolver(1);
             this.solver_impl = WRAP.pt3x2_to_qlu(cc);      
         end

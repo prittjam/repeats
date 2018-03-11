@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf2x2_to_Hinf < WRAP.LafRectSolver
+classdef laf22_to_Hinf < WRAP.LafRectSolver
     methods(Static)
         function H = solve(aX,arsc)
             if ~iscell(aX)
@@ -58,7 +58,7 @@ classdef laf2x2_to_Hinf < WRAP.LafRectSolver
                     cmp_splitapply(@(x) ...
                                    (deal({(x(1:2,:)+x(4:5,:)+x(7:8,:))/3}, ...
                                          {1./nthroot(LAF.calc_scale(x),3)})),v,G);
-                Hk = WRAP.laf2x2_to_Hinf.solve(mu,sc);
+                Hk = WRAP.laf22_to_Hinf.solve(mu,sc);
                 H = Hk*H;
                 v = LAF.renormI(blkdiag(H,H,H)*u);
             end
@@ -66,7 +66,7 @@ classdef laf2x2_to_Hinf < WRAP.LafRectSolver
     end
     
     methods
-        function this = laf2x2_to_Hinf()
+        function this = laf22_to_Hinf()
             this = this@WRAP.LafRectSolver(2);
         end
         
@@ -74,7 +74,7 @@ classdef laf2x2_to_Hinf < WRAP.LafRectSolver
             G = varargin{1};
             m = corresp(:,idx);
             x = x(:,m(:));
-            M.Hinf = WRAP.laf2x2_to_Hinf.iter_solve(x,G(m(:)));
+            M.Hinf = WRAP.laf22_to_Hinf.iter_solve(x,G(m(:)));
             M.l = transpose(M.Hinf(3,:));
         end
     end

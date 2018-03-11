@@ -1,12 +1,12 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf2x2_to_qlusv < WRAP.LafRectSolver
+classdef laf22_to_qlusv < WRAP.LafRectSolver
     properties
         solver_impl = [];
     end
     
     methods
-        function this = laf2x2_to_qlusv(cc)
+        function this = laf22_to_qlusv(cc)
             this = this@WRAP.LafRectSolver(2,cc);
             this.solver_impl = WRAP.pt4x2_to_qlusv(cc);
         end
