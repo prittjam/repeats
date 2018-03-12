@@ -128,9 +128,9 @@ for k2 = 1:numel(model_list)
     MM.H(3,:) = transpose(model_list.l);
     
     xp = LAF.renormI(blkdiag(MM.H,MM.H,MM.H)*LAF.ru_div(x,model_list.cc,model_list.q));
-    figure;LAF.draw(gca,xp(:,~isnan(MM.Gs)));
+    %    figure;LAF.draw(gca,xp(:,~isnan(MM.Gs)));
+    % keyboard;
 
-    keyboard;
     rimg= ...
         IMG.render_rectification(x,MM,img.data, ...
                                  'Registration','none', ...

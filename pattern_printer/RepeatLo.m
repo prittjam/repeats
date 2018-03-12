@@ -79,11 +79,6 @@ classdef RepeatLo < handle
             %            end
 
             xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x(:,inl),M00.cc,M00.q));
-            figure;LAF.draw(gca,xp);
-            axis ij;
-            axis equal;
-            drawnow;
-            
             M0 = struct('H', H, ...
                         'cc', this.cc, ...
                         'q', q);

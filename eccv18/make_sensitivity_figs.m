@@ -1,6 +1,6 @@
 function [] = make_sensitivity_figs()
 greedy_repeats_init('..');
-sensitivity = load('sensitivity.mat');
+sensitivity = load('sensitivity_20180311.mat');
 data = innerjoin(sensitivity.res,sensitivity.gt, ...
                  'LeftKeys','ex_num','RightKeys','ex_num');
 q_gt = unique(data.q_gt)*sum(2*sum(sensitivity.cam.cc))^2;
@@ -19,10 +19,8 @@ qres = array2table([data.q*sum(2*sum(sensitivity.cam.cc))^2 ...
 res = [data(:,{'ex_num','scene_num','solver','sigma'}) qres];
 solver_list = unique(res.solver);
 
-keyboard;
-
-Lia = res.sigma > 0; 
-
+Lia = res.sigma == 1; 
+%Lia = res.sigma > 0;
 Lib = ismember(res.solver, ...
                setdiff(solver_list, {'$\mH22\vl s$'}));
 Lic = ismember(res.solver, ...
@@ -103,20 +101,36 @@ lambda_colors = [1:2 4:7];
 %            'extraAxisOptions',axis_options);
 
 
-figure;
-ind = find(Lia & Lid);
-usolvers = unique(res(ind,:).solver);
-warp_colors = [1:3 5:7];
-for k = 1:numel(usolvers)
-    hold on;
-    Lif = ismember(res.solver,usolvers(k));
-    h = cdfplot(res(find(Lif),:).rewarp);
-    set(h, ...
-        'color',color_list(warp_colors(k),:));
-    hold off;
-end
-xlim([0 50]);
-keyboard;
+%figure;
+%ind = find(Lia & Lid);
+%usolvers = unique(res(ind,:).solver);
+%warp_colors = [1:3 5:7];
+%
+%usolvers = usolvers([1 4 2 5 3 6]);
+%warp_colors = warp_colors([1 4 2 5 3 6]);
+%for k = 1:numel(usolvers)
+%    hold on;
+%    ind2 = ismember(res(ind,:).solver,usolvers(k));
+%    h = cdfplot(res(ind(ind2),:).rewarp);
+%    set(h,'color', ...
+%          color_list(warp_colors(k),:));
+%    hold off;
+%end
+%xlim([0 20]);
+%xlabel('$\Delta^{\mathrm{warp}}_{\mathrm{RMS}}$ [pixels] at $\sigma=1$ pixel', ...
+%       'Interpreter','Latex','Color','k'); 
+%ylabel('$p(x < \Delta^{\mathrm{warp}}_{\mathrm{RMS}})$', ...
+%       'Interpreter','Latex');
+%grid off;
+%title('Empirical CDF of RMS warp error');
+%legend('a','b','c','d','e','f','Location','northwest');
+%drawnow;
+%cleanfigure;
+%matlab2tikz(['/home/prittjam/Documents/eccv18/fig/' ...
+%             'ecdf_warp_1px.tikz'], ...
+%            'width', '\fwidth', ...
+%            'extraAxisOptions',axis_options);
+%
 
 %ax5 = make_grouped_boxplot(res(ind,:), {'rewarp'},{ 'sigma', 'solver'}, ...
 %                           'ylim', [0 40], ...
@@ -149,7 +163,9 @@ keyboard;
 %            'width', '\fwidth', ...
 %            'extraAxisOptions',axis_options);
 
-%cleanfigure;
-%matlab2tikz('/home/prittjam/Documents/eccv18/fig/real_sols.tikz', ...
-%            'width', '\fwidth', ...
-%            'extraAxisOptions',axis_options);
+cleanfigure;
+axis_options = {'enlargelimits=false'} 
+matlab2tikz('/home/prittjam/Documents/eccv18/fig/real_sols.tikz', ...
+            'width', '\fwidth', ...
+            'extraAxisOptions',axis_options);
+
