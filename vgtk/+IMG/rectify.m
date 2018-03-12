@@ -92,7 +92,7 @@ function [timg,T,A] = rectify(img,H,varargin)
     end
 
     if ~isempty(cfg.extents)
-        [T,A2] = register_by_extent(img,T,cfg.extents);
+        [T,A2] = register_by_extent(img,T,border,cfg.extents);
         A = A2*A;
     end
     
@@ -161,13 +161,10 @@ function [T,S] = register_by_scale(img,T0)
                   maketform('affine',S'), ...
                   T0);
 
-function [T,S] = register_by_extent(img,T0,extents)
+function [T,S] = register_by_extent(img,T0,border0,extents)
     nx = size(img,2);
     ny = size(img,1);
-    border0 = [0.5       0.5; ...
-              (nx-1)+0.5 0.5; ...    
-              (nx-1)+0.5 (ny-1)+0.5; ...
-              0.5        (ny-1)+0.5];
+
     tborder0 = tformfwd(T0,border0);
     xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
     yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
