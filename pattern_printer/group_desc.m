@@ -1,6 +1,6 @@
 function [x,Gsamp,Gapp] = group_desc(dr)
 Gapp = DR.group_desc_app(dr,'desc_linkage', 'single', ...
-                         'desc_cutoff', 160);
+                         'desc_cutoff', 180);
 Gr = DR.group_reflections(dr);
 Gr_tmp = Gr;
 Gr_tmp(find(Gr_tmp == 0)) = -1;

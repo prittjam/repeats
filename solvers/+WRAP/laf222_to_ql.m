@@ -27,7 +27,7 @@ classdef laf222_to_ql < WRAP.LafRectSolver
                                                       xd(1:2,16:18)); 
             solver_time = toc;
             qn = q*sum(2*this.cc)^2;
-            good_ind = find((qn < 1) & (qn > -8));
+            good_ind = find((qn < 1) & (qn > -15));
             N = numel(good_ind);
             if N > 0 
                 ll2 = A'*ll;

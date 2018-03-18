@@ -70,7 +70,7 @@ function [timg,T,A] = rectify(img,H,varargin)
 %        cropped_ru_border = [xx;yy]';
 %        border = tforminv(cfg.ru_xform,cropped_ru_border);        
 %    end
-    
+%    
     T0 = maketform('composite', ...
                    maketform('projective',H'), ...
                    cfg.ru_xform);

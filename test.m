@@ -112,7 +112,7 @@ LAF.draw_groups(gca,x,Gsamp);
 %solver = WRAP.laf2x2_to_qluv(cc); 
 %solver = WRAP.laf2x2_to_qlusv(cc); 
 %solver = WRAP.laf3x2_to_ql(cc);
-solver = WRAP.lafmxn_to_qAl(WRAP.laf3x2_to_ql(cc));
+%solver = WRAP.lafmxn_to_qAl(WRAP.laf3x2_to_ql(cc));
 %solver = WRAP.laf2x2_to_AHinf();
 
 [model_list,lo_res_list,stats_list,cspond] = ...

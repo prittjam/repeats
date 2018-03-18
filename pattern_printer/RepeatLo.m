@@ -5,7 +5,6 @@ classdef RepeatLo < handle
         cc = [];
         eval = [];
         max_iter = 10;
-        
         %        vqT = 21.026;
         %        reprojT = 21.026;
         %    

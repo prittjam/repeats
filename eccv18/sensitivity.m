@@ -70,6 +70,7 @@ function [] = sensitivity(out_name,varargin)
                         X = cspond_info(k2).Xlist;
                         truth = PLANE.make_gt(scene_num,P,q_gt,cam.cc, ...
                                               ccd_sigma,X);
+                        keyboard;
                         X4 = reshape(X,4,[]);
                         x = PT.renormI(P*X4);
                         xd = CAM.rd_div(reshape(x,3,[]),...
