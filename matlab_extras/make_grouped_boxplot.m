@@ -22,7 +22,6 @@ for k = 1:numel(group_list)
         res.(group_field) = grp2idx(res.(group_field));
     end
 end
-
 categories = uval{1};
 num_categories = numel(uval{1});
 num_groups = numel(uval{2});
@@ -39,6 +38,7 @@ for k1 = 1:size(groups,1)
     data(:,k1) = res{ind,data_field};
 end
 
+
 figure;
 ax = axes; % create a temporary axes
 set(ax,'fontsize',6);
@@ -46,7 +46,7 @@ set(ax,'fontsize',6);
 boxplot(ax,data, 'Colors', cfg.colors, ...
         'Symbol',cfg.symbol);
 
-xticks((0:num_groups-1)*(num_groups)+(num_groups+1)/2);
+xticks((0:num_categories-1)*(num_groups)+(num_groups+1)/2);
 xticklabels(num2str(categories));
 xlabel(ax,'Noise ($\sigma$) [pixels]', ...
        'Interpreter','Latex','Color','k'); 
@@ -56,6 +56,7 @@ yticks(cfg.yticks);
 tickstr = arrayfun(@(x) num2str(x), cfg.yticks, ...
                    'UniformOutput',false);
 yticklabels(tickstr);
+keyboard;
 
 bounds = axis;
 if ~isempty(cfg.truth)
@@ -63,10 +64,10 @@ if ~isempty(cfg.truth)
          [cfg.truth cfg.truth],'Color',[0.3 0.3 0.3], 'LineStyle','--');
 end
 
-x = (1:num_groups-1)*(num_groups)+0.5;
+x = (1:num_categories-1)*(num_groups)+0.5;
 xx = [x;x];
-yy = [repmat(bounds(3),1,num_groups-1); ...
-      repmat(bounds(4),1,num_groups-1)];
+yy = [repmat(bounds(3),1,num_categories-1); ...
+      repmat(bounds(4),1,num_categories-1)];
 line(xx,yy,'Color',[0.8 0.8 0.8]);
 
 %boxes = flipud(findobj(gca, 'Tag', 'Box'));
