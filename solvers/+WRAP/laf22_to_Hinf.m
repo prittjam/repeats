@@ -67,7 +67,7 @@ classdef laf22_to_Hinf < WRAP.LafRectSolver
     
     methods
         function this = laf22_to_Hinf()
-            this = this@WRAP.LafRectSolver(2);
+            this = this@WRAP.LafRectSolver([2 2]);
         end
         
         function M = fit(this,x,corresp,idx,varargin)            

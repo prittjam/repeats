@@ -56,7 +56,6 @@ yticks(cfg.yticks);
 tickstr = arrayfun(@(x) num2str(x), cfg.yticks, ...
                    'UniformOutput',false);
 yticklabels(tickstr);
-keyboard;
 
 bounds = axis;
 if ~isempty(cfg.truth)

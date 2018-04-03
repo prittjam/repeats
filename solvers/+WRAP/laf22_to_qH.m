@@ -7,7 +7,7 @@ classdef laf22_to_qH < WRAP.LafRectSolver
     
     methods
         function this = laf22_to_qH(cc)
-            this = this@WRAP.LafRectSolver(2);
+            this = this@WRAP.LafRectSolver([2 2]);
             this.solver_impl = WRAP.pt5x2_to_qH(cc);
         end
 

@@ -7,7 +7,7 @@ classdef laf2_to_lu < WRAP.LafRectSolver
     
     methods
         function this = laf2_to_lu(cc)
-            this = this@WRAP.LafRectSolver(1);
+            this = this@WRAP.LafRectSolver(2);
             this.solver_impl = WRAP.pt2x2_to_lu(cc);
         end
 

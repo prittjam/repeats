@@ -17,22 +17,29 @@ end
 u = PT.renormI(H*U);
 su = norm(Xlaf(1:3,2)-Xlaf(1:3,1));
 
-l3 = cross(Xlaf(1:3,3),Xlaf(1:3,4));
-l4 = cross(Xlaf(4:6,3),Xlaf(4:6,4));
-V = cross(l3,l4);
-if dot(V,Xlaf(1:3,4)-Xlaf(1:3,3)) < 0
-    V = -V;
+if size(X,2) > 2
+    l3 = cross(Xlaf(1:3,3),Xlaf(1:3,4));
+    l4 = cross(Xlaf(4:6,3),Xlaf(4:6,4));
+    V = cross(l3,l4);
+    if dot(V,Xlaf(1:3,4)-Xlaf(1:3,3)) < 0
+        V = -V;
+    end
+
+    v = PT.renormI(H*V);
+    sv = norm(Xlaf(1:3,4)-Xlaf(1:3,3));
+
+    gt = struct('l', linf,'u', u, 'v', v, ...
+                'sU', su,'sV', sv, ...
+                'U',U/norm(U), 'V',V/norm(V), ...
+                'scene_num', scene_num, ...
+                'q', q_gt, 'ccd_sigma', ccd_sigma, ...
+                'cc', cc);
+else
+    gt = struct('l', linf,'u', u, 'sU', su, ...
+                'U',U/norm(U), 'scene_num', scene_num, ...
+                'q', q_gt, 'ccd_sigma', ccd_sigma, ...
+                'cc', cc);
 end
-
-v = PT.renormI(H*V);
-sv = norm(Xlaf(1:3,4)-Xlaf(1:3,3));
-
-gt = struct('l', linf,'u', u, 'v', v, ...
-            'sU', su,'sV', sv, ...
-            'U',U/norm(U), 'V',V/norm(V), ...
-            'scene_num', scene_num, ...
-            'q', q_gt, 'ccd_sigma', ccd_sigma, ...
-            'cc', cc);
 
 %x1 = PT.renormI(H*Xlaf(1:3,1));
 %x2 = PT.renormI(H*Xlaf(1:3,2));

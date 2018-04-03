@@ -13,7 +13,6 @@ function [] = sensitivity(out_name,varargin)
                       'ransac_rewarp','q','ransac_q'});
     gt = cell2table(cell(0,4), 'VariableNames', ...
                     {'ex_num', 'scene_num', 'q_gt','sigma'});
-
     sample_type_strings = {'laf2','laf22','laf22s','laf222','laf32','laf4'};
     sample_type_list = categorical(1:6,1:6, ...
                                    sample_type_strings, ...
@@ -22,6 +21,7 @@ function [] = sensitivity(out_name,varargin)
                  '$\mH22\vl\vu\vv s_{\vv}\lambda$', ...
                  '$\mH22\vl s$', ...
                  '$\mH22\lambda$', ...
+                 '$\mH22\vl', ...
                  '$\mH222\vl\lambda s_i$', ...
                  '$\mH32\vl\lambda s_i$', ...
                  '$\mH4\vl\lambda s_i$'}; 
@@ -34,11 +34,12 @@ function [] = sensitivity(out_name,varargin)
         WRAP.laf22_to_qlusv(cc) ...
         WRAP.laf22_to_Hinf() ...
         WRAP.laf22_to_qH(cc) ...
+        WRAP.laf22_to_l(cc) ...
         WRAP.laf222_to_ql(cc) ...
         WRAP.laf32_to_ql(cc) ...
         WRAP.laf4_to_ql(cc) ] ;
     
-    solver_sample_type = {'laf2', 'laf22', 'laf22', ...
+    solver_sample_type = {'laf2', 'laf22', 'laf22', 'laf22', ...
                         'laf22s', 'laf222', 'laf32', 'laf4'};
     ex_num = 1;
 
@@ -53,8 +54,8 @@ function [] = sensitivity(out_name,varargin)
             cspond = {};
             G = {};
             for k2 = 1:samples_drawn
-                [Xlist{k2},cspond{k2},G{k2}] = sample_lafs(usample_type{k},...
-                                                           wplane,hplane);
+                [Xlist{k2},cspond{k2},G{k2}] = sample_lafs_t(usample_type{k},...
+                                                             wplane,hplane);
             end
             cspond_dict(usample_type{k}) = struct('Xlist', Xlist, ...
                                                   'cspond', cspond, ...
@@ -70,7 +71,6 @@ function [] = sensitivity(out_name,varargin)
                         X = cspond_info(k2).Xlist;
                         truth = PLANE.make_gt(scene_num,P,q_gt,cam.cc, ...
                                               ccd_sigma,X);
-                        keyboard;
                         X4 = reshape(X,4,[]);
                         x = PT.renormI(P*X4);
                         xd = CAM.rd_div(reshape(x,3,[]),...
@@ -114,10 +114,11 @@ function [] = sensitivity(out_name,varargin)
         end
     end
     disp(['Finished']);
-    save('sensitivity','res','gt','cam');
-%
+    
+    save('sensitivity_20180402.mat','res','gt','cam');
+
 function [num_scenes,ccd_sigma_list,q_list]  = make_experiments(cc)
-    num_scenes = 1000;   
+    num_scenes = 50;   
     ccd_sigma_list = [0.1 0.5 1 2 5];
     q_list = arrayfun(@(x) x/(sum(2*cc)^2),-4);
     
@@ -251,20 +252,40 @@ function [optq,opt_rms,opt_warp] = calc_opt_res(gt,cam,M,P,w,h)
         opt_warp = nan;
     end
 
-function [X,cspond,G] = sample_lafs(sample_type,w,h)
+
+function [X,cspond,G] = sample_lafs_t(sample_type,w,h)
     switch sample_type
-      case {'laf2','laf22'}
-        [X,cspond,G] = PLANE.make_cspond_t(2,w,h);
+      case 'laf2'
+        [X,cspond,G] = PLANE.make_cspond_set_t(2,w,h);
+        
       case 'laf22s'
         [X,cspond,G] = PLANE.make_cspond_same_t(2,w,h);
+        
+      case 'laf22'
+        [X0,cspond0,G0] = PLANE.make_cspond_set_t(2,w,h);
+        [X1,cspond1,G1] = PLANE.make_cspond_set_t(2,w,h);
+        X = [X0 X1];
+        cspond = [cspond0 cspond1+max(cspond0(:))];
+        G = [G0 G1+max(G0)];
+
       case 'laf222'
-        [X,cspond,G] = PLANE.make_cspond_t(3,w,h);
+        [X0,cspond0,G0] = PLANE.make_cspond_set_t(2,w,h);
+        [X1,cspond1,G1] = PLANE.make_cspond_set_t(2,w,h);
+        [X2,cspond2,G2] = PLANE.make_cspond_set_t(2,w,h);
+        X = [X0 X1 X2];
+        cspond1 = cspond1+max(cspond0(:));
+        cspond2 = cspond2+max(cspond1(:));
+        cspond = [cspond0 cspond1 cspond2];
+        G1 = G1+max(G0);
+        G2 = G2+max(G1);
+        G = [G0 G1 G2];
+      
       case 'laf32'
         [X0,cspond0,G0] = PLANE.make_cspond_set_t(3,w,h);
         [X1,cspond1,G1] = PLANE.make_cspond_set_t(2,w,h);
         X = [X0 X1];
-        cspond = [cspond0 cspond1];
-        G = [G0 G1];
+        cspond = [cspond0 cspond1+max(cspond0(:))];
+        G = [G0 G1+max(G0)];
       case 'laf4'
         [X,cspond,G] = PLANE.make_cspond_set_t(4,w,h);
     end

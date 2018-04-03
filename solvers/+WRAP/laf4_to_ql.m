@@ -3,11 +3,12 @@
 classdef laf4_to_ql < WRAP.LafRectSolver
     properties
         cc = [];
+        sample_type
     end
 
     methods
         function this = laf4_to_ql(cc)
-            this = this@WRAP.LafRectSolver(3);
+            this = this@WRAP.LafRectSolver(4);
             this.cc = cc;
         end
 

@@ -7,7 +7,7 @@ classdef laf32_to_ql < WRAP.LafRectSolver
 
     methods
         function this = laf32_to_ql(cc)
-            this = this@WRAP.LafRectSolver(3);
+            this = this@WRAP.LafRectSolver([3 2]);
             this.cc = cc;
         end
 

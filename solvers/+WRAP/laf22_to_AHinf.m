@@ -7,7 +7,7 @@ classdef laf22_to_AHinf < WRAP.LafRectSolver
     
     methods
         function this = laf22_to_AHinf(cc)
-            this = this@WRAP.LafRectSolver(2); 
+            this = this@WRAP.LafRectSolver([2 2]); 
             this.cc = cc;
         end
         
