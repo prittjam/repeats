@@ -1,13 +1,23 @@
 function [] = new_sensitivity(out_name,name_list,solver_list,varargin)
+    cfg = struct('nx', 1000, ...
+                 'ny', 1000, ...
+                 'cc', []);
+    
     greedy_repeats_init('..');
-    assert(numel(name_list)==numel(solver_list), ...
+    assert(numel(name_list) == numel(solver_list), ...
            'The number of names MUST match the number of solvers');
     
+    cfg = cmp_argparse(cfg,varargin{:});
+    
+    if isempty(cfg.cc)
+        cc = [cfg.nx/2+0.5; ...
+              cfg.ny/2+0.5];
+    else
+        cc = cfg.cc;
+    end
+    
     samples_drawn = 25;
-    nx = 1000;
-    ny = 1000;
-    cc = [nx/2+0.5; ...
-          ny/2+0.5];
+
     wplane = 10;
     hplane = 10;
     [num_scenes,ccd_sigma_list,q_gt_list] = make_experiments(cc);
@@ -19,22 +29,21 @@ function [] = new_sensitivity(out_name,name_list,solver_list,varargin)
 
     sample_type_strings = ...
         {'laf2','laf22','laf22s','laf222','laf32','laf4'};
-
-    sample_type_list = categorical(1:numel(sample_type_string),...
+    sample_type_list = categorical(1:numel(sample_type_strings),...
                                    1:numel(sample_type_strings), ...
                                    sample_type_strings, ...
                                    'Ordinal',true);
     solver_names = categorical([1:numel(name_list)], ...
                                [1:numel(name_list)], ...
                                name_list, 'Ordinal', true);
-
+    solver_sample_type = arrayfun(@(x) x.sample_type,solver_list, ...
+                                  'UniformOutput',false);
     
-    solver_sample_type = {'laf22','laf22','laf22s','laf222','laf32','laf4'};
     ex_num = 1;
 
     for scene_num = 1:num_scenes
         f = 5*rand(1)+3;
-        cam = CAM.make_ccd(f,4.8,nx,ny);
+        cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
         P = PLANE.make_viewpoint(cam,10,10);
         cspond_dict = containers.Map;
         usample_type = unique(solver_sample_type);
@@ -55,7 +64,8 @@ function [] = new_sensitivity(out_name,name_list,solver_list,varargin)
                 for k = 1:numel(solver_list)
                     optq_list = nan(1,samples_drawn);
                     opt_warp_list = nan(1,samples_drawn);
-                    cspond_info = cspond_dict(solver_sample_type{k});
+                    cspond_info = ...
+                        cspond_dict(solver_sample_type{k});
                     for k2 = 1:samples_drawn
                         X = cspond_info(k2).Xlist;
                         truth = PLANE.make_Rt_gt(scene_num,P,q_gt,cam.cc, ...
@@ -73,10 +83,10 @@ function [] = new_sensitivity(out_name,name_list,solver_list,varargin)
                                                    cspond_info(k2).cspond, ...
                                                    1:size(cspond_info(k2).cspond,2), ...
                                                    cspond_info(k2).G);
-                        catch
+                        catch err
                             M = [];
                         end
- 
+                        
 %                        if numel(cspond_info(1).G) == 4
 %                            keyboard;
 %                        end
@@ -109,7 +119,7 @@ function [] = new_sensitivity(out_name,name_list,solver_list,varargin)
         keyboard;
     end
     disp(['Finished']);
-    save('sensitivity','res','gt','cam');
+    save(out_name,'res','gt','cam');
 %
 function [num_scenes,ccd_sigma_list,q_list]  = make_experiments(cc)
     num_scenes = 10;   
@@ -174,24 +184,24 @@ function [X,cspond,G] = sample_lafs(sample_type,w,h,xform)
         xform = 'Rt';
     end
     
-    make_cspond_same = str2func('PLANE.make_cspond_same_',xform);
-    make_cspond_set = str2func('PLANE.make_cspond_set_',xform);
+    make_cspond_same = str2func(['PLANE.make_cspond_same_' xform]);
+    make_cspond_set = str2func(['PLANE.make_cspond_set_' xform]);
     
     switch sample_type
       case 'laf22s'
-        [X,cspond,G] = PLANE.make_cspond_same_Rt(2,w,h);
+        [X,cspond,G] = make_cspond_same(2,w,h);
         
       case 'laf22'
-        [X0,cspond0,G0] = PLANE.make_cspond_set_Rt(2,w,h);
-        [X1,cspond1,G1] = PLANE.make_cspond_set_Rt(2,w,h);
+        [X0,cspond0,G0] = make_cspond_set(2,w,h);
+        [X1,cspond1,G1] = make_cspond_set(2,w,h);
         X = [X0 X1];
         cspond = [cspond0 cspond1+max(cspond0(:))];
         G = [G0 G1+max(G0)];
 
       case 'laf222'
-        [X0,cspond0,G0] = PLANE.make_cspond_set_Rt(2,w,h);
-        [X1,cspond1,G1] = PLANE.make_cspond_set_Rt(2,w,h);
-        [X2,cspond2,G2] = PLANE.make_cspond_set_Rt(2,w,h);
+        [X0,cspond0,G0] = make_cspond_set(2,w,h);
+        [X1,cspond1,G1] = make_cspond_set(2,w,h);
+        [X2,cspond2,G2] = make_cspond_set(2,w,h);
         X = [X0 X1 X2];
         cspond1 = cspond1+max(cspond0(:));
         cspond2 = cspond2+max(cspond1(:));
@@ -201,11 +211,12 @@ function [X,cspond,G] = sample_lafs(sample_type,w,h,xform)
         G = [G0 G1 G2];
       
       case 'laf32'
-        [X0,cspond0,G0] = PLANE.make_cspond_set_Rt(3,w,h);
-        [X1,cspond1,G1] = PLANE.make_cspond_set_Rt(2,w,h);
+        [X0,cspond0,G0] = make_cspond_set(3,w,h);
+        [X1,cspond1,G1] = make_cspond_set(2,w,h);
         X = [X0 X1];
         cspond = [cspond0 cspond1+max(cspond0(:))];
         G = [G0 G1+max(G0)];
+      
       case 'laf4'
-        [X,cspond,G] = PLANE.make_cspond_set_Rt(4,w,h);
+        [X,cspond,G] = make_cspond_set(4,w,h);
     end

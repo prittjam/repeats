@@ -108,7 +108,7 @@ LAF.draw_groups(gca,x,Gsamp);
 
 %solver = WRAP.laf1x2_to_lu(cc);
 %solver = WRAP.laf1x2_to_qlu(cc); 
-%solver = WxRAP.laf1x2_to_qlsu(cc); 
+%solver = WRAP.laf1x2_to_qlsu(cc); 
 %solver = WRAP.laf2x2_to_qluv(cc); 
 %solver = WRAP.laf2x2_to_qlusv(cc); 
 %solver = WRAP.laf3x2_to_ql(cc);

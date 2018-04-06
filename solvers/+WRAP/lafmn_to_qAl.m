@@ -7,7 +7,7 @@ classdef lafmn_to_qAl < WRAP.LafRectSolver
     
     methods
         function this = lafmn_to_qAl(solver_impl)
-            this = this@WRAP.LafRectSolver(solver_impl.mss); 
+            this = this@WRAP.LafRectSolver(solver_impl.sample_type); 
             this.solver_impl = solver_impl;
         end
 

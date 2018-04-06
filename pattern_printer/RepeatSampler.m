@@ -14,11 +14,11 @@ classdef RepeatSampler < handle
     end
     
     methods
-        function this = RepeatSampler(dr,corresp,k,Gsamp,varargin)
+        function this = RepeatSampler(x,corresp,k,Gsamp,varargin)
             this.labeling0 = Gsamp;
             
             this.freq = hist(this.labeling0,1:max(this.labeling0));
-            this.Z = arrayfun(@(x) nchoosek(x,2),this.freq);
+            this.Z = arrayfun(@(z) nchoosek(z,2),this.freq);
             this.p = this.Z/sum(this.Z);
             this.N = sum(this.Z);
             this.k = k;
@@ -27,7 +27,7 @@ classdef RepeatSampler < handle
                    'Number of total correspondences is incorrect');
         end
 
-        function idx = sample(this,dr,corresp,varargin)
+        function idx = sample(this,x,corresp,varargin)
             while true
                 idx = randsample(this.N,this.k);
                 if (numel(unique(corresp(:,idx))) == 2*this.k) && ...

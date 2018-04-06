@@ -1,11 +1,35 @@
 classdef LafRectSolver < handle & matlab.mixin.Heterogeneous
     properties
         mss = [];
+        sample_type = [];
     end
     
     methods
-        function this = LafRectSolver(mss,cc)
-            this.mss = mss;
+        function this = LafRectSolver(sample_type)
+            switch sample_type
+              case 'laf2'
+                this.mss = 2;
+                
+              case 'laf22'
+                this.mss = [2 2];
+                
+              case 'laf22s'
+                this.mss = [2 2];
+
+              case 'laf222'
+                this.mss = [2 2 2];
+                                
+              case 'laf32'
+                this.mss = [3 2];
+                
+              case 'laf4'
+                this.mss = 4;
+                
+              otherwise
+                throw('Incorrect sample type for rectifying solvers');
+            end
+            
+            this.sample_type = sample_type;
         end
         
         function flag = is_sample_good(this,dr,corresp,idx)

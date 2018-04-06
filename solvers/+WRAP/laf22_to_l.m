@@ -6,7 +6,7 @@ classdef laf22_to_l < WRAP.LafRectSolver
         solver_type = 'polynomial';
     end
 
-    methods
+    methods(Static)
         function H = solve_accv10(aX,arsc)
             if ~iscell(aX)
                 aX = {aX};
@@ -55,30 +55,37 @@ classdef laf22_to_l < WRAP.LafRectSolver
             H = H * A;
         end
         
-        function H = iter_solve_accv10(u,G)
+        function [H,solver_time] = iter_solve_accv10(u,G)
             v = u;
             H = eye(3,3);
+            solver_time = 0;
             for k = 1:3         
                 [mu,sc] = ...
                     cmp_splitapply(@(x) ...
                                    (deal({(x(1:2,:)+x(4:5,:)+x(7:8,:))/3}, ...
-                                         {1./nthroot(LAF.calc_scale(x),3)})),v,G);
-                Hk = WRAP.laf22_to_Hinf.solve(mu,sc);
+                                         {1./ ...
+                                    nthroot(LAF.calc_scale(x),3)})),v,G);
+                tic;
+                Hk = WRAP.laf22_to_l.solve_accv10(mu,sc);
+                tmp_solver_time = toc;
                 H = Hk*H;
                 v = LAF.renormI(blkdiag(H,H,H)*u);
+                solver_time = solver_time+tmp_solver_time;
             end
         end        
-
-        
-        function this = laf22_to_l(cc)
-            this = this@WRAP.LafRectSolver([2 2]);
+    end
+    
+    methods
+        function this = laf22_to_l(cc,varargin)
+            this = this@WRAP.LafRectSolver('laf22');
+            this = cmp_argparse(this,varargin{:});
             this.cc = cc;
         end
 
         function M = fit(this,x,corresp,idx,varargin)
-            cfg  = struct('sovler_type','polynomial')
-            switch(solver_type)
+            switch(this.solver_type)
               case 'polynomial'
+                keyboard;
                 M = [];
                 A = [1 0 -this.cc(1); ...
                      0 1 -this.cc(2); ...
@@ -105,8 +112,12 @@ classdef laf22_to_l < WRAP.LafRectSolver
                 G = varargin{1};
                 m = corresp(:,idx);
                 x = x(:,m(:));
-                Hinf = WRAP.laf22_to_Hinf.iter_solve(x,G(m(:)));
-                M.l = transpose(M.Hinf(3,:));
+                [Hinf,solver_time] = ...
+                    this.iter_solve_accv10(x,G(m(:)));
+                M = struct('q', 0, ...
+                           'l', transpose(Hinf(3,:)), ...
+                           'cc', this.cc, ...
+                           'solver_time', solver_time);
             end
         end
     end
