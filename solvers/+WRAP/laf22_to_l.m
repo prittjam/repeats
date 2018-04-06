@@ -85,7 +85,6 @@ classdef laf22_to_l < WRAP.LafRectSolver
         function M = fit(this,x,corresp,idx,varargin)
             switch(this.solver_type)
               case 'polynomial'
-                keyboard;
                 M = [];
                 A = [1 0 -this.cc(1); ...
                      0 1 -this.cc(2); ...

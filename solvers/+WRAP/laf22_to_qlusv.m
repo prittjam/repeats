@@ -7,7 +7,7 @@ classdef laf22_to_qlusv < WRAP.LafRectSolver
     
     methods
         function this = laf22_to_qlusv(cc)
-            this = this@WRAP.LafRectSolver([2 2],cc);
+            this = this@WRAP.LafRectSolver('laf22');
             this.solver_impl = WRAP.pt4x2_to_qlusv(cc);
         end
         

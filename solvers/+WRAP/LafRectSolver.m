@@ -32,7 +32,7 @@ classdef LafRectSolver < handle & matlab.mixin.Heterogeneous
             this.sample_type = sample_type;
         end
         
-        function flag = is_sample_good(this,dr,corresp,idx)
+        function flag = is_sample_good(this,x,corresp,idx)
             flag = numel(unique(corresp(:,idx))) == 2*this.mss;
         end    
         
@@ -52,7 +52,7 @@ classdef LafRectSolver < handle & matlab.mixin.Heterogeneous
             end
         end                
         
-        function M = fix(this,dr,corresp,idx,M)
+        function M = fix(this,x,corresp,idx,M)
             M = [];
         end
     end
