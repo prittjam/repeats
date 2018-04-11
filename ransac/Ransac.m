@@ -63,6 +63,7 @@ classdef Ransac < handle
                         end
                     end
                 end
+                
                 assert(is_sample_good, ... 
                        'Could not draw a non-degenerate sample!'); 
                 assert(has_model, ...
