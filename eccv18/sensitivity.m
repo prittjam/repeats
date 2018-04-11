@@ -1,4 +1,4 @@
-function [] = new_sensitivity(out_name,name_list,solver_list,varargin)
+function [] = sensitivity(out_name,name_list,solver_list,varargin)
     greedy_repeats_init('..');
     assert(numel(name_list) == numel(solver_list), ...
            'The number of names MUST match the number of solvers');

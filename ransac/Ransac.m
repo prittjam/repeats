@@ -54,7 +54,7 @@ classdef Ransac < handle
                             model_list = this.model.fit(x, ...
                                                         corresp,idx, ...
                                                         varargin{:});
-                        catch
+                        catch excpn
                             model_list = [];
                         end
                         if ~isempty(model_list)
@@ -63,8 +63,7 @@ classdef Ransac < handle
                         end
                     end
                 end
-                
-                assert(is_sample_good, ...
+                assert(is_sample_good, ... 
                        'Could not draw a non-degenerate sample!'); 
                 assert(has_model, ...
                        'Could not generate a model!');                     
@@ -72,6 +71,7 @@ classdef Ransac < handle
                 stats.sample_count = stats.sample_count+k;
                 
                 is_model_good = false(1,numel(model_list));
+
                 for k = 1:numel(model_list)
                     is_model_good(k) = ...
                         this.model.is_model_good(x,corresp,idx,model_list(k));
@@ -88,32 +88,25 @@ classdef Ransac < handle
                     end
                     model_list = model_list(is_model_good);
                 end
-                
+
                 if ~isempty(model_list)
                     stats.model_count = stats.model_count+numel(model_list);
-
                     loss = inf(numel(model_list),1);
-
                     for k = 1:numel(model_list)
                         [loss(k),err{k}] = this.eval.calc_loss(x,corresp,model_list(k));
                         cs{k} = this.eval.calc_cs(err{k});
                     end
-                    
                     [~,mink] = min(loss);
-                    
                     M0 = model_list(mink);
                     res0 = struct('err', err{mink}, ...
                                   'loss', loss(mink), ...
                                   'cs', cs{mink}, ...
-                                  'mss', idx);
-
-                    
+                                  'mss', {idx});
                     if (sum(res0.cs) > 0) && ...
                             (res0.loss < res.loss) && ...
                             (sum(res0.cs) >= sum(res.cs))
                         M = M0;
                         res = res0;
-
                         stats.ransac = cat(2,stats.ransac, ...
                                            struct('M',M, ...
                                                   'res',res, ...

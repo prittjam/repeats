@@ -14,7 +14,7 @@ classdef lafmn_to_qAl < WRAP.LafRectSolver
         function M = fit(this,x,corresp,idx,varargin)            
             M = this.solver_impl.fit(x,corresp,idx,varargin{:});
             Gsamp = varargin{1};
-            m = reshape(corresp(:,idx),1,[]);
+            m = [idx{:}];                
             for k = 1:numel(M)
                 H = eye(3);
                 H(3,:) = transpose(M(k).l);

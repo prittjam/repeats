@@ -15,7 +15,7 @@ classdef RepeatSampler < handle
     
     methods
         function this = RepeatSampler(x,corresp,k,Gsamp,varargin)
-            this.labeling0 = Gsamp;
+            this.labeling0 = findgroups(Gsamp);
             
             this.freq = hist(this.labeling0,1:max(this.labeling0));
             this.Z = arrayfun(@(z) nchoosek(z,2),this.freq);
@@ -27,16 +27,36 @@ classdef RepeatSampler < handle
                    'Number of total correspondences is incorrect');
         end
 
+        %        function idx = sample(this,x,corresp,varargin)
+        %            while true
+        %                idx = randsample(this.N,this.k);
+        %                if (numel(unique(corresp(:,idx))) == 2*this.k) && ...
+        %                    (numel(unique(this.labeling0(corresp(:,idx)))) == this.k)
+        %                    break;
+        %                end
+        %            end
+        %        end
+
         function idx = sample(this,x,corresp,varargin)
-            while true
-                idx = randsample(this.N,this.k);
-                if (numel(unique(corresp(:,idx))) == 2*this.k) && ...
-                    (numel(unique(this.labeling0(corresp(:,idx)))) == this.k)
-                    break;
-                end
+            [ii,jj] = find(mnrnd(1,this.p,numel(this.k)));
+            jj(ii) = jj;
+            for k = 1:numel(jj)
+                ind = find(this.labeling0 == jj(k));
+                idx{k} = ind(randperm(this.freq(jj(k)),this.k(k)));
             end
+            %    for 
+            %    
+            %    while true
+            %                idx = randsample(this.N,this.k);
+            %                if (numel(unique(corresp(:,idx))) == 2*this.k) && ...
+            %                    (numel(unique(this.labeling0(corresp(:,idx)))) == this.k)
+            %                    break;
+            %                end
+            %            end
+            %        end
+            %
         end
-        
+
         function trial_count = update_trial_count(this,corresp,cs)
             trial_count = inf;
             %            cslabeling = this.labeling0.*cs;
@@ -47,9 +67,8 @@ classdef RepeatSampler < handle
             %            p3 = dot(this.p(ind),p2);
             p3 = sum(cs)/size(corresp,2);
 
-
             if p3 > 0
-                N = ceil(log(1-this.confidence)/log(1-p3^(this.k)));
+                N = ceil(log(1-this.confidence)/log(1-p3^(sum(this.k))));
             else
                 N = inf;
             end

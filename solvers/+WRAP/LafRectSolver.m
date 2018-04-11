@@ -33,13 +33,12 @@ classdef LafRectSolver < handle & matlab.mixin.Heterogeneous
         end
         
         function flag = is_sample_good(this,x,corresp,idx)
-            flag = numel(unique(corresp(:,idx))) == 2*this.mss;
+            flag = numel(unique([idx{:}])) == sum(this.mss);
         end    
         
         function flag = is_model_good(this,x,corresp,idx,M)      
             flag = false;
-
-            m = corresp(:,idx);
+            m = [idx{:}];
             x = x(:,m(:));
             if ~isfield(M,'q')
                 flag = LAF.are_same_orientation(x,M.l); 
