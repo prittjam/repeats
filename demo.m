@@ -11,10 +11,10 @@ listing = listing4;
 
 dr = [];
 border = [];
-name_list{1} = 'H222_ECCV18';
-%name_list{2} = 'H22_CVPR18';
-%name_list{3} = 'H22_ACCV10';
-%name_list{4} = 'H22_ECCV18';
+name_list{1} = 'H222_eccv18';
+%name_list{2} = 'H22_cvpr18';
+%name_list{3} = 'H22_accv10';
+%name_list{4} = 'H22_eccv18';
 
 for k = 1:numel(listing)
     target_dir = [listing(k).folder '/res/'];
