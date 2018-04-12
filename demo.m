@@ -1,22 +1,18 @@
 function [] = demo()
 greedy_repeats_init();
-imparams = { 'img_set', 'dggt', ...
-             'max_num_cores', 1, ...
-             'dr_type','all', ...
-             'res_path','~/cvpr16'};
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
 listing4 = dir('img/0.jpg');
 listing = listing4;
 
-dr = [];
-border = [];
 name_list{1} = 'H222_eccv18';
 %name_list{2} = 'H22_cvpr18';
 %name_list{3} = 'H22_accv10';
 %name_list{4} = 'H22_eccv18';
 
 for k = 1:numel(listing)
+    dr = [];
+    border = [];
     target_dir = [listing(k).folder '/res/'];
     if ~exist(target_dir)
         mkdir(target_dir);
@@ -35,8 +31,6 @@ for k = 1:numel(listing)
         target_fname = [target_dir name '_' name_list{k2} '.mat'];
         if ~exist(target_fname)
             try
-                gr_params = { 'img', img.data, ...
-                              'num_planes', 1 };
                 if isempty(dr)
                     dr = DR.get(img,cid_cache, ...
                                     {'type','all', ...
@@ -86,6 +80,4 @@ for k = 1:numel(listing)
             end
         end
     end
-    dr = [];
-    border = [];
 end
