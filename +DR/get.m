@@ -4,7 +4,7 @@ res = [];
 
 min_size = img.area/640/480*4;
 min_mser_scale = 20;
-min_haff_scale = 50;
+min_haff_scale = 20;
 
 cfg.type = 'all';
 cfg.reflection = 1;
