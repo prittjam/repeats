@@ -1,5 +1,5 @@
 function [] = demo()
-greedy_repeats_init();
+repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
 listing4 = dir('img/0.jpg');
@@ -10,10 +10,13 @@ name_list{1} = 'H222_eccv18';
 %name_list{3} = 'H22_accv10';
 %name_list{4} = 'H22_eccv18';
 
+[cur_path, name, ext] = fileparts(mfilename('fullpath'));
+
 for k = 1:numel(listing)
     dr = [];
     border = [];
-    target_dir = [listing(k).folder '/res/'];
+    target_dir = [cur_path '/res/'];
+    keyboard;
     if ~exist(target_dir)
         mkdir(target_dir);
     end

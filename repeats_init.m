@@ -1,7 +1,4 @@
-function [] = greedy_repeats_init(src_path,opt_path)
-%set(0,'DefaultFigureRenderer','OpenGL');
-%set(0,'DefaultFigureRendererMode', 'manual');
-%
+function [] = repeats_init(src_path,opt_path)
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
 addpath(genpath(cur_path))
