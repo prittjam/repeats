@@ -6,9 +6,9 @@ listing4 = dir('img/0.jpg');
 listing = listing4;
 
 name_list{1} = 'H222_eccv18';
-%name_list{2} = 'H22_cvpr18';
-%name_list{3} = 'H22_accv10';
-%name_list{4} = 'H22_eccv18';
+name_list{2} = 'H22_eccv18';
+name_list{3} = 'H22_accv10';
+name_list{4} = 'H22_cvpr18';
 
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
@@ -16,7 +16,6 @@ for k = 1:numel(listing)
     dr = [];
     border = [];
     target_dir = [cur_path '/res/'];
-    keyboard;
     if ~exist(target_dir)
         mkdir(target_dir);
     end
@@ -30,8 +29,9 @@ for k = 1:numel(listing)
     cc = [(img.width+1)/2 (img.height+1)/2];
     cid_cache = CASS.CidCache(img.cid,cache_params{:});
 
-    for k2 = 1
+    for k2 = 1:numel(name_list)
         target_fname = [target_dir name '_' name_list{k2} '.mat'];
+        keyboard;
         if ~exist(target_fname)
             try
                 if isempty(dr)
@@ -42,10 +42,12 @@ for k = 1:numel(listing)
                 end
                 
                 solver_list(1) = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql(cc));   
-%               solver_list(2) = WRAP.lafmn_to_qAl(WRAP.laf22_to_qlusv(cc));   
-%               solver_list(3) = WRAP.laf22_to_AHinf(cc);
-%               solver_list(4) = WRAP.lafmn_to_qAl(WRAP.laf22_to_l(cc));   
-%
+                solver_list(2) = ...
+                    WRAP.lafmn_to_qAl(WRAP.laf22_to_l(cc,'solver_type','polynomial'))
+                solver_list(3) = ...
+                    WRAP.laf22_to_qAl(WRAP.laf22_to_l(cc,'solver_type','linear'));
+                solver_list(4) = WRAP.lafmn_to_qAl(WRAP.laf22_to_qlusv(cc));   
+               
                 [model_list,lo_res_list,stats_list,cspond] = ...
                     fit_coplanar_patterns(solver_list(k2),x,Gsamp,Gsamp,cc,1);
                 tmp = img;

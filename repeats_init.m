@@ -11,6 +11,8 @@ if nargin < 2
     opt_path = '~/opt/';
 end
 
+addpath([opt_path 'mex']);
+
 if ~exist('+MMS','dir')
     addpath(fullfile([opt_path 'mex']));
 end
@@ -25,3 +27,5 @@ if ~exist('cvdb_init','file')
     feval('cvdb_init'); 
     cd(cur_path);
 end
+
+features_init();
