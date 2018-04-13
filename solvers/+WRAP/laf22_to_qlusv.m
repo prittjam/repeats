@@ -16,10 +16,13 @@ classdef laf22_to_qlusv < WRAP.LafRectSolver
         end        
 
         function M = fit(this,x,corresp,idx,varargin)
-            m = corresp(:,idx);
-            x = x(:,m(:));
+            x = x(:,[idx{:}]);
             xp = [x(1:3,1:2) x(4:6,1:2) x(1:3,3:4) x(4:6,3:4)];
-            M = this.solver_impl.fit(xp,[1 3 5 7;2 4 6 8],[1 2 3 4]);
+            M = ...
+                this.solver_impl.fit(xp, ...
+                                     [1 3 5 7;2 4 6 8], ...
+                                     [1 2 3 4]);
+            
         end
     end
 end

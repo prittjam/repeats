@@ -2,7 +2,7 @@ function [] = demo()
 repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
-listing4 = dir('img/0.jpg');
+listing4 = dir('img/*.jpg');
 listing = listing4;
 
 name_list{1} = 'H222_eccv18';
@@ -31,7 +31,6 @@ for k = 1:numel(listing)
 
     for k2 = 1:numel(name_list)
         target_fname = [target_dir name '_' name_list{k2} '.mat'];
-        keyboard;
         if ~exist(target_fname)
             try
                 if isempty(dr)
@@ -40,14 +39,16 @@ for k = 1:numel(listing)
                                      'reflection', false });       
                     [x,Gsamp,Gapp] = group_desc(dr);    
                 end
-                
-                solver_list(1) = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql(cc));   
+
+                solver_list(1) = ...
+                    WRAP.lafmn_to_qAl(WRAP.laf222_to_ql(cc));   
                 solver_list(2) = ...
-                    WRAP.lafmn_to_qAl(WRAP.laf22_to_l(cc,'solver_type','polynomial'))
+                    WRAP.lafmn_to_qAl(WRAP.laf22_to_l(cc,'solver_type','polynomial'));
                 solver_list(3) = ...
-                    WRAP.laf22_to_qAl(WRAP.laf22_to_l(cc,'solver_type','linear'));
-                solver_list(4) = WRAP.lafmn_to_qAl(WRAP.laf22_to_qlusv(cc));   
-               
+                    WRAP.lafmn_to_qAl(WRAP.laf22_to_l(cc,'solver_type','linear'));
+                solver_list(4) = ...
+                    WRAP.lafmn_to_qAl(WRAP.laf22_to_qlusv(cc));   
+
                 [model_list,lo_res_list,stats_list,cspond] = ...
                     fit_coplanar_patterns(solver_list(k2),x,Gsamp,Gsamp,cc,1);
                 tmp = img;
@@ -82,6 +83,7 @@ for k = 1:numel(listing)
                 imwrite(uimg, ...
                         [target_dir name '_' name_list{k2} '_ud.jpg']);
             catch err
+                keyboard;
             end
         end
     end

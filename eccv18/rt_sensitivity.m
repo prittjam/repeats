@@ -20,7 +20,7 @@ solver_list = [ ...
     WRAP.laf4_to_ql(cc) ] ;
 
 dstr = datestr(now,'yyyymmdd');
-out_name = ['ct_sensitivity_' dstr '.mat'];
+out_name = ['rt_sensitivity_' dstr '.mat'];
 
-new_sensitivity(out_name,name_list,solver_list, ...
-                'nx',nx,'ny',ny,'cc',cc);
+sensitivity(out_name,name_list,solver_list, ...
+            'nx',nx,'ny',ny,'cc',cc);
