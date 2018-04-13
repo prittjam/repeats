@@ -35,13 +35,13 @@ In addition, for all solvers, the estimator attempts an upgrade to a metric rect
 ## Structure
 - [`features`](tbd) - MATLAB wrappers for the feature detectors
 - [`solvers`](tbd) - minimal solvers proposed in the papers mentioned under usage 
-- `vgtk` - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
-- `ransac` - implementation of LO-RANSAC
-- `pattern-printer` - constructs the generative model of the imaged coplanar repeated pattern
-- `scene-sim` - makes synthetic scenes containing coplanar repeated patterns
-- `eccv18` - reproduce synthetic experiments from the paper [Rectification from Radially-Distorted Scales](TBD)
-- `external` - contains dependencies from various authors and sources
-- `mex` - contains mex binaries for the feature detectors (Linux only)
+- [`vgtk`](tbd) - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
+- [`ransac`](tbd) - implementation of LO-RANSAC
+- [`pattern-printer`](tbd) - constructs the generative model of the imaged coplanar repeated pattern
+- [`scene-sim`](tbd) - makes synthetic scenes containing coplanar repeated patterns
+- [`eccv18`](tbd) - reproduce synthetic experiments from the paper [Rectification from Radially-Distorted Scales](TBD)
+- [`external`](tbd) - contains dependencies from various authors and sources
+- [`mex`](tbd) - contains mex binaries for the feature detectors (Linux only)
 
 
 ## Input
