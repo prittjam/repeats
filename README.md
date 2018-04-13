@@ -1,8 +1,20 @@
 # Rectification from Coplanar Repeats
+This framework rectifies imaged coplanar repeated patterns. The solvers are used in a LO-RANSAC-based robust-
+estimation framework. Affine-covariant features are extracted from the image for input to the solvers. Affine-
+covariant features are highly repeatable on the same imaged scene texture with respect to significant changes of viewpoint and illumination. In particular, the Maximally-Stable Extremal Region and Hesssian-Affine detectors are used. Affine frames are labeled as repeated texture based on the similarity of their appearance, which is given by the
+RootSIFT embedding of the image patch local to the affine frame. The RootSIFT descriptors are agglomera-
+tively clustered, which establishes tentative correspondences among the connected components linked by the
+clustering. Each appearance cluster has some proportion of its members that correspond to affine frames that give
+the geometry of imaged repeated scene content, which are the inliers of that appearance cluster. The remaining affine
+frames are the outliers.
 
+LO-RANSAC samples pairs of affine frames from the appearance cluster, which are inputted to the proposed mini-
+mal solvers. Each pair of affine frames across all appearance clusters has an equi-probable chance of being drawn.
+The consensus with the minimal sample is measured by the number of pairs of affine frames within appearance groups
+that are consistent with the hypothesized model, normalized by the size of each respective group. A non-linear optimizer
+following is used as the local optimization step of the LO-RANSAC estimator.
 
-
-## Download and run 
+## Download and Run 
 To start using repeats, 
 ```
 bash
@@ -11,7 +23,7 @@ cd repeats
 matlab -nosplash -nodesktop -r demo
 ```
 
-## Usage example
+## Usage Example
 The MATLAB file [demo.m](TBD) constructs RANSAC-based estimators from minimal solvers proposed in the following papers: 
 1. "[Rectification from Radially-Distorted Scales](TBD)" 
   * a minimal solver that jointly estimates radial lens distortion and affine rectification from 3 corrrespondences of 2 coplanar affine-covariant regions, denoted in [demo.m](TBD) as H222_eccv18 and
@@ -45,9 +57,7 @@ In addition, for all solvers, the estimator attempts an upgrade to a metric rect
 
 The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from each of the minimal solvers enumerated above. The solvers are run on the images in the [img] subdirectory and the results are placed in the [res] s.
 
-
-## Estimator parameters
-
+## Estimator Parameters
 1. [RepeatSampler.m](TBD)
   * `min_trial_count`, minimum number of RANSAC trials
   * `max_trial_count`, maximum number of RANSAC trials
@@ -56,7 +66,6 @@ The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from each of 
   * `extentT`, the threshold of ratio of extent lengths of affine frames which defines inliers and outliers. 
 
 ## Citations
-
 Please cite us if you use this code:
 
 * Rectification, and Segmentation of Coplanar Repeated Patterns
