@@ -53,6 +53,8 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 *
 
+## Images
+
 ## Feature Detection Parameters
 
 ## RANSAC Parameters
@@ -70,7 +72,7 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 ## Citations
 Please cite us if you use this code:
 
-* "Rectification, and Segmentation of Coplanar Repeated Patterns"
+* Rectification, and Segmentation of Coplanar Repeated Patterns
 ```
 @inproceedings{DBLP:conf/cvpr/PrittsCM14,
   author    = {James Pritts and
@@ -89,7 +91,7 @@ Please cite us if you use this code:
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```
-* "Radially-Distorted Conjugate Translations"
+* Radially-Distorted Conjugate Translations
 ```
 @article{DBLP:journals/corr/abs-1711-11339,
   author    = {James Pritts and
