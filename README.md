@@ -53,13 +53,19 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 *
 
-## Estimator Parameters
+## Feature Detection Parameters
+
+## RANSAC Parameters
 1. [RepeatSampler.m](TBD)
   * `min_trial_count`, minimum number of RANSAC trials
   * `max_trial_count`, maximum number of RANSAC trials
   * `max_num_retries`, maximum number of retries to find a valid sampling of the measurements
 2. [RepeatEval.m](TBD)
   * `extentT`, the threshold of ratio of extent lengths of affine frames which defines inliers and outliers. 
+ 
+## Pattern Printer Parameters
+
+
 
 ## Citations
 Please cite us if you use this code:
