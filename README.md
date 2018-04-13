@@ -2,7 +2,7 @@
 
 
 
-## Datasets and Training
+## Download and run 
 To start using repeats, 
 ```
 bash
@@ -26,17 +26,25 @@ The MATLAB file [demo.m](TBD) constructs RANSAC-based estimators from minimal so
 In addition, for all solvers, the estimator attempts an upgrage to a metric rectification using the upgrade proposed in 
 "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
 
-The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from each of the minimal solvers enumerated above.
+## Structure
+- `features` - MATLAB wrappers for various 
+- `solvers` - minimal solvers proposed in the papers mentioned under usage 
+- `vgtk` - the visual geometry toolkit, a dependency implementing useful functions for single-view geometry
+- `ransac` - implementation of LO-RANSAC
+- `pattern-printer` - constructs a generative model of the imaged coplanar repeated pattern
+- `scene-sim` - synthesizes scenes containing coplanar repeated patterns
+- `eccv18` - reproduce synthetic experiments from the paper [Rectification from Radially-Distorted Scales](TBD)
+- `external` - 
 
-"(TBD)
 
-We provide two examples, how to estimate affine shape with AffNet. 
-First, on patch-column file, in [HPatches](https://github.com/hpatches/hpatches-benchmark) format, i.e. grayscale image with w = patchSize and h = nPatches * patchSize
+## Input
+* image with a scene plane containing some coplanar repeated pattern
+* 
 
-```
-cd examples/just_shape
-python detect_affine_shape.py imgs/face.png out.txt
-```
+## 
+
+The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from each of the minimal solvers enumerated above. The solvers are run on the images in the [img] subdirectory and the results are placed in the [res] s.
+
 
 ## Estimator parameters
 
