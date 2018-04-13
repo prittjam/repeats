@@ -24,7 +24,6 @@ matlab -nosplash -nodesktop -r demo
 - [`ransac`](tbd) - implementation of LO-RANSAC
 - [`pattern-printer`](tbd) - constructs the generative model of the imaged coplanar repeated pattern
 - [`scene-sim`](tbd) - makes synthetic scenes containing coplanar repeated patterns
-- [`eccv18`](tbd) - reproduce synthetic experiments from the paper [Rectification from Radially-Distorted Scales](TBD)
 - [`external`](tbd) - contains dependencies from various authors and sources
 - [`mex`](tbd) - contains mex binaries for the feature detectors (Linux only)
 
