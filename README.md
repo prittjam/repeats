@@ -41,6 +41,7 @@ In addition, for all solvers, the estimator attempts an upgrade to a metric rect
 - `scene-sim` - makes synthetic scenes containing coplanar repeated patterns
 - `eccv18` - reproduce synthetic experiments from the paper [Rectification from Radially-Distorted Scales](TBD)
 - `external` - contains dependencies from various authors and sources
+- `mex` - contains mex binaries for the feature detectors (Linux only)
 
 
 ## Input
