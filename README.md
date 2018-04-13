@@ -54,10 +54,9 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 
 ## Images
-
-Solarized dark             |  Solarized Ocean
+Original | Undistorted| Rectified
 :-------------------------:|:-------------------------:
-<img src="imgs/pattern1b.jpg" alt="Drawing" height="100" width="180"/>  |  <img src="imgs/pattern1b.jpg" alt="Drawing" height="100" width="180"/>
+<img src="imgs/pattern1b.jpg" alt="Drawing" height="200" width="300"/>  |  <img src="imgs/rotate_udist.jpg" alt="Drawing" height="200" width="300"/> | <img src="imgs/crop_great_rotate.jpg" alt="Drawing" height="200" width="300"/>
 
 ## Feature Detection Parameters
 
