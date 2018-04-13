@@ -46,7 +46,7 @@ In addition, for all solvers, the estimator attempts an upgrade to a metric rect
 
 ## Input
 * image with a scene plane containing some coplanar repeated pattern
-* 
++ optional .mat specifying a bounding box that defines the region in the image to be rectified
 
 ## 
 
