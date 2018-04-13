@@ -30,9 +30,7 @@ matlab -nosplash -nodesktop -r demo
 
 ## Usage Example
 The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from minimal solvers proposed in the following papers: 
-1. "[Rectification from Radially-Distorted Scales](TBD)" 
-  * a minimal solver that jointly estimates radial lens distortion and affine rectification from 3 corrrespondences of 2 coplanar affine-covariant regions, denoted in [demo.m](TBD) as H222_eccv18 and
-  * a minimal solver that estimates affine rectification from 2 correspondences of 2 coplanar affine-covariant regions, denoted in [demo.m](TBD) as H22_eccv18,
+1. TBD
 
 2. "[Radially Distorted Conjugate Translations](https://arxiv.org/abs/1711.11339)"
   * a minimal solver that jointly estimates radial lens distortion and affine rectification from 2 independent radially-distorted conjugate translations, denoted in [demo.m](TBD) as H22_cvpr18, and
