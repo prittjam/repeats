@@ -69,8 +69,9 @@ Please cite us if you use this code:
   biburl    = {https://dblp.org/rec/bib/conf/cvpr/PrittsCM14},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
-
+```
 2.
+```
 @article{DBLP:journals/corr/abs-1711-11339,
   author    = {James Pritts and
                Zuzana Kukelova and
