@@ -3,8 +3,7 @@
 
 
 ## Datasets and Training
-To start using repeats, :
-
+To start using repeats, 
 ```
 bash
 git clone https://github.com/prittjam/repeats
