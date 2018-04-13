@@ -1,9 +1,5 @@
 # Rectification from Coplanar Repeats
-This framework rectifies imaged coplanar repeated patterns. The solvers are used in a LO-RANSAC-based robust-
-estimation framework. Affine-covariant features are extracted from the image for input to the solvers. Affine-
-covariant features are highly repeatable on the same imaged scene texture with respect to significant changes of viewpoint and illumination. In particular, the Maximally-Stable Extremal Region and Hesssian-Affine detectors are used. Affine frames are labeled as repeated texture based on the similarity of their appearance, which is given by the
-RootSIFT embedding of the image patch local to the affine frame. The RootSIFT descriptors are agglomera-
-tively clustered, which establishes tentative correspondences among the connected components linked by the
+This framework rectifies imaged coplanar repeated patterns. Minimal solvers derived from constraints induced by coplanar repeated patterns are used in a LO-RANSAC-based robust-estimation framework. Affine-covariant features are extracted from the image for input to the solvers. Affine-covariant features are highly repeatable on the same imaged scene texture with respect to significant changes of viewpoint and illumination. In particular, the Maximally-Stable Extremal Region and Hesssian-Affine detectors are used. Affine frames are labeled as repeated texture based on the similarity of their appearance, which is given by the RootSIFT embedding of the image patch local to the affine frame. The RootSIFT descriptors are agglomeratively clustered, which establishes tentative correspondences among the connected components linked by the
 clustering. Each appearance cluster has some proportion of its members that correspond to affine frames that give
 the geometry of imaged repeated scene content, which are the inliers of that appearance cluster. The remaining affine
 frames are the outliers.
