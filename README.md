@@ -29,7 +29,7 @@ matlab -nosplash -nodesktop -r demo
 - [`mex`](tbd) - contains mex binaries for the feature detectors (Linux only)
 
 ## Usage Example
-The MATLAB file [demo.m](TBD) constructs RANSAC-based estimators from minimal solvers proposed in the following papers: 
+The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from minimal solvers proposed in the following papers: 
 1. "[Rectification from Radially-Distorted Scales](TBD)" 
   * a minimal solver that jointly estimates radial lens distortion and affine rectification from 3 corrrespondences of 2 coplanar affine-covariant regions, denoted in [demo.m](TBD) as H222_eccv18 and
   * a minimal solver that estimates affine rectification from 2 correspondences of 2 coplanar affine-covariant regions, denoted in [demo.m](TBD) as H22_eccv18,
@@ -43,14 +43,15 @@ The MATLAB file [demo.m](TBD) constructs RANSAC-based estimators from minimal so
 In addition, for all solvers, the estimator attempts an upgrade to a metric rectification using the upgrade proposed in 
 "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
 
+The solvers are run on the images in the [img] subdirectory and the results are placed in the [res]. 
 
-## Input
+### Input
 * image with a scene plane containing some coplanar repeated pattern
 + optional .mat specifying a bounding box that defines the region in the image to be rectified
 
-## 
-
-The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from each of the minimal solvers enumerated above. The solvers are run on the images in the [img] subdirectory and the results are placed in the [res] s.
+### Output 
+*
+*
 
 ## Estimator Parameters
 1. [RepeatSampler.m](TBD)
