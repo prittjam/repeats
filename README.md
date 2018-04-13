@@ -54,10 +54,10 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 
 ## Images
-<img src="imgs/pattern1b.jpg" alt="Drawing" height="50" width="100"/>
-![](imgs/pattern1b.jpg =150x100)
-![](imgs/pattern24w.jpg =150x100)
 
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+<img src="imgs/pattern1b.jpg" alt="Drawing" height="100" width="180"/>  |  <img src="imgs/pattern1b.jpg" alt="Drawing" height="100" width="180"/>
 
 ## Feature Detection Parameters
 
