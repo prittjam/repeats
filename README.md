@@ -1,4 +1,4 @@
-# Rectification and Undistortion from Coplanar Repeats
+# Rectification from Coplanar Repeats
 
 
 
