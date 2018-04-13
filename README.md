@@ -23,7 +23,7 @@ The MATLAB file [demo.m](TBD) constructs RANSAC-based estimators from minimal so
 3. "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)"
   * a minimial solver that estimates affine rectification from the change-of-scale of affine-covariant regions from the image to a rectified imaged scene plane, denoted in [demo.m] as H22_cvpr14.
 
-In addition, for all solvers, the estimator attempts an upgrage to a metric rectification using the upgrade proposed in 
+In addition, for all solvers, the estimator attempts an upgrade to a metric rectification using the upgrade proposed in 
 "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
 
 ## Structure
@@ -34,7 +34,7 @@ In addition, for all solvers, the estimator attempts an upgrage to a metric rect
 - `pattern-printer` - constructs a generative model of the imaged coplanar repeated pattern
 - `scene-sim` - synthesizes scenes containing coplanar repeated patterns
 - `eccv18` - reproduce synthetic experiments from the paper [Rectification from Radially-Distorted Scales](TBD)
-- `external` - 
+- `external` - contains dependencies from various authors and sources
 
 
 ## Input
@@ -49,11 +49,11 @@ The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from each of 
 ## Estimator parameters
 
 1. [RepeatSampler.m](TBD)
-  * min_trial_count, minimum number of RANSAC trials
-  * max_trial_count, maximum number of RANSAC trials
-  * max_num_retries, maximum number of retries to find a valid sampling of the measurements
+  * `min_trial_count`, minimum number of RANSAC trials
+  * `max_trial_count`, maximum number of RANSAC trials
+  * `max_num_retries`, maximum number of retries to find a valid sampling of the measurements
 2. [RepeatEval.m](TBD)
-  * extentT, the threshold of ratio of extent lengths of affine frames which defines inliers and outliers. 
+  * `extentT`, the threshold of ratio of extent lengths of affine frames which defines inliers and outliers. 
 
 ## Citations
 
