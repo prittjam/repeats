@@ -58,6 +58,8 @@ Original | Undistorted | Rectified
 :-------------------------:|:-------------------------:|:-------------------------:
 <img src="imgs/pattern1b.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/rotate_udist.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/crop_great_rotate.jpg" alt="Drawing" height="200" width="280"/>
 <img src="imgs/new_medium_63_o.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/flower_medium_H222_ECCV18_ud.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/flower_medium_H222_ECCV18_mat_rect_rot.jpg" alt="Drawing" height="200" width="280"/>
+<img src="imgs/pattern24w.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/pattern24w_ud.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/pattern24w_rect.jpg" alt="Drawing" height="200" width="280"/>
+<img src="imgs/Fujifilm_X_E1_Samyang_8mm.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/Fujifilm_X_E1_Samyang_8mm_ud.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/Fujifilm_X_E1_Samyang_8mm_rect_cropped.jpg" alt="Drawing" height="200" width="280"/>
 
 ## Feature Detection Parameters
 
