@@ -54,6 +54,7 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 
 ## Images
+<img src="imgs/pattern1b.jpg" alt="Drawing" style="width: 200px;"/>
 ![](imgs/pattern1b.jpg =150x100)
 ![](imgs/pattern24w.jpg =150x100)
 
