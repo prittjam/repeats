@@ -51,7 +51,7 @@ python detect_affine_shape.py imgs/face.png out.txt
 
 Please cite us if you use this code:
 
-1. Rectification, and Segmentation of Coplanar Repeated Patterns
+* Rectification, and Segmentation of Coplanar Repeated Patterns
 ```
 @inproceedings{DBLP:conf/cvpr/PrittsCM14,
   author    = {James Pritts and
@@ -70,7 +70,7 @@ Please cite us if you use this code:
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```
-2. Radially-Distorted Conjugate Translations
+* Radially-Distorted Conjugate Translations
 ```
 @article{DBLP:journals/corr/abs-1711-11339,
   author    = {James Pritts and
