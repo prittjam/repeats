@@ -4,11 +4,9 @@ clustering. Each appearance cluster has some proportion of its members that corr
 the geometry of imaged repeated scene content, which are the inliers of that appearance cluster. The remaining affine
 frames are the outliers.
 
-LO-RANSAC samples pairs of affine frames from the appearance cluster, which are inputted to the proposed mini-
-mal solvers. Each pair of affine frames across all appearance clusters has an equi-probable chance of being drawn.
+LO-RANSAC samples pairs of affine frames from the appearance cluster, which are inputted to a minimal solvers. Each pair of affine frames across all appearance clusters has an equi-probable chance of being drawn.
 The consensus with the minimal sample is measured by the number of pairs of affine frames within appearance groups
-that are consistent with the hypothesized model, normalized by the size of each respective group. A non-linear optimizer
-following is used as the local optimization step of the LO-RANSAC estimator.
+that are consistent with the hypothesized model normalized by the size of each respective group. A non-linear optimizer is used as the local optimization step of the LO-RANSAC estimator, which estimates a generative model of the iamged coplanar repeated pattern. 
 
 ## Download and Run 
 To start using repeats, 
