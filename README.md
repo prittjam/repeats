@@ -33,7 +33,7 @@ In addition, for all solvers, the estimator attempts an upgrade to a metric rect
 "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
 
 ## Structure
-- `features`(tbd) - MATLAB wrappers for the feature detectors
+- `features(tbd)` - MATLAB wrappers for the feature detectors
 - `solvers` - minimal solvers proposed in the papers mentioned under usage 
 - `vgtk` - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
 - `ransac` - implementation of LO-RANSAC
