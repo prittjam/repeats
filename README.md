@@ -54,9 +54,9 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 
 ## Images
-Original | Undistorted| Rectified
-:-------------------------:|:-------------------------:
-<img src="imgs/pattern1b.jpg" alt="Drawing" height="200" width="300"/>  |  <img src="imgs/rotate_udist.jpg" alt="Drawing" height="200" width="300"/> | <img src="imgs/crop_great_rotate.jpg" alt="Drawing" height="200" width="300"/>
+Original | Undistorted | Rectified
+:-------------------------:|:-------------------------:|:-------------------------
+<img src="imgs/pattern1b.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/rotate_udist.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/crop_great_rotate.jpg" alt="Drawing" height="200" width="280"/>
 
 ## Feature Detection Parameters
 
