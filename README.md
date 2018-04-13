@@ -53,6 +53,14 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 *
 
+## Images
+Original | Undistorted | Rectified
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="imgs/pattern1b.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/rotate_udist.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/crop_great_rotate.jpg" alt="Drawing" height="200" width="280"/>
+<img src="imgs/new_medium_63_o.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/flower_medium_H222_ECCV18_ud.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/flower_medium_H222_ECCV18_mat_rect_rot.jpg" alt="Drawing" height="200" width="280"/>
+<img src="imgs/pattern24w.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/pattern24w_ud.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/pattern24w_rect.jpg" alt="Drawing" height="200" width="280"/>
+<img src="imgs/Fujifilm_X_E1_Samyang_8mm.jpg" alt="Drawing" height="200" width="280"/>  |  <img src="imgs/Fujifilm_X_E1_Samyang_8mm_ud.jpg" alt="Drawing" height="200" width="280"/> | <img src="imgs/Fujifilm_X_E1_Samyang_8mm_rect_cropped.jpg" alt="Drawing" height="200" width="280"/>
+
 ## Feature Detection Parameters
 
 ## RANSAC Parameters
@@ -70,7 +78,7 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 ## Citations
 Please cite us if you use this code:
 
-* "Rectification, and Segmentation of Coplanar Repeated Patterns"
+* Rectification, and Segmentation of Coplanar Repeated Patterns
 ```
 @inproceedings{DBLP:conf/cvpr/PrittsCM14,
   author    = {James Pritts and
@@ -89,7 +97,7 @@ Please cite us if you use this code:
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```
-* "Radially-Distorted Conjugate Translations"
+* Radially-Distorted Conjugate Translations
 ```
 @article{DBLP:journals/corr/abs-1711-11339,
   author    = {James Pritts and
