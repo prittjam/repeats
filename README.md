@@ -27,12 +27,12 @@ In addition, for all solvers, the estimator attempts an upgrade to a metric rect
 "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
 
 ## Structure
-- `features` - MATLAB wrappers for various 
+- `features` - MATLAB wrappers for the feature detectors
 - `solvers` - minimal solvers proposed in the papers mentioned under usage 
-- `vgtk` - the visual geometry toolkit, a dependency implementing useful functions for single-view geometry
+- `vgtk` - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
 - `ransac` - implementation of LO-RANSAC
-- `pattern-printer` - constructs a generative model of the imaged coplanar repeated pattern
-- `scene-sim` - synthesizes scenes containing coplanar repeated patterns
+- `pattern-printer` - constructs the generative model of the imaged coplanar repeated pattern
+- `scene-sim` - makes synthetic scenes containing coplanar repeated patterns
 - `eccv18` - reproduce synthetic experiments from the paper [Rectification from Radially-Distorted Scales](TBD)
 - `external` - contains dependencies from various authors and sources
 
