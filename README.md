@@ -54,8 +54,8 @@ The solvers are run on the images in the [img] subdirectory and the results are 
 *
 
 ## Images
-![HesAff](imgs/pattern1b.jpg)
-![HesAffNet](imgs/pattern24w.jpg)
+![](imgs/pattern1b.jpg =150x100)
+![](imgs/pattern24w.jpg =150x100)
 
 
 ## Feature Detection Parameters
