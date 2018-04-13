@@ -1,0 +1,3 @@
+[submodule "vendor"]
+	path = vendor
+	url = prittjam@woska.felk.cvut.cz:/home.stud/qqmikula/git/imagedb
