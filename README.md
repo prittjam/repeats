@@ -3,29 +3,36 @@
 
 
 ## Datasets and Training
-To start using repeats:
+To start using repeats, :
 
-```bash
+```
+bash
 git clone https://github.com/prittjam/repeats
+cd repeats
+matlab -nosplash -nodesktop -r demo
 ```
 
-From MATLAB run demo.m
-
 ## Usage example
-
 The MATLAB file demo.m constructs RANSAC-based estimators from minimal solvers proposed in the following papers, 
-1. "[Rectification from Radially-Distorted Scales]  (TBD)" 
-..* a minimal solver that jointly estimates radial lens distortion and affine rectification from 3 corrrespondences of 2 affine covariant regions
-..* a minimal solver that estimates affine rectification from 2 correspondences of 2 affine covariant regions
-2. "[Radially Distorted Conjugate Translations] (https://arxiv.org/abs/1711.11339)"
-..* a minimal solver that jointly estimates radial lens distortion and affine rectification from 2 independent radially-distorted conjugate translations.
-3. "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns] (http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)"
-..* a minimial solver that estimates affine rectification from the change-of-scale
+1. "[Rectification from Radially-Distorted Scales](TBD)" 
+..* a minimal solver that jointly estimates radial lens distortion and affine rectification from 3 corrrespondences of 2 coplanar affine-covariant regions, denoted in demo.m as 
+> H222_eccv18
 
-In addition, for all solvers, the estimator attempts an upgrage to metric rectification using the metric upgrade proposed in 
-"[Detection, Rectification and Segmentation of Coplanar Repeated Patterns] (http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
+..* a minimal solver that estimates affine rectification from 2 correspondences of 2 coplanar affine-covariant regions, denoted in demo.m as 
+> H222_eccv18
 
-The MATLAB file demo.m construct each 
+2. "[Radially Distorted Conjugate Translations](https://arxiv.org/abs/1711.11339)"
+..* a minimal solver that jointly estimates radial lens distortion and affine rectification from 2 independent radially-distorted conjugate translations, denoted in demo.m as 
+> H22_cvpr18
+
+3. "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)"
+..* a minimial solver that estimates affine rectification from the change-of-scale of affine-covariant regions from the image to rectified imaged scene plane, denoted in demo.m as
+> H22_cvpr14
+
+In addition, for all solvers, the estimator attempts an upgrage to metric rectification using the upgrade proposed in 
+"[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
+
+The MATLAB file demo.m constructs 4 RANSAC-based estimators from each of the minimal solvers enumerated above.
 
 
 
