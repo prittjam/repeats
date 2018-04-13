@@ -1,5 +1,5 @@
 function [model_list,stats_list] = ...
-    greedy_repeats(x,Gsamp,Gapp,cc,motion_model)
+    repeats(x,Gsamp,Gapp,cc,motion_model)
 if nargin < 4
     num_planes = 1;
 end
