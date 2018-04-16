@@ -15,7 +15,7 @@ classdef CidCache < handle
             this.cid = cid;
             this.map = containers.Map;
             this.vlist = cell(1,1000);
-            this.G = digraph;
+            this.G = [];
             last_add = {};
             
             this.cfg.read_cache = true;
@@ -215,19 +215,17 @@ classdef CidCache < handle
         
         function v = add_vertex(this,name,key,tcfg)
             hkey = KEY.make(key);
-            [ii,jj] = findedge(this.G);
+            [ii,jj] = find(this.G);
             this.G = sparse(ii,jj,ones(1,numel(jj)), ...
-                           numnodes(this.G)+1, ...
-                           numnodes(this.G)+1); 
-            if size(this.G,1) > 1            
+                           num_vertices(this.G)+1, ...
+                           num_vertices(this.G)+1); 
+            if num_vertices(this.G) > 1            
                 for pa = tcfg.parents
                     item = this.map(pa{:});
-                    this.G(size(this.G,1),item.v) = 1;
+                    this.G(num_vertices(this.G),item.v) = 1;
                 end
             end
-            this.G = digraph(this.G);                
-
-            v = numnodes(this.G);
+            v = num_vertices(this.G);
             item = struct('v',v, ...
                           'key',hkey, ...
                           'name',name, ...
@@ -249,10 +247,7 @@ classdef CidCache < handle
         end
 
         function [key_list, name_list] = get_parent_tree(this,v)
-            dt = distances(this.G,v)+1;
-            dt(~isfinite(dt)) = -1;
-            dt = dt';
-
+            [~,dt] = bfs(this.G,v);
             tmp = v;
             ia = v;
             [val,order] = sort(dt);
