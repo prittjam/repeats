@@ -2,20 +2,20 @@ function [] = demo()
 repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
-listing4 = dir('img/*.jpg');
+listing4 = dir('qimg/*.jpg');
 listing = listing4;
 
 name_list{1} = 'H222_eccv18';
-name_list{2} = 'H22_eccv18';
-name_list{3} = 'H22_accv10';
-name_list{4} = 'H22_cvpr18';
+%name_list{2} = 'H22_eccv18';
+%name_list{3} = 'H22_accv10';
+%name_list{4} = 'H22_cvpr18';
 
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
 for k = 1:numel(listing)
     dr = [];
     border = [];
-    target_dir = [cur_path '/res/'];
+    target_dir = [cur_path '/res_nosample/'];
     if ~exist(target_dir)
         mkdir(target_dir);
     end
@@ -32,7 +32,7 @@ for k = 1:numel(listing)
     for k2 = 1:numel(name_list)
         target_fname = [target_dir name '_' name_list{k2} '.mat'];
         if ~exist(target_fname)
-            try
+            %            try
                 if isempty(dr)
                     dr = DR.get(img,cid_cache, ...
                                     {'type','all', ...
@@ -82,9 +82,9 @@ for k = 1:numel(listing)
 
                 imwrite(uimg, ...
                         [target_dir name '_' name_list{k2} '_ud.jpg']);
-            catch err
-                keyboard;
-            end
+%           catch err
+%               keyboard;
+%           end
         end
     end
 end

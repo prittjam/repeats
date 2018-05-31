@@ -17,7 +17,6 @@ A0 = calc_A0(xu,gtHinf,estHinf);
 y = CAM.rd_div(PT.renormI(inv(estHinf)*A0*gtHinf*xu),cc,estlambda);
 y = real(y);
 
-
 options = optimoptions('lsqnonlin', ...
                        'Display','off', ...
                        'MaxIter',3);

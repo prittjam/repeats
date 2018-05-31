@@ -1,7 +1,7 @@
 classdef RepeatSampler < handle
     properties
-        min_trial_count = 1900;
-        max_trial_count = 2000;
+        min_trial_count = 50;
+        max_trial_count = 250;
         max_num_retries = 100;
         
         confidence = 0.99

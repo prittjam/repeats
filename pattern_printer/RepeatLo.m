@@ -8,8 +8,8 @@ classdef RepeatLo < handle
         %        vqT = 21.026;
         %        reprojT = 21.026;
         %    
-        vqT = 15;
-        reprojT = 15;
+        vqT = 10;
+        reprojT = 10;
     end
     
     methods(Access = private)

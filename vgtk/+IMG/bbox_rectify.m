@@ -1,24 +1,29 @@
-function [] = bboxrect(bbox)
+function [] = bbox_rectify(bbox)
 if nargin < 2
    bbox = []; 
 end
-greedy_repeats_init();
+repeats_init();
 [name,pth] = uigetfile({'*.mat'}, ...
                        'FileSelector');
-load([pth name]);
+load([pth name]); 
 [~,base_name] = fileparts(name); 
 figure;
 imshow(img);
 
+bbox_file_name = [pth base_name '_bbox.mat'];
+if (exist(bbox_file_name,'file') == 2)
+    load(bbox_file_name)
+end
+
 if isempty(bbox)
-    border = ginput(4);
+    bbox = ginput(4);
     nx = size(img,2);
     ny = size(img,1);
 
-    border(find(border(:,1) < 0.5),1) = 0.5;
-    border(find(border(:,2) < 0.5),2) = 0.5;
-    border(find(border(:,1) > nx+0.5),1) = nx+0.5;
-    border(find(border(:,2) > ny+0.5),2) = ny+0.5;
+    bbox(find(bbox(:,1) < 0.5),1) = 0.5;
+    bbox(find(bbox(:,2) < 0.5),2) = 0.5;
+    bbox(find(bbox(:,1) > nx+0.5),1) = nx+0.5;
+    bbox(find(bbox(:,2) > ny+0.5),2) = ny+0.5;
 end
     
 k2 = 1;
@@ -29,8 +34,8 @@ rimg = IMG.render_rectification(x,MM,img, ...
                                 'Registration','none', ...
                                 'extents',...
                                 [size(img,2) size(img,1)]', ...
-                                'bbox',border);
+                                'bbox',bbox);
 figure;
 imshow(rimg);
-imwrite(rimg, [ pth '/' name '_rect.jpg']);
-save([pth '/' base_name '_bbox.mat']);
+imwrite(rimg, [ pth  name '_rect.jpg']);
+save([pth  base_name '_bbox.mat'],'bbox');

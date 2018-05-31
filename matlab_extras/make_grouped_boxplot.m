@@ -22,6 +22,7 @@ for k = 1:numel(group_list)
         res.(group_field) = grp2idx(res.(group_field));
     end
 end
+
 categories = uval{1};
 num_categories = numel(uval{1});
 num_groups = numel(uval{2});
@@ -31,12 +32,21 @@ if isempty(cfg.colors)
 end
 
 groups = allcomb(uval{:});
+valid_groups = {};
+k2 = 0;
 for k1 = 1:size(groups,1)
-    in = ismember(res{:,{group_list{:}}}, ...
-                  groups(k1,:),'Rows');
+    in = all(ismember(res{:,{group_list{:}}}, groups(k1,:),'Rows'),2);
     ind = find(in);
-    data(:,k1) = res{ind,data_field};
+    if ~isempty(ind)
+        k2 = k2+1;
+        valid_groups(k2,:) = groups(k1,:);
+        data(:,k2) = res{ind,data_field};
+    end
 end
+
+groups = valid_groups;
+
+keyboard;
 
 
 figure;
@@ -47,7 +57,13 @@ boxplot(ax,data, 'Colors', cfg.colors, ...
         'Symbol',cfg.symbol);
 
 xticks((0:num_categories-1)*(num_groups)+(num_groups+1)/2);
-xticklabels(num2str(categories));
+
+if isnumeric(categories)
+    xticklabels(num2str(categories));
+else
+    xticklabels(categories);
+end
+
 xlabel(ax,'Noise ($\sigma$) [pixels]', ...
        'Interpreter','Latex','Color','k'); 
 ylabel(cfg.ylabel,'Interpreter','Latex');
@@ -69,13 +85,13 @@ yy = [repmat(bounds(3),1,num_categories-1); ...
       repmat(bounds(4),1,num_categories-1)];
 line(xx,yy,'Color',[0.8 0.8 0.8]);
 
-%boxes = flipud(findobj(gca, 'Tag', 'Box'));
-%tmp = boxes(1:numel(boxes));
-%leg1 = legend(tmp(1:num_groups), group_names{:}, 'Location',cfg.location);
-%set(leg1, 'FontSize', 10);
-%set(leg1,'Interpreter','Latex');
+boxes = flipud(findobj(gca, 'Tag', 'Box'));
+tmp = boxes(1:numel(boxes));
+leg1 = legend(tmp(1:num_groups), group_names{:}, 'Location',cfg.location);
+set(leg1, 'FontSize', 10);
+set(leg1,'Interpreter','Latex');
 
-%axis square;
-%legend('boxoff');
+axis square;
+legend('boxoff');
 
 pbaspect([16 9 1]);
