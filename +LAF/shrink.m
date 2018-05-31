@@ -1,15 +1,9 @@
-function u = shrink(u,displacement)
-dist = u([1 2 7 8],:) - u([4 5 4 5],:);
-adist = abs(dist);
-h = hypot(adist([1 3],:),adist([2 4],:));
-movex = adist([1 3],:)./h;
-movey = adist([2 4],:)./h;
-if displacement < 1
-	len1 = sqrt(dist(1,:).^2 + dist(2,:).^2);
-	len2 = sqrt(dist(3,:).^2 + dist(4,:).^2);
-	u([1 7],:) = u([1 7],:) - sign(dist([1 3],:)).*[len1; len2].*displacement.*movex;
-	u([2 8],:) = u([2 8],:) - sign(dist([2 4],:)).*[len1; len2].*displacement.*movey;
-else
-	u([1 7],:) = u([1 7],:) - sign(dist([1 3],:)).*displacement.*movex;
-	u([2 8],:) = u([2 8],:) - sign(dist([2 4],:)).*displacement.*movey;
+function x = shrink(x,s)
+A = LAF.pt3x3_to_A(x);
+for k = 1:numel(A);
+    B = A{k};
+    [U,S,V] = svd(B(1:2,1:2));
+    B(1:2,1:2) = U*(s*S)*V';
+    A{k} = B;
 end
+x = LAF.A_to_pt3x3(A);
