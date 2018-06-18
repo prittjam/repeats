@@ -38,7 +38,8 @@ function [timg,T,A] = rectify(img,H,varargin)
     endpts = LINE.intersect_rect(H(3,:)',rect);
 
     in_image = ~isempty(endpts);
-    
+
+    keyboard;
     if in_image
         assert(size(endpts,2)==2,...
                ['The vanishing line must cross the image border twice']);

@@ -1,6 +1,8 @@
 function v = rd_div(u,cc,q,varargin)
+udcc = CAM.ru_div(cc,cc,q);
+
 if abs(q) > 0
-    A = make_A(cc,varargin{:});
+    A = make_A(udcc,varargin{:});
 
     m = size(u,1);
     if (m == 2)
@@ -14,6 +16,9 @@ if abs(q) > 0
     yu = v(2,:);
     v(1,:) = xu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
     v(2,:) = yu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
+
+    
+    A = make_A(cc,varargin{:});
     v = inv(A)*v;
 
     if (m == 2)
@@ -25,6 +30,7 @@ end
 
 function A = make_A(cc,varargin)
 cfg.rescale = false;
+keyboard;
 cfg = cmp_argparse(cfg,varargin{:});    
 if cfg.rescale
     sc = sum(2*cc);
