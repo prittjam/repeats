@@ -5,6 +5,12 @@ classdef laf2_to_qlu < WRAP.LafRectSolver
         solver_impl = [];
     end
     
+    methods (Static)
+        function obj = getObj(cc) 
+            obj = laf2_to_qlu(cc)
+        end
+    end         
+        
     methods
         function this = laf2_to_qlu(cc)
             this = this@WRAP.LafRectSolver(2);
