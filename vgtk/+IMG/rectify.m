@@ -70,12 +70,6 @@ function [timg,T,A] = rectify(img,H,varargin)
         cropped_ru_border = [xx;yy]';
         border = tforminv(cfg.ru_xform,cropped_ru_border);        
     end
-<<<<<<< HEAD
-
-=======
-    
-=======
->>>>>>> 70769ab1a1c755f7602ad3f473e5f480037f0c9d
 %    if in_image
 %        assert(size(endpts,2)==2,...
 %               ['The vanishing line must cross the image border twice']);
