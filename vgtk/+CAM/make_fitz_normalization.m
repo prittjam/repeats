@@ -1,0 +1,6 @@
+function [A,sc] = make_fitz_normalization(cc)
+sc = sum(2*cc);
+ncc = -cc/sc;
+A = [1/sc 0        ncc(1); ...
+     0       1/sc  ncc(2); ...
+     0       0      1];
