@@ -11,6 +11,7 @@ name_list{1} = 'H222_eccv18';
 
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
+keyboard;
 for k = 1:numel(listing)
     dr = [];
     border = [];
