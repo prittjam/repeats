@@ -1,6 +1,7 @@
 function [keepind,cfg] = get_distinct(cfg,affpt)
 num_dr = numel(affpt);
 u = LAF.affpt_to_pt3x3(affpt);
+
 drid = [affpt(:).class];
 
 udrid = unique(drid);
