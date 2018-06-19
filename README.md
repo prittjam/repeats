@@ -9,7 +9,7 @@ The consensus with the minimal sample is measured by the number of pairs of affi
 that are consistent with the hypothesized model normalized by the size of each respective group. A non-linear optimizer is used as the local optimization step of the LO-RANSAC estimator, which estimates a generative model of the iamged coplanar repeated pattern. 
 
 ## Download and Run 
-Currently repeats runs only on x86-64 Linux systems. Windows will be added later. Check back for frequent code updates. To start using repeats, 
+Currently repeats runs only on x86-64 Linux systems. A version that runs on Windows will be added soon. Check back for frequent code updates. To start using repeats,
 ```
 bash
 git clone https://github.com/prittjam/repeats
