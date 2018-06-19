@@ -2,8 +2,7 @@ function [] = demo()
 repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
-listing4 = dir('qimg/*.jpg');
-listing = listing4;
+listing = dir('qimg/*.jpg');
 
 name_list{1} = 'H222_eccv18';
 %name_list{2} = 'H22_eccv18';
