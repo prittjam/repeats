@@ -109,11 +109,6 @@ function [timg,T,A] = rectify(img,H,varargin)
 %        border = tforminv(cfg.ru_xform,cropped_ru_border);        
 %    end
 %    
-<<<<<<< HEAD
-=======
->>>>>>> 0cdf6dd9d2c86aa4dbf62a71f73ee031bbcce843
->>>>>>> 70769ab1a1c755f7602ad3f473e5f480037f0c9d
->>>>>>> 2c43cacabbb14bcbf858b70c3f5864d9454df642
     T0 = maketform('composite', ...
                    maketform('projective',H'), ...
                    cfg.ru_xform);
@@ -171,13 +166,7 @@ function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
     A = HG.pt2x2_to_sRt([transpose(v);u]);
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-    keyboard;
->>>>>>> 70769ab1a1c755f7602ad3f473e5f480037f0c9d
->>>>>>> 2c43cacabbb14bcbf858b70c3f5864d9454df642
+
     T = maketform('composite', ...
                   maketform('affine',transpose(A)), ...
                   T0);
