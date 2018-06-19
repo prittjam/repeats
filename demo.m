@@ -2,7 +2,7 @@ function [] = demo()
 repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
-listing = dir('qimg/*.jpg');
+listing = dir('img/*.jpg');
 
 name_list{1} = 'H222_eccv18';
 %name_list{2} = 'H22_eccv18';
@@ -12,7 +12,6 @@ name_list{1} = 'H222_eccv18';
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
 keyboard;
-
 for k = 1:numel(listing)
     dr = [];
     border = [];
