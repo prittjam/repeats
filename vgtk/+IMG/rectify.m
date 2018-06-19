@@ -70,7 +70,50 @@ function [timg,T,A] = rectify(img,H,varargin)
         cropped_ru_border = [xx;yy]';
         border = tforminv(cfg.ru_xform,cropped_ru_border);        
     end
+<<<<<<< HEAD
 
+=======
+    
+=======
+>>>>>>> 70769ab1a1c755f7602ad3f473e5f480037f0c9d
+%    if in_image
+%        assert(size(endpts,2)==2,...
+%               ['The vanishing line must cross the image border twice']);
+%        
+%        [~,ind] = sort(endpts(1,:));
+%        endpts = endpts(:,ind);
+%
+%        l = LINE.inhomogenize(cross(endpts(:,1),endpts(:,2)));
+%
+%        v = tformfwd(cfg.ru_xform,cfg.good_points(1:2,:)');
+%        mu = PT.homogenize(mean(v',2));
+%
+%        if dot(l,mu) < 0
+%            l = -l;
+%        end
+%
+%        newpt = endpts(:,1)+[100*l(1:2);1];
+%
+%        l(3) = -dot(l(1:2),newpt(1:2));
+%
+%        pts = LINE.intersect_rect(l,rect);
+%        
+%        idx = find(dot(repmat(l,1,4),[ru_border';ones(1,4)]) > 0);
+%        xx = [pts(1,:) ru_border(idx,1)'];
+%        yy = [pts(2,:) ru_border(idx,2)'];
+%        K = convhull(xx,yy);
+%        xx = xx(K);
+%        yy = yy(K);
+%        
+%        cropped_ru_border = [xx;yy]';
+%        border = tforminv(cfg.ru_xform,cropped_ru_border);        
+%    end
+%    
+<<<<<<< HEAD
+=======
+>>>>>>> 0cdf6dd9d2c86aa4dbf62a71f73ee031bbcce843
+>>>>>>> 70769ab1a1c755f7602ad3f473e5f480037f0c9d
+>>>>>>> 2c43cacabbb14bcbf858b70c3f5864d9454df642
     T0 = maketform('composite', ...
                    maketform('projective',H'), ...
                    cfg.ru_xform);
@@ -128,6 +171,13 @@ function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
     A = HG.pt2x2_to_sRt([transpose(v);u]);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+    keyboard;
+>>>>>>> 70769ab1a1c755f7602ad3f473e5f480037f0c9d
+>>>>>>> 2c43cacabbb14bcbf858b70c3f5864d9454df642
     T = maketform('composite', ...
                   maketform('affine',transpose(A)), ...
                   T0);
