@@ -1,5 +1,5 @@
 function [model_list,lo_res_list,stats_list,cspond] = ...
-    fit_coplanar_patterns(solver,x,Gsamp,Gapp,cc,num_planes,varargin)
+   fit_coplanar_patterns(solver,x,Gsamp,Gapp,cc,num_planes,varargin)
 [ransac,cspond] = make_ransac(solver,x,Gsamp,Gapp,cc,varargin);
 [model0,res0,stats_list] = ...
         ransac.fit(x,cspond,Gsamp,Gapp);

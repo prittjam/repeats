@@ -7,7 +7,7 @@ classdef laf2_to_qlu < WRAP.LafRectSolver
     
     methods (Static)
         function obj = getObj(cc) 
-            obj = laf2_to_qlu(cc)
+            obj = WRAP.laf2_to_qlu(cc)
         end
     end         
         
@@ -22,9 +22,8 @@ classdef laf2_to_qlu < WRAP.LafRectSolver
         end
         
         function M = fit(this,x,corresp,idx,varargin)
-            m = corresp(:,idx(1));
-            x = x(:,m(:));
-            xp = [x(1:3,:) x(4:6,:) x(7:9,:)];
+            x = x(:,[idx{:}]);
+            xp = [x(1:3,1:2) x(4:6,1:2) x(7:9,1:2)];
             M = this.solver_impl.fit(xp,[1 3 5; 2 4 6],[1 2 3]);
         end
     end

@@ -1,10 +1,15 @@
 function [] = cvpr18_demo()
+repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
 listing = dir('img/*.jpg');
 
-name_list{1} = 'H2_cvpr18';
-
+name_list = { 'H2.5qlu', 'H3qlsu', 'H3.5qluv', 'H4qlusv' };
+solver_list = {@WRAP.laf2_to_qlu, ...
+               @WRAP.laf2_to_qlsu, ...
+               @WRAP.laf22_to_qluv, ...
+               @WRAP.laf22_to_qlusv};
+               
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
 for k = 1:numel(listing)
@@ -35,11 +40,9 @@ for k = 1:numel(listing)
                     [x,Gsamp,Gapp] = group_desc(dr);    
                 end
 
-                solver_list(1) = ...
-                    WRAP.lafmn_to_qAl(WRAP.laf2_to_qlu(cc));
-
+                solver = WRAP.lafmn_to_qAl(feval(solver_list{k2},cc));
                 [model_list,lo_res_list,stats_list,cspond] = ...
-                    fit_coplanar_patterns(solver_list(k2),x,Gsamp,Gsamp,cc,1);
+                    fit_coplanar_patterns(solver,x,Gsamp,Gsamp,cc,1);
                 tmp = img;
                 img = img.data;
                 save(target_fname, ...

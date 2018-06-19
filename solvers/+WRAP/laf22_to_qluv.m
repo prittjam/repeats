@@ -7,7 +7,7 @@ classdef laf22_to_qluv < WRAP.LafRectSolver
     
     methods
         function this = laf22_to_qluv(cc)
-            this = this@WRAP.LafRectSolver([2 2]);
+            this = this@WRAP.LafRectSolver('laf22');
             this.solver_impl = WRAP.pt4x2_to_qluv(cc);
         end
         
@@ -16,8 +16,7 @@ classdef laf22_to_qluv < WRAP.LafRectSolver
         end        
 
         function M = fit(this,x,corresp,idx,varargin)
-            m = corresp(:,idx);
-            x = x(:,m(:));
+            x = x(:,[idx{:}]);
             xp = [x(1:3,1:2) x(4:6,1:2) x(1:3,3:4) x(4:6,3:4)];
             M = this.solver_impl.fit(xp, ...
                                      [1 3 5 7;2 4 6 8], ...
