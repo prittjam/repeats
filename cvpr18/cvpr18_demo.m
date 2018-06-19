@@ -2,7 +2,7 @@ function [] = cvpr18_demo()
 repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
-listing = dir('img/*.jpg');
+listing = dir('input/*.jpg');
 
 name_list = { 'H2.5qlu', 'H3qlsu', 'H3.5qluv', 'H4qlusv' };
 solver_list = {@WRAP.laf2_to_qlu, ...
@@ -15,7 +15,7 @@ solver_list = {@WRAP.laf2_to_qlu, ...
 for k = 1:numel(listing)
     dr = [];
     border = [];
-    target_dir = [cur_path '/res/'];
+    target_dir = [cur_path '/output/'];
     if ~exist(target_dir)
         mkdir(target_dir);
     end
