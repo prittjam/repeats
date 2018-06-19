@@ -1,12 +1,3 @@
-## Download and Run 
-Currently repeats runs only on x86-64 Linux systems. Windows will be added later. Check back for frequent code updates. To start using repeats, 
-```
-bash
-git clone https://github.com/prittjam/repeats
-cd repeats
-matlab -nosplash -nodesktop -r demo
-```
-
 # Rectification from Coplanar Repeats
 This framework rectifies imaged coplanar repeated patterns. Minimal solvers derived from constraints induced by coplanar repeated patterns are used in a LO-RANSAC-based robust-estimation framework. Affine-covariant features are extracted from the image for input to the solvers. Affine-covariant features are highly repeatable on the same imaged scene texture with respect to significant changes of viewpoint and illumination. In particular, the Maximally-Stable Extremal Region and Hesssian-Affine detectors are used. Affine frames are labeled as repeated texture based on the similarity of their appearance, which is given by the RootSIFT embedding of the image patch local to the affine frame. The RootSIFT descriptors are agglomeratively clustered, which establishes tentative correspondences among the connected components linked by the
 clustering. Each appearance cluster has some proportion of its members that correspond to affine frames that give
@@ -17,11 +8,18 @@ LO-RANSAC samples pairs of affine frames from the appearance cluster, which are 
 The consensus with the minimal sample is measured by the number of pairs of affine frames within appearance groups
 that are consistent with the hypothesized model normalized by the size of each respective group. A non-linear optimizer is used as the local optimization step of the LO-RANSAC estimator, which estimates a generative model of the iamged coplanar repeated pattern. 
 
-
+## Download and Run 
+Currently repeats runs only on x86-64 Linux systems. Windows will be added later. Check back for frequent code updates. To start using repeats, 
+```
+bash
+git clone https://github.com/prittjam/repeats
+cd repeats
+matlab -nosplash -nodesktop -r demo
+```
 ## Structure
 - [`features`](features) - MATLAB wrappers for the feature detectors
 - [`linear sovlers`](cvpr14/solvers) - minimal solvers proposed in [1](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf). 
-- ['conjugate translation solvers'](cvpr18/solvers) - minimal solvers proposed in [2](https://arxiv.org/abs/1711.11339). 
+- [`conjugate translation solvers`](cvpr18/solvers) - minimal solvers proposed in [2](https://arxiv.org/abs/1711.11339). 
 - [`vgtk`](vgtk) - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
 - [`ransac`](ransac) - implementation of LO-RANSAC
 - [`pattern-printer`](pattern_printer) - constructs the generative model of the imaged coplanar repeated pattern
@@ -29,25 +27,11 @@ that are consistent with the hypothesized model normalized by the size of each r
 - [`external`](external) - contains dependencies from various authors and sources
 - [`mex`](mex) - contains mex binaries for the feature detectors (Linux only)
 
-## Bibliography
-1. "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)"
-  * a minimial solver that estimates affine rectification from the change-of-scale of affine-covariant regions from the image to a rectified imaged scene plane, denoted in [demo.m](TBD). 
-
-2. "[Radially Distorted Conjugate Translations](https://arxiv.org/abs/1711.11339)"
-  * minimal solvers that jointly estimate radial lens distortion and affine rectification from radially-distorted conjugate translations
-
-In addition, for all solvers, the estimator attempts an upgrade to a metric rectification using the upgrade proposed in 
-"[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
-
-The solvers are run on the images in the [img] subdirectory and the results are placed in the [res]. 
-
 ### Input
-* image with a scene plane containing some coplanar repeated pattern
-+ optional .mat specifying a bounding box that defines the region in the image to be rectified
+The solvers are run on the images placed in the [input](input) subdirectory. If a result is already computed and placed in [output](output), then it is not computed again when [demo.m](demo.m) is rerun. 
 
 ### Output 
-*
-*
+The undistorted and rectified images are placed in the [output](output) subdirectory. Some examples are shown below. 
 
 ## Images
 Original | Undistorted | Rectified
