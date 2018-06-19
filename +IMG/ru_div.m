@@ -1,7 +1,8 @@
 function [timg,T,trect] = ru_div(img,cc,q,varargin)
-cfg = struct('extents', [], ...
+cfg = struct('extents', transpose([size(img,2),size(img,1)]), ...
              'bbox', []);
-[cfg,varargin] = cmp_argparse(cfg,varargin{:});
+
+%[cfg,varargin] = cmp_argparse(cfg,varargin{:});
 
 T0 = CAM.make_ru_div_tform(cc,q);
 
@@ -24,6 +25,7 @@ else
     S = eye(3);
 end
  
+T = T0;
 tbounds = tformfwd(T,border);
 
 minx = min(tbounds(:,1));
@@ -35,7 +37,7 @@ timg = imtransform(img,T,'bicubic', ...
                    'XYScale',1, ...
                    'XData',[minx maxx], ...
                    'YData',[miny maxy], ...
-                   varargin{:});
+                   'Fill',transpose([255 255 255]));
 
 if ~isempty(cfg.extents)
     timg = imresize(timg,[ny nx]);
