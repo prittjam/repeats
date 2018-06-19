@@ -18,24 +18,23 @@ matlab -nosplash -nodesktop -r demo
 ```
 
 ## Structure
-- [`features`](tbd) - MATLAB wrappers for the feature detectors
-- [`solvers`](tbd) - minimal solvers proposed in the papers mentioned under usage 
-- [`vgtk`](tbd) - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
-- [`ransac`](tbd) - implementation of LO-RANSAC
-- [`pattern-printer`](tbd) - constructs the generative model of the imaged coplanar repeated pattern
-- [`scene-sim`](tbd) - makes synthetic scenes containing coplanar repeated patterns
-- [`external`](tbd) - contains dependencies from various authors and sources
-- [`mex`](tbd) - contains mex binaries for the feature detectors (Linux only)
+- [`features`](features) - MATLAB wrappers for the feature detectors
+- [`solvers`](solvers) - minimal solvers proposed in the papers mentioned under usage 
+- [`vgtk`](vgtk) - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
+- [`ransac`](ransac) - implementation of LO-RANSAC
+- [`pattern-printer`](pattern_printer) - constructs the generative model of the imaged coplanar repeated pattern
+- [`scene-sim`](scene_sim) - makes synthetic scenes containing coplanar repeated patterns
+- [`external`](external) - contains dependencies from various authors and sources
+- [`mex`](mex) - contains mex binaries for the feature detectors (Linux only)
 
 ## Usage Example
-The MATLAB file [demo.m](TBD) constructs 4 RANSAC-based estimators from minimal solvers proposed in the following papers: 
-1. TBD
+The MATLAB file [demo.m](demo.m) constructs LO-RANSAC estimators using the solvers proposed in the following papers: 
+
+1. "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)"
+  * a minimial solver that estimates affine rectification from the change-of-scale of affine-covariant regions from the image to a rectified imaged scene plane, denoted in [demo.m](TBD). 
 
 2. "[Radially Distorted Conjugate Translations](https://arxiv.org/abs/1711.11339)"
-  * a minimal solver that jointly estimates radial lens distortion and affine rectification from 2 independent radially-distorted conjugate translations, denoted in [demo.m](TBD) as H22_cvpr18, and
-
-3. "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)"
-  * a minimial solver that estimates affine rectification from the change-of-scale of affine-covariant regions from the image to a rectified imaged scene plane, denoted in [demo.m](TBD) as H22_cvpr14.
+  * minimal solvers that jointly estimate radial lens distortion and affine rectification from radially-distorted conjugate translations
 
 In addition, for all solvers, the estimator attempts an upgrade to a metric rectification using the upgrade proposed in 
 "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)".
