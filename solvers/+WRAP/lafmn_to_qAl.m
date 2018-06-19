@@ -20,7 +20,7 @@ classdef lafmn_to_qAl < WRAP.LafRectSolver
                 H(3,:) = transpose(M(k).l);
                 xp = ...
                     LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,M(k).cc,M(k).q));
-                A{k} = HG.laf2x1_to_Amu(xp(:,m),findgroups(Gsamp(m)));
+                A{k} = laf2_to_Amu(xp(:,m),findgroups(Gsamp(m))); 
             end         
             [M(:).A] = A{:};
             good_ind = arrayfun(@(x) ~isempty(x.A),M);

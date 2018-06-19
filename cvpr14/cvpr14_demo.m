@@ -1,14 +1,11 @@
-function [] = cvpr18_demo()
+function [] = cvpr14_demo()
 repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
 listing = dir('img/*.jpg');
 
-name_list = { 'H2.5qlu', 'H3qlsu', 'H3.5qluv', 'H4qlusv' };
-solver_list = {@WRAP.laf2_to_qlu, ...
-               @WRAP.laf2_to_qlsu, ...
-               @WRAP.laf22_to_qluv, ...
-               @WRAP.laf22_to_qlusv};
+name_list = { 'H4ls' };
+solver_list = { @WRAP.laf2_to_qlu };
                
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
