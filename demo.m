@@ -4,10 +4,7 @@ cache_params = { 'read_cache', false, ...
                  'write_cache', false };
 listing = dir('img/*.jpg');
 
-name_list{1} = 'H222_eccv18';
-%name_list{2} = 'H22_eccv18';
-%name_list{3} = 'H22_accv10';
-%name_list{4} = 'H22_cvpr18';
+name_list{1} = 'H22_cvpr18';
 
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
