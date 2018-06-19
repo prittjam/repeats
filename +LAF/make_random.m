@@ -14,6 +14,7 @@ sc = LAF.calc_scale(xc);
 s = sqrt(tsc./sc);
 sx = zeros(9,num_lafs);
 for k = 1:numel(s)
+
     S = [s(k) 0    0; ...
          0    s(k) 0; ...
          0     0   1];
