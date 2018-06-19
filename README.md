@@ -1,3 +1,12 @@
+## Download and Run 
+Currently repeats runs only on x86-64 Linux systems. Windows will be added later. Check back for frequent code updates. To start using repeats, 
+```
+bash
+git clone https://github.com/prittjam/repeats
+cd repeats
+matlab -nosplash -nodesktop -r demo
+```
+
 # Rectification from Coplanar Repeats
 This framework rectifies imaged coplanar repeated patterns. Minimal solvers derived from constraints induced by coplanar repeated patterns are used in a LO-RANSAC-based robust-estimation framework. Affine-covariant features are extracted from the image for input to the solvers. Affine-covariant features are highly repeatable on the same imaged scene texture with respect to significant changes of viewpoint and illumination. In particular, the Maximally-Stable Extremal Region and Hesssian-Affine detectors are used. Affine frames are labeled as repeated texture based on the similarity of their appearance, which is given by the RootSIFT embedding of the image patch local to the affine frame. The RootSIFT descriptors are agglomeratively clustered, which establishes tentative correspondences among the connected components linked by the
 clustering. Each appearance cluster has some proportion of its members that correspond to affine frames that give
@@ -8,18 +17,11 @@ LO-RANSAC samples pairs of affine frames from the appearance cluster, which are 
 The consensus with the minimal sample is measured by the number of pairs of affine frames within appearance groups
 that are consistent with the hypothesized model normalized by the size of each respective group. A non-linear optimizer is used as the local optimization step of the LO-RANSAC estimator, which estimates a generative model of the iamged coplanar repeated pattern. 
 
-## Download and Run 
-To start using repeats, 
-```
-bash
-git clone https://github.com/prittjam/repeats
-cd repeats
-matlab -nosplash -nodesktop -r demo
-```
 
 ## Structure
 - [`features`](features) - MATLAB wrappers for the feature detectors
-- [`solvers`](solvers) - minimal solvers proposed in the papers mentioned under usage 
+- [`linear sovlers`](cvpr14/solvers) - minimal solvers proposed in [1](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf). 
+- ['conjugate translation solvers'](cvpr18/solvers) - minimal solvers proposed in [2](https://arxiv.org/abs/1711.11339). 
 - [`vgtk`](vgtk) - the visual geometry toolkit, a dependency implementing useful functions for projective geometry
 - [`ransac`](ransac) - implementation of LO-RANSAC
 - [`pattern-printer`](pattern_printer) - constructs the generative model of the imaged coplanar repeated pattern
@@ -27,9 +29,7 @@ matlab -nosplash -nodesktop -r demo
 - [`external`](external) - contains dependencies from various authors and sources
 - [`mex`](mex) - contains mex binaries for the feature detectors (Linux only)
 
-## Usage Example
-The MATLAB file [demo.m](demo.m) constructs LO-RANSAC estimators using the solvers proposed in the following papers: 
-
+## Bibliography
 1. "[Detection, Rectification and Segmentation of Coplanar Repeated Patterns](http://cmp.felk.cvut.cz/~prittjam/doc/cvpr14.pdf)"
   * a minimial solver that estimates affine rectification from the change-of-scale of affine-covariant regions from the image to a rectified imaged scene plane, denoted in [demo.m](TBD). 
 
@@ -74,13 +74,13 @@ Original | Undistorted | Rectified
 ## Citations
 Please cite us if you use this code:
 
-* Rectification, and Segmentation of Coplanar Repeated Patterns
+[1] Detection, Rectification and Segmentation of Coplanar Repeated Patterns
 ```
 @inproceedings{DBLP:conf/cvpr/PrittsCM14,
   author    = {James Pritts and
                Ondrej Chum and
                Jiri Matas},
-  title     = {Rectification, and Segmentation of Coplanar Repeated Patterns},
+  title     = {Detection, Rectification and Segmentation of Coplanar Repeated Patterns},
   booktitle = {2014 {IEEE} Conference on Computer Vision and Pattern Recognition,
                {CVPR} 2014, Columbus, OH, USA, June 23-28, 2014},
   pages     = {2973--2980},
@@ -93,7 +93,7 @@ Please cite us if you use this code:
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```
-* Radially-Distorted Conjugate Translations
+[2] Radially-Distorted Conjugate Translations
 ```
 @article{DBLP:journals/corr/abs-1711-11339,
   author    = {James Pritts and
