@@ -7,6 +7,7 @@ cfg.yticks = [];
 cfg.location = [];
 cfg.colors = [];
 cfg.symbol = 'k';
+cfg.legend = 'On';
 
 cfg = cmp_argparse(cfg,varargin{:});
 
@@ -32,27 +33,19 @@ if isempty(cfg.colors)
 end
 
 groups = allcomb(uval{:});
-valid_groups = {};
 k2 = 0;
 for k1 = 1:size(groups,1)
     in = all(ismember(res{:,{group_list{:}}}, groups(k1,:),'Rows'),2);
     ind = find(in);
     if ~isempty(ind)
         k2 = k2+1;
-        valid_groups(k2,:) = groups(k1,:);
         data(:,k2) = res{ind,data_field};
     end
 end
 
-groups = valid_groups;
-
-keyboard;
-
-
 figure;
 ax = axes; % create a temporary axes
 set(ax,'fontsize',6);
-
 boxplot(ax,data, 'Colors', cfg.colors, ...
         'Symbol',cfg.symbol);
 
@@ -85,13 +78,19 @@ yy = [repmat(bounds(3),1,num_categories-1); ...
       repmat(bounds(4),1,num_categories-1)];
 line(xx,yy,'Color',[0.8 0.8 0.8]);
 
-boxes = flipud(findobj(gca, 'Tag', 'Box'));
-tmp = boxes(1:numel(boxes));
-leg1 = legend(tmp(1:num_groups), group_names{:}, 'Location',cfg.location);
-set(leg1, 'FontSize', 10);
-set(leg1,'Interpreter','Latex');
-
 axis square;
-legend('boxoff');
-
 pbaspect([16 9 1]);
+
+if strcmpi(cfg.legend,'on')
+    boxes = flipud(findobj(gca, 'Tag', 'Box'));
+    tmp = boxes(1:numel(boxes));
+    legend('boxoff');
+    leg1 = legend(tmp(1:num_groups), ...
+              group_names{:}, ...
+              'Location',cfg.location);
+    set(leg1, 'FontSize', 10);
+    set(leg1,'Interpreter','Latex');
+else
+    legend('off');
+end
+

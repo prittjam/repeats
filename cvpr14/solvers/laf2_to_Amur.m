@@ -1,4 +1,4 @@
-function A = laf2x1_to_Amur(u,G,Gr)
+function A = laf2_to_Amur(u,G,Gr)
     left = cmp_splitapply(@(v,gr) { v(:,gr) },u,Gr,G);
     right = cmp_splitapply(@(v,gr) { v(:,~gr) },u,Gr,G);
  

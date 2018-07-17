@@ -12,8 +12,7 @@ classdef laf22_to_qH < WRAP.LafRectSolver
         end
 
         function M = fit(this,x,corresp,idx,varargin)
-            m = corresp(:,idx);
-            x = x(:,m(:));
+            x = x(:,[idx{:}]);
             x = [x(1:3,:) x(4:6,:) x(7:9,:)];
             M = this.solver_impl.fit(x, ...
                                      [1 3 5 7 9; 2 4 6 8 10], ...
