@@ -1,28 +1,37 @@
-function [] = cvpr18_demo()
+function [] = cvpr18_demo(img_path)
 repeats_init();
 cache_params = { 'read_cache', false, ...
                  'write_cache', false };
-listing = dir('input/*.jpg');
+
+file_pattern_list{1} = fullfile(img_path,'*.jpg');
+file_pattern_list{2} = fullfile(img_path,'*.png');
+file_pattern_list{3} = fullfile(img_path,'*.JPG');
+
+img_files = [];
+for k = 1:numel(file_pattern_list)
+    img_files = cat(1,img_files,dir(file_pattern_list{k}));    
+end
 
 name_list = { 'H2.5qlu', 'H3qlsu', 'H3.5qluv', 'H4qlusv' };
 solver_list = {@WRAP.laf2_to_qlu, ...
                @WRAP.laf2_to_qlsu, ...
                @WRAP.laf22_to_qluv, ...
                @WRAP.laf22_to_qlusv};
-               
+
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
-for k = 1:numel(listing)
+for k = 1:numel(img_files)
     dr = [];
     border = [];
     target_dir = [cur_path '/output/'];
     if ~exist(target_dir)
         mkdir(target_dir);
     end
-    [~,name,ext] = fileparts(listing(k).name);
+    [~,name,ext] = fileparts(img_files(k).name);
+    keyboard;
     img = Img('url', ...
-              [listing(k).folder '/' listing(k).name]);  
-    bbox_fname = [listing(k).folder '/' name '_bbox.mat'];
+              [img_files(k).folder '/' img_files(k).name]);  
+    bbox_fname = [img_files(k).folder '/' name '_bbox.mat'];
     if exist(bbox_fname)
         load(bbox_fname)
     end

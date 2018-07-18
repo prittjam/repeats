@@ -1,4 +1,5 @@
 function [] = demo()
 repeats_init();
-cvpr14_demo();
-cvpr18_demo();
+[cur_path, name, ext] = fileparts(mfilename('fullpath'));
+%cvpr14_demo([cur_path '/img']);
+cvpr18_demo([cur_path '/img']);
