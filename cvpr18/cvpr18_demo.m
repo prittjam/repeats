@@ -1,8 +1,11 @@
 function [] = cvpr18_demo(img_path)
 repeats_init();
-cache_params = { 'read_cache', false, ...
-                 'write_cache', false };
+cache_params = { 'read_cache', true, ...
+                 'write_cache', true };
 
+%file_pattern_list{1} = fullfile(img_path, 'building_us.jpg');
+%file_pattern_list{1} = fullfile(img_path,'tran_1_046.jpg');
+%
 file_pattern_list{1} = fullfile(img_path,'*.jpg');
 file_pattern_list{2} = fullfile(img_path,'*.png');
 file_pattern_list{3} = fullfile(img_path,'*.JPG');
@@ -28,7 +31,6 @@ for k = 1:numel(img_files)
         mkdir(target_dir);
     end
     [~,name,ext] = fileparts(img_files(k).name);
-    keyboard;
     img = Img('url', ...
               [img_files(k).folder '/' img_files(k).name]);  
     bbox_fname = [img_files(k).folder '/' name '_bbox.mat'];
@@ -41,51 +43,35 @@ for k = 1:numel(img_files)
     for k2 = 1:numel(name_list)
         target_fname = [target_dir name '_' name_list{k2} '.mat'];
         if ~exist(target_fname)
-            %            try
-                if isempty(dr)
-                    dr = DR.get(img,cid_cache, ...
-                                    {'type','all', ...
-                                     'reflection', false });       
-                    [x,Gsamp,Gapp] = group_desc(dr);    
-                end
+            if isempty(dr)
+                dr = DR.get(img,cid_cache, ...
+                                {'type','all', ...
+                                 'reflection', false });
+                [x,Gsamp,Gapp] = group_desc(dr);    
+            end
+            
+            solver = WRAP.lafmn_to_qAl(feval(solver_list{k2},cc));
+            [model_list,lo_res_list,stats_list,cspond] = ...
+                fit_coplanar_patterns(solver,x, ...
+                                      Gsamp,Gsamp,cc,1);
+            tmp = img;
+            img = img.data;
 
-                solver = WRAP.lafmn_to_qAl(feval(solver_list{k2},cc));
-                [model_list,lo_res_list,stats_list,cspond] = ...
-                    fit_coplanar_patterns(solver,x,Gsamp,Gsamp,cc,1);
-                tmp = img;
-                img = img.data;
-                save(target_fname, ...
-                     'model_list','lo_res_list','stats_list', ...
-                     'cspond','x','Gsamp','Gapp','img');
-                img = tmp;
+            save(target_fname, ...
+                 'model_list','lo_res_list','stats_list', ...
+                 'cspond','x','Gsamp','Gapp','img');
+            img = tmp;
 
-                model_list(1).H = model_list(1).A;
-                model_list(1).H(3,:) = transpose(model_list(1).l);
-                if ~isempty(border)
-                    rimg = IMG.render_rectification(x,model_list(1),img.data, ...
-                                                    'Registration','none', ...
-                                                    'extents',...
-                                                    [size(img.data,2) size(img.data,1)]', ...
-                                                    'bbox',border);
-                else
-                    rimg = IMG.render_rectification(x,model_list(1),img.data, ...
-                                                    'Registration','none', ...
-                                                    'extents',...
-                                                    [size(img.data,2) size(img.data,1)]');
-                end
-
-                imwrite(rimg,[target_dir name '_' name_list{k2} ...
-                              '_rect.jpg']);
-                
-                uimg = IMG.ru_div(img.data,model_list.cc, ...
-                                  model_list.q ,...
-                                  'extents', 2*[size(img,2) size(img,1)]');
-
-                imwrite(uimg, ...
-                        [target_dir name '_' name_list{k2} '_ud.jpg']);
-%           catch err
-%               keyboard;
-%           end
+            %            [rimg,uimg] = render_results(img.data,model_list);
+            
+%            model_list(1).H = model_list(1).A;
+%            model_list(1).H(3,:) = transpose(model_list(1).l);
+%
+%            imwrite(rimg, ...
+%                    [target_dir name '_' name_list{k2} '_rect.jpg']);
+%            imwrite(uimg, ...
+%                    [target_dir name '_' name_list{k2} '_ud.jpg']);
+%
         end
     end
 end

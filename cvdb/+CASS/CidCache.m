@@ -11,7 +11,7 @@ classdef CidCache < handle
 
     methods(Access=public)
         function this = CidCache(cid,varargin)
-            this.imagedb = CASS.CassDb.getObj();
+            this.imagedb = KeyValDb.getObj();
             this.cid = cid;
             this.map = containers.Map;
             this.vlist = cell(1,1000);
@@ -21,7 +21,7 @@ classdef CidCache < handle
             this.cfg.read_cache = true;
             this.cfg.write_cache = true;
 
-            [this.cfg,~] = cmp_argparse(this.cfg,varargin);
+            [this.cfg,~] = cmp_argparse(this.cfg,varargin{:}); 
             
             if isempty(cid) || isempty(this.imagedb)
                 this.cfg.read_cache = false;
@@ -93,7 +93,8 @@ classdef CidCache < handle
                 for k1 = 1:numel(chains{k})
                     name_list{k}{k1} = [name chains{k}{k1}.get_uname()];
                     name = [name_list{k}{k1} ':'];
-                    [res{k}{k1},is_found{k}(k1)] = this.get('dr',name(1:end-1));
+                    [res{k}{k1},is_found{k}(k1)] = ...
+                        this.get('dr',name(1:end-1));
                 end
             end
             
@@ -120,34 +121,27 @@ classdef CidCache < handle
         function [is_put,xor_key] = put(this,table,name,value,varargin)
             cfg.overwrite = false;
             cfg = cmp_argparse(cfg,varargin);
-
             is_put = false;
-
-            if ~CompressLib.isCompressed(value) && ...
-                     CompressLib.byteSize(value)/1024^2 > 15
-                value = CompressLib.compress(value);
-            end
-            
             if this.map.isKey(name)
                 item = this.map(name);
                 v = item.v;
                 xor_key = this.get_xor_key(v);
-                
                 if item.write_cache 
-                    if ((~this.imagedb.check(table,this.cid,xor_key) | ...
-                         cfg.overwrite))
-                        if iscell(value)
-                             value = cell2struct(value,'convertme',1);
-                        end
+                    if (~this.imagedb.check(table,this.cid, [name ':' xor_key]))
                         this.imagedb.put(table,this.cid, ...
-                                         [name ':' xor_key],value);
+                                         [name ':' xor_key], ...
+                                         value);
                         is_put = true;
                     else
-                        error('Cannot put');
+                        error('key already in database');
+%                        this.imagedb.remove(table,this.cid, ...
+%                                            [name ':'  xor_key]);
+%                        this.imagedb.put(table,this.cid, ...
+%                                         [name ':' xor_key], ...
+%                                         value);
                     end
                 end
             end
-
         end
 
         function [val,is_found,xor_key] = get(this,table,name,fmake,varargin)
@@ -161,15 +155,16 @@ classdef CidCache < handle
                 if item.read_cache
                     [val,is_found] = this.imagedb.get(table, ...
                                                       this.cid,[name ':' xor_key]);        
-                    if is_found && CompressLib.isCompressed(val)
-                        val = CompressLib.decompress(val);
-                    end
-                    if isstruct(val) && ...
-                        length(fieldnames(val)) == 1 && isfield(val,'convertme')
-                        val = struct2cell(val);
-                    end
+%                    if is_found && CompressLib.isCompressed(val)
+%                        val = CompressLib.decompress(val);
+%                    end
+%                    if isstruct(val) && ...
+%                        length(fieldnames(val)) == 1 && isfield(val,'convertme')
+%                        val = struct2cell(val);
+%                    end
                 end    
             end
+            
             if ~is_found && nargin > 3
                 val = feval(fmake,varargin{:});
                 if item.write_cache

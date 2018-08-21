@@ -44,13 +44,13 @@ classdef LafRectSolver < handle & matlab.mixin.Heterogeneous
                 flag = LAF.are_same_orientation(x,M.l); 
             else
                 nq = M.q*sum(2*M.cc)^2;
-                if nq <= 0 && nq > -8
+                if nq <= 0 && nq > -6
                     xp = LAF.ru_div(x,M.cc,M.q);
                     flag = LAF.are_same_orientation(xp,M.l); 
                 end
             end
         end                
-        
+
         function M = fix(this,x,corresp,idx,M)
             M = [];
         end

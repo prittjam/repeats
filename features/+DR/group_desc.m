@@ -18,8 +18,3 @@ if ~cfg.group_reflections
     Gapp(ind) = nan;
     Gapp = findgroups(Gapp);
 end
-
-
-
-
-

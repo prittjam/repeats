@@ -18,6 +18,7 @@ classdef CassDb < handle
 
     methods (Access = private)
         function this = CassDb(varargin)
+            this.cass = CASS.Sqlite
             this.cass = CASS.Cass(varargin{:});
         end
     end
@@ -70,6 +71,8 @@ classdef CassDb < handle
 %            end
         end
 
+        
+        
         function [is_found] = check(this,table,cid,cfg_key)
             is_found = this.cass.check(cid,[table ':' cfg_key],[]);
         end

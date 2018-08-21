@@ -80,7 +80,8 @@ if isempty(fdr)
     end
     dr = cellfun(@(x) x(end),res_list);
     dr_names = cellfun(@(x) x(end),name_list);
-    fdr = cid_cache.get('dr','vl_dr',@combine_dr,dr,dr_names);
+    fdr = cid_cache.get('dr','vl_dr', ...
+                             @combine_dr,dr,dr_names);
 end
 
 fdr = fdr(randperm(numel(fdr)));

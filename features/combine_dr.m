@@ -2,15 +2,13 @@ function dr = combine_dr(desc,names_list)
 dr = [];
 ind = find(cellfun(@(x) ~isempty(x),desc));
 
-names_list = categorical(names_list);
 for k = reshape(ind,1,[])
     for k2 = 1:numel(desc{k}.affpt)
         desc{k}.affpt(k2).class = desc{k}.affpt(k2).class;
-        desc{k}.affpt(k2).uname = names_list(k);
+        desc{k}.affpt(k2).uname = names_list{k};
     end
     m = LAF.affpt_to_pt3x3(desc{k}.affpt);
     t = [desc{k}.affpt(:).desc]';
-    
     dr = cat(2,dr,struct('u', mat2cell(m,9,ones(size(m,2),1)), ...
                          'desc', mat2cell(t, 128*ones(1,numel(t)/128),1)', ...
                          'class', {desc{k}.affpt(:).class}, ...

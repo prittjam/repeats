@@ -65,7 +65,7 @@ classdef PatternPrinter < handle
                                   rtree.Edges.EndNodes(:,1), ...
                                   rtree.Edges.EndNodes(:,2))) = is_inverted;
             
-            this.cc = cc;
+            this.cc = reshape(cc,2,[]);
             this.x = x;
             this.Tlist = Tlist;
             

@@ -1,23 +1,27 @@
 function [timg,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
 
-    cfg.bbox = [];
+    cfg.border = [];
     cfg.extents = [];
+    cfg.cspond = [];
+    cfg.maxrelativescale = 10;
     cfg.registration = 'Similarity';
     cfg.ru_xform = maketform('affine',eye(3));
-    cfg.good_points = [];
     cfg.fill = [255 255 255]';
     
     [cfg,leftover] = cmp_argparse(cfg,varargin{:});
-
+    
     leftover = { 'Fill', cfg.fill, ...
                  leftover{:} };
+    
+    T0 = maketform('composite', ...
+                   maketform('projective',H'), ...
+                   cfg.ru_xform);
 
-    nx = size(img,2);
-    ny = size(img,1);
+    [ny,nx,~] = size(img);
 
-    if ~isempty(cfg.bbox)
-        border = cfg.bbox;
+    if ~isempty(cfg.border)
+        border = cfg.border;
     else
         border = [0.5        0.5; ...
                   (nx-1)+0.5 0.5; ...    
@@ -25,102 +29,22 @@ function [timg,T,A] = rectify(img,H,varargin)
                   0.5        (ny-1)+0.5];
     end
     
-    ru_border = tformfwd(cfg.ru_xform,border);
-
-    minx = min(ru_border(:,1));
-    maxx = max(ru_border(:,1));
-    miny = min(ru_border(:,2));
-    maxy = max(ru_border(:,2));
-
-    rect = [minx maxx miny maxy];
-
-    endpts = LINE.intersect_rect(H(3,:)',rect);
-
-    in_image = ~isempty(endpts);
-
-    if in_image
-        assert(size(endpts,2)==2,...
-               ['The vanishing line must cross the image border twice']);
-        
-        [~,ind] = sort(endpts(1,:));
-        endpts = endpts(:,ind);
-
-        l = LINE.inhomogenize(cross(endpts(:,1),endpts(:,2)));
-
-        v = tformfwd(cfg.ru_xform,cfg.good_points(1:2,:)');
-        mu = PT.homogenize(mean(v',2));
-
-        if dot(l,mu) < 0
-            l = -l;
-        end
-
-        newpt = endpts(:,1)+[100*l(1:2);1];
-
-        l(3) = -dot(l(1:2),newpt(1:2));
-
-        pts = LINE.intersect_rect(l,rect);
-        
-        idx = find(dot(repmat(l,1,4),[ru_border';ones(1,4)]) > 0);
-        xx = [pts(1,:) ru_border(idx,1)'];
-        yy = [pts(2,:) ru_border(idx,2)'];
-        K = convhull(xx,yy);
-        xx = xx(K);
-        yy = yy(K);
-        
-        cropped_ru_border = [xx;yy]';
-        border = tforminv(cfg.ru_xform,cropped_ru_border);        
-    end
-%    if in_image
-%        assert(size(endpts,2)==2,...
-%               ['The vanishing line must cross the image border twice']);
-%        
-%        [~,ind] = sort(endpts(1,:));
-%        endpts = endpts(:,ind);
-%
-%        l = LINE.inhomogenize(cross(endpts(:,1),endpts(:,2)));
-%
-%        v = tformfwd(cfg.ru_xform,cfg.good_points(1:2,:)');
-%        mu = PT.homogenize(mean(v',2));
-%
-%        if dot(l,mu) < 0
-%            l = -l;
-%        end
-%
-%        newpt = endpts(:,1)+[100*l(1:2);1];
-%
-%        l(3) = -dot(l(1:2),newpt(1:2));
-%
-%        pts = LINE.intersect_rect(l,rect);
-%        
-%        idx = find(dot(repmat(l,1,4),[ru_border';ones(1,4)]) > 0);
-%        xx = [pts(1,:) ru_border(idx,1)'];
-%        yy = [pts(2,:) ru_border(idx,2)'];
-%        K = convhull(xx,yy);
-%        xx = xx(K);
-%        yy = yy(K);
-%        
-%        cropped_ru_border = [xx;yy]';
-%        border = tforminv(cfg.ru_xform,cropped_ru_border);        
-%    end
-%    
-    T0 = maketform('composite', ...
-                   maketform('projective',H'), ...
-                   cfg.ru_xform);
-
     switch lower(cfg.registration)
       case 'affinity'
-        assert(~isempty(cfg.good_points), ...
+        assert(~isempty(cfg.cspond), ...
                ['You cannot register the rectification without inliers!']);
-        [T,A] = register_by_affinity(cfg.good_points,T0);
+        [T,A] = register_by_affinity(cfg.cspond,T0);
       case 'similarity'
-        assert(~isempty(cfg.good_points), ...
+        assert(~isempty(cfg.cspond), ...
                ['You cannot register the rectification without inliers!']);
-        [T,A] = register_by_similarity(cfg.good_points,T0);
+        [T,A] = register_by_similarity(cfg.cspond,T0);
       case 'scale'
         [T,A] = register_by_scale(img,T0);
       case 'none'
         T = T0;
         A = eye(3);
+      otherwise
+        error('No registration method specified'); 
     end
 
     if ~isempty(cfg.extents)
@@ -134,27 +58,22 @@ function [timg,T,A] = rectify(img,H,varargin)
     maxx = round(max(tbounds(:,1)));
     miny = round(min(tbounds(:,2)));
     maxy = round(max(tbounds(:,2)));
-
-%    tnx = max(cfg.oborder(:,1))-min(cfg.oborder(:,1))+1;
-%    tny = max(cfg.oborder(:,2))-min(cfg.oborder(:,2))+1;
-%%    assert(maxx-minx+1==tnx,'problem in x dimension');
-%    assert(maxy-miny+1==tny,'problem in y dimension');
-
+    
     timg = imtransform(img,T,'bicubic', ...
                        'XData',[minx maxx], ...
                        'YData',[miny maxy], ...
                        'XYScale',1, ...
                        leftover{:});
     
-    if in_image
-        BW = roipoly([minx maxx], ...
-                     [miny maxy], ...
-                     zeros(maxy-miny+1,maxx-minx+1,3), ...
-                     tbounds(:,1),tbounds(:,2));
-        BW3 = repmat(~BW,1,1,3);
-        fill = BW3.*permute(cfg.fill,[3 2 1]);
-        timg(find(BW3)) = fill(find(BW3));
-    end
+%    if in_image
+%        BW = roipoly([minx maxx], ...
+%                     [miny maxy], ...
+%                     zeros(maxy-miny+1,maxx-minx+1,3), ...
+%                     tbounds(:,1),tbounds(:,2));
+%        BW3 = repmat(~BW,1,1,3);
+%        fill = BW3.*permute(cfg.fill,[3 2 1]);
+%        timg(find(BW3)) = fill(find(BW3));
+%    end
     
 function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
@@ -194,9 +113,7 @@ function [T,S] = register_by_scale(img,T0)
                   T0);
 
 function [T,S] = register_by_extent(img,T0,border0,extents)
-    nx = size(img,2);
-    ny = size(img,1);
-
+    [ny,nx,~] = size(img);
     tborder0 = tformfwd(T0,border0);
     xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
     yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
@@ -214,3 +131,10 @@ function [T,S] = register_by_extent(img,T0,border0,extents)
 %    miny = round(min(tbounds(:,2)));
 %    maxy = round(max(tbounds(:,2)));
 
+
+function [] = calc_relative_scale(border,x0,H)
+    l = transpose(H(3,:));
+    theta = atan2(l(2),l(1));
+    [si18,tst18_fn,si10,tst10_fn] = ...
+        make_change_of_scale_constraints()
+    

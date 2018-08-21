@@ -5,14 +5,16 @@ cfg.desc_linkage = 'single';
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 N = numel(dr);
+LAF.is_right_handed([dr(:).u]);
 
-unames = categories([dr(:).uname]);
-is_reflected = cellfun(@(u) numel(strfind(u,'ReflectImg:')),unames);
-dr_str = cellfun(@(u) strrep(u,'ReflectImg:',''),unames, ...
+tmp = squeeze(struct2cell(dr)); 
+names = tmp(4,:);
+dr_str = cellfun(@(u) strrep(u,'ReflectImg:',''),names, ...
                  'UniformOutput',false);
-Guname = findgroups([dr.uname]);
-uGsdr = conncomp(graph(squareform(pdist(dr_str,@strcmp)) > 0));
-Gsdr = uGsdr(Guname);
+is_reflected = cellfun(@(u) numel(strfind(u,'ReflectImg:')),names);
+
+Gnames = categorical(names);
+Gunames = findgroups(Gnames);
 
 [T,idx] =  ...
     splitapply(@(x,y) ...
@@ -20,10 +22,9 @@ Gsdr = uGsdr(Guname);
                                  'linkage',cfg.desc_linkage, ...
                                  'criterion','distance', ...
                                  'cutoff',cfg.desc_cutoff)},{y}), ... 
-               dr,1:numel(dr),findgroups(Gsdr));
+               dr,1:numel(dr),Gunames);
 
-G = zeros(size(Gsdr));
-maxT = max(G);
+maxT = 0;
 for k = 1:numel(T)
     G(idx{k}) = T{k}+maxT;
     maxT = max(G);
@@ -32,5 +33,4 @@ end
 freq = hist(G,1:max(G));
 [~,idxb] = ismember(find(freq == 1),G);
 G(idxb) = nan;
-
 G = reshape(findgroups(G),1,[]);

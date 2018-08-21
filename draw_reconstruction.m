@@ -11,7 +11,6 @@ Rti = [vertex_data.Rti(inl,:)]';
 Xp = LAF.apply_rigid_xforms(Y,Rti);
 
 
-
 inl = find(~isnan(Gs));
 inlGs = reshape(Gs(inl),1,[]);
 Y = X(:,inlGs);
