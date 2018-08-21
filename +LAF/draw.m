@@ -1,6 +1,7 @@
 function h1 = draw(ax1,u,varargin)
 cfg.labels = [];
 cfg.draw_centroid = false;
+cfg.DrawAnchor = false;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 if ~any(strcmpi('color',leftover))
@@ -16,6 +17,11 @@ if isempty(leftover)
     h1 = plot(ax1,x,y);
 else
     h1 = plot(ax1,x,y,leftover{:});    
+end
+
+if cfg.DrawAnchor
+    color_list = cell2mat(get(h1,'Color'));
+    scatter(u(1,:),u(2,:),40,color_list,'filled');
 end
 
 if ~isempty(cfg.labels)

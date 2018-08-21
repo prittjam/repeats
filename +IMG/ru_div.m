@@ -2,7 +2,7 @@ function [timg,T,trect] = ru_div(img,cc,q,varargin)
 cfg = struct('extents', transpose([size(img,2),size(img,1)]), ...
              'bbox', []);
 
-%[cfg,varargin] = cmp_argparse(cfg,varargin{:});
+[cfg,varargin] = cmp_argparse(cfg,varargin{:});
 
 T0 = CAM.make_ru_div_tform(cc,q);
 

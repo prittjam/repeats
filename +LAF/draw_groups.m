@@ -33,10 +33,10 @@ end
 
 function [] = draw_one_group(ax0,u,color,linewidth,varargin)
 LAF.draw(ax0,u,'Color','black', 'LineWidth',linewidth+2,varargin{:});
-
 su = LAF.shrink(u,0.8);
-
-LAF.draw(ax0,su,'Color',color(:,1),'LineWidth',linewidth,varargin{:});
+LAF.draw(ax0,su,'Color',color(:,1), ...
+         'LineWidth',linewidth, ...
+         'DrawAnchor',true,varargin{:});
 
 function [] = print_group_labels(ax0,u,color,id)
 mu = [(u(1:2,:)+u(4:5,:)+u(7:8,:))/3];
