@@ -5,10 +5,10 @@ cfg = cmp_argparse(cfg,varargin{:});
 
 [ny,nx,~] = size(img);
 x =  PT.renormI(H*CAM.ru_div(v,cc,q));
-idx = convhull(x(1,:),x(2,:))
+idx = convhull(x(1,:),x(2,:));
 mux = mean(x(:,idx),2);
 
-refpt = CAM.rd_div(PT.renormI(inv(H)*mux),cc,q)
+refpt = CAM.rd_div(PT.renormI(inv(H)*mux),cc,q);
 
 rimg = IMG.ru_div_rectify(img,cc,H,q, ...
                           'Fill', [255 255 255]', ...
