@@ -1,4 +1,4 @@
-function [X,cspond,idx,G] = sample_lafs(sample_type,w,h,xform)
+function [X,cspond,idx,G] = sample_cspond(sample_type,xform)
     if nargin < 4
         xform = 'Rt';
     end
@@ -8,22 +8,22 @@ function [X,cspond,idx,G] = sample_lafs(sample_type,w,h,xform)
     
     switch sample_type
       case 'laf2'
-        [X,cspond,G] = make_cspond_set(2,w,h);        
-      
+        [X,cspond,G] = make_cspond_set(2);        
+        
       case 'laf22s'
-        [X,cspond,G] = make_cspond_same(2,w,h);
+        [X,cspond,G] = make_cspond_same(2);
         
       case 'laf22'
-        [X0,cspond0,G0] = make_cspond_set(2,w,h);
-        [X1,cspond1,G1] = make_cspond_set(2,w,h);
+        [X0,cspond0,G0] = make_cspond_set(2);
+        [X1,cspond1,G1] = make_cspond_set(2);
         X = [X0 X1];
         cspond = [cspond0 cspond1+max(cspond0(:))];
         G = [G0 G1+max(G0)];
 
       case 'laf222'
-        [X0,cspond0,G0] = make_cspond_set(2,w,h);
-        [X1,cspond1,G1] = make_cspond_set(2,w,h);
-        [X2,cspond2,G2] = make_cspond_set(2,w,h);
+        [X0,cspond0,G0] = make_cspond_set(2);
+        [X1,cspond1,G1] = make_cspond_set(2);
+        [X2,cspond2,G2] = make_cspond_set(2);
         X = [X0 X1 X2];
         cspond1 = cspond1+max(cspond0(:));
         cspond2 = cspond2+max(cspond1(:));
@@ -31,16 +31,16 @@ function [X,cspond,idx,G] = sample_lafs(sample_type,w,h,xform)
         G1 = G1+max(G0);
         G2 = G2+max(G1);
         G = [G0 G1 G2];
-      
+        
       case 'laf32'
-        [X0,cspond0,G0] = make_cspond_set(3,w,h);
-        [X1,cspond1,G1] = make_cspond_set(2,w,h);
+        [X0,cspond0,G0] = make_cspond_set(3);
+        [X1,cspond1,G1] = make_cspond_set(2);
         X = [X0 X1];
         cspond = [cspond0 cspond1+max(cspond0(:))];
         G = [G0 G1+max(G0)];
         
       case 'laf4'
-        [X,cspond,G] = make_cspond_set(4,w,h);
+        [X,cspond,G] = make_cspond_set(4);
     end
 
     uG = unique(G);

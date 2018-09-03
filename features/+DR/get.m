@@ -83,5 +83,3 @@ if isempty(fdr)
     fdr = cid_cache.get('dr','vl_dr', ...
                              @combine_dr,dr,dr_names);
 end
-
-fdr = fdr(randperm(numel(fdr)));

@@ -1,17 +1,17 @@
-function H = laf2x2_to_Hinf(u,G)
+function [H,scl] = laf22_to_Hinf(u,G)
 v = u;
 H = eye(3,3);
-for k = 1:3         
+for k = 1:1
     [mu,sc] = ...
         cmp_splitapply(@(x) ...
                        (deal({(x(1:2,:)+x(4:5,:)+x(7:8,:))/3}, ...
                              {1./nthroot(LAF.calc_scale(x),3)})),v,G);
-    Hk = laf2x2_to_Hinf_internal(mu,sc);
+    [Hk,scl] = laf2x2_to_Hinf_internal(mu,sc);
     H = Hk*H;
     v = LAF.renormI(blkdiag(H,H,H)*u);
 end
 
-function H = laf2x2_to_Hinf_internal(aX,arsc)
+function [H,scl] = laf2x2_to_Hinf_internal(aX,arsc)
 if ~iscell(aX)
     aX = {aX};
     arsc = {arsc};
@@ -40,11 +40,9 @@ for i = 1:len
     rsc = arsc{i};
     X(1,:) = (X(1,:) - tx) / dsc;
     X(2,:) = (X(2,:) - ty) / dsc;
-    
     z = [rsc .* X(1,:); rsc .* X(2,:)];
     z(len+2, :) = 0;
     z(i+2,:) = -ones(1, size(X,2));
-    
     Z = [Z; z'];
     R = [R; rsc(:)];
 end
@@ -52,8 +50,11 @@ end
 hs = pinv(Z) * -R;
 
 H = eye(3);
-
 H(3,1) = hs(1);
 H(3,2) = hs(2);
-
 H = H * A;
+
+hh = [H(3,1)/H(3,3) H(3,2)/H(3,3)];
+(hh*aX{1}+1).^3.*(arsc{1}.^3)
+
+keyboard;

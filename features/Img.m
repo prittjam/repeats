@@ -71,7 +71,7 @@ classdef Img < handle
                 this.intensity = data;
             end
             
-            this.real = im2double(this.data);
+            %   this.real = im2double(this.data);
         end
 
         function [] = calc_size(this)

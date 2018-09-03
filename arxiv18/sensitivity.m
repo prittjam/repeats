@@ -55,7 +55,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
             G = {};
             for k2 = 1:samples_drawn
                 [Xlist{k2},cspond{k2},idx{k2},G{k2}] = ...
-                    sample_lafs(usample_type{k},wplane,hplane,cfg.xform);
+                    PLANE.make_cspond(usample_type{k},wplane,hplane,cfg.xform);
             end
             cspond_dict(usample_type{k}) = ...
                 struct('Xlist', Xlist, 'idx', idx, 'G', G);                
@@ -175,5 +175,3 @@ function [optq,opt_warp] = calc_opt_warp(gt,cam,M,P,w,h)
     
     [opt_warp,best_ind] = min(warp_list);    
     optq = mq(best_ind); 
-    
-

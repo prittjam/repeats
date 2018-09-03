@@ -6,8 +6,7 @@ r = ones(1,N);
 %r(r==0) = -1;
 x = LAF.apply_rigid_xforms(repmat(LAF.make_random(1),1,N), ...
                            [theta;t;r]);
-M = [[w 0; 0 h] [0 0]';0 0 1];
-M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-X = reshape(M2*M*reshape(x,3,[]),12,[]);
+M = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
+X = reshape(M*reshape(x,3,[]),12,[]);
 cspond = transpose(nchoosek(1:N,2));
 G = repmat(1,1,size(X,2));

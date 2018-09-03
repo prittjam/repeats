@@ -4,9 +4,9 @@
 % si        is the rectified scale, it will be eliminated
 % l1 l2 l3  are the components of vanishing line
 % q         is the division model parameter
-function [si18,tst18_fn,si10,tst10_fn] = make_change_of_scale_constraints()
+function [cartesian,polar] = make_change_of_scale_constraints(varargin)
 clear all;
-si18 = sym('s',[1 6]);
+si = sym('s',[1 6]);
 sdi = sym('sd',[1 6]);
 xi = sym('x',[1 6]);
 yi = sym('y',[1 6]);
@@ -33,35 +33,44 @@ Jpolar = jacobian(fpolar,[r theta]);
 % and l3 is an unknown and to be estimated
 
 Jxy = subs(Jxy,l3,1);
-detJxy = det(Jxy);
-
 Jpolar = subs(Jpolar,l3,1);
+
+detJxy = det(Jxy);
 detJpolar = det(Jpolar);
 
 for k = 1:6
-    si18(k) = subs(detJxy,[x y],[xi(k) yi(k)])*sdi(k);
-    si18polar(k) = subs(detJpolar,[r theta],[ri(k) thetai(k)])*sdi(k);
+    si(k) = subs(detJxy,[x y],[xi(k) yi(k)])*sdi(k);
+    sipolar(k) = subs(detJpolar,[r theta],[ri(k) thetai(k)])*sdi(k);
 end
-
-tst18_fn = matlabFunction(si18(1));
 
 %%%%%%%%%%%%%%%%%%%%
 % compare to accv10 constraints
-si10 = make_accv10(si18);
-tst10_fn = matlabFunction(si10(1));
+si10 = make_accv10(si);
+si10polar = make_accv10(sipolar);
 
-keyboard;
+%%%%%%%%%%%%%%%%%%%%
+% Make MATLAB functions for testing constraints
+si_fn = matlabFunction(si(1));
+si10_fn = matlabFunction(si10(1));
+
+sipolar_fn = matlabFunction(sipolar(1));
+si10polar_fn = matlabFunction(si10polar(1));
+
+cartesian = struct('si', si, ...
+                   'si_fn', si_fn, ...
+                   'si10', si10, ...
+                   'si10_fn', si10_fn);
+
+polar = struct('si', sipolar, ...
+               'si_fn', sipolar_fn, ...
+               'si10polar', si10polar, ...
+               'si10polar_fn', si10polar_fn);
 
 function f = make_f()
 syms x y l1 l2 l3 q;
 X = transpose([x y 1+q*(x^2+y^2)]);
 l = transpose([l1 l2 l3]);
 f = [x/(transpose(l)*X), y/(transpose(l)*X)];
-
-function invdetJ = make_invdetJ()
-
-J = jacobian([x/(transpose(l)*X), y/(transpose(l)*X)],[x,y]);
-invdetJ = 1/det(J);
 
 function [si10,alphai] = make_accv10(si)
 vars = symvar(si(1));
