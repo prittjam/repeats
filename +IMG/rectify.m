@@ -1,8 +1,14 @@
 function [timg,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
 
-    cfg.border = [];
-    cfg.extents = [];
+    [ny,nx,~] = size(img);
+
+    cfg.border = [ 0.5    0.5; ...
+                   nx-0.5 0.5; ...
+                   nx-0.5 ny-0.5; ...
+                   0.5 ny-0.5 ];
+
+    cfg.dims = [];
     cfg.cspond = [];
     cfg.maxrelativescale = 10;
     cfg.registration = 'Similarity';
@@ -17,17 +23,6 @@ function [timg,T,A] = rectify(img,H,varargin)
     T0 = maketform('composite', ...
                    maketform('projective',H'), ...
                    cfg.ru_xform);
-
-    [ny,nx,~] = size(img);
-
-    if ~isempty(cfg.border)
-        border = cfg.border;
-    else
-        border = [0.5        0.5; ...
-                  (nx-1)+0.5 0.5; ...    
-                  (nx-1)+0.5 (ny-1)+0.5; ...
-                  0.5        (ny-1)+0.5];
-    end
     
     switch lower(cfg.registration)
       case 'affinity'
@@ -47,12 +42,12 @@ function [timg,T,A] = rectify(img,H,varargin)
         error('No registration method specified'); 
     end
 
-    if ~isempty(cfg.extents)
-        [T,A2] = register_by_extent(img,T,border,cfg.extents);
+    if ~isempty(cfg.dims)
+        [T,A2] = register_by_dims(img,T,cfg.border,cfg.dims);
         A = A2*A;
     end
     
-    tbounds = tformfwd(T,border);
+    tbounds = tformfwd(T,cfg.border);
 
     minx = round(min(tbounds(:,1)));
     maxx = round(max(tbounds(:,1)));
@@ -92,14 +87,10 @@ function [T,A] = register_by_affinity(u,T0)
                   maketform('affine',transpose(A)), ...
                   T0);
 
-function [T,S] = register_by_scale(img,T0)
+function [T,S] = register_by_scale(img,T0,border)
     nx = size(img,2);
     ny = size(img,1);
 
-    border = [0.5        0.5; ...
-              (nx-1)+0.5 0.5; ...    
-              (nx-1)+0.5 (ny-1)+0.5; ...
-              0.5        (ny-1)+0.5];
     tborder = tformfwd(T0,border);
     
     s1 = polyarea(border(:,1),border(:,2));
@@ -112,12 +103,11 @@ function [T,S] = register_by_scale(img,T0)
                   maketform('affine',S'), ...
                   T0);
 
-function [T,S] = register_by_extent(img,T0,border0,extents)
-    [ny,nx,~] = size(img);
+function [T,S] = register_by_dims(img,T0,border0,dims)
     tborder0 = tformfwd(T0,border0);
     xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
     yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
-    s = min([extents(1)/xextent extents(2)/yextent]);
+    s = min([dims(2)/xextent dims(1)/yextent]);
     S = [s 0 0;
          0 s 0;
          0 0 1];
@@ -130,11 +120,3 @@ function [T,S] = register_by_extent(img,T0,border0,extents)
 %    maxx = round(max(tbounds(:,1)));
 %    miny = round(min(tbounds(:,2)));
 %    maxy = round(max(tbounds(:,2)));
-
-
-function [] = calc_relative_scale(border,x0,H)
-    l = transpose(H(3,:));
-    theta = atan2(l(2),l(1));
-    [si18,tst18_fn,si10,tst10_fn] = ...
-        make_change_of_scale_constraints()
-    
