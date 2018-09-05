@@ -3,6 +3,7 @@
 classdef laf32_to_ql < WRAP.LafRectSolver
     properties
         cc = [];
+        name = 'H32ql';
     end
 
     methods

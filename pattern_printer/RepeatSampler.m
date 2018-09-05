@@ -14,7 +14,7 @@ classdef RepeatSampler < handle
     end
     
     methods
-        function this = RepeatSampler(x,corresp,k,Gsamp,varargin)
+        function this = RepeatSampler(x,k,Gsamp,varargin)
             this.labeling0 = findgroups(Gsamp);
             
             this.freq = hist(this.labeling0,1:max(this.labeling0));
@@ -22,9 +22,6 @@ classdef RepeatSampler < handle
             this.p = this.Z/sum(this.Z);
             this.N = sum(this.Z);
             this.k = k;
-            
-            assert(this.N == size(corresp,2), ...
-                   'Number of total correspondences is incorrect');
         end
 
         %        function idx = sample(this,x,corresp,varargin)
@@ -37,7 +34,7 @@ classdef RepeatSampler < handle
         %            end
         %        end
 
-        function idx = sample(this,x,corresp,varargin)
+        function idx = sample(this,x,varargin)
             [ii,jj] = find(mnrnd(1,this.p,numel(this.k)));
             jj(ii) = jj;
             for k = 1:numel(jj)
@@ -65,7 +62,7 @@ classdef RepeatSampler < handle
             %            ind = cs_freq > 0;
             %            p2 = hygepdf(2,this.freq(ind),cs_freq(ind),2);
             %            p3 = dot(this.p(ind),p2);
-            p3 = sum(cs)/size(corresp,2);
+            p3 = sum(cs)/this.N;
 
             if p3 > 0
                 N = ceil(log(1-this.confidence)/log(1-p3^(sum(this.k))));
