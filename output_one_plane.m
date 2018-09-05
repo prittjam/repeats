@@ -1,4 +1,5 @@
-function [rimg,uimg] = output_one_plane(img,H,cc,q,v)
+function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
+    output_one_plane(img,H,cc,q,v)
 [ny,nx,~] = size(img);
 [uimg,~,trect] = IMG.ru_div(img,cc,q);
 

@@ -23,55 +23,5 @@ solver_list = {@WRAP.laf2_to_qlu, ...
 
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
-for k = 1:numel(img_files)
-    dr = [];
-    border = [];
-    target_dir = [cur_path '/output/'];
-    if ~exist(target_dir)
-        mkdir(target_dir);
-    end
-    [~,name,ext] = fileparts(img_files(k).name);
-    img = Img('url', ...
-              [img_files(k).folder '/' img_files(k).name]);  
-    bbox_fname = [img_files(k).folder '/' name '_bbox.mat'];
-    if exist(bbox_fname)
-        load(bbox_fname)
-    end
-    cc = [(img.width+1)/2 (img.height+1)/2];
-    cid_cache = CASS.CidCache(img.cid,cache_params{:});
 
-    for k2 = 1:numel(name_list)
-        target_fname = [target_dir name '_' name_list{k2} '.mat'];
-        if ~exist(target_fname)
-            if isempty(dr)
-                dr = DR.get(img,cid_cache, ...
-                                {'type','all', ...
-                                 'reflection', false });
-                [x,Gsamp,Gapp] = group_desc(dr);    
-            end
-            
-            solver = WRAP.lafmn_to_qAl(feval(solver_list{k2},cc));
-            [model_list,lo_res_list,stats_list,cspond] = ...
-                fit_coplanar_patterns(solver,x, ...
-                                      Gsamp,Gsamp,cc,1);
-            tmp = img;
-            img = img.data;
-
-            save(target_fname, ...
-                 'model_list','lo_res_list','stats_list', ...
-                 'cspond','x','Gsamp','Gapp','img');
-            img = tmp;
-
-            %            [rimg,uimg] = render_results(img.data,model_list);
-            
-%            model_list(1).H = model_list(1).A;
-%            model_list(1).H(3,:) = transpose(model_list(1).l);
-%
-%            imwrite(rimg, ...
-%                    [target_dir name '_' name_list{k2} '_rect.jpg']);
-%            imwrite(uimg, ...
-%                    [target_dir name '_' name_list{k2} '_ud.jpg']);
-%
-        end
-    end
-end
+demo();
