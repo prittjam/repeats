@@ -1,5 +1,5 @@
 function [model_list,lo_res_list,stats_list,cspond] = ...
-    rectify_scene_planes(x,Gsamp,Gapp,solver,cc)
+    rectify_planes(x,Gsamp,Gapp,solver,cc)
 [x,Gsamp,Gapp] = group_desc(dr);   
 solver = WRAP.lafmn_to_qAl(feval(solver_list{k2},cc));
 [model_list,lo_res_list,stats_list,cspond] = ...
