@@ -1,4 +1,4 @@
-function [timg,T,A] = rectify(img,H,varargin)
+function [timg,trect,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
 
     [ny,nx,~] = size(img);
@@ -53,6 +53,8 @@ function [timg,T,A] = rectify(img,H,varargin)
     maxx = round(max(tbounds(:,1)));
     miny = round(min(tbounds(:,2)));
     maxy = round(max(tbounds(:,2)));
+
+    trect = [minx maxx miny maxy];
     
     timg = imtransform(img,T,'bicubic', ...
                        'XData',[minx maxx], ...
