@@ -17,16 +17,16 @@ classdef Ransac < handle
             this.eval = eval;
         end
         
-        function [loM,lo_res,lo_stats] = do_lo(this,x,corresp,M,res,varargin)
+        function [loM,lo_res,lo_stats] = do_lo(this,x,cspond,M,res,varargin)
             loM = [];
             lo_res = [];
             if ~isempty(this.lo)
-                [loM,lo_res] = this.lo.fit(x,corresp,M,res, ...
+                [loM,lo_res] = this.lo.fit(x,cspond,M,res, ...
                                            varargin{:});
             end
         end
 
-        function  [optM,opt_res,stats] = fit(this,x,corresp,varargin)
+        function  [optM,opt_res,stats] = fit(this,x,cspond,varargin)
             tic;
 
             stats = struct('time_elapsed', 0, ...
@@ -46,17 +46,20 @@ classdef Ransac < handle
             has_model = false;
             while true         
                 for k = 1:this.sampler.max_num_retries
-                    idx = this.sampler.sample(x,corresp);
+                    idx = this.sampler.sample(x,cspond);
                     is_sample_good = ...
-                        this.model.is_sample_good(x,corresp,idx);
+                        this.model.is_sample_good(x,cspond,idx);
                     if is_sample_good
-                        try
+                        %                        try
                             model_list = this.model.fit(x, ...
-                                                        corresp,idx, ...
+                                                        cspond,idx, ...
                                                         varargin{:});
-                        catch excpn
-                            model_list = [];
-                        end
+%                        catch excpn
+%                            %                        figure;
+%                            %                        LAF.draw(gca, x(:,[idx{:}]));
+%                            %                        axis equal;
+%                            model_list = [];
+%                        end
                         if ~isempty(model_list)
                             has_model = true;
                             break;
@@ -75,13 +78,13 @@ classdef Ransac < handle
 
                 for k = 1:numel(model_list)
                     is_model_good(k) = ...
-                        this.model.is_model_good(x,corresp,idx,model_list(k));
+                        this.model.is_model_good(x,cspond,idx,model_list(k));
                 end
                 
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
-                        Mfix = this.model.fix(x,corresp,idx,model_list(k));
+                        Mfix = this.model.fix(x,cspond,idx,model_list(k));
                         if ~isempty(Mfix)
                             is_model_good(k) = true;
                             model_list(k) = Mfix;
@@ -94,7 +97,7 @@ classdef Ransac < handle
                     stats.model_count = stats.model_count+numel(model_list);
                     loss = inf(numel(model_list),1);
                     for k = 1:numel(model_list)
-                        [loss(k),err{k}] = this.eval.calc_loss(x,corresp,model_list(k));
+                        [loss(k),err{k}] = this.eval.calc_loss(x,cspond,model_list(k));
                         cs{k} = this.eval.calc_cs(err{k});
                     end
                     [~,mink] = min(loss);
@@ -118,7 +121,7 @@ classdef Ransac < handle
                             opt_res = res;
                         end
                         [loM,lo_res] = ...
-                            this.do_lo(x,corresp,M0,res0,varargin{:});
+                            this.do_lo(x,cspond,M0,res0,varargin{:});
                         lo_stats = struct('loM',loM, ...
                                           'lo_res',lo_res, ...
                                           'trial_count',stats.trial_count, ...
@@ -132,7 +135,7 @@ classdef Ransac < handle
                         % Update estimate of est_trial_count, the number
                         % of trial_count to ensure we pick, with
                         % probability p, a data set with no outliers.
-                        N = this.sampler.update_trial_count(corresp,opt_res.cs);
+                        N = this.sampler.update_trial_count(cspond,opt_res.cs);
                     end   
                 end
                 
@@ -149,7 +152,7 @@ classdef Ransac < handle
                                           'res',res, ...
                                           'model_count', stats.model_count, ...
                                           'trial_count', stats.trial_count));
-                [loM,lo_res] = this.do_lo(x,corresp,M,res,varargin{:});
+                [loM,lo_res] = this.do_lo(x,cspond,M,res,varargin{:});
                 lo_stats = struct('loM',loM, ...
                                   'lo_res',lo_res, ...
                                   'trial_count',stats.trial_count, ...

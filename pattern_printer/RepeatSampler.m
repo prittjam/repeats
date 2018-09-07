@@ -1,7 +1,7 @@
 classdef RepeatSampler < handle
     properties
         min_trial_count = 50;
-        max_trial_count = 250;
+        max_trial_count = 750;
         max_num_retries = 100;
         
         confidence = 0.99
@@ -9,52 +9,51 @@ classdef RepeatSampler < handle
         labeling0
 
         freq = []
-        Z = []
-        k = []
+        mss = []
+        pmap = containers.Map('KeyType','double','ValueType','any');
     end
     
     methods
-        function this = RepeatSampler(x,k,Gsamp,varargin)
+        function this = RepeatSampler(x,mss,Gsamp,varargin)
             this.labeling0 = findgroups(Gsamp);
-            
             this.freq = hist(this.labeling0,1:max(this.labeling0));
-            this.Z = arrayfun(@(z) nchoosek(z,2),this.freq);
-            this.p = this.Z/sum(this.Z);
-            this.N = sum(this.Z);
-            this.k = k;
-        end
+            this.mss = mss; 
+            umss = unique(mss);
 
-        %        function idx = sample(this,x,corresp,varargin)
-        %            while true
-        %                idx = randsample(this.N,this.k);
-        %                if (numel(unique(corresp(:,idx))) == 2*this.k) && ...
-        %                    (numel(unique(this.labeling0(corresp(:,idx)))) == this.k)
-        %                    break;
-        %                end
-        %            end
-        %        end
+ 
+            for k = 1:numel(umss)
+                is_good = this.freq >= umss(k); 
+                Z = zeros(1,numel(this.freq));
+                Z(is_good) = arrayfun(@(z) nchoosek(z,umss(k)), ...
+                                      this.freq(is_good)); 
+                this.pmap(umss(k)) = Z/sum(Z);
+            end
+        end
 
         function idx = sample(this,x,varargin)
-            [ii,jj] = find(mnrnd(1,this.p,numel(this.k)));
-            jj(ii) = jj;
-            for k = 1:numel(jj)
-                ind = find(this.labeling0 == jj(k));
-                idx{k} = ind(randperm(this.freq(jj(k)),this.k(k)));
+            [G,id] = findgroups(this.mss); 
+            keyboard;
+            keep_trying = true; 
+            while keep_trying
+                s = splitapply(@(x) { mnrnd(numel(x),this.pmap(x(1)),1) }, ...
+                               this.mss,G);
+                for k = 1:numel(id)
+                    labels = s{k};
+                    ind = find(labels);
+                    replabel = repelem(ind,labels(ind));
+                    for k2 = 1:numel(replabel)
+                        good_idx = find(this.labeling0 == replabel(k2));
+                        perm_idx = randperm(numel(good_idx),id(k));
+                        idx{k} = good_idx(perm_idx);
+                    end
+                end
+                [~,ia] = ismember(this.mss,id);
+                idx = idx(ia);
+                
             end
-            %    for 
-            %    
-            %    while true
-            %                idx = randsample(this.N,this.k);
-            %                if (numel(unique(corresp(:,idx))) == 2*this.k) && ...
-            %                    (numel(unique(this.labeling0(corresp(:,idx)))) == this.k)
-            %                    break;
-            %                end
-            %            end
-            %        end
-            %
         end
 
-        function trial_count = update_trial_count(this,corresp,cs)
+        function trial_count = update_trial_count(this,cspond,cs)
             trial_count = inf;
             %            cslabeling = this.labeling0.*cs;
             %            cslabeling(find(cslabeling==0)) = nan;
@@ -62,10 +61,10 @@ classdef RepeatSampler < handle
             %            ind = cs_freq > 0;
             %            p2 = hygepdf(2,this.freq(ind),cs_freq(ind),2);
             %            p3 = dot(this.p(ind),p2);
-            p3 = sum(cs)/this.N;
+            p3 = sum(cs)/size(cspond,2);
 
             if p3 > 0
-                N = ceil(log(1-this.confidence)/log(1-p3^(sum(this.k))));
+                N = ceil(log(1-this.confidence)/log(1-p3^(sum(this.mss))));
             else
                 N = inf;
             end

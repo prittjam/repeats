@@ -1,4 +1,4 @@
-function [X,cspond,G] = make_cspond_set_t(N,w,h)
+function [X,cspond,G] = make_cspond_set_t(N)
 x = repmat(LAF.make_random(1),1,N);
 t = 0.9*rand(2,N)-0.45;
 x = LAF.translate(x,t);

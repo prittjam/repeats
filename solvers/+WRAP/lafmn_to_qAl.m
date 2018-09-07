@@ -13,8 +13,9 @@ classdef lafmn_to_qAl < WRAP.LafRectSolver
 
         function M = fit(this,x,corresp,idx,varargin)            
             M = this.solver_impl.fit(x,corresp,idx,varargin{:});
-            Gsamp = varargin{1};
-            m = [idx{:}];                
+            Gsamp = varargin{2};
+            m = [idx{:}];        
+            
             for k = 1:numel(M)
                 H = eye(3);
                 H(3,:) = transpose(M(k).l);
@@ -22,9 +23,11 @@ classdef lafmn_to_qAl < WRAP.LafRectSolver
                     LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,M(k).cc,M(k).q));
                 A{k} = laf2_to_Amu(xp(:,m),findgroups(Gsamp(m))); 
             end         
-            [M(:).A] = A{:};
-            good_ind = arrayfun(@(x) ~isempty(x.A),M);
-            M = M(good_ind);
+            if numel(M) > 0;
+                [M(:).A] = A{:};
+                good_ind = arrayfun(@(x) ~isempty(x.A),M);
+                M = M(good_ind); 
+            end
         end
     end
 end 

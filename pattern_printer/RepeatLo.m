@@ -2,14 +2,13 @@ classdef RepeatLo < handle
     properties
         motion_model = [];
         metric_solver = [];
-        cc = [];
         eval = [];
         max_iter = 10;
-        %        vqT = 21.026;
-        %        reprojT = 21.026;
+        %   vqT = 21.026;
+        % reprojT = 21.026;
         %    
-        vqT = 10;
-        reprojT = 10;
+                vqT = 15;
+         reprojT = 15;
     end
     
     methods(Access = private)
@@ -24,8 +23,7 @@ classdef RepeatLo < handle
     end
 
     methods
-        function this = RepeatLo(cc,motion_model,varargin)
-            this.cc = cc;
+        function this = RepeatLo(motion_model,varargin)
             this.eval = RepeatEval();
             this.motion_model = motion_model;
             [this,~] = cmp_argparse(this,varargin{:});
@@ -39,8 +37,8 @@ classdef RepeatLo < handle
 
         function [mle_model,mle_res,mle_stats] = fit(this,x,cspond,M00,res,varargin)
             inl = unique(cspond(:,res.cs));
-            Gsamp = varargin{1};
-            Gapp = varargin{2};
+            Gsamp = varargin{end-1};
+            Gapp = varargin{end};
             N = size(x,2);
             %            G = separate_look_alikes(x,cspond,res);
             G = nan(size(Gapp));
@@ -79,7 +77,7 @@ classdef RepeatLo < handle
 
             xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x(:,inl),M00.cc,M00.q));
             M0 = struct('H', H, ...
-                        'cc', this.cc, ...
+                        'cc', M00.cc, ...
                         'q', q);
             
             [good_cspond,Rtij00] = ...
@@ -107,7 +105,7 @@ classdef RepeatLo < handle
                 Gs(inl2) = findgroups(G(inl2));
                 
                 pattern_printer = ...
-                    PatternPrinter(this.cc,x,rtree,Gs,Tlist, ...
+                    PatternPrinter(M00.cc,x,rtree,Gs,Tlist, ...
                                    Gm,is_inverted,M00.q,M00.A,M00.l,X,Rtij, ...
                                    'motion_model', ...
                                    this.motion_model);

@@ -45,7 +45,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
     for scene_num = 1:num_scenes
         f = 5*rand(1)+3;
         cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
-        P = PLANE.make_viewpoint(cam,10,10);
+        P = PLANE.make_viewpoint(cam);
         cspond_dict = containers.Map;
         usample_type = unique(solver_sample_type);
 
@@ -55,7 +55,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
             G = {};
             for k2 = 1:samples_drawn
                 [Xlist{k2},cspond{k2},idx{k2},G{k2}] = ...
-                    PLANE.make_cspond(usample_type{k},wplane,hplane,cfg.xform);
+                    PLANE.sample_cspond(usample_type{k},cfg.xform);
             end
             cspond_dict(usample_type{k}) = ...
                 struct('Xlist', Xlist, 'idx', idx, 'G', G);                
@@ -71,19 +71,18 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                         cspond_dict(solver_sample_type{k});
                     for k2 = 1:samples_drawn
                         X = cspond_info(k2).Xlist;
-                        truth = PLANE.make_Rt_gt(scene_num,P,q_gt,cam.cc, ...
-                                                 ccd_sigma,X);
+                        truth = PLANE.make_Rt_gt(scene_num,P,q_gt,cam.cc,ccd_sigma);
                         X4 = reshape(X,4,[]);
                         x = PT.renormI(P*X4);
                         xd = CAM.rd_div(reshape(x,3,[]),...
                                         cam.cc,q_gt);
                         xdn = ...
                             reshape(GRID.add_noise(xd,ccd_sigma), ...
-                                    9,[]);                      
+                                    9,[]);       
                         try
-                        M = ...
-                            solver_list(k).fit(xdn,[], ...
-                                               cspond_info(k2).idx,cspond_info(k2).G);
+                            M = ...
+                                solver_list(k).fit(xdn,[], ...
+                                                   cspond_info(k2).idx,cspond_info(k2).G);
                         catch err
                             M = [];
                         end
@@ -121,7 +120,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
 function [num_scenes,ccd_sigma_list,q_list]  = make_experiments(cc)
     num_scenes = 1000;   
     %    ccd_sigma_list = 0;   
-    ccd_sigma_list = [0.1 0.5 1 2 5];
+    ccd_sigma_list = [0 0.1 0.5 1 2 5];
     q_list = arrayfun(@(x) x/(sum(2*cc)^2),-4);
 
 

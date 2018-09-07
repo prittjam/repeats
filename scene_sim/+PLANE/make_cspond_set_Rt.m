@@ -1,4 +1,4 @@
-function [X,cspond,G] = make_cspond_set_Rt(N,w,h)
+function [X,cspond,G] = make_cspond_set_Rt(N)
 theta = 2*pi*rand(1,N);
 t = 0.9*rand(2,N)-0.45;
 r = ones(1,N);

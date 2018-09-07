@@ -2,20 +2,18 @@
 % 
 classdef laf222_to_ql < WRAP.LafRectSolver
     properties
-        cc = [];
         name = 'H222ql';
     end
 
     methods
-        function this = laf222_to_ql(cc)
+        function this = laf222_to_ql()
             this = this@WRAP.LafRectSolver('laf222');   
-            this.cc = cc;
         end
 
-        function M = fit(this,x,corresp,idx,varargin)
+        function M = fit(this,x,corresp,idx,cc,varargin)
             M = [];
-            A = [1 0 -this.cc(1); ...
-                 0 1 -this.cc(2); ...
+            A = [1 0 -cc(1); ...
+                 0 1 -cc(2); ...
                  0 0  1];    
             xd = A*reshape(x(:,[idx{:}]),3,[]); 
             tic
@@ -27,7 +25,7 @@ classdef laf222_to_ql < WRAP.LafRectSolver
                                                       xd(1:2,13:15), ...
                                                       xd(1:2,16:18)); 
             solver_time = toc;
-            qn = q*sum(2*this.cc)^2;
+            qn = q*sum(2*cc)^2;
             good_ind = find((qn < 1) & (qn > -15));
             N = numel(good_ind);
             if N > 0 
@@ -35,6 +33,7 @@ classdef laf222_to_ql < WRAP.LafRectSolver
                 ll2 = bsxfun(@rdivide,ll2,ll2(3,:));
                 M = struct('q', mat2cell(real(q(good_ind)),1,ones(1,N)), ...
                            'l', mat2cell(real(ll2(:,good_ind)),3,ones(1,N)), ...
+                           'cc', cc, ...
                            'solver_time', solver_time);
                 
             end
