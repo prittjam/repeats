@@ -4,11 +4,11 @@ classdef RepeatLo < handle
         metric_solver = [];
         eval = [];
         max_iter = 10;
-        %   vqT = 21.026;
-        % reprojT = 21.026;
+           vqT = 21.026;
+         reprojT = 21.026;
         %    
-                vqT = 15;
-         reprojT = 15;
+ %                vqT = 15;
+ %        reprojT = 15;
     end
     
     methods(Access = private)

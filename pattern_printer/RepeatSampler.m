@@ -20,7 +20,7 @@ classdef RepeatSampler < handle
             this.mss = mss; 
             umss = unique(mss);
 
- 
+            
             for k = 1:numel(umss)
                 is_good = this.freq >= umss(k); 
                 Z = zeros(1,numel(this.freq));
@@ -31,26 +31,27 @@ classdef RepeatSampler < handle
         end
 
         function idx = sample(this,x,varargin)
-            [G,id] = findgroups(this.mss); 
-            keyboard;
+            [smss,inda] = sort(this.mss);
+            [G,id] = findgroups(findgroups(smss));
             keep_trying = true; 
-            while keep_trying
-                s = splitapply(@(x) { mnrnd(numel(x),this.pmap(x(1)),1) }, ...
-                               this.mss,G);
-                for k = 1:numel(id)
-                    labels = s{k};
-                    ind = find(labels);
-                    replabel = repelem(ind,labels(ind));
-                    for k2 = 1:numel(replabel)
-                        good_idx = find(this.labeling0 == replabel(k2));
-                        perm_idx = randperm(numel(good_idx),id(k));
-                        idx{k} = good_idx(perm_idx);
-                    end
+
+            idx = {};
+            s = splitapply(@(x) { mnrnd(numel(x),this.pmap(x(1)),1) }, ...
+                           smss,G);
+            k3 = 1;               
+            for k = 1:numel(id)
+                labels = s{k};
+                ind = find(labels);
+                replabel = repelem(ind,labels(ind));
+                for k2 = 1:numel(replabel)
+                    good_idx = find(this.labeling0 == replabel(k2));
+                    perm_idx = randperm(numel(good_idx),smss(k));
+                    idx{k3} = good_idx(perm_idx);
+                    k3 = k3+1;
                 end
-                [~,ia] = ismember(this.mss,id);
-                idx = idx(ia);
-                
             end
+
+            idx(inda) = idx;
         end
 
         function trial_count = update_trial_count(this,cspond,cs)

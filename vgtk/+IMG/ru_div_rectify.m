@@ -1,4 +1,4 @@
-function [timg,T,A] = ru_div_rectify(img,cc,H,q,varargin)
+function [timg,trect,T,A] = ru_div_rectify(img,cc,H,q,varargin)
     [ny,nx,~] = size(img);
     cfg.referencepoint = [];
     cfg.minscale = 0;
@@ -22,13 +22,13 @@ function [timg,T,A] = ru_div_rectify(img,cc,H,q,varargin)
     end
 
     if isempty(border)
-        [timg,T,A] = IMG.rectify(img,H, ...
-                                 'ru_xform', ru_xform, varargin{:});
+        [timg,trect,T,A] = IMG.rectify(img,H, ...
+                                       'ru_xform', ru_xform, varargin{:});
 
     else
-        [timg,T,A] = IMG.rectify(img,H, ...
-                                 'border', border, ...
-                                 'ru_xform', ru_xform, varargin{:});
+        [timg,trect,T,A] = IMG.rectify(img,H, ...
+                                       'border', border, ...
+                                       'ru_xform', ru_xform, varargin{:});
     end
 
 function border = calc_border(dims,l,cc,q,minscale,maxscale,pt)
