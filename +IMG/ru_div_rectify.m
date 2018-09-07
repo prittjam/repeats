@@ -31,12 +31,14 @@ function [timg,T,A] = ru_div_rectify(img,cc,H,q,varargin)
                                  'ru_xform', ru_xform, varargin{:});
     end
 
-function border = calc_border(dims,l,cc,q, ...
-                              minscale,maxscale,pt)
+function border = calc_border(dims,l,cc,q,minscale,maxscale,pt)
     [sc_img,si_fn] = IMG.calc_dscale(dims,l,cc,q);
-    ref_sc = si_fn(l(1),l(2),q,1,pt(1),pt(2));
+    A = [1 0 -cc(1); ...
+         0 1 -cc(2); ...
+         0 0      1];
+    ptn = A*[pt(1) pt(2) 1]';
+    ref_sc = si_fn(l(1),l(2),q,1,ptn(1),ptn(2));
     sc_img = sc_img/ref_sc;
-
     mask = (sc_img > minscale) & (sc_img < maxscale);
     [ii,jj] = find(mask);
     idx = convhull(ii,jj);
