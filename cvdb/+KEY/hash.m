@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi, CTU in Prague
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function h = hash(inp,meth)
 % HASH - Convert an input variable into a message digest using any of
 %        several common hash algorithms
