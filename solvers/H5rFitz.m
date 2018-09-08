@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 % Created by Zuzana Kukelova 11.11.2014
 
 %  H + r polyeig solver from Fitzgibbon

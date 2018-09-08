@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 % Copyright (c) 2017 James Pritts
 % 
 function gt = make_Rt_gt(scene_num,P,q_gt,cc,ccd_sigma)

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function arc_list = make(nx,ny,cc,q,varargin)
 cfg.num_arcs = 3;
 cfg.min_cc_dist = 0;

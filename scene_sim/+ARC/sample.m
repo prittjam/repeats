@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function X = sample(arc_list,nx,ny,varargin)
 cfg.num_points = 3;
 cfg = cmp_argparse(cfg,varargin{:});

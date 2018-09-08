@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Y = add_noise(X,arc_list,varargin)
 cfg.sigma = 0;
 cfg = cmp_argparse(cfg,varargin{:});

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [X,cspond,idx,G] = sample_cspond(sample_type,xform)
     if nargin < 4
         xform = 'Rt';
