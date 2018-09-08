@@ -9,9 +9,5 @@ function [] = repeats_init()
 
 addpath(genpath(cur_path));
 
-%if ~exist('ColumnType','file')
-%    addpath([src_path '/ckvs']);
-%end
-
 features_init();
 cvdb_init();
