@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function segm = join(segm1,segm2)
 segm = segm1 + ((segm2 + 2)*max(segm1(:)) + 1);
 segm = SPIXEL.renumber(segm);

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function masks = make_masks(labels,labeling,spixels)
     num_spixels = max(spixels(:));
     num_dr = double(numel(labeling)-num_spixels);

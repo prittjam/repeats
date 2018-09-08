@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function masks = labeling_to_masks(segments,labels,labeling)
 num_segments = max(segments(:));
 num_dr = double(numel(labeling)-num_segments);

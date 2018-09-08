@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function alpha = draw_pairwise(img,segments,pairwise,varargin)
 N = max(segments(:));
 cfg = struct('segments',1:N, ...

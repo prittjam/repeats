@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function [] = test_watershed_slic(img_name)
 cfg = CFG.get();
 img = Img('data',imread(img_name));

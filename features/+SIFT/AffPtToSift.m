@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 classdef AffPtToSift < handle & matlab.mixin.Heterogeneous
     methods
         function this = AffPtToSift()

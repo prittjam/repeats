@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function [] = draw_groups(ax0,segments,labeling,varargin)
 cfg.exclude = 0;
 cfg.color = '';

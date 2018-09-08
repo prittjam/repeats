@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = demo(img_files,solver_list,name_list)
 repeats_init();
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));

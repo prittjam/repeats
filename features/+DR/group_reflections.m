@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function Gr = group_reflections(dr)
 tmp = squeeze(struct2cell(dr)); 
 names = tmp(4,:);

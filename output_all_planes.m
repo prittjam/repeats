@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function output_all_planes(x,img,model_list)
 for k = 1:numel(model_list)
     ind = find(~isnan(model_list(k).Gs));

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 classdef Extrema < Gen
     properties(Constant)
         subids = containers.Map({class(MSER.CFG.Mserp()),class(MSER.CFG.Mserm())},[1 2]);

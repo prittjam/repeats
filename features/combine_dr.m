@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi, CTU in Prague
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function dr = combine_dr(desc,names_list)
 dr = [];
 ind = find(cellfun(@(x) ~isempty(x),desc));

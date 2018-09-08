@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function bimg = mark_planes(img,linfs_segments)
 method = 'shadow';
 l3 = linfs_segments(:,:,[1 1 1]);

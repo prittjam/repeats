@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [rect_rd_div_dscale_img,rect_dscale_img,rect] = ...
     render_dscale(dims,H,cc,q,v)
 l = H(3,:);

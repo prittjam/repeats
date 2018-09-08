@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = do_one_img(img_url,varargin)
 repeats_init();
 cfg = struct('solver', 'WRAP.laf222_to_ql', ...

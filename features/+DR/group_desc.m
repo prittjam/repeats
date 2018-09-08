@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function [Gapp,Gr] = group_desc(dr,varargin)
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 G = DR.group_desc_app(dr);

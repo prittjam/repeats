@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function c = segment_to_pixel_bag(segments,img,varargin)
 cfg.sigma = 0;
 cfg.decimation_factor = 1;

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function G = group_desc_app(dr,varargin)
 cfg.desc_cutoff = 150;
 cfg.desc_linkage = 'single';

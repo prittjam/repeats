@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts, Denys Rozumnyi
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts and Denys Rozumnyi
+%
 function D = calc_all_pairwise(img,segments)
 [R indnz] = SPIXEL.calc_pairwise(img,segments);
 A = R;

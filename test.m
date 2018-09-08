@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 repeats_init();
 img_name = 'cropped_dartboard';
 load(['output/' img_name '_H4ql.mat']);
