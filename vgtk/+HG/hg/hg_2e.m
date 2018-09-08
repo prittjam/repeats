@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = hg_2e(C)
     C1a = make_sym_3x3(C(1:6,1));
     C2a = make_sym_3x3(C(1:6,2));

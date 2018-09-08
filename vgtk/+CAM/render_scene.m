@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = render_scene(P,X)
 [K,R,c] = CAM.P_to_KRc(P);
 

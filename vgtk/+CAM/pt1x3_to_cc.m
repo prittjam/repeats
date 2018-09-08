@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function M = pt1x3_to_cc(x,q)
 u1 = transpose(x(1,:));
 v1 = transpose(x(2,:));

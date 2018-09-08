@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function pts = line_intersect(l1,l2)
 n = size(l1,2);
 u = [l2(3,:).*l1(2,:)-l1(3,:).*l2(2,:); ...

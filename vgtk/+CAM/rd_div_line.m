@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function c = rd_div_line(l,cc,q)
 assert(q ~= 0, 'The division model parameter must be non-zero');
 c = zeros(size(l));

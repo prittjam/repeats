@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function cam = make_ccd(f_mm,ccd_mm,nx,ny)
 f = nx*f_mm/ccd_mm;
 cc = [nx/2+0.5; ...

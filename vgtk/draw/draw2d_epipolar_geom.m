@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function l = draw2d_epipolar_geom(ax1,ax2,u,F)
 %if isempty(varargin)
 %    colors = varycolor(size(u,2));

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 % make a 4 mexapixel camera
 function [K nx ny ccd_sz f] = cam_make_4mpx(ef)
 nx = 2240;

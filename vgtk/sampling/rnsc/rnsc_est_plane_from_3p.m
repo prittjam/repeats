@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function res = rnsc_est_plane_from_3p(u,sample_set,threshold,confidence)
 cfg.s = 3;
 cfg.t = threshold;

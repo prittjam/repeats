@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function u = A_to_p3x3(A0)
 if iscell(A0)
     A = reshape(cell2mat(A0'),3,3,[]);

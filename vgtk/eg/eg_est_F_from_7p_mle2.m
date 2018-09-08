@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function F = eg_est_F_from_7p_mle2(u,F0,W)
 m = 4*size(u,2);
 

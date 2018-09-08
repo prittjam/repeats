@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Y = VChooseK(X, K)
 % VChooseK - Combinations of K elements [MEX]
 % VChooseK(V, K) creates a matrix, which rows are all combinations of 

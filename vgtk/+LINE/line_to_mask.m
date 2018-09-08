@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [BW, T] = line2mask(l,im,mu,displacement)
 if nargin < 4
     displacement = 0;

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function M = ell_get_TRS_from_C(C)
 m = ELL.get__center(C);
 T = MTX.make_T(m(1:2));

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = laf2x2_to_Hinf(u,G)
 v = u;
 H = eye(3,3);

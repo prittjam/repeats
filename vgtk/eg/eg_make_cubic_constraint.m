@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function c = eg_make_cubic_constraint(file_name)
 syms a ...
      F11 F21 F31 F41 F51 F61 F71 F81 F91 ...

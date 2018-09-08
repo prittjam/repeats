@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [score opt_labels labels labels2] = orsa_objective_fn(C,u,sample,cfg,T)
 if nargin < 5
     T = cfg.orsa.max_tsq;

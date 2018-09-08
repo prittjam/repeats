@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Ha = laf1x2_to_Amu(u,G)
 X = cmp_splitapply(@(x) ({x}),u,G);    
 Ha = laf2x2_to_Amu_internal(X);   

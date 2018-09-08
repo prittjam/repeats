@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function w = rm_duplicate_motions(K,w)
 for k = 1:numel(w)
     w1 = w;

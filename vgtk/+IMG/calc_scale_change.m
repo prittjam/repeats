@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function img = calc_scale_change(nx,ny,l,cc,q)
 l = l/l(3);
 

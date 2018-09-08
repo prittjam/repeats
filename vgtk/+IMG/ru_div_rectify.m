@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [timg,trect,T,A] = ru_div_rectify(img,cc,H,q,varargin)
     [ny,nx,~] = size(img);
     cfg.referencepoint = [];

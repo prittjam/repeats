@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function mkdir_for_file( file )
 %MKDIR_FOR_FILE  Creates necessary directory structure for given file.
 %

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function G = separate_look_alikes(x,cspond,res)
 N = size(x,2);
 inl_cspond = cspond(:,logical(res.cs)); 

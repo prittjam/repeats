@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function draw2d_piecewise_linear_lafs(ax1,x,y,line_style,cmap)
 k = floor(size(x,1)/2);
 

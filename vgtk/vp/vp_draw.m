@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = vp_draw()
     v1 = vp_linear(X1);
     v2 = vp_linear(X2);

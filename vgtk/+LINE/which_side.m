@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function position = which_side(line,pts)
 % line is a 2x2 matrix
 % rows equal to coordinates, columns to points

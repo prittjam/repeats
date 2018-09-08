@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function sx = make_random(num_lafs)
 x1 = repmat([0 1]',1,num_lafs);
 theta = pi/3*rand(1,num_lafs)+pi/3;

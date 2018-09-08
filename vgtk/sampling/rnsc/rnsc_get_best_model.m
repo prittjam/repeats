@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function res = rnsc_get_best_model(u,s,model_list,cfg)
 if cfg.compare(0,inf)
     res.score = inf;

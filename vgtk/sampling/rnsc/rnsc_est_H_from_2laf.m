@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [res,cfg] = rnsc_est_H_from_2laf(u,sample_set,threshold,confidence)
 cfg.k = 2;
 cfg.t = threshold;

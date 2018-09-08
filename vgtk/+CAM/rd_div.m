@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function v = rd_div(u,cc,q,varargin)
 if abs(q) > 0
     A = make_A(cc,varargin{:});

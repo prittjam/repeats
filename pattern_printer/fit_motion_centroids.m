@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [rt,is_inverted] = fit_motion_centroids(Gm,Rtij0)
 Gm = reshape(Gm,1,[]);
 [Rtij,is_inverted] = unique_ro(Rtij0);

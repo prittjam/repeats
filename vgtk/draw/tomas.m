@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [K,Q,D,W,l,qf] = tomas(ax1,C,varargin)
 %
 %  [K,Q,D,W,l,qf] = ellipse(A)

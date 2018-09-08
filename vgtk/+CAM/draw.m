@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = draw(ax,P)
 s = 10;
 [K R c] = CAM.P_to_KRc(P);

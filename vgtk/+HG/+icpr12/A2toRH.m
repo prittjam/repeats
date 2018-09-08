@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = A2toRH (N1, D1, N2, D2)
 
 % function H = A2toRH (N1, D1, N2, D2)

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Gm = segment_motions(x,model,corresp,rt0,varargin)
 cfg.vqT = 21.026;
 cfg.num_codes = 1e3;

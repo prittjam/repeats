@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [ell,CC] = to_ell(u)
 n = size(u,2);
 C1 = zeros(3,3,n);

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [Faa] = faff_n_points(x)
     x1 = [x(1:3,:)];
     x2 = [x(4:6,:)];

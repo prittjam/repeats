@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function cfg = rnsc_lo_make_est_Rt_from_np_cfg(cfg) 
 cfg.est_fn = @ao_est_Rt_from_np_lsqnonlin;
 cfg.min_trials = 20;

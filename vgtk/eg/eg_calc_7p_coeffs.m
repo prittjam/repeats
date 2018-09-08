@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function c = eg_calc_7p_coeffs(F)
 %eg_calc_7p_coeffs
 %    C = eg_calc_7p_coeffs(F11,F12,F21,F22,F31,F32,F41,F42,F51,F52,F61,F62,F71,F72,F81,F82,F91,F92)

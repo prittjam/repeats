@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function A = laf1x2_to_Amur(x,G)
     Gr = ~LAF.is_right_handed(x);
     right = cmp_splitapply(@(v,gr) { v(:,gr) },x,Gr,G);

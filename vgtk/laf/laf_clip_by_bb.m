@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function s3 = laf_clip_by_bb(u,s,x);
 v = laf_renormI(u);
 abc = [1 2 4 5 7 8];

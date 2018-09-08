@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function draw2d_ondrej(ax0,u,vis,varargin)
 if isempty(varargin)
     varargin = {'LineWidth',3};

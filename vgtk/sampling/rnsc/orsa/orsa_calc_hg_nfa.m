@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function orsa = orsa_calc_hg_nfa(cfg,sz1,sz2)
 ny1 = sz1(1);
 nx1 = sz1(2);

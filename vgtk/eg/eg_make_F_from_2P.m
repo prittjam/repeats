@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function F = eg_make_F_from_2P(P1,P2)
 %[K R C] = cam_factor_P(P1);
 %e2 = P2*C;

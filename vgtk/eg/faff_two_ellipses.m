@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [Fa_list] = faff_two_ellipses(x)
 x1 = x(:,1);
 x2 = x(:,2);

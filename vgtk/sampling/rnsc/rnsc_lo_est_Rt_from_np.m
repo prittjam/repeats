@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function res = rnsc_lo_est_Rt_from_np(u,sample_set,M0,cfg)
 
 res = rnsc_get_best_model(u,{ M0 },cfg);

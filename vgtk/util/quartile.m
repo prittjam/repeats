@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 
 % define data set
 x = [16, 22, 24, 24, 27, 28, 29, 30]';

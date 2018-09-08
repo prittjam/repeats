@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = pt_draw_tc(im1,im2,u,span)
 if nargin < 4
     span = 1;

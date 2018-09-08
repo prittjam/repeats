@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [xx,yy] = rectcirc(border,cc,c)
 m = nan(1,4);
 b = nan(1,4);

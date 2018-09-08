@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function s = laf_clip_3p(pts,x)
 n = size(pts,2);
 x2 = repmat(x(:),1,n);

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [l,N] = hg_2x2laf_to_linf(aX,arsc)
 % scale2H_multi
 if ~iscell(aX)

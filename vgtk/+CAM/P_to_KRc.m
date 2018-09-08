@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [K R c] = P_to_KRc(Q)
 alpha = sign(det(Q(1:3,1:3)))/norm(Q(3,1:3));
 M = alpha*Q(1:3,1:3);

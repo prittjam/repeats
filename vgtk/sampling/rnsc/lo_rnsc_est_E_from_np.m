@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function res = lo_rnsc_est_E_from_np(u, sample_set, cfg, varargin)
 F0 = varargin{ 1 };
 

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = H_from_4pl(u,l)
 u1 = renormI(v(1:3,:))';
 u2 = renormI(v(4:6,:))';

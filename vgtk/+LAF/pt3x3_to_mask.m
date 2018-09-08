@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function BW = p3x3_to_mask(u,img)
 BW = zeros(size(img,1),size(img,2));
 v = LAF.p3x3_to_poly(u);

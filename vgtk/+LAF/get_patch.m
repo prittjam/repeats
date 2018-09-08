@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function patch = get_patch(img,invA,sz,H)
 if nargin < 3
 	sz = 50;

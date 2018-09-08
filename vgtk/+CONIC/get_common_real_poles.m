@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function vd = get_common_real_poles(C1a, C2a)
 Q1 = inv(C1a)*C2a;
 [v, e] = eig(Q1);

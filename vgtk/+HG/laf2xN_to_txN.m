@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Rt = laf2xN_to_txN(u)
 u_ii = u(1:9,:);
 u_jj = u(10:18,:);

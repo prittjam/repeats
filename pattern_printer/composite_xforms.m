@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [Gs,Rti,Gmj] = composite_xforms(Tlist,Gm,inverted,...
                                          Rtij,X,num_vertices)
 mtx_Rtij = Rt.params_to_mtx(Rtij);

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [X,s] = pt1x2_to_X(u0,s,P1,P2)
 F = eg_make_F_from_2P(P1,P2);
 dx = eg_sampson_err(u0(:,s),F);

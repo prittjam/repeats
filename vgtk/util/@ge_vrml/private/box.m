@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function box( fh, X, C, r )
 fprintf( fh, 'Transform {\n' );
 fprintf( fh, '      translation %f %f %f\n', X(1), X(2), X(3) );

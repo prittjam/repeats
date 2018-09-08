@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function draw_raster(img,x1,y1,x2,y2)
 % distances according to both axes
 xn = abs(x2-x1);

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = hg_est_H_from_4p(v)
 u = renormI(v(1:3,:));
 u0 = renormI(v(4:6,:));

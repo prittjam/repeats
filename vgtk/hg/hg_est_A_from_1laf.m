@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Ha = hg_est_A_from_1laf(v,s,varargin)
 if nargin < 2
     s = true(1,size(v,2));

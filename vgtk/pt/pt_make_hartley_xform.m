@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function varargout = make_hartley_xform(pts)
     if size(pts,1) ~= 3
         error('pts must be 3xN');

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [lh,pts2] = draw_extents(ax1,l,varargin)
 v = axis;
 c = [mean([v(1) v(2)]); mean([v(3) v(4)])];

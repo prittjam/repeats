@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [line, T] = move(line,displacement)
 % line is a 2x2 matrix
 % rows equal to points, columns to coordinates

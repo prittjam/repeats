@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function varargout = rt_rnsc_p3(u,threshold,confidence)
 sample_set = ones(1,size(u,2));
 
