@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = A2toH2 (A1, u1, A2, u2)
 
 % function H = A2toH (A1, u1, A2, u2)

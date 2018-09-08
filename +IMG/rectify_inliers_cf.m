@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function rimg = rectify_inliers_cf(im,Hinf,dr,inl_idx)
 linf = Hinf(3,:)';
 inl_idx = inl_idx(cellfun(@numel, inl_idx) > 1);        

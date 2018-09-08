@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function ge = ge_points( ge, X, varargin )
 % GE_VRML/GE_POINTS     Export of points.
 %    ex = ge_points( ex, X, varargin )

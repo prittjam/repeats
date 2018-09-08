@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [a sin_alpha cos_alpha] = R2aa( R )
 %R2AA  Rotation matrix to axis-angle (inverted Rodrigues' formula).
 %   [a] = R2aa( R )

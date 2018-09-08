@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function K = cam_make_K(f,cc,alpha_c,px_sz);
 %  make calibration matrix
 K = zeros(3,3);

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function l = fit(x)
 %Xu = mat2cell(x(1:2,:),2,ones(1,size(x,2)));
 %L = cv.fitLine(Xu);

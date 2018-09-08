@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function w = find_overlapped_segments(u,segments,varargin)
 cfg.test = 'poly';
 [cfg,leftover] =  cmp_argparse(cfg,varargin{:});

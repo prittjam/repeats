@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function varargout = rnsc_est_H_from_4p(u,sigma,confidence,sz1, ...
                                           sz2)
 

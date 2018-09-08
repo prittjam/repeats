@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function is_degen = pt_corr_is_injective(u, sample, varargin)
     t = varargin{ 1 };
 

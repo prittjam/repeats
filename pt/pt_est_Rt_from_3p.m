@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [R,t0] = pt_est_Rt_from_3p(u,v)
 c0 = zeros(2,2);
 

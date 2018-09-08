@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function is_degen = hg_degen_test(C, u, inlying_set, t)
 H = hg_2e(C);
 dx_v = hg_sampson_err(H, u(:,inlying_set));

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function v = rectify(u,l)
 u2 = reshape(u,3,[]);
 [a,b] = meshgrid(1:size(l,2),1:size(u2,2));

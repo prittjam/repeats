@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = hg_make_Hinf_from_linf(l_inf)
 
 % takse line at infinity l_inf

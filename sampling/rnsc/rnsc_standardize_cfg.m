@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function cfg = rnsc_standardize_cfg(cfg)
     if ~isfield(cfg, 'min_trials')
         cfg.min_trials = 0;

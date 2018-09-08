@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Rt = mtx_to_params(M)
 %Rt = zeros(1,4);
 %Rt(1) = atan2(-M(4),M(5));

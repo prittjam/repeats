@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [ind,ind2] = pt_find_dups(u,tsq)
 if nargin < 2
     tsq = eps;

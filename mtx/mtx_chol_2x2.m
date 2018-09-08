@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function L = mtx_chol_2x2(M)
 k = numel(M);
 A = cell2mat(M);

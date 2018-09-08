@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function ge = ge_cams( ge, ptrack, varargin )
 % GE_VRML/GE_CAMS       Export of cameras as viewpoints.
 %    ex = ge_cams( ex, ptrack, varargin )

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [A,sc] = make_fitz_normalization(cc)
 sc = sum(2*cc);
 ncc = -cc/sc;

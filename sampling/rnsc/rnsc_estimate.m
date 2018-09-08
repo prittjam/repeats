@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function opt_res = rnsc_estimate(u,cfg,sampling_seed)
 error(nargchk(2,3,nargin));
 

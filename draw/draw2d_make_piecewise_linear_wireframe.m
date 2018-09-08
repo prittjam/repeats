@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [x,y] = draw2d_make_piecewise_linear_wireframe(u,edges)
 t = [0:0.1:1]';
 k = numel(t);

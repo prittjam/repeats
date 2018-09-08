@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [A,m] = get_A_from_C(C)
 m = ELL.get_center(C);
 T = MTX.make_T(m(1:2));

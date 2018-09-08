@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function M = ell_srt_to_C(sx,sy,alpha,tx,ty)
 c = cos(alpha);
 s = sin(alpha);

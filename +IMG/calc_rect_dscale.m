@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [img,si_fn,xurect] = calc_rect_dscale(dims,l,varargin)
 cfg.ruxform = maketform('affine',eye(3));
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});

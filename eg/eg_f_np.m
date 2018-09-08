@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [F] = eg_f_np(F0, u)
 x0 = extract_parameters(F0);
 x = lsqnonlin(@f_sampson_wrapper, x0, ...

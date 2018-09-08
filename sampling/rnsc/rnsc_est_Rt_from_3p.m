@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function res = rnsc_est_Rt_from_3p(u,threshold,confidence)
 sample_set = true(1,size(u,2));
 

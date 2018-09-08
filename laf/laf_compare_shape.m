@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function d = laf_compare_shape(u,v)
 Au = mat2cell(laf_3p_to_A(u));
 Av = mat2cell(laf_3p_to_A(v));

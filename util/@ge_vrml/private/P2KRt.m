@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [K, R, t] = P2KRt( P )
 %P2KRT  Decomposition of projective camera matrix.
 %   [K, R, t] = P2KRt( P ) decomposes 3x4 projective camera matrix.

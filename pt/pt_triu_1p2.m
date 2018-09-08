@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 yfunction X = pt_triu_1p2(u,P1,P2)
 N = size(u,2);
 X = zeros(4,N);

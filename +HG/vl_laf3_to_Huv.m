@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = linf_laf3_to_Huv(u0,m,n,linf)
     num_lafs = size(u0,2);
     num_pts = 3*num_lafs;

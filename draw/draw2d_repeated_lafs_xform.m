@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = draw2d_repeated_lafs_xform(ax1,u,vis,xform)
 [~,jj] = find(vis);
 jj3 = [jj jj jj]';

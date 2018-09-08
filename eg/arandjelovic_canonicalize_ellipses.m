@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [C2, C2_dual, M] = arandjelovic_canonicalize_ellipses(CC1)
 M = calc_arandjelovic_faff_canonicalize(CC1(:,:,1), CC1(:,:,2));
 C2 = M'*CC1(:,:,2)*M;

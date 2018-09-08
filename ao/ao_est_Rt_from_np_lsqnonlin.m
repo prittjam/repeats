@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function M = ao_est_Rt_from_np_lsqnonlin(u,s,M)
 R0 = M(1:3,1:3);
 c0 = -R0'*M(:,end);

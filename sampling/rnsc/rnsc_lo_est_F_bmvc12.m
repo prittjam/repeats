@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function res = rnsc_lo_est_F_bmvc12(u,s,sample,weights,F0,cfg)
 
 cfg8 = cfg;

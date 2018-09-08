@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function draw2d_laf_repeats(ax0,u,labels,varargin)
 ulabels = unique(labels);
 cfg.topN = [];

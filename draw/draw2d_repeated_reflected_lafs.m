@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function draw2d_repeated_reflected_lafs(ax0,u,vis,varargin)
 reflect = rpt_geom_find_oriented_vis(u,vis);
 

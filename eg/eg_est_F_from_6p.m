@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 % Polynomial eigenvalue solution to the 6pt relative pose + focal length problem
 %
 % by M. Bujnak, Z. Kukelova (c)sep2008

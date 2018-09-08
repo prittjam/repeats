@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [ic,clust_ind,n] = laf_find_duplicates(u,cutoff,n)
     T = laf_agglom_clust(u,cutoff);
     h = hist(T,1:max(T));

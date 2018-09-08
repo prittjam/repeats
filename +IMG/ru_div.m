@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [timg,T,trect] = ru_div(img,cc,q,varargin)
 cfg = struct('dims', transpose([size(img,1) size(img,2)]), ...
              'border', []);

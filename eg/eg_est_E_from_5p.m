@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function model_list = eg_est_E_from_5p_gb(u,s,varargin)
 
 if ~exist('p5gb','file')

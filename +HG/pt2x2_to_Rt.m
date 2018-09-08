@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Rt = pt2x2_to_Rt(u)
 u1c = mean(u(1:2,:),2);
 u2c = mean(u(3:4,:),2);

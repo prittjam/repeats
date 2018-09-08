@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 % James Pritts, 10/31/2010
 % Czech Technical University
 % The Center for Machine Perception

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function E = eg_est_E_from_np_lsqnonlin(u,s,E0)
 [Pa,Pb,Pc,Pd] = cam_get_4P_from_E(E0);
 [~,M] = cam_get_2P_from_4P(u(:,s),Pa,Pb,Pc,Pd);

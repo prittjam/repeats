@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [img,si_fn] = calc_rect_rd_div_dscale(dims,l,cc,q)
 nx = dims(2);
 ny = dims(1);

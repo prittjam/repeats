@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [Fa] = eg_est_Fa_from_4p(u)
     x1 = [u(1:3,:)];
     x2 = [u(4:6,:)];

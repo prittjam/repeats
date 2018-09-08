@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [K nx ny ccd_sz f] = make_canon_eos_5d_mark3(ef)
 nx = 5760;
 ny = 3840;

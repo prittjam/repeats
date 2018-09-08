@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [keepind,cfg] = get_distinct(cfg,affpt)
 num_dr = numel(affpt);
 u = LAF.affpt_to_pt3x3(affpt);

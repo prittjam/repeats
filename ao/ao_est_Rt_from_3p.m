@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function model_list = ao_est_Rt_from_3p(u,s,varargin)
 Xw = u(4:7,s);
 

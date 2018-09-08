@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function draw2d_repeated_lafs2(ax0,u,vis,varargin)
 
 colors = varycolor(ceil(1.2*size(vis,2)));

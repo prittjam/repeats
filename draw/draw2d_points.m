@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function hp = draw2d_points(ax1,u,varargin)
 if (size(u,1) > 2)
     u = renormI(u);

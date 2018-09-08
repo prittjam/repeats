@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [hh,v] = draw2d_line_segment(ax1,u,l,varargin)
 v = line_project_points(ax1,u,l);
 draw2d_expand_axis(ax1,v);

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function D = sqdist(X1,X2)
 % computes the distance b/w every pair of column vectors in X1, and X2;
 % 

@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function Rt = laf2xN_to_RtxN(u)
 M = size(u,2);
 theta = zeros(3,M);

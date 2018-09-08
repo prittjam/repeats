@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function A = pt3x2_to_A(u)
 t1 = mean(u(1:2,:),2);
 t2 = mean(u(4:5,:),2);

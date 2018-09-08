@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function H = hg_2elin(C1a, C2a, C1b, C2b)
 
 % function H = hg_2elin(C1a, C2a, C1b, C2b)

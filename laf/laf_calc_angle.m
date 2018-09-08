@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function angle = laf_calc_angle(u)
 v1 = u(1:2,:)-u(4:5,:);
 v2 = u(7:8,:)-u(4:5,:);
