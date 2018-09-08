@@ -1,6 +1,6 @@
 classdef RepeatEval < handle
     properties    
-        extentT = log(1.1);
+        extentT = log(1.05);
     end
     
     methods
