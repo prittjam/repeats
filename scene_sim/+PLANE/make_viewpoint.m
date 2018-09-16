@@ -4,8 +4,6 @@
 %
 %  Written by James Pritts
 %
-% Copyright (c) 2017 James Pritts
-% 
 function [P,x] = make_viewpoint(cam,varargin)
 cfg.phi = rand(1,1)*2*pi;
 cfg.theta = rand(1,1)*45*pi/180;

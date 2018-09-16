@@ -4,8 +4,6 @@
 %
 %  Written by James Pritts
 %
-% Copyright (c) 2017 James Pritts
-% 
 function gt = make_Rt_gt(scene_num,P,q_gt,cc,ccd_sigma)
 H = P(:,[1 2 4]);
 linf = inv(H)'*[0 0 1]';

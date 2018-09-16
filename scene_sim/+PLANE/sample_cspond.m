@@ -4,13 +4,12 @@
 %
 %  Written by James Pritts
 %
-function [X,cspond,idx,G] = sample_cspond(sample_type,xform)
-    if nargin < 4
-        xform = 'Rt';
-    end
-
-    make_cspond_same = str2func(['PLANE.make_cspond_same_' xform]);
-    make_cspond_set = str2func(['PLANE.make_cspond_set_' xform]);
+function [X,cspond,idx,G] = sample_cspond(sample_type,varargin)
+    cfg.rigidxform = 'Rt';
+    cfg = cmp_argparse(cfg,varargin{:});
+    
+    make_cspond_same = str2func(['PLANE.make_cspond_same_' cfg.rigidxform]);
+    make_cspond_set = str2func(['PLANE.make_cspond_set_' cfg.rigidxform]);
     
     switch sample_type
       case 'laf2'
