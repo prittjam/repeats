@@ -4,8 +4,6 @@
 %
 %  Written by James Pritts
 %
-% Copyright (c) 2017 James Pritts
-% 
 classdef pt5x2_to_qH < Solver
     properties
         A = [];

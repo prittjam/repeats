@@ -1,3 +1,9 @@
+%
+%  Copyright (c) 2018 James Pritts
+%  Licensed under the MIT License (see LICENSE for details)
+%
+%  Written by James Pritts
+%
 function [] = sensitivity(out_name,name_list,solver_list,varargin)
     repeats_init;
     assert(numel(name_list) == numel(solver_list), ...
@@ -6,7 +12,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
     cfg = struct('nx', 1000, ...
                  'ny', 1000, ...
                  'cc', [], ...
-                 'xform','Rt');
+                 'rigidxform','Rt');
         
     cfg = cmp_argparse(cfg,varargin{:});
     
@@ -55,7 +61,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
             G = {};
             for k2 = 1:samples_drawn
                 [Xlist{k2},cspond{k2},idx{k2},G{k2}] = ...
-                    PLANE.sample_cspond(usample_type{k},cfg.xform);
+                    PLANE.sample_cspond(usample_type{k},'RigidXform',cfg.rigidxform);
             end
             cspond_dict(usample_type{k}) = ...
                 struct('Xlist', Xlist, 'idx', idx, 'G', G);                
@@ -80,9 +86,9 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                             reshape(GRID.add_noise(xd,ccd_sigma), ...
                                     9,[]);       
                         try
+                            keyboard;
                             M = ...
-                                solver_list(k).fit(xdn,[], ...
-                                                   cspond_info(k2).idx,cspond_info(k2).G);
+                                solver_list(k).fit(xdn,[],cspond_info(k2).idx,cc);
                         catch err
                             M = [];
                         end

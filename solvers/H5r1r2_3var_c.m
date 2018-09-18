@@ -1,9 +1,3 @@
-%
-%  Copyright (c) 2018 James Pritts
-%  Licensed under the MIT License (see LICENSE for details)
-%
-%  Written by James Pritts
-%
 % Generated using GBSolver generator v1.1 Copyright Martin Bujnak,
 % Zuzana Kukelova, Tomas Pajdla CTU Prague 2008.
 % 
