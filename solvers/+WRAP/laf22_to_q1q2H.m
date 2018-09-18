@@ -4,8 +4,6 @@
 %
 %  Written by James Pritts
 %
-% Copyright (c) 2017 James Pritts
-% 
 classdef laf22_to_q1q2H < WRAP.LafRectSolver
     properties
         solver_impl = [];
