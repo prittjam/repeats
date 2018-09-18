@@ -15,4 +15,3 @@ dr = DR.get(img,cid_cache, ...
                  'reflection', false });
 x = [dr(:).u];
 output_all_planes(x,img,model_list);
-
