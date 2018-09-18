@@ -13,21 +13,21 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                  'ny', 1000, ...
                  'cc', [], ...
                  'rigidxform', 'Rt', ...
-                 'numscenes' = 1000, ...
+                 'numscenes', 1000, ...
                  'ccdsigmalist', [0 0.1 0.5 1 2 5], ...
                  'normqlist',-4);
         
     cfg = cmp_argparse(cfg,varargin{:});
 
-    q_list = arrayfun(@(x) x/(sum(2*cc)^2),cfg.normqlist);
-    
     if isempty(cfg.cc)
         cc = [cfg.nx/2+0.5; ...
               cfg.ny/2+0.5];
     else
         cc = cfg.cc;
-    end
+    end    
     
+    q_gt_list = arrayfun(@(x) x/(sum(2*cc)^2),cfg.normqlist);
+
     samples_drawn = 25;
 
     wplane = 10;
