@@ -12,9 +12,14 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
     cfg = struct('nx', 1000, ...
                  'ny', 1000, ...
                  'cc', [], ...
-                 'rigidxform','Rt');
+                 'rigidxform', 'Rt', ...
+                 'numscenes' = 1000, ...
+                 'ccdsigmalist', [0 0.1 0.5 1 2 5], ...
+                 'normqlist',-4);
         
     cfg = cmp_argparse(cfg,varargin{:});
+
+    q_list = arrayfun(@(x) x/(sum(2*cc)^2),cfg.normqlist);
     
     if isempty(cfg.cc)
         cc = [cfg.nx/2+0.5; ...
@@ -27,7 +32,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
 
     wplane = 10;
     hplane = 10;
-    [num_scenes,ccd_sigma_list,q_gt_list] = make_experiments(cc);
+
     res = cell2table(cell(0,6), 'VariableNames', ...
                      {'solver','ex_num','rewarp',...
                       'ransac_rewarp','q','ransac_q'});
@@ -48,7 +53,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
     
     ex_num = 1;
 
-    for scene_num = 1:num_scenes
+    for scene_num = 1:cfg.numscenes
         f = 5*rand(1)+3;
         cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
         P = PLANE.make_viewpoint(cam);
@@ -69,7 +74,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
 
         clear idx;
         for q_gt = q_gt_list
-            for ccd_sigma = ccd_sigma_list
+            for ccd_sigma = cfg.ccdsigmalist
                 for k = 1:numel(solver_list)
                     optq_list = nan(1,samples_drawn);
                     opt_warp_list = nan(1,samples_drawn);
@@ -86,7 +91,6 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                             reshape(GRID.add_noise(xd,ccd_sigma), ...
                                     9,[]);       
                         try
-                            keyboard;
                             M = ...
                                 solver_list(k).fit(xdn,[],cspond_info(k2).idx,cc);
                         catch err
@@ -119,15 +123,10 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                 ex_num = ex_num+1;
             end
         end
+        keyboard;
     end
     disp(['Finished']);
     save(out_name,'res','gt','cam');
-
-function [num_scenes,ccd_sigma_list,q_list]  = make_experiments(cc)
-    num_scenes = 1000;   
-    %    ccd_sigma_list = 0;   
-    ccd_sigma_list = [0 0.1 0.5 1 2 5];
-    q_list = arrayfun(@(x) x/(sum(2*cc)^2),-4);
 
 
 function optq = calc_opt_q(gt,cam,M,P,w,h)

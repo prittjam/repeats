@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef pt3x2_to_qlu < Solver
+classdef pt3x2_to_qlu < handle & matlab.mixin.Heterogeneous
     properties
         A = [];
         invA = [];

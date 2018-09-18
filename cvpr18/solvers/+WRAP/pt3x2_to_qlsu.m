@@ -1,11 +1,7 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef pt3x2_to_qlsu < Solver
+classdef pt3x2_to_qlsu < handle & matlab.mixin.Heterogeneous
     properties
-        A = [];
-        invA = [];
-        normcc;
-        cc = [];
         solver = 'det';
     end
     
@@ -64,34 +60,35 @@ classdef pt3x2_to_qlsu < Solver
     end
     
     methods
-        function this = pt3x2_to_qlsu(cc)
-            this.A = CAM.make_fitz_normalization(cc);
-            this.invA = inv(this.A); 
-            this.normcc = sum(2*this.invA(1:2,3))^2;
-            this.cc = cc;
+        function this = pt3x2_to_qlsu()
         end
         
-        function M = unnormalize(this,M)
-            M.Hu = this.invA*(eye(3)+M.u*M.l')*this.A;
-            M.Hsu = this.invA*(eye(3)+M.s*M.u*M.l')*this.A;
+        function M = unnormalize(this,M,cc)
+            A = CAM.make_fitz_normalization(cc);
+            invA = inv(A); 
+            normcc = sum(2*invA(1:2,3))^2;
+            
+            M.Hu = invA*(eye(3)+M.u*M.l')*A;
+            M.Hsu = invA*(eye(3)+M.s*M.u*M.l')*A;
             M.l = M.l/norm(M.l);
-            M.l = this.A'*M.l;
-            M.u = this.invA*M.u;            
-            M.q = M.q/this.normcc;
-            M.cc = this.cc;
+            M.l = A'*M.l;
+            M.u = invA*M.u;            
+            M.q = M.q/normcc;
+            M.cc = cc;
 
             M.Hinf = eye(3,3);
             M.Hinf(3,:) = transpose(M.l);
         end
         
-        function M = fit(this,x,corresp,idx)
+        function M = fit(this,x,corresp,idx,cc)
             m  = corresp(:,idx);
-            un = this.A*x(:,m(:));
+            A = CAM.make_fitz_normalization(cc);
+            un = A*x(:,m(:));
             ung = reshape(un,6,[]);
             assert(size(ung,2)==3, ...
                    'incorrect number of correspondences');
             M = WRAP.pt3x2_to_qlsu.solve(ung,this.solver);
-            M = arrayfun(@(m) this.unnormalize(m),M);
+            M = arrayfun(@(m) this.unnormalize(m,cc),M);
         end
     end
 end
