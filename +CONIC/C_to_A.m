@@ -5,7 +5,7 @@
 %  Written by James Pritts
 %
 function [A,m] = get_A_from_C(C)
-m = ELL.get_center(C);
+m = CONIC.get_center(C);
 T = MTX.make_T(m(1:2));
 U = [chol(C(1:2,1:2))   zeros(2,1); ...
      zeros(1,2)        1];
