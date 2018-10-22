@@ -22,10 +22,16 @@ end
 x = [u(:)'-0.5; ...
      v(:)'-0.5; ...
      ones(1,numel(u))];
-A = [1 0 -cc(1); ...
-     0 1 -cc(2); ...
-     0 0      1];
-xn = A*x;
-sc = si_fn(l(1),l(2),q,1,xn(1,:),xn(2,:));
+
+if q == 0
+    sc = si_fn(l(1),l(2),1,x(1,:),x(2,:));
+else
+    A = [1 0 -cc(1); ...
+         0 1 -cc(2); ...
+         0 0      1];
+    xn = A*x;
+    sc = si_fn(l(1),l(2),q,1,xn(1,:),xn(2,:));
+end
+
 img = reshape(sc,ny,nx);
 
