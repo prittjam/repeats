@@ -8,7 +8,7 @@ function cam = make_ccd(f_mm,ccd_mm,nx,ny)
 f = nx*f_mm/ccd_mm;
 cc = [nx/2+0.5; ...
       ny/2+0.5];
-K = [2*f 0 cc(1);
+K = [f 0 cc(1);
      0 f cc(2);
      0 0 1];
 
