@@ -51,9 +51,10 @@ classdef Ransac < handle
                         this.model.is_sample_good(x,cspond,idx);
                     if is_sample_good
                         %                        try
-                            model_list = this.model.fit(x, ...
-                                                        cspond,idx, ...
-                                                        varargin{:});
+
+                        model_list = this.model.fit(x, ...
+                                                    cspond,idx, ...
+                                                    varargin{:});
 %                        catch excpn
 %                            %                        figure;
 %                            %                        LAF.draw(gca, x(:,[idx{:}]));

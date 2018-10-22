@@ -5,8 +5,8 @@
 %  Written by James Pritts
 %
 function H = pt4x2_to_H(v)
-u = renormI(v(1:3,:));
-u0 = renormI(v(4:6,:));
+u = PT.renormI(v(1:3,:));
+u0 = PT.renormI(v(4:6,:));
 
 m = size(u,2);
 z = zeros(m,3);

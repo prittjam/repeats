@@ -22,14 +22,20 @@ classdef KeyValDb < handle
     methods (Access = private) 
         function this = KeyValDb(varargin)
             p = inputParser;
+
             dbfile = fullfile([pwd '/features.db']);
             addOptional(p,'dbfile',dbfile);
             parse(p,varargin{:});
+
             if ~exist(p.Results.dbfile,'file')
+                try 
                 this.db = sqlite(p.Results.dbpath,'create');
                 exec(this.db, ...
                      ['CREATE TABLE `cid_table` (`k`	TEXT NOT NULL, `v` ' ...
                       'BLOB NOT NULL, PRIMARY KEY(`k`))']);
+                catch
+                    disp('Database does not exist. Could not create the database.');
+                end
             else
                 this.db = sqlite(p.Results.dbfile,'connect');            
             end

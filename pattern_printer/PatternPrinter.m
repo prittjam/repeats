@@ -125,7 +125,7 @@ classdef PatternPrinter < handle
                 A(1,2) = this.A0(2)+dH(1);
                 A(2,2) = this.A0(3)+dH(2);
                 l = this.l0+[dH(3:4);0];
-                Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;                
+                Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;
             end
             Hinf = A;
             Hinf(3,:) = transpose(l);

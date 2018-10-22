@@ -26,9 +26,13 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
     leftover = { 'Fill', cfg.fill, ...
                  leftover{:} };
     
-    T0 = maketform('composite', ...
-                   maketform('projective',H'), ...
-                   cfg.ru_xform);
+    if isempty(cfg.ru_xform)
+        T0 = maketform('projective',H');
+    else
+        T0 = maketform('composite', ...
+                       maketform('projective',H'), ...
+                       cfg.ru_xform);
+    end
     
     switch lower(cfg.registration)
       case 'affinity'
@@ -40,7 +44,7 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
                ['You cannot register the rectification without inliers!']);
         [T,A] = register_by_similarity(cfg.cspond,T0);
       case 'scale'
-        [T,A] = register_by_scale(img,T0);
+        [T,A] = register_by_scale(img,T0,cfg.border);
       case 'none'
         T = T0;
         A = eye(3);

@@ -59,12 +59,14 @@ classdef RepeatLo < handle
             else
                 q = M00.q;
             end
+            
 
+            A = M00.A;
             H = eye(3);
             H(3,:) = transpose(M00.l);            
-            assert(istriu(M00.A), ...
-                   'metric upgrade is not upper triangular!');
-            H = M00.A*H;
+%            assert(istriu(M00.A), ...
+%                   'metric upgrade is not upper triangular!');
+            H = A*H;
             
             %            inl = reshape(cspond(:,res.cs),1,[]);
             %            if (any(LAF.is_right_handed(x(:,inl))))
@@ -81,7 +83,7 @@ classdef RepeatLo < handle
             %                end
             %            end
 
-            xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x(:,inl),M00.cc,M00.q));
+            xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x(:,inl),M00.cc,q));
             M0 = struct('H', H, ...
                         'cc', M00.cc, ...
                         'q', q);
@@ -112,7 +114,7 @@ classdef RepeatLo < handle
                 
                 pattern_printer = ...
                     PatternPrinter(M00.cc,x,rtree,Gs,Tlist, ...
-                                   Gm,is_inverted,M00.q,M00.A,M00.l,X,Rtij, ...
+                                   Gm,is_inverted,q,A,M00.l,X,Rtij, ...
                                    'motion_model', ...
                                    this.motion_model);
                 

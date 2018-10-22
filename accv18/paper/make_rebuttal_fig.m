@@ -1,5 +1,6 @@
 close all;
 bright = 1.7;
+keyboard;
 img_name = 'cropped_dartboard';
 img = Img('url',['data/' img_name '.jpg']);  
 cid_cache = CidCache(img.cid, ...
