@@ -3,6 +3,8 @@ bright = 1.7;
 keyboard;
 img_name = 'cropped_dartboard';
 img = Img('url',['data/' img_name '.jpg']);  
+
+kvdb = KeyValDb.getObj('dbfile', '../../features.db');
 cid_cache = CidCache(img.cid, ...
                      { 'read_cache', true, 'write_cache', true });
 dr = DR.get(img,cid_cache, ...
@@ -32,9 +34,11 @@ H = model_list(1).A;
 H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
+keyboard;
 [rimg,trect] = render_rectification(img.data,H,cc,q,v, ...
                                     'MinScale', 0.1, ...
                                     'MaxScale', 1.5);
+
 imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
          'rect_H4ql.jpg']);
 [uimg,~,trect] = IMG.ru_div(img.data,cc,q);
