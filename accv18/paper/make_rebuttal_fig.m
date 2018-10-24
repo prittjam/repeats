@@ -2,7 +2,8 @@ close all;
 bright = 1.7;
 img_name = 'cropped_dartboard';
 img = Img('url',['data/' img_name '.jpg']);  
-
+[ny,nx,~] = size(img.data);
+dims = [ny nx];
 dbfile = [ fileparts(which('repeats_init.m')) '/features.db'];
 kvdb = KeyValDb.getObj('dbfile', dbfile);
 
@@ -13,7 +14,7 @@ dr = DR.get(img,cid_cache, ...
                 {'type','all', ...
                  'reflection', false });
 x = [dr(:).u];
-rect = [200 80 875 475];
+rect = [80 200 475 875];
 
 cropped = img.data(200:875,80:475,:);
 colors = {'g','r','c'};
@@ -34,15 +35,19 @@ export_fig( ['/home/jbpritts/Documents/accv18_rebuttal/fig/' ...
              'H4ql.png']);
 ind = find(~isnan(model_list(1).Gs));
 v = reshape(x(:,ind),3,[]);
+keyboard;
 H = model_list(1).A;
 H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
 
-[rimg,trect,tform] = render_rectification(img.data,H,cc,q, ...
-                                          'cspond', v, ...
-                                          'rect',rect);
-keyboard;
+boundary = IMG.rect_to_boundary(rect);
+
+[rimg,trect,tform] = IMG.ru_div_rectify(img.data,H,cc,q, ...
+                                        'cspond', v, ...
+                                        'boundary',boundary, ...
+                                        'Registration','Similarity', ...
+                                        'Dims',dims);
 image([trect(1) trect(2)],[trect(3) trect(4)],rimg);
 axis off;
 axis equal;
@@ -53,7 +58,6 @@ hold on;
 LAF.draw(gca, y, 'Color','w', 'LineWidth',5);
 LAF.draw(gca, y, 'Color','g', 'LineWidth',3);
 hold off;
-
 
 imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
          'rect_H4ql.jpg']);
@@ -85,15 +89,17 @@ H = model_list(1).A;
 H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
-[rimg,trect] = render_rectification(img.data,H,cc,q,v, ...
-                            'MinScale', 0.1, ...
-                            'MaxScale', 1.5);
+
+boundary = rect_to_boundary(rect);
+[rimg,trect,tform] = IMG.ru_div_rectify(img.data,H,cc,q, ...
+                                        'cspond', v, ...
+                                        'boundary',boundary);
+
 imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
          'rect_H222ql.jpg']);
 [uimg,~,trect] = IMG.ru_div(img.data,cc,q);
 imwrite(uimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
          'ud_H222ql.jpg']);
-
 
 figure;
 image([80 475], [200 875], cropped/bright);
@@ -122,6 +128,11 @@ q = model_list(1).q;
 [rimg,trect] = render_rectification(img.data,H,cc,q,v, ...
                                     'MinScale', 0.1, ...
                                     'MaxScale', 1.5);
+
+boundary = rect_to_boundary(rect);
+[rimg,trect,tform] = IMG.ru_div_rectify(img.data,H,cc,q, ...
+                                        'cspond', v, ...
+                                        'boundary',boundary);
 
 imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
          'rect_H32ql.jpg']);
