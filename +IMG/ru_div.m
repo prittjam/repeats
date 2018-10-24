@@ -25,7 +25,7 @@ else
 end
 
 if cfg.dims
-    [T,S] = register_by_extent(img,T0,cfg.dims);
+    [T,S] = register_by_dims(img,T0,cfg.dims);
 else
     T = T0;
     S = eye(3);
@@ -50,27 +50,3 @@ if ~isempty(cfg.dims)
 end
 
 trect = [minx maxx miny maxy];
-
-function [T,S] = register_by_extent(img,T0,dims)
-    nx = size(img,2);
-    ny = size(img,1);
-   
-    border0 = [0.5    0.5; ...
-               nx-0.5 0.5; ...    
-               nx-0.5 ny-0.5; ...
-               0.5    ny-0.5];
-    tborder0 = tformfwd(T0,border0);
-    
-    xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
-    yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
-    
-    sx = abs(dims(2)/xextent);
-    sy = abs(dims(1)/yextent);
-
-    S = [sx  0 0;
-          0 sy 0;
-          0  0 1];
-    
-    T = maketform('composite', ...
-                  maketform('affine',S'), ...
-                  T0);
