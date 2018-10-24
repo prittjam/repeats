@@ -19,9 +19,9 @@ if ~isempty(cfg.boundary)
     boundary = cfg.boundary;
 else
     boundary = [0.5     0.5; ...
-              nx-0.5  0.5; ...    
-              nx-0.5  ny-0.5; ...
-              0.5     ny-0.5];
+                nx-0.5  0.5; ...    
+                nx-0.5  ny-0.5; ...
+                0.5     ny-0.5];
 end
 
 if cfg.dims
@@ -49,4 +49,4 @@ if ~isempty(cfg.dims)
     timg = imresize(timg,[ny nx]);
 end
 
-trect = [minx maxx miny maxy];
+trect = [minx miny maxx maxy];

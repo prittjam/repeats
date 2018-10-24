@@ -62,7 +62,7 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
     miny = round(min(tbounds(:,2)));
     maxy = round(max(tbounds(:,2)));
 
-    trect = [minx maxx miny maxy];
+    trect = [minx miny maxx maxy];
     
     timg = imtransform(img,T,'bicubic', ...
                        'XData',[minx maxx], ...
