@@ -6,7 +6,7 @@
 %
 function [timg,T,trect] = ru_div(img,cc,q,varargin)
 cfg = struct('dims', transpose([size(img,1) size(img,2)]), ...
-             'border', []);
+             'boundary', []);
 
 [cfg,varargin] = cmp_argparse(cfg,varargin{:});
 
@@ -15,24 +15,24 @@ T0 = CAM.make_ru_div_tform(cc,q);
 nx = size(img,2);
 ny = size(img,1);
 
-if ~isempty(cfg.border)
-    border = cfg.border;
+if ~isempty(cfg.boundary)
+    boundary = cfg.boundary;
 else
-    border = [0.5     0.5; ...
+    boundary = [0.5     0.5; ...
               nx-0.5  0.5; ...    
               nx-0.5  ny-0.5; ...
               0.5     ny-0.5];
 end
 
 if cfg.dims
-    [T,S] = IMG.register_by_dims(img,T0,cfg.dims);
+    [T,S] = IMG.register_by_dims(img,T0,boundary,cfg.dims);
 else
     T = T0;
     S = eye(3);
 end
  
 T = T0;
-tbounds = tformfwd(T,border);
+tbounds = tformfwd(T,boundary);
 
 minx = min(tbounds(:,1));
 maxx = max(tbounds(:,1));

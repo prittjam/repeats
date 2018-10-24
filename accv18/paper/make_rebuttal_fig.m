@@ -35,14 +35,13 @@ export_fig( ['/home/jbpritts/Documents/accv18_rebuttal/fig/' ...
              'H4ql.png']);
 ind = find(~isnan(model_list(1).Gs));
 v = reshape(x(:,ind),3,[]);
-keyboard;
+
 H = model_list(1).A;
 H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
 
 boundary = IMG.rect_to_boundary(rect);
-
 [rimg,trect,tform] = IMG.ru_div_rectify(img.data,H,cc,q, ...
                                         'cspond', v, ...
                                         'boundary',boundary, ...
@@ -90,16 +89,36 @@ H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
 
-boundary = rect_to_boundary(rect);
+boundary = IMG.rect_to_boundary(rect);
 [rimg,trect,tform] = IMG.ru_div_rectify(img.data,H,cc,q, ...
                                         'cspond', v, ...
-                                        'boundary',boundary);
+                                        'boundary',boundary, ...
+                                        'Registration','Similarity', ...
+                                        'Dims',dims);
 
-imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
-         'rect_H222ql.jpg']);
-[uimg,~,trect] = IMG.ru_div(img.data,cc,q);
-imwrite(uimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
-         'ud_H222ql.jpg']);
+image([trect(1) trect(2)],[trect(3) trect(4)],rimg);
+axis off;
+axis equal;
+axis ij;
+y = LAF.warp_fwd(x(:,stats_list.ransac(end).res.mss{1}), ...
+                 tform);
+hold on;
+for k = 1:numel(stats_list.ransac(end).res.mss)
+    LAF.draw(gca, x(:,stats_list.ransac(end).res.mss{k}), ...
+             'Color','w', 'LineWidth',5);
+    LAF.draw(gca, x(:,stats_list.ransac(end).res.mss{k}), ...
+             'Color',colors{k},'LineWidth',3);
+end
+
+hold off;
+
+
+%imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
+%         'rect_H222ql.jpg']);
+%[uimg,~,trect] = IMG.ru_div(img.data,cc,q);
+%imwrite(uimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
+%         'ud_H222ql.jpg']);
+%
 
 figure;
 image([80 475], [200 875], cropped/bright);
@@ -125,14 +144,30 @@ H = model_list(1).A;
 H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
-[rimg,trect] = render_rectification(img.data,H,cc,q,v, ...
-                                    'MinScale', 0.1, ...
-                                    'MaxScale', 1.5);
 
-boundary = rect_to_boundary(rect);
+boundary = IMG.rect_to_boundary(rect);
 [rimg,trect,tform] = IMG.ru_div_rectify(img.data,H,cc,q, ...
                                         'cspond', v, ...
-                                        'boundary',boundary);
+                                        'boundary',boundary, ...
+                                        'Registration','Similarity', ...
+                                        'Dims',dims);
+
+image([trect(1) trect(2)],[trect(3) trect(4)],rimg);
+axis off;
+axis equal;
+axis ij;
+y = LAF.warp_fwd(x(:,stats_list.ransac(end).res.mss{1}), ...
+                 tform);
+hold on;
+for k = 1:numel(stats_list.ransac(end).res.mss)
+    LAF.draw(gca, x(:,stats_list.ransac(end).res.mss{k}), ...
+             'Color','w', 'LineWidth',5);
+    LAF.draw(gca, x(:,stats_list.ransac(end).res.mss{k}), ...
+             'Color',colors{k},'LineWidth',3);
+end
+
+hold off;
+
 
 imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
          'rect_H32ql.jpg']);
