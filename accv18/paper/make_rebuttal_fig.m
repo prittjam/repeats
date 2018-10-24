@@ -1,12 +1,14 @@
 close all;
 bright = 1.7;
-keyboard;
 img_name = 'cropped_dartboard';
 img = Img('url',['data/' img_name '.jpg']);  
 
-kvdb = KeyValDb.getObj('dbfile', '../../features.db');
+dbfile = [ fileparts(which('repeats_init.m')) '/features.db'];
+kvdb = KeyValDb.getObj('dbfile', dbfile);
+
 cid_cache = CidCache(img.cid, ...
-                     { 'read_cache', true, 'write_cache', true });
+                     { 'read_cache', true, ...
+                    'write_cache', true });
 dr = DR.get(img,cid_cache, ...
                 {'type','all', ...
                  'reflection', false });
@@ -34,10 +36,24 @@ H = model_list(1).A;
 H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
+
 keyboard;
-[rimg,trect] = render_rectification(img.data,H,cc,q,v, ...
-                                    'MinScale', 0.1, ...
-                                    'MaxScale', 1.5);
+
+
+[rimg,trect,tform] = render_rectification(img.data,H,cc,q,v, ...
+                                          'MinScale', 0.1, ...
+                                          'MaxScale', 1.5);
+image([trect(1) trect(2)],[trect(3) trect(4)],rimg);
+axis off;
+axis equal;
+axis ij;
+y = LAF.warp_fwd(x(:,stats_list.ransac(end).res.mss{1}), ...
+                 tform);
+hold on;
+LAF.draw(gca, y, 'Color','w', 'LineWidth',5);
+LAF.draw(gca, y, 'Color','g', 'LineWidth',3);
+hold off;
+
 
 imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
          'rect_H4ql.jpg']);

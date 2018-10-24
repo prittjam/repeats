@@ -16,7 +16,6 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
 
     cfg.dims = [];
     cfg.cspond = [];
-    cfg.maxrelativescale = 10;
     cfg.registration = 'Similarity';
     cfg.ru_xform = maketform('affine',eye(3));
     cfg.fill = [255 255 255]';
@@ -86,7 +85,6 @@ function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
          ones(size(u,2),1)];
     A = HG.pt2x2_to_sRt([transpose(v);u]);
-
     T = maketform('composite', ...
                   maketform('affine',transpose(A)), ...
                   T0);
