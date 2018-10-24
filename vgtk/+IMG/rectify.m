@@ -9,11 +9,10 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
 
     [ny,nx,~] = size(img);
 
-    cfg.border = [ 0.5    0.5; ...
-                   nx-0.5 0.5; ...
-                   nx-0.5 ny-0.5; ...
-                   0.5 ny-0.5 ];
-
+    cfg.boundary = [ 0.5    0.5; ...
+                     nx-0.5 0.5; ...
+                     nx-0.5 ny-0.5; ...
+                     0.5 ny-0.5 ];
     cfg.dims = [];
     cfg.cspond = [];
     cfg.registration = 'Similarity';
@@ -43,7 +42,7 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
                ['You cannot register the rectification without inliers!']);
         [T,A] = register_by_similarity(cfg.cspond,T0);
       case 'scale'
-        [T,A] = register_by_scale(img,T0,cfg.border);
+        [T,A] = register_by_scale(img,T0,cfg.boundary);
       case 'none'
         T = T0;
         A = eye(3);
@@ -52,11 +51,11 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
     end
 
     if ~isempty(cfg.dims)
-        [T,A2] = register_by_dims(img,T,cfg.border,cfg.dims);
+        [T,A2] = IMG.register_by_dims(img,T,cfg.boundary,cfg.dims);
         A = A2*A;
     end
     
-    tbounds = tformfwd(T,cfg.border);
+    tbounds = tformfwd(T,cfg.boundary);
 
     minx = round(min(tbounds(:,1)));
     maxx = round(max(tbounds(:,1)));
@@ -97,14 +96,14 @@ function [T,A] = register_by_affinity(u,T0)
                   maketform('affine',transpose(A)), ...
                   T0);
 
-function [T,S] = register_by_scale(img,T0,border)
+function [T,S] = register_by_scale(img,T0,roi)
     nx = size(img,2);
     ny = size(img,1);
 
-    tborder = tformfwd(T0,border);
+    troi = tformfwd(T0,roi);
     
-    s1 = polyarea(border(:,1),border(:,2));
-    s2 = polyarea(tborder(:,1),tborder(:,2));
+    s1 = polyarea(roi(:,1),roi(:,2));
+    s2 = polyarea(troi(:,1),troi(:,2));
     s3 = sqrt(s2/s1);
 
     S = [s3 0 0; 0 s3 0; 0 0 1];
@@ -113,20 +112,3 @@ function [T,S] = register_by_scale(img,T0,border)
                   maketform('affine',S'), ...
                   T0);
 
-function [T,S] = register_by_dims(img,T0,border0,dims)
-    tborder0 = tformfwd(T0,border0);
-    xextent = max(tborder0(:,1))-min(tborder0(:,1))+1;
-    yextent = max(tborder0(:,2))-min(tborder0(:,2))+1;
-    s = min([dims(2)/xextent dims(1)/yextent]);
-    S = [s 0 0;
-         0 s 0;
-         0 0 1];
-    T = maketform('composite', ...
-                  maketform('affine',S'), ...
-                  T0);
-%    tbounds = tformfwd(T,border0);
-%
-%    minx = round(min(tbounds(:,1)));
-%    maxx = round(max(tbounds(:,1)));
-%    miny = round(min(tbounds(:,2)));
-%    maxy = round(max(tbounds(:,2)));

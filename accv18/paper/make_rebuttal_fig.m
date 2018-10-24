@@ -13,6 +13,8 @@ dr = DR.get(img,cid_cache, ...
                 {'type','all', ...
                  'reflection', false });
 x = [dr(:).u];
+rect = [200 80 875 475];
+
 cropped = img.data(200:875,80:475,:);
 colors = {'g','r','c'};
 
@@ -37,12 +39,10 @@ H(3,:) = transpose(model_list(1).l);
 cc = model_list(1).cc;
 q = model_list(1).q;
 
+[rimg,trect,tform] = render_rectification(img.data,H,cc,q, ...
+                                          'cspond', v, ...
+                                          'rect',rect);
 keyboard;
-
-
-[rimg,trect,tform] = render_rectification(img.data,H,cc,q,v, ...
-                                          'MinScale', 0.1, ...
-                                          'MaxScale', 1.5);
 image([trect(1) trect(2)],[trect(3) trect(4)],rimg);
 axis off;
 axis equal;

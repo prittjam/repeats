@@ -1,4 +1,4 @@
-function border = calc_dscale_border(dims,l,cc,q,minscale,maxscale,pt)
+function border = calc_rectification_clipping(dims,l,cc,q,minscale,maxscale,pt)
     [sc_img,si_fn] = IMG.calc_dscale(dims,l,cc,q);
     if q == 0
         ref_sc = si_fn(l(1),l(2),1,pt(1),pt(2));
