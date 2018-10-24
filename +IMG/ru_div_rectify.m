@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [timg,trect,T,A] = ru_div_rectify(img,cc,H,q,varargin)
+function [timg,trect,T,A] = ru_div_rectify(img,H,cc,q,varargin)
     ru_xform = [];
 
     if q ~= 0

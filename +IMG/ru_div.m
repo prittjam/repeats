@@ -25,7 +25,7 @@ else
 end
 
 if cfg.dims
-    [T,S] = register_by_dims(img,T0,cfg.dims);
+    [T,S] = IMG.register_by_dims(img,T0,cfg.dims);
 else
     T = T0;
     S = eye(3);
