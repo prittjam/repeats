@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [timg,T,trect] = ru_div(img,cc,q,varargin)
+function [timg,trect,T] = ru_div(img,cc,q,varargin)
 cfg = struct('dims', transpose([size(img,1) size(img,2)]), ...
              'boundary', []);
 

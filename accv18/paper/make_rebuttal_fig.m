@@ -152,6 +152,7 @@ boundary = IMG.rect_to_boundary(rect);
                                         'Registration','Similarity', ...
                                         'Dims',dims);
 
+figure;
 image([trect(1) trect(2)],[trect(3) trect(4)],rimg);
 axis off;
 axis equal;
@@ -168,9 +169,18 @@ end
 
 hold off;
 
-
-imwrite(rimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
-         'rect_H32ql.jpg']);
+figure;
 [uimg,~,trect] = IMG.ru_div(img.data,cc,q);
-imwrite(uimg,['/home/jbpritts/Documents/accv18_rebuttal/img/' ...
-         'ud_H32ql.jpg']);
+
+y = LAF.warp_fwd(x(:,stats_list.ransac(end).res.mss{1}), ...
+                 tform);
+hold on;
+for k = 1:numel(stats_list.ransac(end).res.mss)
+    LAF.draw(gca, x(:,stats_list.ransac(end).res.mss{k}), ...
+             'Color','w', 'LineWidth',5);
+    LAF.draw(gca, x(:,stats_list.ransac(end).res.mss{k}), ...
+             'Color',colors{k},'LineWidth',3);
+end
+
+hold off;
+
