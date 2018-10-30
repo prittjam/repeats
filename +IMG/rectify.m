@@ -9,10 +9,10 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
 
     [ny,nx,~] = size(img);
 
-    cfg.boundary = [ 0.5    0.5; ...
-                     nx-0.5 0.5; ...
-                     nx-0.5 ny-0.5; ...
-                     0.5 ny-0.5 ];
+    cfg.border = [ 0.5    0.5; ...
+                   nx-0.5 0.5; ...
+                   nx-0.5 ny-0.5; ...
+                   0.5 ny-0.5 ];
     cfg.dims = [];
     cfg.cspond = [];
     cfg.registration = 'Similarity';
@@ -42,7 +42,7 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
                ['You cannot register the rectification without inliers!']);
         [T,A] = register_by_similarity(cfg.cspond,T0);
       case 'scale'
-        [T,A] = register_by_scale(img,T0,cfg.boundary);
+        [T,A] = register_by_scale(img,T0,cfg.border);
       case 'none'
         T = T0;
         A = eye(3);
@@ -51,34 +51,21 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
     end
 
     if ~isempty(cfg.dims)
-        [T,A2] = IMG.register_by_dims(img,T,cfg.boundary,cfg.dims);
+        [T,A2] = IMG.register_by_dims(img,T,cfg.border,cfg.dims);
         A = A2*A;
     end
     
-    tbounds = tformfwd(T,cfg.boundary);
+    outbounds = tformfwd(T,cfg.border);
 
-    minx = round(min(tbounds(:,1)));
-    maxx = round(max(tbounds(:,1)));
-    miny = round(min(tbounds(:,2)));
-    maxy = round(max(tbounds(:,2)));
-
-    trect = [minx miny maxx maxy];
-    
     timg = imtransform(img,T,'bicubic', ...
-                       'XData',[minx maxx], ...
-                       'YData',[miny maxy], ...
+                       'XData', [min(outbounds(:,1))-35 max(outbounds(:,1))], ...
+                       'YData', [min(outbounds(:,2)) max(outbounds(:,2))], ...
                        'XYScale',1, ...
-                       leftover{:});
+                       leftover{:}); 
     
-%    if in_image
-%        BW = roipoly([minx maxx], ...
-%                     [miny maxy], ...
-%                     zeros(maxy-miny+1,maxx-minx+1,3), ...
-%                     tbounds(:,1),tbounds(:,2));
-%        BW3 = repmat(~BW,1,1,3);
-%        fill = BW3.*permute(cfg.fill,[3 2 1]);
-%        timg(find(BW3)) = fill(find(BW3));
-%    end
+    trect = [min(outbounds(:,1))-35 min(outbounds(:,2)) ...
+             max(outbounds(:,1)) max(outbounds(:,2))];
+                                                     
     
 function [T,A] = register_by_similarity(u,T0)
     v = [tformfwd(T0,transpose(u(1:2,:))) ... 
