@@ -56,7 +56,7 @@ if mod(length(args),2) == 1
 end
 
 for ai = 1:2:length(args)
-  paramName = args{ai} ;
+    paramName = args{ai} ;
   if ~ischar(paramName)
     error('The name of the parameter number %d is not a string.', (ai-1)/2+1) ;
   end

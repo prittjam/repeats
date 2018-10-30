@@ -5,7 +5,7 @@
 %  Written by James Pritts
 %
 function [X,cspond,idx,G] = sample_cspond(sample_type,varargin)
-    cfg.rigidxform = 'Rt';
+    cfg = struct('rigidxform', 'Rt');
     cfg = cmp_argparse(cfg,varargin{:});
     
     make_cspond_same = str2func(['PLANE.make_cspond_same_' cfg.rigidxform]);

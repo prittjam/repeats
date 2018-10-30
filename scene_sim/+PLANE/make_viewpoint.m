@@ -5,12 +5,9 @@
 %  Written by James Pritts
 %
 function [P,x] = make_viewpoint(cam,varargin)
-cfg.phi = rand(1,1)*2*pi;
-cfg.theta = rand(1,1)*45*pi/180;
-cfg.w = 1;
-cfg.h = 1;
-cfg.coa = [];
-
+cfg = struct('phi', rand(1,1)*2*pi, ...
+             'theta', rand(1,1)*45*pi/180, ...
+             'w', 1, 'h', 1, 'coa', []);
 cfg = cmp_argparse(cfg,varargin{:});
 
 w = cfg.w;
