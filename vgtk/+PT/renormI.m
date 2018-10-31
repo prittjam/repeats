@@ -4,6 +4,7 @@
 %
 %  Written by James Pritts
 %
-function Y = renormI(X)
-%    Y = bsxfun(@rdivide,X,X(end,:));
-Y = X./X(end,:);
+function y = renormI(x)
+m = size(x,1);
+x = reshape(x,3,[]);
+y = reshape(x./x(end,:),m,[]);

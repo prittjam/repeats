@@ -36,7 +36,6 @@ detJxy = det(Jxy);
 for k = 1:6
     si(k) = subs(detJxy,[c x y],[ci(k) xi(k) yi(k)])*sdi(k);
 end
-keyboard;
 %%%%%%%%%%%%%%%%%%%%
 % compare to accv10 constraints
 si10 = make_accv10(si);
