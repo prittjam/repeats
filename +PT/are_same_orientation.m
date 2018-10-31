@@ -4,6 +4,10 @@
 %
 %  Written by James Pritts
 %
-function flag = are_same_orientation(u,l)
+function [flag,side] = are_same_orientation(u,l)
+m = size(u,1);
+u = reshape(u,3,[]);
 z = dot(l(:,ones(1,size(u,2))),u);
-flag = all(z/z(1) > 0);
+side = z/z(1) > 0;
+flag = all(side);
+side = prod(reshape(side,m,[]));
