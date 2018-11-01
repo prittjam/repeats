@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf222_to_ql < WRAP.LafRectSolver
+classdef laf222_to_ql < WRAP.RectSolver
     properties
         name = 'H222ql';
         solver = 'accv18';
@@ -8,7 +8,7 @@ classdef laf222_to_ql < WRAP.LafRectSolver
 
     methods
         function this = laf222_to_ql(varargin)
-            this = this@WRAP.LafRectSolver('laf222');   
+            this = this@WRAP.RectSolver('222');   
             this = cmp_argparse(this,varargin{:}); 
         end
 
@@ -23,10 +23,10 @@ classdef laf222_to_ql < WRAP.LafRectSolver
         end
 
         function [q,ll] = cvpr19_fit(this,x,corresp,idx,cc,varargin)
-            x1 = LAF.calc_mu(x(:,1:2:end));
+            x1 = PT.calc_mu(x(:,1:2:end));
             s1 = PT.calc_scale(x(:,1:2:end));
             c1 = ones(1,numel(s1));
-            x2 = LAF.calc_mu(x(:,2:2:end));
+            x2 = PT.calc_mu(x(:,2:2:end));
             s2 = PT.calc_scale(x(:,2:2:end));
             c2 = ones(1,numel(s2));
 
