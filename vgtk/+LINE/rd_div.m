@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function c = rd_div_line(l,cc,q)
+function c = rd_div(l,cc,q)
 assert(q ~= 0, 'The division model parameter must be non-zero');
 c = zeros(size(l));
 cc = reshape(cc,2,[]);
