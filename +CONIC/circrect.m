@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [xx,yy] = rectcirc(border,cc,c)
+function [xx,yy] = circrect(border,cc,c)
 m = nan(1,4);
 b = nan(1,4);
 
