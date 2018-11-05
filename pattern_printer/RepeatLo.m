@@ -61,6 +61,7 @@ classdef RepeatLo < handle
             end
             
 
+            keyboard;
             A = M00.A;
             H = eye(3);
             H(3,:) = transpose(M00.l);            
@@ -83,7 +84,7 @@ classdef RepeatLo < handle
             %                end
             %            end
 
-            xp = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x(:,inl),M00.cc,q));
+            xp = PT.renormI(blkdiag(H,H,H)*PT.ru_div(x(:,inl),M00.cc,q));
             M0 = struct('H', H, ...
                         'cc', M00.cc, ...
                         'q', q);

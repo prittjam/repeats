@@ -1,4 +1,7 @@
-function Ha = laf2x1_to_Amu(u,G)
+function Ha = laf2_to_Amu(u,G,varargin)
+cfg = 
+cfg = cmp_argparse()
+
 X = cmp_splitapply(@(x) ({x}),u,G);    
 Ha = laf2x2_to_Amu_internal(X);   
 
@@ -9,7 +12,7 @@ Z = zeros(3*m,3+3*n);
 
 k = 0;
 for j = 1:numel(X)
-    u = LAF.renormI(X{j});
+    u = PT.renormI(X{j});
     v = u([1:2 7:8 1:2],:)-u([4:5 4:5 7:8],:);
 
     negs = -ones(1,size(v,2));

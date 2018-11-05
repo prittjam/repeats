@@ -24,8 +24,8 @@ classdef RepeatEval < handle
                 q = M.q;
             end
             
-            xu = LAF.ru_div(x,M.cc,q);
-            xp = LAF.renormI(blkdiag(H,H,H)*xu);
+            xu = PT.ru_div(x,M.cc,q);
+            xp = PT.renormI(blkdiag(H,H,H)*xu);
             D2 = [sum((xp(1:2,:)-xp(4:5,:)).^2); ...
                   sum((xp(7:8,:)-xp(4:5,:)).^2); ...
                   sum((xp(7:8,:)-xp(1:2,:)).^2)];
