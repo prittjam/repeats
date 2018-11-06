@@ -5,15 +5,9 @@
 %  Written by James Pritts
 %
 repeats_init();
+
 img_name = 'cropped_dartboard';
-%load(['output/' img_name '_H4ql.mat']);
+solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
+[res,meas,img] = do_one_img(['data/' img_name '.jpg'], solver);
 
-img = Img('url',['data/' img_name '.jpg']);  
-cid_cache = CidCache(img.cid, ...
-                     { 'read_cache', true, 'write_cache', true });
-dr = DR.get(img,cid_cache, ...
-                {'type','all', ...
-                 'reflection', false });
-x = [dr(:).u];
-
-output_all_planes(x,img,model_list);
+output_all_planes(meas.x,img,res.model_list);

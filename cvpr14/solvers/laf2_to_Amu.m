@@ -1,7 +1,4 @@
 function Ha = laf2_to_Amu(u,G,varargin)
-cfg = 
-cfg = cmp_argparse()
-
 X = cmp_splitapply(@(x) ({x}),u,G);    
 Ha = laf2x2_to_Amu_internal(X);   
 

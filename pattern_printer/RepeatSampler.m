@@ -25,7 +25,6 @@ classdef RepeatSampler < handle
             this.freq = hist(this.labeling0,1:max(this.labeling0));
             this.mss = mss; 
             umss = unique(mss);
-
             
             for k = 1:numel(umss)
                 is_good = this.freq >= umss(k); 
@@ -60,28 +59,29 @@ classdef RepeatSampler < handle
             idx(inda) = idx;
         end
 
-        function trial_count = update_trial_count(this,cspond,cs)
-            trial_count = inf;
-            %            cslabeling = this.labeling0.*cs;
-            %            cslabeling(find(cslabeling==0)) = nan;
-            %            cs_freq = hist(cslabeling,1:max(this.labeling0));
-            %            ind = cs_freq > 0;
-            %            p2 = hygepdf(2,this.freq(ind),cs_freq(ind),2);
-            %            p3 = dot(this.p(ind),p2);
-            p3 = sum(cs)/size(cspond,2);
-
-            if p3 > 0
-                N = ceil(log(1-this.confidence)/log(1-p3^(sum(this.mss))));
-            else
-                N = inf;
-            end
-            
-            ub = min([N this.max_trial_count]);
-            trial_count = max([ub this.min_trial_count]);
-
-            eip = p3*100;
-            disp(['Expected inlier percentage: ' num2str(eip,'%04.1f') ...
-                  ' |  # trials needed: ' num2str(trial_count)]);
+        function trial_count = update_trial_count(this,cs)
+%            trial_count = inf;
+%            cslabeling = this.labeling0.*cs;
+%            cslabeling(find(cslabeling==0)) = nan;
+%            cs_freq = hist(cslabeling,1:max(this.labeling0));
+%            ind = cs_freq > 0;
+%            p2 = hygepdf(2,this.freq(ind),cs_freq(ind),2);
+%            p3 = dot(this.p(ind),p2);
+%            %            p3 = sum(cs)/size(cspond,2);
+%
+%            if p3 > 0
+%                N = ceil(log(1-this.confidence)/log(1-p3^(sum(this.mss))));
+%            else
+%                N = inf;
+%            end
+%            
+%            ub = min([N this.max_trial_count]);
+%            trial_count = max([ub this.min_trial_count]);
+%
+%            eip = p3*100;
+%            disp(['Expected inlier percentage: ' num2str(eip,'%04.1f') ...
+%                  ' |  # trials needed: ' num2str(trial_count)]);
+    trial_count = 1000;
         end
     end
 end 

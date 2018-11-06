@@ -6,43 +6,23 @@
 %
 classdef RepeatLo < handle
     properties
-        motion_model = [];
-        metric_solver = [];
         eval = [];
         max_iter = 10;
         %           vqT = 21.026;
         %  reprojT = 21.026;
         %    
-                vqT = 15;
-         reprojT = 15;
-    end
-    
-    methods(Access = private)
-        function Ha = fit_t(this,dr,v,G)
-            Gr = logical([dr(:).reflected]);            
-            Ha = HG.laf2x1_to_Amur(v,G,Gr);
-        end
-        
-        function Ha = fit_Rt(this,dr,v,G)
-            Ha = HG.laf2x1_to_Amu(v,G);
-        end        
+        vqT = 15;
+        reprojT = 15;
     end
 
     methods
         function this = RepeatLo(motion_model,varargin)
             this.eval = RepeatEval();
-            this.motion_model = motion_model;
             [this,~] = cmp_argparse(this,varargin{:});
-            switch this.motion_model
-              case 't'
-                this.metric_solver = @this.fit_t;
-              case 'Rt'
-                this.metric_solver = @this.fit_Rt;
-            end
         end
 
-        function [mle_model,mle_res,mle_stats] = fit(this,x,cspond,M00,res,varargin)
-            inl = unique(cspond(:,res.cs));
+        function [mle_model,mle_res,mle_stats] = fit(this,x,M00,res,varargin)
+            inl = find(res.cs);
             Gsamp = varargin{end-1};
             Gapp = varargin{end};
             N = size(x,2);
@@ -50,47 +30,25 @@ classdef RepeatLo < handle
             G = nan(size(Gapp));
             G(inl) = findgroups(Gapp(inl));
             
-            %            tstinl = find(Gcomp==Gmax);
-            %            figure;
-            %            LAF.draw(gca,x(:,tstinl))
-            %            
             if ~isfield(M00,'q')
                 q = -1e-9;
             else
                 q = M00.q;
             end
-            
 
-            keyboard;
             A = M00.A;
             H = eye(3);
             H(3,:) = transpose(M00.l);            
 %            assert(istriu(M00.A), ...
 %                   'metric upgrade is not upper triangular!');
             H = A*H;
-            
-            %            inl = reshape(cspond(:,res.cs),1,[]);
-            %            if (any(LAF.is_right_handed(x(:,inl))))
-            %                Grect = nan(size(Gapp));  
-            %                Grect(inl) = findgroups(Gapp(inl));
-            %                u = LAF.renormI(blkdiag(H,H,H)*LAF.ru_div(x,this.cc,q));
-            %                A = HG.laf1x2_to_Amu(u,Grect);
-            %                if isempty(A)
-            %                    A = eye(3);
-            %                    G = Gsamp;
-            %                    disp('Metric upgrade failed');
-            %                else
-            %                    G = Gapp;
-            %                end
-            %            end
-
             xp = PT.renormI(blkdiag(H,H,H)*PT.ru_div(x(:,inl),M00.cc,q));
-            M0 = struct('H', H, ...
-                        'cc', M00.cc, ...
+            M0 = struct('H',H, ...
+                        'cc',M00.cc, ...
                         'q', q);
             
             [good_cspond,Rtij00] = ...
-                resection(x,M0,G,this.motion_model, ...
+                resection(x,M0,G,'Rt', ...
                           'vqT',this.vqT); 
             
             mle_stats = [];
@@ -117,7 +75,7 @@ classdef RepeatLo < handle
                     PatternPrinter(M00.cc,x,rtree,Gs,Tlist, ...
                                    Gm,is_inverted,q,A,M00.l,X,Rtij, ...
                                    'motion_model', ...
-                                   this.motion_model);
+                                   'Rt');
                 
                 err0 = pattern_printer.calc_err();
                 sq_err = sum(sum(reshape(err0,6,[]).^2));
@@ -136,7 +94,7 @@ classdef RepeatLo < handle
 
                 unary_cs = err2 < this.reprojT;
 
-                %                mle_model.l = transpose(mle_model.Hinf(3,:));
+                >%                mle_model.l = transpose(mle_model.Hinf(3,:));
                 [loss,E] = this.eval.calc_loss(x,cspond,mle_model);
                 cs = this.eval.calc_cs(E);
                 

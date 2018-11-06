@@ -12,7 +12,7 @@ classdef laf222_to_ql < WRAP.RectSolver
             this = cmp_argparse(this,varargin{:}); 
         end
 
-        function [q,ll] = accv18_fit(this,x,corresp,idx,cc,varargin)
+        function [q,ll] = accv18_fit(this,x,idx,cc,varargin)
             x = reshape(x,3,[]);
             [q,ll] = ...
                 solver_changeofscale_222_new_basis_d2(x(1:2,1:3), ...
@@ -23,7 +23,7 @@ classdef laf222_to_ql < WRAP.RectSolver
                                                       x(1:2,16:18)); 
         end
 
-        function [q,ll] = cvpr19_fit(this,x,corresp,idx,cc,varargin)
+        function [q,ll] = cvpr19_fit(this,x,idx,cc,varargin)
             x1 = PT.calc_mu(x(:,1:2:end));
             s1 = PT.calc_scale(x(:,1:2:end));
             c1 = ones(1,numel(s1));
@@ -35,7 +35,7 @@ classdef laf222_to_ql < WRAP.RectSolver
             ll = [ll;ones(1,size(ll,2))];
         end
                
-        function M = fit(this,x,corresp,idx,cc,varargin)
+        function M = fit(this,x,idx,cc,varargin)
             m = size(x,1);
             M = [];
             A = [1 0 -cc(1); ...
@@ -45,12 +45,12 @@ classdef laf222_to_ql < WRAP.RectSolver
 
             if strcmpi(this.solver,'accv18')
                 tic
-                [q,ll] = this.accv18_fit(xn,corresp,idx,cc, ...
+                [q,ll] = this.accv18_fit(xn,idx,cc, ...
                                          varargin{:});
                 solver_time = toc;
             else
                 tic
-                [q,ll] = this.cvpr19_fit(xn,corresp,idx,cc,varargin{:});
+                [q,ll] = this.cvpr19_fit(xn,idx,cc,varargin{:});
                 solver_time = toc;
             end
             

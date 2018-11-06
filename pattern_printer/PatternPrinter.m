@@ -27,7 +27,7 @@ classdef PatternPrinter < handle
         dz0 = [];
         
         num_Rt_params = [];
-                motion_model = 't';
+        motion_model = 't';
     end
     
     methods(Static)
@@ -80,14 +80,17 @@ classdef PatternPrinter < handle
         
         function [] = pack(this,q,A0,l0,X,Rtij)
             this.q0 = q*sum(2*this.cc)^2;
-            this.A0 = [1 A0(4)/A0(1) A0(5)/A0(1)];
+            if A0(2,1) == 0
+                this.A0 = [1 0 A0(4)/A0(1) A0(5)/A0(1)];
+            else
+                this.A0 = reshape(A0(1:2,1:2),1,[]);
+            end
             this.l0 = l0;
             this.X0 = X;
             this.Rtij0 = Rtij;
             q_idx = 1;
             switch this.motion_model
               case 't'
-                keyboard;
                 H_idx = [1:3]+q_idx(end);
                 X_idx = [1:6*size(X,2)]+H_idx(end);
                 Rtij_idx = ...
@@ -117,14 +120,25 @@ classdef PatternPrinter < handle
             X = this.X0+dX;
             Rtij = this.Rtij0;
             A = eye(3);
+            l = zeros(3,1);
             if numel(dH) == 3
                 l = this.l0+dH(1:3);
                 Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
             elseif numel(dH) == 4
-                A(1,1) = 1;
-                A(1,2) = this.A0(2)+dH(1);
-                A(2,2) = this.A0(3)+dH(2);
-                l = this.l0+[dH(3:4);0];
+                if this.A0(2) == 0
+                    A(1,1) = this.A0(1);
+                    A(2,1) = this.A0(2);
+                    A(1,2) = this.A0(3)+dH(1);
+                    A(2,2) = this.A0(4)+dH(2);
+                    l = this.l0+[dH(3:4);0];
+                else
+                    A(1,1) = this.A0(1)+dH(1);
+                    A(2,1) = this.A0(2)+dH(2);
+                    A(1,2) = this.A0(3)+dH(3);
+                    A(2,2) = this.A0(4)+dH(4);
+                    l(1:2) =  transpose([A(1,1) A(1,2)]);
+                    l(3) = -det(A(1:2,1:2));
+                end
                 Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;
             end
             Hinf = A;

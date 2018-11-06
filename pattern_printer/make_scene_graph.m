@@ -10,7 +10,7 @@ cfg = cmp_argparse(cfg,varargin{:});
 
 Hinf = model0.H;
 
-v = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
+v = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model0.cc,model0.q));
 %xp2 = LAF.apply_rigid_xforms(v(:,corresp(1,:)),Rtij0);
 %dist = sum((xp2-v(:,corresp(2,:))).^2);
 %
@@ -53,15 +53,15 @@ Hinv = inv(Hinf);
 corresp = transpose(rtree.Edges.EndNodes);
 ind = rtree.Edges.Ind;
 
-xp = LAF.renormI(blkdiag(Hinf,Hinf,Hinf)*LAF.ru_div(x,model0.cc,model0.q));
+xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model0.cc,model0.q));
 
 ut_j = ...
-    LAF.rd_div(LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
+    LAF.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
                            LAF.apply_rigid_xforms(xp(:,corresp(1,:)),Rtij)), ...
                model0.cc,model0.q);
 invrt = Rt.invert(Rtij);
 ut_i = ...
-    LAF.rd_div(LAF.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
+    LAF.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
                            LAF.apply_rigid_xforms(xp(:,corresp(2,:)),invrt)), ...
                            model0.cc,model0.q);
 

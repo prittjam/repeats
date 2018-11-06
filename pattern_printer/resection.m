@@ -16,7 +16,6 @@ switch motion_model
 end
 Hinf = model0.H;
 Hinv = inv(model0.H);
-
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model0.cc,model0.q));
 
 xform_list = ...
@@ -43,6 +42,16 @@ d2 = sum([ut_j-x(:,corresp(2,:)); ...
           ut_i-x(:,corresp(1,:))].^2);
 inl = find(double(d2 < cfg.vqT));
 good_corresp = corresp(:,inl);
+%
+%keyboard;
+%hist(G,1:max(G))
+%figure;
+%LAF.draw_groups(gca,xp,G);
+%axis equal;
+%
+%xform_list = laf2xNxN_to_RtxNxN(xp(:,ind2),ind2,motion_solver,true);
+%
+%xprt = LAF.apply_rigid_xforms(xp(:,[xform_list(:).i]),[xform_list(:).Rt])
 
 Rtij = Rtij(:,inl);
 
