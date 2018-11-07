@@ -50,15 +50,10 @@ classdef Ransac < handle
                     is_sample_good = ...
                         this.model.is_sample_good(x,idx);
                     if is_sample_good
-                        %                        try
-
-                        model_list = this.model.fit(x,idx,varargin{:});
-%                        catch excpn
-%                            %                        figure;
-%                            %                        LAF.draw(gca, x(:,[idx{:}]));
-%                            %                        axis equal;
-%                            model_list = [];
-%                        end
+                        try
+                            model_list = this.model.fit(x,idx,varargin{:});
+                        catch excpn
+                        end
                         if ~isempty(model_list)
                             has_model = true;
                             break;
@@ -96,7 +91,8 @@ classdef Ransac < handle
                     stats.model_count = stats.model_count+numel(model_list);
                     loss = inf(numel(model_list),1);
                     for k = 1:numel(model_list)
-                        [loss(k),err{k}] = this.eval.calc_loss(x,model_list(k),varargin{:});
+                        [loss(k),err{k}] = ...
+                            this.eval.calc_loss(x,model_list(k),varargin{:});
                         cs{k} = this.eval.calc_cs(err{k});
                     end
                     [~,mink] = min(loss);
@@ -120,17 +116,19 @@ classdef Ransac < handle
                             opt_res = res;
                         end
                         
-                        [loM,lo_res] = ...
-                            this.do_lo(x,M0,res0,varargin{:});
+                        [loM,lo_res] = this.do_lo(x,M0,res,varargin{:});
                         lo_stats = struct('loM',loM, ...
                                           'lo_res',lo_res, ...
                                           'trial_count',stats.trial_count, ...
                                           'model_count',stats.model_count); ...
                             stats.lo = cat(2,stats.lo,lo_stats);
-
-                        if (lo_res.loss < opt_res.loss)
+                        
+                        assert(lo_res.loss <= res.loss, ...
+                               ['likelihood decreased!']);
+                        if (lo_res.loss <= opt_res.loss)
                             optM = loM;
                             opt_res = lo_res;
+                            opt_res.loss
                         end
                         % Update estimate of est_trial_count, the number
                         % of trial_count to ensure we pick, with
@@ -138,32 +136,12 @@ classdef Ransac < handle
                         N = this.sampler.update_trial_count(opt_res.cs);
                     end   
                 end
-                
                 stats.trial_count = stats.trial_count+1;
-                
                 if (stats.trial_count >= N)
                     break;
                 end
             end
-            
-            if numel(stats.lo) == 0
-                stats.ransac = cat(2,stats.ransac, ...
-                                   struct('M',M, ...
-                                          'res',res, ...
-                                          'model_count', stats.model_count, ...
-                                          'trial_count', stats.trial_count));
-                [loM,lo_res] = this.do_lo(x,M,res,varargin{:});
-                lo_stats = struct('loM',loM, ...
-                                  'lo_res',lo_res, ...
-                                  'trial_count',stats.trial_count, ...
-                                  'model_count',stats.model_count); 
-                stats.lo = cat(2,stats.lo,lo_stats);
-                if (lo_res.loss < opt_res.loss)
-                    optM = loM;
-                    opt_res = lo_res;
-                end
-            end
-            
+
             stats.time_elapsed = toc;               
         end
     end

@@ -7,6 +7,7 @@
 repeats_init();
 
 img_name = 'cropped_dartboard';
+%img_name = 'pattern1b'
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 [res,meas,img] = do_one_img(['data/' img_name '.jpg'], solver);
 

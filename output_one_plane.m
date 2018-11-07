@@ -9,9 +9,24 @@ function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
 [ny,nx,~] = size(img);
 [uimg,~,trect] = IMG.ru_div(img,cc,q);
 
-rimg = render_rectification(img,H,cc,q,v, ...
-                            'MinScale', 0.1, ...
-                            'MaxScale', 3);
+dims = [ny nx]';
+
+border = IMG.calc_rectification_border(dims,H,cc,q,0.1,10,v);
+[rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
+                                        'cspond', v, 'border', border, ...
+                                        'Registration','Similarity', ...
+                                        'Dims',dims);
+
+rect = [1 200 480 850];
+cropped = img.data(250:rect(4),60:rect(3),:)/1.7;
+rect = rect-0.5;
+border = IMG.rect_to_border(rect);
+
+[rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
+                                        'border',border, ...
+                                        'cspond', v, ...
+                                        'Registration','Similarity', ...
+                                        'Dims',dims);
 
 figure;
 subplot(1,3,1);
@@ -21,8 +36,9 @@ imshow(uimg);
 subplot(1,3,3);
 imshow(rimg);
 
+keyboard;
+
 figure;
-dims = [ny nx];
 [rect_rd_div_dscale_img,rect_dscale_img,trect] = render_dscale(dims,H,cc,q,v);
 rect_rd_div_dscale_img = 1./rect_rd_div_dscale_img;
 rect_dscale_img  = 1./rect_dscale_img;
