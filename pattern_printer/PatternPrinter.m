@@ -69,7 +69,7 @@ classdef PatternPrinter < handle
                             rtree.Edges.EndNodes(:,2))) = Gm;
             this.inverted(sub2ind(size(this.inverted),...
                                   rtree.Edges.EndNodes(:,1), ...
-                                  rtree.Edges.EndNodes(:,2))) = is_inverted;
+                                  rtree.Edges.EndNodes(:,2))) = is_inverted(Gm);
             
             this.cc = reshape(cc,2,[]);
             this.x = x;

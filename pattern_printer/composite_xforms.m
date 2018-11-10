@@ -4,8 +4,8 @@
 %
 %  Written by James Pritts
 %
-function [Gs,Rti,Gmj] = composite_xforms(Tlist,Gm,inverted,...
-                                         mtxRtij,X,num_vertices)
+function [Gs,mtxRti,Gmj] = composite_xforms(Tlist,Gm,inverted,...
+                                            mtxRtij,X,num_vertices)
 mtxinvRtij = multinv(mtxRtij);
 
 Gs =  nan(num_vertices,1);
@@ -17,7 +17,6 @@ for k1 = 1:numel(Tlist)
     Gs(T(1,1)) = k1;
     for k2 = 1:size(T,1);
         gm = Gm(T(k2,1),T(k2,2));
-
         Gmj([T(k2,1) T(k2,2)]) = gm;
         if inverted(T(k2,1),T(k2,2))
             mtxRti(:,:,T(k2,2)) = ...
@@ -28,5 +27,3 @@ for k1 = 1:numel(Tlist)
         Gs(T(k2,2)) = k1;
     end
 end
-
-Rti = Rt.mtx_to_params(mtxRti)';

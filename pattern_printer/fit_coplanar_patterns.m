@@ -9,4 +9,9 @@ function [model,res,stats_list] = ...
 ransac = make_ransac(solver,x,Gsamp,Gapp,cc,varargin);
 [model0,res0,stats_list] = ransac.fit(x,cc,Gsamp,Gapp);
 ransac.lo.max_iter = 150;
+
+keyboard;
 [model,res] =  ransac.lo.fit(x,model0,res0,cc,Gsamp,Gapp);
+
+model = model0;
+res = res0;
