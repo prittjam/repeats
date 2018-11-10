@@ -4,10 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [good_corresp,Rtij] = resection(x,model0,G,motion_model,varargin)
-cfg = struct('vqT',21.026);
-cfg = cmp_argparse(cfg,varargin{:});
-
+function [good_corresp,Rtij,d2] = resection(x,model0,G,motion_model,vqT)
 switch motion_model
   case 't'
     motion_solver = 'HG.laf2xN_to_txN';    
@@ -16,6 +13,7 @@ switch motion_model
 end
 Hinf = model0.H;
 Hinv = inv(model0.H);
+
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model0.cc,model0.q));
 
 xform_list = ...
@@ -23,43 +21,30 @@ xform_list = ...
                    deal( { laf2xNxN_to_RtxNxN(xp,ind,motion_solver,true) }), ...
                    xp,1:size(xp,2),G);
 xform_list = [xform_list{:}];
+corresp = [xform_list(:).i; xform_list(:).j];
+Rtij = reshape([xform_list(:).Rt],3,3,[]);
 
-corresp = [xform_list(:).i; ...
-           xform_list(:).j];
-Rtij = [xform_list(:).Rt];
-
-ut_j = ...
-    PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                           LAF.apply_rigid_xforms(xp(:,corresp(1,:)),Rtij)), ...
-               model0.cc,model0.q);
-invrt = Rt.invert(Rtij);
-ut_i = ...
-    PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                           LAF.apply_rigid_xforms(xp(:,corresp(2,:)),invrt)), ...
-                           model0.cc,model0.q);
-
+ut_j =  PT.rd_div(PT.renormI( ...
+    PT.apply_xforms(xp(:,corresp(1,:)),mtimesx(Hinv,Rtij))),...
+                  model0.cc,model0.q);
+invRtij = multinv(Rtij);
+ut_i =  PT.rd_div(PT.renormI( ...
+    PT.apply_xforms(xp(:,corresp(2,:)),mtimesx(Hinv,invRtij))), ...
+                  model0.cc,model0.q);
 d2 = sum([ut_j-x(:,corresp(2,:)); ...
           ut_i-x(:,corresp(1,:))].^2);
-inl = find(double(d2 < cfg.vqT));
-good_corresp = corresp(:,inl);
-%
-%keyboard;
-%hist(G,1:max(G))
-%figure;
-%LAF.draw_groups(gca,xp,G);
-%axis equal;
-%
-%xform_list = laf2xNxN_to_RtxNxN(xp(:,ind2),ind2,motion_solver,true);
-%
-%xprt = LAF.apply_rigid_xforms(xp(:,[xform_list(:).i]),[xform_list(:).Rt])
 
-Rtij = Rtij(:,inl);
+inl = find(double(d2 < vqT));
+good_corresp = corresp(:,inl);
+Rtij = Rtij(:,:,inl);
+d2 = d2(inl);
 
 function xform_list = laf2xNxN_to_RtxNxN(x,ind,motion_solver,do_inversion)
 N = size(x,2);
 [ii,jj] = itril([N N],-1);
 rt = feval(motion_solver,[x(:,ii);x(:,jj)]);
-
-xform_list = struct('Rt',mat2cell(rt,4,ones(1,size(rt,2))), ...
+mtxRt = Rt.params_to_mtx(rt);
+xform_list = struct('Rt', reshape(squeeze(mat2cell(mtxRt,3,3,ones(1, ...
+                                                  size(mtxRt,3)))),1,[]), ....
                     'i', mat2cell(ind(ii),1,ones(1,numel(ii))), ...
                     'j', mat2cell(ind(jj),1,ones(1,numel(jj))));

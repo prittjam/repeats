@@ -4,17 +4,14 @@
 %
 %  Written by James Pritts
 %
-function Gm = segment_motions(x,model,corresp,rt0,varargin)
-cfg.vqT = 21.026;
+function [rt2,Gm,needs_inverted] = segment_motions(x,model,corresp,rt,vqT)
 cfg.num_codes = 1e3;
-[cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 Hinf = model.H;
 Hinv = inv(Hinf);
 
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model.cc, ...
                                                   model.q));
-xp2 = LAF.apply_rigid_xforms(xp(:,corresp(1,:)),rt0);
 
 M = size(corresp,2);
 %if M > cfg.num_codes
@@ -25,27 +22,23 @@ ind = 1:M;
 
 N = numel(ind);
 
-is_inverted = false(1,N);
-[rt,is_inverted] = unique_ro(rt0);
-[corresp(2,is_inverted),corresp(1,is_inverted)] = ...
-    deal(corresp(1,is_inverted),corresp(2,is_inverted));
 [aa,bb] = ndgrid(1:M,1:N);
 
 c1 = corresp(1,aa);
 c2 = corresp(2,aa);
 
 ut_j = LAF.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                              LAF.apply_rigid_xforms(xp(:,c1),rt(:,bb))),...
+                              PT.apply_xforms(xp(:,c1),rt(:,:,bb))),...
                   model.cc,model.q);
-invrt = Rt.invert(rt);
+invrt = multinv(rt);
 ut_i = LAF.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                              LAF.apply_rigid_xforms(xp(:,c2), ...
-                                                  invrt(:,bb))),...
+                              PT.apply_xforms(xp(:,c2), ...
+                                              invrt(:,:,bb))),...
                   model.cc,model.q);
 d2 = sum([ut_j-x(:,c2);  ...
           ut_i-x(:,c1)].^2);
 d2 = reshape(d2,M,N);
-K = double(d2 < cfg.vqT);
+K = double(d2 < vqT);
 
 is_valid_ii = find(any(K,2));
 
@@ -57,11 +50,16 @@ code_ind = find(w>0);
 d2c = d2(:,code_ind);
 [min_d2c,Gm] = min(d2c,[],2);
 
-%assert(all(min_d2c < cfg.vqT), ...
-%       'Motion segmentation increased error.');
-%
-Gm(min_d2c > cfg.vqT) = nan;
-Gm = findgroups(Gm);
+Gm(min_d2c > vqT) = nan;
 
+%assert(all(min_d2c < vqT), ...
+%       'Motion segmentation increased error.');
 %assert(sum(~isnan(Gm))==size(corresp,2), ...
 %       'Some correspondences dont have motions.');
+
+uGm = unique(Gm);
+Gm = findgroups(Gm);
+rt2 = rt(:,:,uGm);
+
+needs_inverted = unique_ro(rt2);
+rt2(:,:,needs_inverted) = multinv(rt2(:,:,needs_inverted));

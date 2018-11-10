@@ -28,9 +28,10 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 xp = ...
                     PT.renormI(blkdiag(H,H,H)*PT.ru_div(x,M(k).cc, ...
                                                         M(k).q));
-                                A{k} = laf2_to_Amu(xp(:,m),findgroups(Gsamp(m))); 
-%                [A{k},l{k}] = ...
-%                    laf2_vl_to_Hmr(xp,corresp,idx,M(k).cc,M(k).l);
+                A{k} =laf2_to_Amu(xp(:,m),findgroups(Gsamp(m))); 
+                %                [A{k},l{k}] = laf2_vl_to_Hmr(xp,idx,M(k).cc, ...
+                %                                            M(k).l);
+                
             end         
             
             if ~isempty(M)
@@ -45,6 +46,12 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                     end
                 end
                 [M(:).A] = A{:};
+
+                HH = eye(3);
+                HH = [M(1).A];
+                HH(3,:) = transpose(M(1).l);
+                xp = ...
+                    PT.renormI(blkdiag(HH,HH,HH)*PT.ru_div(x,M(k).cc,M(k).q));
             end
         end
     end

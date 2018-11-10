@@ -4,12 +4,8 @@
 %
 %  Written by James Pritts
 %
-function [ransac,cspond] = make_ransac(solver,x,Gsamp,Gapp,cc,varargin)
-cspond = ...
-    cmp_splitapply(@(u) { VChooseK(u,2)' }, 1:numel(Gsamp),Gsamp);
-cspond = [ cspond{:} ];
+function ransac = make_ransac(solver,x,Gsamp,Gapp,cc,varargin)
 sampler = RepeatSampler(x,solver.mss,Gsamp);
 eval = NewRepeatEval(varargin{:});
-lo = RepeatLo('Rt',varargin{:});
-
+lo = RepeatLo('Rt',eval,varargin{:});
 ransac = Ransac(solver,sampler,eval,'lo',lo);

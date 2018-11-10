@@ -11,14 +11,14 @@ function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
 
 dims = [ny nx]';
 
-border = IMG.calc_rectification_border(dims,H,cc,q,0.1,10,v);
+border = IMG.calc_rectification_border(dims,H,cc,q,0.1,5,v);
 [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
                                         'cspond', v, 'border', border, ...
                                         'Registration','Similarity', ...
                                         'Dims',dims);
 
 rect = [1 200 480 850];
-cropped = img.data(250:rect(4),60:rect(3),:)/1.7;
+cropped = img(250:rect(4),60:rect(3),:)/1.7;
 rect = rect-0.5;
 border = IMG.rect_to_border(rect);
 
@@ -27,7 +27,7 @@ border = IMG.rect_to_border(rect);
                                         'cspond', v, ...
                                         'Registration','Similarity', ...
                                         'Dims',dims);
-
+%
 figure;
 subplot(1,3,1);
 imshow(img);

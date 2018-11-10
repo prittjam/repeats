@@ -100,7 +100,7 @@ classdef PatternPrinter < handle
                 H_idx = [1:4]+q_idx(end);
                 X_idx = [1:6*size(X,2)]+H_idx(end);
                 Rtij_idx = ...
-                    [1:3*size(Rtij,2)]+X_idx(end);
+                    [1:3*size(Rtij,3)]+X_idx(end);
                 this.num_Rt_params = 3;
             end
             this.params =  struct('q', q_idx,'H', H_idx, ...
@@ -139,7 +139,7 @@ classdef PatternPrinter < handle
                     l(1:2) =  transpose([A(1,1) A(1,2)]);
                     l(3) = -det(A(1:2,1:2));
                 end
-                Rtij(1:3,:) = this.Rtij0(1:3,:)+dRtij;
+                Rtij = mtimesx(this.Rtij0,Rt.params_to_mtx(dRtij));
             end
             Hinf = A;
             Hinf(3,:) = transpose(l);

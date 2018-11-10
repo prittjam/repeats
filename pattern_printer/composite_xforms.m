@@ -5,9 +5,9 @@
 %  Written by James Pritts
 %
 function [Gs,Rti,Gmj] = composite_xforms(Tlist,Gm,inverted,...
-                                         Rtij,X,num_vertices)
-mtx_Rtij = Rt.params_to_mtx(Rtij);
-inv_mtx_Rtij = Rt.params_to_mtx(Rt.invert(Rtij));
+                                         mtxRtij,X,num_vertices)
+mtxinvRtij = multinv(mtxRtij);
+
 Gs =  nan(num_vertices,1);
 Gmj = nan(num_vertices,1);
 mtxRti = repmat(eye(3,3),1,1,num_vertices);
@@ -21,9 +21,9 @@ for k1 = 1:numel(Tlist)
         Gmj([T(k2,1) T(k2,2)]) = gm;
         if inverted(T(k2,1),T(k2,2))
             mtxRti(:,:,T(k2,2)) = ...
-                inv_mtx_Rtij(:,:,gm)*mtxRti(:,:,T(k2,1));
+                mtxinvRtij(:,:,gm)*mtxRti(:,:,T(k2,1));
         else
-            mtxRti(:,:,T(k2,2)) = mtx_Rtij(:,:,gm)*mtxRti(:,:,T(k2,1));
+            mtxRti(:,:,T(k2,2)) = mtxRtij(:,:,gm)*mtxRti(:,:,T(k2,1));
         end
         Gs(T(k2,2)) = k1;
     end
