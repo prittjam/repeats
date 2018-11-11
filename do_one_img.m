@@ -4,7 +4,8 @@
 %
 %  Written by James Pritts
 %
-function [res,meas,img] = do_one_img(img_url,solver,varargin)
+function [model_list,lo_res_list,stats_list,meas,img] = ...
+    do_one_img(img_url,solver,varargin)
 repeats_init();
 dbpath = fileparts(mfilename('fullpath'));
 KeyValDb.getObj('dbfile', [dbpath '/features.db']); 
@@ -18,5 +19,6 @@ dr = DR.get(img,cid_cache, ...
                 {'type','all', ...
                  'reflection', false });
 [x,Gsamp,Gapp] = group_desc(dr);    
-res = rectify_planes(x,Gsamp,Gapp,solver,cc,varargin{:});
+[model_list,lo_res_list,stats_list] = ...
+    rectify_planes(x,Gsamp,Gapp,solver,cc,varargin{:});
 meas = struct('x',x,'Gsamp', Gsamp, 'Gapp', Gapp);

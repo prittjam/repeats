@@ -123,13 +123,12 @@ classdef Ransac < handle
                                           'model_count',stats.model_count); ...
                             stats.lo = cat(2,stats.lo,lo_stats);
                         
-                        assert(lo_res.loss <= opt_res.loss, ...
+                        assert(lo_res.loss <= res.loss, ...
                                ['likelihood decreased!']);
                         if (lo_res.loss <= opt_res.loss)
                             optM = loM;
                             opt_res = lo_res;
                             opt_res.loss
-                            keyboard;
                         end
                         % Update estimate of est_trial_count, the number
                         % of trial_count to ensure we pick, with

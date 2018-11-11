@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [rt2,Gm,needs_inverted] = segment_motions(x,model,corresp,rt,vqT)
+function [rt2,Gm,is_inverted] = segment_motions(x,model,cspond,rt,vqT)
 cfg.num_codes = 1e3;
 
 Hinf = model.H;
@@ -12,32 +12,33 @@ Hinv = inv(Hinf);
 
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model.cc, ...
                                                   model.q));
-
-M = size(corresp,2);
+M = size(cspond,2);
 %if M > cfg.num_codes
 %    ind = randsample(M,cfg.num_codes);
 %else
 ind = 1:M;
     %end
 
-N = numel(ind);
+    N = numel(ind); 
+is_inverted = unique_ro(rt);
 
-[aa,bb] = ndgrid(1:M,1:N);
+cspond([2 1],is_inverted) = cspond(:,is_inverted);
+rt(:,:,is_inverted) = multinv(rt(:,:,is_inverted));
 
-c1 = corresp(1,aa);
-c2 = corresp(2,aa);
-
-ut_j = PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                              PT.apply_xforms(xp(:,c1),rt(:,:,bb))),...
-                  model.cc,model.q);
+ut_j = PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)*...
+                            PT.multiprod(rt,xp(:,cspond(1,:)))), ...
+                            model.cc,model.q);
 invrt = multinv(rt);
-ut_i = PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)* ...
-                            PT.apply_xforms(xp(:,c2), ...
-                                            invrt(:,:,bb))),...
-                  model.cc,model.q);
-d2 = sum([ut_j-x(:,c2);  ...
-          ut_i-x(:,c1)].^2);
+ut_i = PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)*...
+                            PT.multiprod(invrt,xp(:,cspond(2,:)))), ...
+                            model.cc,model.q);
+
+err1 = reshape(ut_j,9,[],size(x(:,cspond(2,:)),2))-x(:,cspond(2,:));
+err2 = reshape(ut_i,9,[],size(x(:,cspond(1,:)),2))-x(:,cspond(1,:));
+
+d2 = sum([err1.^2;err2.^2]);
 d2 = reshape(d2,M,N);
+
 K = double(d2 < vqT);
 
 is_valid_ii = find(any(K,2));
@@ -48,18 +49,39 @@ w = rm_duplicate_motions(K,w0);
 
 code_ind = find(w>0);
 d2c = d2(:,code_ind);
+rt = rt(:,:,code_ind);
 [min_d2c,Gm] = min(d2c,[],2);
 
 Gm(min_d2c > vqT) = nan;
 
 assert(all(min_d2c < vqT), ...
        'Motion segmentation increased error.');
-assert(sum(~isnan(Gm))==size(corresp,2), ...
-       'Some correspondences dont have motions.');
+assert(sum(~isnan(Gm))==size(cspond,2), ...
+       'Some cspondondences dont have motions.');
 
 uGm = unique(Gm);
-Gm = findgroups(Gm);
 rt2 = rt(:,:,uGm);
 
-needs_inverted = unique_ro(rt2);
-rt2(:,:,needs_inverted) = multinv(rt2(:,:,needs_inverted));
+Gm = findgroups(Gm);
+
+check_err(x,cspond,rt2(:,:,Gm),model,vqT,is_inverted);
+
+function d2 = check_err(x,cspond,Rtij,model0,vqT,is_inverted)
+Hinf = model0.H;
+Hinv = inv(Hinf);
+Rtij(:,:,end) = inv(Rtij(:,:,end));
+xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model0.cc,model0.q));
+Rtij(:,:,end) = inv(Rtij(:,:,end));
+ut_j =  PT.rd_div(PT.renormI( ...
+    PT.mtimesx(mtimesx(Hinv,Rtij),xp(:,cspond(1,:)))),...
+                  model0.cc,model0.q);
+invRtij = multinv(Rtij);
+
+ut_i =  PT.rd_div(PT.renormI( ...
+    PT.mtimesx(mtimesx(Hinv,invRtij),xp(:,cspond(2,:)))), ...
+                  model0.cc,model0.q);
+locald2 = sum([ut_j-x(:,cspond(2,:)); ...
+               ut_i-x(:,cspond(1,:))].^2);
+inl = find(double(locald2 < vqT));
+assert(numel(inl)==size(cspond,2), ...
+       'Error did not increase');
