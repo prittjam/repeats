@@ -6,7 +6,7 @@
 %
 function [] = repeats_init()
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
-
+com.mathworks.services.Prefs.setBooleanPref('EditorGraphicalDebugging',false);
 addpath(genpath(cur_path));
 
 features_init();

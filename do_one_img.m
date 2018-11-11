@@ -11,13 +11,13 @@ dbpath = fileparts(mfilename('fullpath'));
 KeyValDb.getObj('dbfile', [dbpath '/features.db']); 
 img = Img('url', img_url);  
 cache_params = { 'read_cache', true, ...
-                 'write_cache', true };
+                 'write_cache', false };
 cid_cache = CidCache(img.cid,cache_params{:});
 [~,name,ext] = fileparts(img_url);
 cc = [(img.width+1)/2 (img.height+1)/2];
 dr = DR.get(img,cid_cache, ...
                 {'type','all', ...
-                 'reflection', false });
+                 'reflection', true });
 [x,Gsamp,Gapp] = group_desc(dr);    
 [model_list,lo_res_list,stats_list] = ...
     rectify_planes(x,Gsamp,Gapp,solver,cc,varargin{:});

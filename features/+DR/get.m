@@ -77,7 +77,9 @@ if isempty(fdr)
     [res_list,~,name_list] = ...
         cid_cache.get_chains(dr_chains,'',@extract,img);
     if cfg.reflection
-        rimg = img.transform(@IMG.reflect);
+        rimgdata = fliplr(img.data);
+        rimg = Img('data',rimgdata,'cid',img.cid);
+        
         [res_list2,~,name_list2] = ...
             cid_cache.get_chains(dr_chains,'ReflectImg',@extract,rimg);
         res_list2 = LAF.reflect(res_list2,img.width);

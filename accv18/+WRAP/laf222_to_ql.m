@@ -13,6 +13,8 @@ classdef laf222_to_ql < WRAP.RectSolver
         end
 
         function [q,ll] = accv18_fit(this,x,idx,cc,varargin)
+            left_handed = ~LAF.is_right_handed(x);
+            x(:,left_handed) = LAF.switch_hands(x(:,left_handed));
             x = reshape(x,3,[]);
             [q,ll] = ...
                 solver_changeofscale_222_new_basis_d2(x(1:2,1:3), ...
