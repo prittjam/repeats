@@ -8,4 +8,4 @@ function [Xp,inl] = sfm(X,Gs,Rti)
 inl = find(~isnan(Gs));
 inlGs = reshape(Gs(inl),1,[]);
 Y = X(:,inlGs);
-Xp = PT.apply_xforms(Y,Rti(:,:,inl));
+Xp = PT.mtimesx(Rti(:,:,inl),Y);

@@ -7,7 +7,8 @@
 function [X,cspond,G,dtheta,dt] = make_cspond_same_Rt(N)
 x = LAF.make_random(N);
 t = 0.9*rand(2,N)-0.45;
-x1 = LAF.translate(x,t);
+T = Rt.params_to_mtx([zeros(1,size(t,2));t;ones(1,size(t,2))]);
+x1 = PT.mtimesx(T,x);
 [x2,dtheta,dt] = do_rigid_xform(x1);
 x = reshape([x1;x2],9,[]);
 M = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
@@ -30,8 +31,9 @@ u = min(as(3,:));
 x2 = zeros(size(x1));
 t = (u-l)*(0.9*rand(1)+0.1);
 dt = bsxfun(@times,t,n);
-Rt = [theta; ...
+uu = [theta; ...
       dt; ...
       ones(1,N)];
+T = Rt.params_to_mtx(uu);
+x2 = PT.mtimesx(T,x1);
 dtheta = theta;
-x2 = LAF.apply_rigid_xforms(x1,Rt);

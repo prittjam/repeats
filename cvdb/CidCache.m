@@ -101,6 +101,7 @@ classdef CidCache < handle
                     name = [name_list{k}{k1} ':'];
                     [res{k}{k1},is_found{k}(k1)] = ...
                         this.get('dr',name(1:end-1));
+                    keyboard;
                 end
             end
             

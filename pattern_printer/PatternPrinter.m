@@ -42,10 +42,6 @@ classdef PatternPrinter < handle
             xpd = CAM.rd_div(xp,mle_impl.cc,q/sum(2*mle_impl.cc)^2);
             x = reshape(mle_impl.x(:,inl),3,[]);
             err = reshape(xpd(1:2,:)-x(1:2,:),[],1);
-            
-            if any(abs(err) > 1e3)
-                keyboard;
-            end
         end
     end
 

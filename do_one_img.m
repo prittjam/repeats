@@ -11,7 +11,7 @@ dbpath = fileparts(mfilename('fullpath'));
 KeyValDb.getObj('dbfile', [dbpath '/features.db']); 
 img = Img('url', img_url);  
 cache_params = { 'read_cache', true, ...
-                 'write_cache', false };
+                 'write_cache', true };
 cid_cache = CidCache(img.cid,cache_params{:});
 [~,name,ext] = fileparts(img_url);
 cc = [(img.width+1)/2 (img.height+1)/2];
