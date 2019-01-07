@@ -8,26 +8,19 @@ function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
     output_one_plane(img,H,cc,q,v)
 [ny,nx,~] = size(img);
 [uimg,~,trect] = IMG.ru_div(img,cc,q);
-
 dims = [ny nx]';
+border = IMG.calc_rectification_border(dims,H,cc,q,1,2,v);
 
-border = IMG.calc_rectification_border(dims,H,cc,q,0.1,5,v);
+figure;
+imshow(img);
+hold on;
+plot(border(:,1),border(:,2),'linewidth',3);
+hold off;
+
 [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
                                         'cspond', v, 'border', border, ...
                                         'Registration','Similarity', ...
                                         'Dims',dims);
-
-rect = [1 200 480 850];
-cropped = img(250:rect(4),60:rect(3),:)/1.7;
-rect = rect-0.5;
-border = IMG.rect_to_border(rect);
-
-[rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
-                                        'border',border, ...
-                                        'cspond', v, ...
-                                        'Registration','Similarity', ...
-                                        'Dims',dims);
-%
 figure;
 subplot(1,3,1);
 imshow(img);
@@ -35,8 +28,6 @@ subplot(1,3,2);
 imshow(uimg);
 subplot(1,3,3);
 imshow(rimg);
-
-keyboard;
 
 figure;
 [rect_rd_div_dscale_img,rect_dscale_img,trect] = render_dscale(dims,H,cc,q,v);

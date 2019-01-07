@@ -6,8 +6,8 @@
 %
 classdef RepeatSampler < handle
     properties
-        min_trial_count = 150;
-        max_trial_count = 1000;
+        min_trial_count = 50;
+        max_trial_count = 300;
         max_num_retries = 200;
         
         confidence = 0.99
@@ -81,7 +81,7 @@ classdef RepeatSampler < handle
 %            eip = p3*100;
 %            disp(['Expected inlier percentage: ' num2str(eip,'%04.1f') ...
 %                  ' |  # trials needed: ' num2str(trial_count)]);
-    trial_count = 1000;
+    trial_count = 100;
         end
     end
 end 
