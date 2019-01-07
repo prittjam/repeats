@@ -56,8 +56,6 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
     end
     
     outbounds = tformfwd(T,cfg.border);
-    
-    keyboard;
 
     timg = imtransform(img,T,'bicubic', ...
                        'XData', [min(outbounds(:,1)) max(outbounds(:,1))], ...
