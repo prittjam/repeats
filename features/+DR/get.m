@@ -72,6 +72,7 @@ cid_cache.add_dependency('vl_dr',[],'parents',last_keys);
 if nargout == 1    
     fdr = cid_cache.get('dr','vl_dr');
 end
+fdr = [];
 
 if isempty(fdr) 
     [res_list,~,name_list] = ...

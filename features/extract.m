@@ -49,28 +49,3 @@ function prev_res = make_prev_res(x,y)
     else
         prev_res = x{y-1};
     end
-
-
-%cur_cfg_chain = cellfun(@(x,y) x{y},cfg_chain,num2cell(curi), ...
-%                            'UniformOutput',false);    
-%end
-%while( ~all(cellfun(@(x) isempty(x),curgen)) )
-%
-%
-%    ugens = curgen(ia);
-%
-%    notempty = find(~cellfun(@(x) strcmp(x,'double'),curname));
-%    i = find(notempty(1) == ia);
-%    prevres(same) = ugens{i}.make(img,cfgs(same),prevres(same));
-%    same = ic == i;
-%
-%    fsame = find(same);
-%    for k = 1:numel(fsame)
-%        res{fsame(k)}{curi(fsame(k))} = prevres{fsame(k)};
-%    end
-%    last = arrayfun(@(x,y) x==y,curi,sizes);
-%    curi(same & ~last) = curi(same & ~last) + 1;
-%    curgen = cellfun(@(x,y) x{y}, gens,num2cell(curi'),'UniformOutput',false);
-%    curgen(last) = {[]};
-%end
-%end

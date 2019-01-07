@@ -101,22 +101,28 @@ classdef CidCache < handle
                     name = [name_list{k}{k1} ':'];
                     [res{k}{k1},is_found{k}(k1)] = ...
                         this.get('dr',name(1:end-1));
-                    keyboard;
                 end
             end
             
             if any(~[is_found{:}]) && nargin > 3
                 res = feval(fmake,chains,varargin{:},res);
-                this.put_chains(chains,res,init_parents);
+                this.put_chains(chains,res,init_parents,is_found);
             end
         end
         
-        function [res,is_found] = put_chains(this,chains,res,init_parents)
+        function [res,is_found] = put_chains(this,chains,res,init_parents,is_found)
+            if nargin < 4
+                szs = cellfun(@numel,is_found);
+                is_found = mat2cell(false(1,numel([res{:}])),1,szs);
+            end
+            
             for k = 1:numel(chains)
                 name = init_parents;
                 for k1 = 1:numel(chains{k})
                     name = [name chains{k}{k1}.get_uname() ':'];
-                    this.put('dr',name(1:end-1),res{k}{k1});
+                    if ~is_found{k}(k1)
+                        this.put('dr',name(1:end-1),res{k}{k1});
+                    end
                 end
             end
         end
@@ -161,14 +167,7 @@ classdef CidCache < handle
                 xor_key = this.get_xor_key(v);
                 if item.read_cache
                     [val,is_found] = this.imagedb.get(table, ...
-                                                      this.cid,[name ':' xor_key]);        
-%                    if is_found && CompressLib.isCompressed(val)
-%                        val = CompressLib.decompress(val);
-%                    end
-%                    if isstruct(val) && ...
-%                        length(fieldnames(val)) == 1 && isfield(val,'convertme')
-%                        val = struct2cell(val);
-%                    end
+                                                      this.cid,[name ':' xor_key]);    
                 end    
             end
             
