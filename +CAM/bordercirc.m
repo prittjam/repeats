@@ -21,3 +21,5 @@ d2 = sum(bsxfun(@minus,[xx;yy],cc).^2);
 [~,ind] = sort(d2);
 xx = xx(ind);
 yy = yy(ind);
+
+
