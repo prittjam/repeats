@@ -23,6 +23,8 @@ xx = xx(ind);
 yy = yy(ind);
 
 
+keyboard;
+
 function [x,y]=linecirc(slope,intercpt,centerx,centery,radius) 
  
 %LINECIRC  Find the intersections of a circle and a line in cartesian space 
