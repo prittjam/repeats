@@ -22,7 +22,6 @@ for k = 1:size(c,2)
     x(:,m*(k-1)+1:m*k) = A*[cos(t);sin(t);ones(1,length(t))];
 end
 
-
 good1 = true(1,size(x,2));
 good2 = good1;
 
