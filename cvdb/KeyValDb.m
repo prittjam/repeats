@@ -12,7 +12,6 @@ classdef KeyValDb < handle
     methods (Static)
         function obj = getObj(varargin) 
             persistent localObjKeyValDb;
-            keyboard;
             if isempty(localObjKeyValDb) || ~isvalid(localObjKeyValDb)
                 localObjKeyValDb = KeyValDb(varargin{:});
             end
