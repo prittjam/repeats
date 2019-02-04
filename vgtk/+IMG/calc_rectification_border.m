@@ -2,7 +2,6 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
     nx = dims(2);
     ny = dims(1);
     
-    keyboard;
     if size(x,2) > 1
         xp =  PT.renormI(H*CAM.ru_div(x,cc,q));
         idx = convhull(xp(1,:),xp(2,:));
