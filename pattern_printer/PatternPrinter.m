@@ -139,7 +139,7 @@ classdef PatternPrinter < handle
                     l(1:2) =  transpose([A(1,1) A(1,2)]);
                     l(3) = -det(A(1:2,1:2));
                 end
-                Rtij = mtimesx(this.Rtij0,Rt.params_to_mtx(dRtij));
+                Rtij2 = multiprod(this.Rtij0,Rt.params_to_mtx(dRtij));
             end
             Hinf = A;
             Hinf(3,:) = transpose(l);

@@ -2,6 +2,7 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
     nx = dims(2);
     ny = dims(1);
     
+    keyboard;
     if size(x,2) > 1
         xp =  PT.renormI(H*CAM.ru_div(x,cc,q));
         idx = convhull(xp(1,:),xp(2,:));
@@ -32,15 +33,18 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
     xq = xx(idx);
     yq = yy(idx);
     
-
     nbw = ~bw;
     [L,n] = bwlabeln(nbw);
     
-    for k = 1:n
-        [yy,xx] = find(L == k);
-        idx = convhull(xx,yy,'simplify',true);
-        xv = xx(idx(1:end-1));
-        yv = yy(idx(1:end-1));
-        bad = inpolygon(xq,yq,xv,yv);
-        border = [xq(~bad) yq(~bad)];
+    if n > 0 
+        for k = 1:n
+            [yy,xx] = find(L == k);
+            idx = convhull(xx,yy,'simplify',true);
+            xv = xx(idx(1:end-1));
+            yv = yy(idx(1:end-1));
+            bad = inpolygon(xq,yq,xv,yv);
+            border = [xq(~bad) yq(~bad)];
+        end
+    else
+        border = [xq yq];
     end
