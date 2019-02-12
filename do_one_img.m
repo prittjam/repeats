@@ -16,9 +16,14 @@ cid_cache = CidCache(img.cid,cache_params{:});
 [~,name,ext] = fileparts(img_url);
 cc = [(img.width+1)/2 (img.height+1)/2];
 dr = DR.get(img,cid_cache, ...
-                {'type','all', ...
-                 'reflection', true });
+                {'type','mser', ...
+                 'reflection', false });
 [x,Gsamp,Gapp] = group_desc(dr);    
+
+figure;
+imshow(img.data);
+LAF.draw_groups(gca,x,Gsamp);
+
 [model_list,lo_res_list,stats_list] = ...
-    rectify_planes(x,Gsamp,Gapp,solver,cc,varargin{:});
+    rectify_planes(x,Gsamp,solver,cc,varargin{:});
 meas = struct('x',x,'Gsamp', Gsamp, 'Gapp', Gapp);

@@ -5,8 +5,7 @@
 %  Written by James Pritts
 %
 function [model_list,lo_res_list,stats_list] = ...
-    rectify_planes(x,Gsamp,Gapp,solver,cc,varargin)
+    rectify_planes(x,G,solver,cc,varargin)
 
 [model_list,lo_res_list,stats_list] = ...
-    fit_coplanar_patterns(solver,x, ...
-                          Gsamp,Gsamp,cc,1);
+    fit_coplanar_patterns(solver,x,G,cc,1);

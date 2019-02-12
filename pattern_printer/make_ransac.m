@@ -4,8 +4,8 @@
 %
 %  Written by James Pritts
 %
-function ransac = make_ransac(solver,x,Gsamp,Gapp,cc,varargin)
-sampler = RepeatSampler(x,solver.mss,Gsamp);
+function ransac = make_ransac(solver,x,G,cc,varargin)
+sampler = RepeatSampler(x,solver.mss,G);
 eval = NewRepeatEval(varargin{:});
 lo = RepeatLo('Rt',eval,varargin{:});
 ransac = Ransac(solver,sampler,eval,'lo',lo);

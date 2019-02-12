@@ -19,7 +19,7 @@ M = size(cspond,2);
 ind = 1:M;
     %end
 
-    N = numel(ind); 
+N = numel(ind); 
 is_inverted = unique_ro(rt);
 
 cspond([2 1],is_inverted) = cspond(:,is_inverted);

@@ -6,4 +6,4 @@
 %
 function v = rd_div(u,cc,k)
 m = size(u,1);
-v = reshape(CAM.ru_div(reshape(u,3,[]),cc,k),m,[]);
+v = reshape(CAM.rd_div(reshape(u,3,[]),cc,k),m,[]);

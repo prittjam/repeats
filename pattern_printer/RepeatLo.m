@@ -20,7 +20,9 @@ classdef RepeatLo < handle
             N = size(x,2);
             Gapp = varargin{2};
             G = findgroups(Gapp);
-            [loss0,E,pattern_printer] = this.eval.calc_loss(x,M00,varargin{:});
+            [loss0,E,pattern_printer] = this.eval.calc_loss(x,M00, ...
+                                                            varargin{:});
+            
             if ~isempty(pattern_printer)
                 [mle_model,mle_stats] = ...
                     pattern_printer.fit('MaxIterations', ...

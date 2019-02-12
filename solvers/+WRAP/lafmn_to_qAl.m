@@ -51,7 +51,9 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 HH = [M(1).A];
                 HH(3,:) = transpose(M(1).l);
                 xp = ...
-                    PT.renormI(blkdiag(HH,HH,HH)*PT.ru_div(x,M(k).cc,M(k).q));
+                    PT.renormI(blkdiag(HH,HH,HH)*PT.ru_div(x, ...
+                                                           M(k).cc, ...
+                                                           M(k).q));
             end
         end
     end

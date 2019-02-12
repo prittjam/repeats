@@ -10,12 +10,13 @@ t = 0.9*rand(2,N)-0.45;
 r = ones(1,N);
 %r = double(rand(1,N) > 0.5);
 %r(r==0) = -1;
-x = LAF.apply_rigid_xforms(repmat(LAF.make_random(1),1,N), ...
-                           [theta;t;r]);
+x = PT.mtimesx(Rt.params_to_mtx([theta;t;r]), ...
+               repmat(LAF.make_random(1),1,N))
+G = repmat(1,1,size(x,2));
 cspond = transpose(nchoosek(1:N,2));
-G = repmat(1,1,size(cspond,2));
 dt = zeros(3,size(cspond,2));
 dtheta = zeros(1,size(cspond,2));
+
 for k = 1:size(cspond,2)
     dtheta(k) = theta(cspond(2,k))-theta(cspond(1,k));
     dt(:,k) = x(1:3,cspond(2,k))-MTX.make_Rz(dtheta(k))*x(1:3,cspond(1,k));

@@ -27,7 +27,7 @@ classdef PatternPrinter < handle
         dz0 = [];
         
         num_Rt_params = [];
-        motion_model = 't';
+        motion_model = 'Rt';
     end
     
     methods(Static)
@@ -125,20 +125,20 @@ classdef PatternPrinter < handle
                 l = this.l0+dH(1:3);
                 Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
             elseif numel(dH) == 4
-                if this.A0(2) == 0
+                %                if this.A0(2) == 0
                     A(1,1) = this.A0(1);
                     A(2,1) = this.A0(2);
                     A(1,2) = this.A0(3)+dH(1);
                     A(2,2) = this.A0(4)+dH(2);
                     l = this.l0+[dH(3:4);0];
-                else
-                    A(1,1) = this.A0(1)+dH(1);
-                    A(2,1) = this.A0(2)+dH(2);
-                    A(1,2) = this.A0(3)+dH(3);
-                    A(2,2) = this.A0(4)+dH(4);
-                    l(1:2) =  transpose([A(1,1) A(1,2)]);
-                    l(3) = -det(A(1:2,1:2));
-                end
+%                else
+%                    A(1,1) = this.A0(1)+dH(1);
+%                    A(2,1) = this.A0(2)+dH(2);
+%                    A(1,2) = this.A0(3)+dH(3);
+%                    A(2,2) = this.A0(4)+dH(4);
+%                    l(1:2) =  transpose([A(1,1) A(1,2)]);
+%                    l(3) = -det(A(1:2,1:2));
+%                end
                 Rtij2 = multiprod(this.Rtij0,Rt.params_to_mtx(dRtij));
             end
             Hinf = A;
