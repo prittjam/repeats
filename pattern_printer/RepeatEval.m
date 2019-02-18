@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-classdef NewRepeatEval < handle
+classdef RepeatEval < handle
     properties    
         max_iter = 10;
         vqT = 15;
@@ -60,7 +60,7 @@ classdef NewRepeatEval < handle
     end 
     
     methods
-        function this = NewRepeatEval(varargin)
+        function this = RepeatEval(varargin)
             [this,~] = cmp_argparse(this,varargin{:});
         end        
        
@@ -68,7 +68,7 @@ classdef NewRepeatEval < handle
             Gapp = varargin{2};
             G = findgroups(Gapp);
             [loss,E,pattern_printer] = ...
-                NewRepeatEval.calc_loss_impl(x,G,M00,this.vqT,this.reprojT);
+                RepeatEval.calc_loss_impl(x,G,M00,this.vqT,this.reprojT);
         end
 
         function cs = calc_cs(this,E)

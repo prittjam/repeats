@@ -4,14 +4,19 @@
 %
 %  Written by James Pritts
 %
-function M = params_to_mtx(Rt)
-if size(Rt,1) < 4
-    Rt(4,:) = ones(1,size(Rt,2));
+
+function M = params_to_mtx(a)
+n = size(a,2);
+if size(a,1) < 4
+    a(4,:) = ones(1,n);
 end
 
-num_xforms = size(Rt,2);
+R = repmat(eye(3,3),1,1,n);
+R(1,1,:) = a(4,:);
 
-c = cos(Rt(1,:));
-s = sin(Rt(1,:));
-z = zeros(1,num_xforms);
-M = reshape([c;s;z;-s;c;z; Rt(2,:); Rt(3,:); ones(1,num_xforms)],3,3,num_xforms);
+c = cos(a(1,:));
+s = sin(a(1,:));
+z = zeros(1,n);
+M = reshape([c;s;z;-s;c;z;a(2,:);a(3,:); ...
+             ones(1,n)],3,3,n);
+M = multiprod(M,R);

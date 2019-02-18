@@ -6,6 +6,6 @@
 %
 function ransac = make_ransac(solver,x,G,cc,varargin)
 sampler = RepeatSampler(x,solver.mss,G);
-eval = NewRepeatEval(varargin{:});
+eval = RepeatEval(varargin{:});
 lo = RepeatLo('Rt',eval,varargin{:});
 ransac = Ransac(solver,sampler,eval,'lo',lo);

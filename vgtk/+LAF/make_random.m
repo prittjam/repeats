@@ -5,22 +5,21 @@
 %  Written by James Pritts
 %
 function sx = make_random(num_lafs)
-x1 = repmat([0 1]',1,num_lafs);
-theta = pi/3*rand(1,num_lafs)+pi/3;
-s = sin(theta);
-c = cos(theta);
-sc = 3*rand(1,num_lafs)+0.1; 
-x3 = bsxfun(@times,sc,[c.*x1(1,:)-s.*x1(2,:);s.*x1(1,:)+c.*x1(2,:)]);
-xc = [x1;ones(1,num_lafs);zeros(2,num_lafs);ones(1,num_lafs);x3; ...
-      ones(1,num_lafs)];
-%is_left = ~LAF.is_right_handed(xc);
-%xc(:,is_left) = LAF.switch_hands(xc(:,is_left));
+theta = -(pi/3)+rand(1,num_lafs)*2*pi/3;
+sc = reshape(3*rand(1,num_lafs)+0.1,1,1,[]);
+x1 = repmat([0 1 1]',1,num_lafs);
+M = Rt.params_to_mtx([theta; ...
+                    zeros(2,num_lafs); ...
+                    ones(1,num_lafs)]);
+M(1:2,1:2,:) = M(1:2,1:2,:).*reshape(sc,1,1,[]);
+x3 = PT.mtimesx(M,[ones(1,num_lafs);zeros(1,num_lafs);ones(1,num_lafs)]);
+xc = [x1;zeros(2,num_lafs); ones(1,num_lafs); x3];
 T = Rt.params_to_mtx([2*pi*rand(1,num_lafs); ...
                     zeros(2,num_lafs); ...
                     ones(1,num_lafs)]);
 xc = PT.mtimesx(T,xc);
 tsc = 0.001*rand(1,num_lafs)+0.001;
-sc = LAF.calc_scale(xc);
+sc = abs(PT.calc_scale(xc));
 s = sqrt(tsc./sc);
 sx = zeros(9,num_lafs);
 for k = 1:numel(s)

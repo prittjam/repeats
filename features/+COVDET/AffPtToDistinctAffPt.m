@@ -19,9 +19,7 @@ classdef AffPtToDistinctAffPt < Gen
                     res{k}.affpt = [];
                     continue;
                end
-                keepind = LAF.get_distinct(cfg_list{k}, ...
-                                           laf_list{k}.affpt);
-                res{k}.affpt = laf_list{k}.affpt(keepind);
+                res{k}.affpt = laf_list{k}.affpt;
             end
         end
     end

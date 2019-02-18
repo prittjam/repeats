@@ -17,7 +17,7 @@ cid_cache = CidCache(img.cid,cache_params{:});
 cc = [(img.width+1)/2 (img.height+1)/2];
 dr = DR.get(img,cid_cache, ...
                 {'type','mser', ...
-                 'reflection', false });
+                 'reflection', true });
 [x,Gsamp,Gapp] = group_desc(dr);    
 
 figure;

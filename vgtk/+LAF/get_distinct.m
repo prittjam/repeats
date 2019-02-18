@@ -12,7 +12,7 @@ drid = [affpt(:).class];
 
 udrid = unique(drid);
 rmind = false(1,num_dr);
-sc = LAF.calc_scale(u);
+sc = abs(PT.calc_scale(u));
 rmind(sc < cfg.min_laf_scale) = true;
 for k = udrid
     ind = find(drid == k);

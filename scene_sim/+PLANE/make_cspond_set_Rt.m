@@ -4,23 +4,28 @@
 %
 %  Written by James Pritts
 %
-function [X,cspond,G,dtheta,dt] = make_cspond_set_Rt(N)
+function [X,cspond,G,params] = make_cspond_set_Rt(N,varargin)
+cfg = struct('reflect',false);
+cfg = cmp_argparse(cfg,varargin{:});
+
+if cfg.reflect
+    r = -ones(1,N);
+else
+    r = ones(1,N);
+end
+
 theta = 2*pi*rand(1,N);
 t = 0.9*rand(2,N)-0.45;
-r = ones(1,N);
-%r = double(rand(1,N) > 0.5);
-%r(r==0) = -1;
-x = PT.mtimesx(Rt.params_to_mtx([theta;t;r]), ...
-               repmat(LAF.make_random(1),1,N))
+M = Rt.params_to_mtx([theta;t;r]);
+
+x = PT.mtimesx(M,repmat(LAF.make_random(1),1,N));
 G = repmat(1,1,size(x,2));
 cspond = transpose(nchoosek(1:N,2));
-dt = zeros(3,size(cspond,2));
-dtheta = zeros(1,size(cspond,2));
 
-for k = 1:size(cspond,2)
-    dtheta(k) = theta(cspond(2,k))-theta(cspond(1,k));
-    dt(:,k) = x(1:3,cspond(2,k))-MTX.make_Rz(dtheta(k))*x(1:3,cspond(1,k));
-end
+invM1 = multinv(M(:,:,cspond(1,:)));
+M2 = M(:,:,cspond(2,:)); 
+dM = multiprod(M2,invM1);
 
 M = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
 X = reshape(M*reshape(x,3,[]),12,[]);
+params = Rt.mtx_to_params(dM);
