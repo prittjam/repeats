@@ -7,8 +7,8 @@
 classdef RepeatEval < handle
     properties    
         max_iter = 10;
-        vqT = 15;
-        reprojT = 15;
+        vqT = 10;
+        reprojT = 10;
     end
     
     methods (Static)

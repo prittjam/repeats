@@ -5,14 +5,12 @@
 %  Written by James Pritts
 %
 function [X,cspond,G,params] = make_cspond_set_Rt(N,varargin)
-cfg = struct('reflect',false);
+cfg = struct('reflect',0.0);
 cfg = cmp_argparse(cfg,varargin{:});
 
-if cfg.reflect
-    r = -ones(1,N);
-else
-    r = ones(1,N);
-end
+r = ones(1,N);
+ind = rand(1,N) < cfg.reflect;
+r(ind) = -1;
 
 theta = 2*pi*rand(1,N);
 t = 0.9*rand(2,N)-0.45;

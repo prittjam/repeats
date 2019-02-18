@@ -4,13 +4,13 @@
 %
 %  Written by James Pritts
 %
-function [x,Gsamp,Gapp] = group_desc(dr)
-Gapp = DR.group_desc_app(dr,'desc_linkage', 'single', ...
-                         'desc_cutoff', 140);
+function [x,G] = group_desc(dr)
+G = DR.group_desc_app(dr,'desc_linkage', 'single', ...
+                      'desc_cutoff', 140);
 %Gr = DR.group_reflections(dr);
 
 %Gr_tmp = Gr;
-%Gr_tmp(find(Gr_tmp == 0)) = -1;
+%Gr_tmp(find(uGr_tmp == 0)) = -1;
 %
 %Gsamp = findgroups(Gapp.*Gr_tmp);
 %freq = hist(Gsamp,1:max(Gsamp));
@@ -18,7 +18,5 @@ Gapp = DR.group_desc_app(dr,'desc_linkage', 'single', ...
 %[~,ind] = ismember(bad_labels,Gsamp);
 %Gsamp(ind) = nan;
 %Gsamp = findgroups(Gsamp);
-
-Gsamp = Gapp;
 
 x = [dr(:).u];
