@@ -52,7 +52,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                                   'UniformOutput',false);
     
     ex_num = 1;
-
+    
     for scene_num = 1:cfg.numscenes
         f = 5*rand(1)+3;
         cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
@@ -71,8 +71,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
             cspond_dict(usample_type{k}) = ...
                 struct('Xlist', Xlist, 'idx', idx, 'G', G);                
         end
-
-        clear idx;
+        
         for q_gt = q_gt_list
             for ccd_sigma = cfg.ccdsigmalist
                 for k = 1:numel(solver_list)
@@ -82,17 +81,18 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                         cspond_dict(solver_sample_type{k});
                     for k2 = 1:samples_drawn
                         X = cspond_info(k2).Xlist;
+                        idx = cspond_info(k2).idx;
+                        G = cspond_info(k2).G;
                         truth = PLANE.make_Rt_gt(scene_num,P,q_gt,cam.cc,ccd_sigma);
                         X4 = reshape(X,4,[]);
                         x = PT.renormI(P*X4);
                         xd = CAM.rd_div(reshape(x,3,[]),...
                                         cam.cc,q_gt);
-                        xdn = ...
-                            reshape(GRID.add_noise(xd,ccd_sigma), ...
-                                    9,[]);       
+                        xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
+                                      9,[]);       
+
                         try
-                            M = ...
-                                solver_list(k).fit(xdn,[],cspond_info(k2).idx,cc);
+                            M = solver_list(k).fit(xdn,idx,cc,G);
                         catch err
                             M = [];
                         end
@@ -163,7 +163,7 @@ function [optq,opt_warp] = calc_opt_warp(gt,cam,M,P,w,h)
     if isfield(M(1),'l')
         for k = 1:numel(M)
             warp_list(k) = ...
-                calc_bmvc16_err(x,gt.l,gt.q,M(k).l,mq(k),gt.cc);
+                TEST.calc_warp_err(x,gt.l,gt.q,M(k).l,mq(k),gt.cc);
         end
     elseif isfield(M(1),'Hu')
 %        for k = 1:numel(M)

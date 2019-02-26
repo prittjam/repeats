@@ -23,7 +23,7 @@ classdef laf222_to_ql < WRAP.RectSolver
                                                       x(1:2,16:18)); 
         end
 
-        function [q,ll] = cvpr19_fit(this,x,idx,cc,varargin)
+        function [q,ll] = ijcv19_fit(this,x,idx,cc,varargin)
             x1 = PT.calc_mu(x(:,1:2:end));
             s1 = PT.calc_scale(x(:,1:2:end));
             c1 = ones(1,numel(s1));
@@ -50,7 +50,7 @@ classdef laf222_to_ql < WRAP.RectSolver
                 solver_time = toc;
             else
                 tic
-                [q,ll] = this.cvpr19_fit(xn,idx,cc,varargin{:});
+                [q,ll] = this.ijcv19_fit(xn,idx,cc,varargin{:});
                 solver_time = toc;
             end
             

@@ -1,17 +1,16 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf32_to_ql < WRAP.LafRectSolver
+classdef laf32_to_ql < WRAP.RectSolver
     properties
         name = 'H32ql';
     end
 
     methods
         function this = laf32_to_ql()
-            this = this@WRAP.LafRectSolver('laf32');
+            this = this@WRAP.RectSolver('32');
         end
 
-        function M = fit(this,x,corresp,idx,cc,varargin)
-
+        function M = fit(this,x,idx,cc,varargin)
             M = [];
             A = [1 0 -cc(1); ...
                  0 1 -cc(2); ...

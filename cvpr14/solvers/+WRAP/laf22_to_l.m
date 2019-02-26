@@ -1,9 +1,8 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf22_to_l < WRAP.LafRectSolver
+classdef laf22_to_l < WRAP.RectSolver
     properties
         q = [];
-        cc = [];
         solver_type = 'polynomial';
     end
 
@@ -52,7 +51,6 @@ classdef laf22_to_l < WRAP.LafRectSolver
 
             H(3,1) = hs(1);
             H(3,2) = hs(2);
-
             H = H * A;
         end
         
@@ -65,30 +63,29 @@ classdef laf22_to_l < WRAP.LafRectSolver
                     cmp_splitapply(@(x) ...
                                    (deal({(x(1:2,:)+x(4:5,:)+x(7:8,:))/3}, ...
                                          {1./ ...
-                                    nthroot(LAF.calc_scale(x),3)})),v,G);
+                                    nthroot(PT.calc_scale(x),3)})),v,G);
                 tic;
                 Hk = WRAP.laf22_to_l.solve_accv10(mu,sc);
                 tmp_solver_time = toc;
                 H = Hk*H;
-                v = LAF.renormI(blkdiag(H,H,H)*u);
+                v = PT.renormI(blkdiag(H,H,H)*u);
                 solver_time = solver_time+tmp_solver_time;
             end
         end        
     end
     
     methods
-        function this = laf22_to_l(cc,varargin)
-            this = this@WRAP.LafRectSolver('laf22');
+        function this = laf22_to_l(varargin)
+            this = this@WRAP.RectSolver('22');
             this = cmp_argparse(this,varargin{:});
-            this.cc = cc;
         end
 
-        function M = fit(this,x,corresp,idx,varargin)
+        function M = fit(this,x,idx,cc,varargin)
             switch(this.solver_type)
               case 'polynomial'
                 M = [];
-                A = [1 0 -this.cc(1); ...
-                     0 1 -this.cc(2); ...
+                A = [1 0 -cc(1); ...
+                     0 1 -cc(2); ...
                      0 0  1];    
                 xd = A*reshape(x(:,[idx{:}]),3,[]);
                 tic

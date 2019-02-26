@@ -1,13 +1,13 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf4_to_ql < WRAP.LafRectSolver
+classdef laf4_to_ql < WRAP.RectSolver
     properties
         name = 'H4ql';
     end
 
     methods
         function this = laf4_to_ql()
-            this = this@WRAP.LafRectSolver('laf4');
+            this = this@WRAP.RectSolver('4');
         end
 
         function M = fit(this,x,corresp,idx,cc,varargin)

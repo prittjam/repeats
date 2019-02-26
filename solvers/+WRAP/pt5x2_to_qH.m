@@ -4,28 +4,21 @@
 %
 %  Written by James Pritts
 %
-classdef pt5x2_to_qH < Solver
-    properties
-        A = [];
-        invA = [];
-        normcc;
-    end
-    
+classdef pt5x2_to_qH 
     methods
-        function this = pt5x2_to_qH(cc)
-            this.A = CAM.make_fitz_normalization(cc);
-            this.invA = inv(this.A); 
-            this.normcc = sum(2*this.invA(1:2,3))^2;
+        function this = pt5x2_to_qH()
         end
         
-        function M = unnormalize(this,M)
-            M.Hu = this.invA*M.Hu*this.A;
-            M.q = M.q/this.normcc;
+        function M = unnormalize(this,M,A,invA,normcc)
+            M.Hu = invA*M.Hu*A;
+            M.q = M.q/normcc;
         end
         
-        function M = fit(this,x,corresp,idx,varargin)
-            m  = corresp(:,idx);
-            xn = this.A*x(:,m);
+        function M = fit(this,x,idx,cc,varargin)
+            A = CAM.make_fitz_normalization(cc);
+            invA = inv(A); 
+            normcc = sum(2*invA(1:2,3))^2;
+            xn = A*x(:,[idx{:}]);
             xng = transpose(reshape(xn,6,[]));
             
             assert(size(xng,1)==5, ...
@@ -44,7 +37,7 @@ classdef pt5x2_to_qH < Solver
             q = cellfun(@(x) real(x),q(is_valid),'UniformOutput',false);
             
             M = struct('Hu',H,'q',q);
-            M = arrayfun(@(m) this.unnormalize(m),M);
+            M = arrayfun(@(m) this.unnormalize(m,A,invA,normcc),M);
         end
     end
 end
