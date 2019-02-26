@@ -12,14 +12,15 @@ Hinv = inv(Hinf);
 
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model.cc, ...
                                                   model.q));
-M = size(cspond,2);
-%if M > cfg.num_codes
-%    ind = randsample(M,cfg.num_codes);
-%else
-ind = 1:M;
-    %end
+%if size(rt,3) > cfg.num_codes
+%    ind = randsample(size(rt,3),cfg.num_codes);
+%    rt = rt(:,:,ind);
+%end
 
-N = numel(ind); 
+%rt = rt(:,:,1:floor(size(rt,3)/2))
+
+M = size(cspond,2);
+N = size(rt,3); 
 is_inverted = unique_ro(rt);
 
 cspond([2 1],is_inverted) = cspond(:,is_inverted);
@@ -33,8 +34,8 @@ ut_i = PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)*...
                             PT.multiprod(invrt,xp(:,cspond(2,:)))), ...
                             model.cc,model.q);
 
-err1 = reshape(ut_j,9,[],size(x(:,cspond(2,:)),2))-x(:,cspond(2,:));
-err2 = reshape(ut_i,9,[],size(x(:,cspond(1,:)),2))-x(:,cspond(1,:));
+err1 = reshape(ut_j,9,M,N)-x(:,cspond(2,:));
+err2 = reshape(ut_i,9,M,N)-x(:,cspond(1,:));
 
 d2 = sum([err1.^2;err2.^2]);
 d2 = reshape(d2,M,N);

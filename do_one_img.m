@@ -13,17 +13,29 @@ img = Img('url', img_url);
 cache_params = { 'read_cache', true, ...
                  'write_cache', true };
 cid_cache = CidCache(img.cid,cache_params{:});
-[~,name,ext] = fileparts(img_url);
-cc = [(img.width+1)/2 (img.height+1)/2];
+cc = [(img.width)/2 (img.height)/2];
 dr = DR.get(img,cid_cache, ...
-                {'type','all', ...
-                 'reflection', true });
-[x,Gsamp,Gapp] = group_desc(dr);    
+                {'type','mser', 'reflection', false });
+[x,G] = group_desc(dr);
 
 figure;
 imshow(img.data);
-LAF.draw_groups(gca,x,Gsamp);
+LAF.draw_groups(gca,x,G);
+G = filter_features(img,x,G);
+figure;
+imshow(img.data);
+LAF.draw_groups(gca,x,G);
+
 
 [model_list,lo_res_list,stats_list] = ...
-    rectify_planes(x,Gsamp,solver,cc,varargin{:});
-meas = struct('x',x,'Gsamp', Gsamp, 'Gapp', Gapp);
+    rectify_planes(x,G,solver,cc,varargin{:});
+meas = struct('x',x, 'G',G);
+
+
+function G = filter_features(img,x,G)
+    areaT = 0.000035*img.area;
+    G(find(abs(PT.calc_scale(x)) < areaT)) = nan;
+    angles = LAF.calc_angle(x);
+    G(find((angles < 1/10*pi) | (angles > 9/10*pi))) = nan;
+
+    G = DR.rm_singletons(findgroups(G));

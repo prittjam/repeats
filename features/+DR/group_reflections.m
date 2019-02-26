@@ -14,4 +14,3 @@ is_reflected = cellfun(@(u) numel(strfind(u,'ReflectImg:')),names);
 keyboard;
 
 Gr = reshape(is_reflected(findgroups([dr.uname])),1,[]);
-

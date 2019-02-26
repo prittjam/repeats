@@ -5,6 +5,3 @@ solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 varargin = {}
 [model_list,lo_res_list,stats_list] = ...
     rectify_planes(x,G,solver,cc,varargin{:});
-
-
-keyboard;

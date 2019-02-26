@@ -42,6 +42,8 @@ classdef PatternPrinter < handle
             xpd = CAM.rd_div(xp,mle_impl.cc,q/sum(2*mle_impl.cc)^2);
             x = reshape(mle_impl.x(:,inl),3,[]);
             err = reshape(xpd(1:2,:)-x(1:2,:),[],1);
+            C = 4;
+            err = sqrt(C^2*2*(sqrt(1+(err/C).^2)-1));
         end
     end
 

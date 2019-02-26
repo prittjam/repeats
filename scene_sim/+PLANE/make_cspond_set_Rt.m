@@ -11,7 +11,6 @@ cfg = cmp_argparse(cfg,varargin{:});
 r = ones(1,N);
 ind = rand(1,N) < cfg.reflect;
 r(ind) = -1;
-
 theta = 2*pi*rand(1,N);
 t = 0.9*rand(2,N)-0.45;
 M = Rt.params_to_mtx([theta;t;r]);
@@ -24,6 +23,6 @@ invM1 = multinv(M(:,:,cspond(1,:)));
 M2 = M(:,:,cspond(2,:)); 
 dM = multiprod(M2,invM1);
 
-M = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-X = reshape(M*reshape(x,3,[]),12,[]);
+T = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
+X = reshape(T*reshape(x,3,[]),12,[]);
 params = Rt.mtx_to_params(dM);

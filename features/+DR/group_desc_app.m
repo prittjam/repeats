@@ -11,17 +11,13 @@ cfg.desc_linkage = 'single';
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 N = numel(dr);
-LAF.is_right_handed([dr(:).u]);
 
 tmp = squeeze(struct2cell(dr)); 
 names = tmp(4,:);
-dr_str = cellfun(@(u) strrep(u,'ReflectImg:',''),names, ...
+names = cellfun(@(u) strrep(u,'ReflectImg:',''),names, ...
                  'UniformOutput',false);
-is_reflected = cellfun(@(u) numel(strfind(u,'ReflectImg:')),names);
-
 Gnames = categorical(names);
 Gunames = findgroups(Gnames);
-
 [T,idx] =  ...
     splitapply(@(x,y) ...
                deal({clusterdata(single([x(:).desc]'), ...

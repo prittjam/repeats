@@ -90,8 +90,7 @@ classdef CidCache < handle
             end
             is_found = cell(1,numel(chains));
             res = cell(numel(chains),1);
-            name_list = {};
-
+            name_list = cell(numel(chains),1);
             for k = 1:numel(chains)
                 name = init_parents;
                 res{k} = cell(1,numel(chains{k}));
