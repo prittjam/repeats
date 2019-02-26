@@ -10,7 +10,7 @@ classdef laf4_to_ql < WRAP.RectSolver
             this = this@WRAP.RectSolver('4');
         end
 
-        function M = fit(this,x,corresp,idx,cc,varargin)
+        function M = fit(this,x,idx,cc,varargin)
             M = [];
             A = [1 0 -cc(1); ...
                  0 1 -cc(2); ...

@@ -90,13 +90,11 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                                         cam.cc,q_gt);
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
-
                         try
                             M = solver_list(k).fit(xdn,idx,cc,G);
                         catch err
                             M = [];
                         end
-                        
                         if ~isempty(M)
                             [~,opt_warp_list(k2)] = ...
                                 calc_opt_warp(truth,cam,M,P,wplane,hplane);
