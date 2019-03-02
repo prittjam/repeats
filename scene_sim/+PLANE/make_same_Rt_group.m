@@ -42,3 +42,4 @@ dM = multiprod(M2,invM1);
 T = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
 X = reshape(T*reshape(x,3,[]),12,[]);
 params = Rt.mtx_to_params(M);
+

@@ -1,6 +1,6 @@
 function [] = make_sensitivity_figs()
 repeats_init();
-sensitivity = load('ct_sensitivity_20180623.mat');
+sensitivity = load('rt_sensitivity_20190302.mat');
 
 data = innerjoin(sensitivity.res,sensitivity.gt, ...
                  'LeftKeys','ex_num','RightKeys','ex_num');

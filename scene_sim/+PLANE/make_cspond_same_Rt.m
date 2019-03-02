@@ -14,7 +14,6 @@ t = 0.9*rand(2,N)-0.45;
 M = Rt.params_to_mtx([theta;t;r]);
 x = PT.mtimesx(M,LAF.make_random(N));
 
-
 r = ones(1,1);
 ind = rand(1,1) < cfg.reflect;
 r(ind) = -1;
