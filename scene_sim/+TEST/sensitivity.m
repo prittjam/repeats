@@ -59,6 +59,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
         P = PLANE.make_viewpoint(cam);
         cspond_dict = containers.Map;
         usample_type = unique(solver_sample_type);
+
         for k = 1:numel(usample_type)
             Xlist = {};
             cspond = {};
@@ -78,7 +79,7 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                     opt_warp_list = nan(1,samples_drawn);
                     cspond_info = ...
                         cspond_dict(solver_sample_type{k});
-                    for k2 = 1:samples_drawn      
+                    for k2 = 1:samples_drawn
                         X = cspond_info(k2).Xlist;
                         idx = cspond_info(k2).idx;
                         G = cspond_info(k2).G;
@@ -112,16 +113,19 @@ function [] = sensitivity(out_name,name_list,solver_list,varargin)
                     tmp_res = res;
                     res = [tmp_res;res_row]; 
                 end
-                gt_row = { ex_num, scene_num, q_gt, ccd_sigma };
+                gt_row = ...
+                    { ex_num, scene_num, q_gt, ccd_sigma };
                 gt = [gt;gt_row];
-                disp(['Computing experiment number ' num2str(ex_num) ...
-                      ' for scene ' num2str(scene_num) ' of ' num2str(cfg.numscenes)]);
-                ex_num = ex_num+1;              
+
+                disp(['Computing ex number ' num2str(ex_num)]);
+                ex_num = ex_num+1;
             end
         end
+        keyboard;
     end
     disp(['Finished']);
     save(out_name,'res','gt','cam');
+
 
 function optq = calc_opt_q(gt,cam,M,P,w,h)
     if isfield(M,'q1')
