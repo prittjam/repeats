@@ -7,7 +7,7 @@
 function [P,x] = make_viewpoint(cam,varargin)
 cfg = struct('phi', rand(1,1)*2*pi, ...
              'theta', rand(1,1)*45*pi/180, ...
-             'w', 1, 'h', 1, 'coa', []);
+             'w', 10, 'h', 10, 'coa', []);
 cfg = cmp_argparse(cfg,varargin{:});
 
 w = cfg.w;
