@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf22_to_qluv < WRAP.LafRectSolver
+classdef laf22_to_qluv < WRAP.RectSolver
     properties
         solver_impl = [];
         name = 'H3.5qluv';
@@ -8,7 +8,7 @@ classdef laf22_to_qluv < WRAP.LafRectSolver
     
     methods
         function this = laf22_to_qluv(cc)
-            this = this@WRAP.LafRectSolver('laf22');
+            this = this@WRAP.RectSolver('22');
             this.solver_impl = WRAP.pt4x2_to_qluv(cc);
         end
         

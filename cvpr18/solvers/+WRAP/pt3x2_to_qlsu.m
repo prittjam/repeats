@@ -80,10 +80,9 @@ classdef pt3x2_to_qlsu < handle & matlab.mixin.Heterogeneous
             M.Hinf(3,:) = transpose(M.l);
         end
         
-        function M = fit(this,x,corresp,idx,cc)
-            m  = corresp(:,idx);
+        function M = fit(this,x,idx,cc)
             A = CAM.make_fitz_normalization(cc);
-            un = A*x(:,m(:));
+            un = A*x(:,idx);
             ung = reshape(un,6,[]);
             assert(size(ung,2)==3, ...
                    'incorrect number of correspondences');

@@ -1,19 +1,16 @@
-%
-%  Copyright (c) 2018 James Pritts
-%  Licensed under the MIT License (see LICENSE for details)
-%
-%  Written by James Pritts
-%
-function [X,cspond,G] = make_cspond_same_t(N)
+function [X,cspond,G] = make_cspond_same_t(N,w,h)
 x = LAF.make_random(N);
 t = 0.9*rand(2,N)-0.45;
 x1 = LAF.translate(x,t);
 x2 = do_translate(x1);
 x = reshape([x1;x2],9,[]);
-M = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-X = reshape(M*reshape(x,3,[]),12,[]);
+M = [[w 0; 0 h] [0 0]';0 0 1];
+M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
+X = reshape(M2*M*reshape(x,3,[]),12,[]);
+
 cspond = reshape([1:2*N],2,[]);
 G = reshape(repmat([1:N],2,1),1,[]);
+
 
 function x2 = do_translate(x1)
 N = size(x1,2);

@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef pt4x2_to_qlusv < Solver
+classdef pt4x2_to_qlusv
     properties
         A = [];
         invA = [];
@@ -42,6 +42,7 @@ classdef pt4x2_to_qlusv < Solver
                 v2 = v2';v3 = v3';
                 k = k';
                 s = s';
+                
               case 'det'
                 tic;
                 [s, l1, l2, k, v1, v2, v3, u1, u2, u3]  = ...
@@ -77,12 +78,8 @@ classdef pt4x2_to_qlusv < Solver
     end
 
     methods          
-        function this = pt4x2_to_qlusv(cc,varargin)
+        function this = pt4x2_to_qlusv(varargin)
             this = cmp_argparse(this,varargin{:});
-            this.A = CAM.make_fitz_normalization(cc);
-            this.invA = inv(this.A); 
-            this.normcc = sum(2*this.invA(1:2,3))^2;
-            this.cc = cc;
         end
         
         function M = unnormalize(this,M)
@@ -101,8 +98,13 @@ classdef pt4x2_to_qlusv < Solver
             M.Hinf(3,:) = transpose(M.l);
         end
         
-        function M = fit(this,x,corresp,idx)
-            m  = corresp(:,idx);
+        function M = fit(this,x,idx,cc,varargin)
+            this.A = CAM.make_fitz_normalization(cc);
+
+            this.invA = inv(this.A); 
+            this.normcc = sum(2*this.invA(1:2,3))^2;
+
+            m = reshape([idx{:}],1,[]);
             xn = this.A*x(:,m);
             xng = reshape(xn,6,[]);
             assert(size(xng,2)==4, ...

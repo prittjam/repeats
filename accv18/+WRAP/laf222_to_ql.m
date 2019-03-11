@@ -52,7 +52,7 @@ classdef laf222_to_ql < WRAP.RectSolver
                 tic
                 [q,ll] = this.ijcv19_fit(xn,idx,cc,varargin{:});
                 solver_time = toc;
-            end
+            end 
             
             qn = q*sum(2*cc)^2;
             good_ind = find((qn < 1) & (qn > -15));

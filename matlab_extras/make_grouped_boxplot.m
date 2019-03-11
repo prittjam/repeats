@@ -14,7 +14,6 @@ cfg = cmp_argparse(cfg,varargin{:});
 group_names = arrayfun(@(x) [char(x)], ...
                        unique(res.(group_list{end})), ...
                        'UniformOutput',false);
-
 for k = 1:numel(group_list)
     group_field = group_list{k};
     [~,uval{k}] = findgroups(res.(group_field));
@@ -48,7 +47,7 @@ ax = axes; % create a temporary axes
 set(ax,'fontsize',6);
 boxplot(ax,data, 'Colors', cfg.colors, ...
         'Symbol',cfg.symbol);
-
+legend('off');
 xticks((0:num_categories-1)*(num_groups)+(num_groups+1)/2);
 
 if isnumeric(categories)
@@ -81,16 +80,17 @@ line(xx,yy,'Color',[0.8 0.8 0.8]);
 axis square;
 pbaspect([16 9 1]);
 
-if strcmpi(cfg.legend,'on')
-    boxes = flipud(findobj(gca, 'Tag', 'Box'));
-    tmp = boxes(1:numel(boxes));
-    legend('boxoff');
-    leg1 = legend(tmp(1:num_groups), ...
-              group_names{:}, ...
-              'Location',cfg.location);
-    set(leg1, 'FontSize', 10);
-    set(leg1,'Interpreter','Latex');
-else
-    legend('off');
-end
 
+legend('off');
+drawnow
+%if strcmpi(cfg.legend,'on')
+%    legend('on')
+%    boxes = flipud(findobj(gca, 'Tag', 'Box'));
+%    tmp = boxes(1:numel(boxes));
+%    legend('boxoff');
+%    leg1 = legend(tmp(1:num_groups), ...
+%                  group_names{:}, ...
+%                  'Location',cfg.location);
+%    set(leg1, 'FontSize', 10);
+%    set(leg1,'Interpreter','Latex');
+%end
