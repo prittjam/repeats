@@ -43,7 +43,7 @@ ax1 = make_grouped_boxplot(res(is_valid,:), ...
                            'legend',is_legend_on);
 
 drawnow;
-keyboard;
+
 cleanfigure;
 matlab2tikz([target_path sprintf('lambda_sensitivity_%s.tikz',rigid_xform)], ...
              'width', '\fwidth','extraAxisOptions',axis_options);
