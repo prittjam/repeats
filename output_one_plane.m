@@ -7,9 +7,10 @@
 function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
     output_one_plane(img,H,cc,q,v)
 [ny,nx,~] = size(img);
-[uimg,~,trect] = IMG.ru_div(img,cc,q);
+[uimg,udtrect,~] = IMG.ru_div(img,cc,q);
+
 dims = [ny nx]';
-border = IMG.calc_rectification_border(dims,H,cc,q,0.1,10,v);
+border = IMG.calc_rectification_border(dims,H,cc,q,0.5,5,v);
 [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
                                         'cspond', v, 'border', border, ...
                                         'Registration','Similarity', ...
@@ -21,6 +22,20 @@ subplot(1,3,2);
 imshow(uimg);
 subplot(1,3,3);
 imshow(rimg);
+
+figure;
+imshow(uimg);
+image(udtrect(1:2),udtrect(3:4),uimg);
+axis off 
+l = transpose(H(3,:));
+LINE.draw_extents(gca,l,'Color','w', ...
+                  'LineWidth', 3, ...
+                  'Color', 'w', ...
+                  'MarkerEdgeColor','w');
+LINE.draw_extents(gca,l,'Color','g', ...
+                  'LineWidth', 2);
+axis equal;
+
 
 %l = transpose(H(3,:));
 %c = LINE.rd_div(l,cc,q);
@@ -81,13 +96,3 @@ imshow(rimg);
 %
 %
 %
-%subplot(1,2,2);
-%image(trect(1:2),trect(3:4),uimg);
-%axis off 
-%LINE.draw_extents(gca,l,'Color','w', ...
-%                  'LineWidth', 3, ...
-%                  'Color', 'w', ...
-%                  'MarkerEdgeColor','w');
-%LINE.draw_extents(gca,l,'Color','g', ...
-%                  'LineWidth', 2);
-%axis equal;

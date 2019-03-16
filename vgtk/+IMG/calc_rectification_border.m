@@ -1,7 +1,7 @@
 function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
     nx = dims(2);
     ny = dims(1);
-    
+
     if size(x,2) > 1
         xp =  PT.renormI(H*CAM.ru_div(x,cc,q));
         idx = convhull(xp(1,:),xp(2,:));
@@ -26,7 +26,7 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
     
     sc_img = sc_img/ref_sc;
     bw = (sc_img > minscale) & (sc_img < maxscale);
- 
+    bw = imerode(bw,strel('square',20));
     [yy,xx] = find(bw);
     idx = convhull(xx,yy,'simplify',true);
     xq = xx(idx);

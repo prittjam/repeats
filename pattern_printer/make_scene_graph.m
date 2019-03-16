@@ -38,9 +38,9 @@ Rtij = Rtij(:,:,rtree.Edges.Ind);
 X = v(:,rvertices);
 
 for k1 = 1:numel(rvertices)
-    Tlist{k1} = bfsearch(rtree,rvertices(k1),{'edgetonew'}); 
+    Tlist{k1} = bfsearch(rtree,rvertices(k1),{'edgetonew','edgetofinished'}); 
 end
-
+keyboard;
 d2 = check_err(x,rtree,Rtij,model0,vqT);
 
 function d2 = check_err(x,rtree,Rtij,model0,vqT)
