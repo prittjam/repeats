@@ -180,8 +180,9 @@ classdef PatternPrinter < handle
             
             for k = 1:numel(this.Tlist)
                 T = this.Tlist{k};
-                TR  = ...
-                    shortestpathtree(this.rtree,T(1),'OutputForm','cell');
+                TR  = shortestpathtree(this.rtree,T(1), ...
+                                       'OutputForm','cell');
+                keyboard;
                 idx = find(~cellfun('isempty',TR));
                 TR = TR(idx); 
                 [~,Locb] = ismember(idx,inl);

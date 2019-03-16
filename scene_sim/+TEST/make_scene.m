@@ -30,8 +30,6 @@ xd = CAM.rd_div(reshape(x,3,[]),...
                 cam.cc,q_gt);
 xdn = reshape(xd,9,[]); 
 
-keyboard;
-
 figure;
 PT.draw_groups(gca,xdn,G);
 drawnow;
