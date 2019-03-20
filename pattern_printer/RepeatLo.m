@@ -33,13 +33,17 @@ classdef RepeatLo < handle
             E = ones(1,size(res.info.cspond,2))*res.info.reprojT;
             E(inl) = sum(E0.^2);
 
-            loss = sum(E);
-            assert(loss <= res.loss,'Likelihood Decreased!');
+            loss = sum(E);           
             cs = this.eval.calc_cs(E);
             mle_res = struct('loss', loss, ...
                              'err', E, ...
                              'cs', cs, ...
                              'info',res.info);
+
+            are_same = PT.are_same_orientation(x,mle_model.l);
+            assert(loss <= res.loss,'Likelihood Decreased!');           
+            assert(are_same, ...
+                   ['There are measurements on both sides of the vanishing line!']);
         end
     end
 end

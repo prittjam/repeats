@@ -10,10 +10,19 @@ classdef RepeatEval < handle
         reprojT = 15;
     end
     
-    methods (Static)
-        function [loss,E,loss_info] = calc_loss_impl(x,G,M00,reprojT)         
+    methods
+        function this = RepeatEval(varargin)
+            [this,~] = cmp_argparse(this,varargin{:});
+        end        
+       
+        function [loss,E,loss_info] = calc_loss(this,x,M00,varargin)         
+            Gapp = varargin{2};
+            G = findgroups(Gapp);
+            [loss,E,loss_info] = RepeatEval.calc_loss_impl(x,G,M00, ...
+                                                           this.reprojT);
+            
             N = size(x,2); 
-           
+            
             if ~isfield(M00,'q')
                 q = -1e-9;
             else
@@ -46,24 +55,11 @@ classdef RepeatEval < handle
                 E0 = theloss(x,cspond(:,inl),Gm(inl),q,M0.cc,H,Rtij);
                 E(inl) = sum(E0.^2);
                 loss = sum(E);
-                loss_info= struct('cspond', cspond, ...
-                                  'inl', inl, ...
-                                  'Gm', Gm, ...
-                                  'Rtij', Rtij, ...
-                                  'reprojT', reprojT);
+                loss_info = struct('cspond', cspond, ...
+                                   'Gm', Gm, ...
+                                   'Rtij', Rtij, ...
+                                   'reprojT', reprojT);
             end
-        end
-    end 
-    
-    methods
-        function this = RepeatEval(varargin)
-            [this,~] = cmp_argparse(this,varargin{:});
-        end        
-       
-        function [loss,E,loss_info] = calc_loss(this,x,M00,varargin)         
-            Gapp = varargin{2};
-            G = findgroups(Gapp);
-            [loss,E,loss_info] = RepeatEval.calc_loss_impl(x,G,M00,this.reprojT);
         end
 
         function cs = calc_cs(this,E)

@@ -16,9 +16,12 @@ load(['output/' img_name '.mat']);
 % 
 k=1;
 ind = find(~isnan(model_list(k).Gm));
+
+
+
 v = reshape(meas.x(:,unique(lo_res_list.info.cspond(lo_res_list.info.inl))),3,[]);
 
-sides = side(cspond(:,d2inl));
+sides = side(cspond(:,));
 [~,best_side] = max(hist(sides,[1,2]));
 side_inl =  find(all(sides == best_side));
 inl = d2inl(side_inl);

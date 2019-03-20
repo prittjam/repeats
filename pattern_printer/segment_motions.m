@@ -63,7 +63,7 @@ rt2 = rt(:,:,uGm);
 
 Gm = findgroups(Gm);
 
-check_err(x,cspond,rt2(:,:,Gm),model,vqT,is_inverted);
+%check_err(x,cspond,rt2(:,:,Gm),model,vqT,is_inverted);
 
 function d2 = check_err(x,cspond,Rtij,model0,vqT,is_inverted)
 Hinf = model0.H;
