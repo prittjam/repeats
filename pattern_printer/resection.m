@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [good_corresp,Rtij,d2] = resection(x,model0,G,motion_model,vqT)
+function [cspond,Rtij,inl] = resection(x,model0,G,motion_model,vqT)
 switch motion_model
   case 't'
     motion_solver = 'HG.laf2xN_to_txN';    
@@ -14,6 +14,8 @@ end
 Hinf = model0.H;
 Hinv = inv(model0.H);
 
+l = transpose(model0.H(3,:));
+[~,side] = PT.are_same_orientation(x,l);
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model0.cc,model0.q));
 
 xform_list = ...
@@ -21,26 +23,25 @@ xform_list = ...
                    deal( { laf2xNxN_to_RtxNxN(xp,ind,motion_solver,true) }), ...
                    xp,1:size(xp,2),G);
 xform_list = [xform_list{:}];
-corresp = [xform_list(:).i; xform_list(:).j];
+cspond = [xform_list(:).i; xform_list(:).j];
 
 Rtij = reshape([xform_list(:).Rt],3,3,[]);
 ut_j =  PT.rd_div(PT.renormI( ...
-    blkdiag(Hinv,Hinv,Hinv)*PT.mtimesx(Rtij,xp(:,corresp(1,:)))),...
-                   model0.cc,model0.q);
+    PT.mtimesx(multiprod(Hinv,Rtij),xp(:,cspond(1,:)))),model0.cc,model0.q);
 
 invRtij = multinv(Rtij);
 ut_i =  PT.rd_div(PT.renormI( ...
-    PT.mtimesx(multiprod(Hinv,invRtij),xp(:,corresp(2,:)))), ...
-                  model0.cc,model0.q);
+    PT.mtimesx(multiprod(Hinv,invRtij),xp(:,cspond(2,:)))),model0.cc,model0.q);
 
-d2 = sum([ut_j-x(:,corresp(2,:)); ...
-          ut_i-x(:,corresp(1,:))].^2);
+d2 = sum([ut_j-x(:,cspond(2,:)); ...
+          ut_i-x(:,cspond(1,:))].^2);
 
-inl = find(double(d2 < vqT));
+d2inl = find(d2 < vqT);
+sides = side(cspond(:,d2inl));
+[~,best_side] = max(hist(sides,[1,2]));
+side_inl =  find(all(sides == best_side));
+inl = d2inl(side_inl);
 
-good_corresp = corresp(:,inl);
-Rtij = Rtij(:,:,inl);
-d2 = d2(inl);
 
 function xform_list = laf2xNxN_to_RtxNxN(x,ind,motion_solver,do_inversion)
 N = size(x,2);

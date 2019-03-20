@@ -26,7 +26,6 @@ G = filter_features(x,G,img);
 
 meas = struct('x',x,'G',G);
 
-
 function G = filter_features(x,G,img)
     areaT = 0.000035*img.area;
     G(find(abs(PT.calc_scale(x)) < areaT)) = nan;

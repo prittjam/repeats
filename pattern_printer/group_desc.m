@@ -6,7 +6,7 @@
 %
 function [x,G] = group_desc(dr)
 G = DR.group_desc_app(dr,'desc_linkage', 'single', ...
-                      'desc_cutoff', 180);
+                      'desc_cutoff', 160);
 %Gr = DR.group_reflections(dr);
 
 %Gr_tmp = Gr;

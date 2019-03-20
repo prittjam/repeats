@@ -11,7 +11,7 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
         refpt = x;
     end  
     l = transpose(H(3,:));
-
+    l = l/l(3);
     [sc_img,si_fn] = IMG.calc_dscale(dims,l,cc,q);
     if q == 0
         ref_sc = si_fn(l(1),l(2),1,refpt(1),refpt(2));
@@ -28,6 +28,7 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
     bw = (sc_img > minscale) & (sc_img < maxscale);
     bw = imerode(bw,strel('square',20));
     [yy,xx] = find(bw);
+    
     idx = convhull(xx,yy,'simplify',true);
     xq = xx(idx);
     yq = yy(idx);

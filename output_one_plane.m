@@ -9,20 +9,6 @@ function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
 [ny,nx,~] = size(img);
 [uimg,udtrect,~] = IMG.ru_div(img,cc,q);
 
-dims = [ny nx]';
-border = IMG.calc_rectification_border(dims,H,cc,q,0.5,5,v);
-[rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
-                                        'cspond', v, 'border', border, ...
-                                        'Registration','Similarity', ...
-                                        'Dims',dims);
-figure;
-subplot(1,3,1);
-imshow(img);
-subplot(1,3,2);
-imshow(uimg);
-subplot(1,3,3);
-imshow(rimg);
-
 figure;
 imshow(uimg);
 image(udtrect(1:2),udtrect(3:4),uimg);
@@ -35,6 +21,24 @@ LINE.draw_extents(gca,l,'Color','w', ...
 LINE.draw_extents(gca,l,'Color','g', ...
                   'LineWidth', 2);
 axis equal;
+
+keyboard;
+dims = [ny nx]';
+border = IMG.calc_rectification_border(dims,H,cc,q,0.5,8,v);
+[rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
+                                        'cspond', v, 'border', border, ...
+                                        'Registration','Similarity', ...
+                                        'Dims',dims);
+figure;
+subplot(1,3,1);
+imshow(img);
+subplot(1,3,2);
+imshow(uimg);
+subplot(1,3,3);
+imshow(rimg);
+
+drawnow;
+
 
 
 %l = transpose(H(3,:));

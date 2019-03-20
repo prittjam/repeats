@@ -5,9 +5,12 @@
 %  Written by James Pritts
 %
 function [flag,side] = are_same_orientation(u,l)
-m = size(u,1);
+m = size(u,1)/3;
 u = reshape(u,3,[]);
-z = dot(l(:,ones(1,size(u,2))),u);
+z = l'*u;
 side = z/z(1) > 0;
 flag = all(side);
-side = prod(reshape(side,m,[]));
+if m > 1
+    side = prod(reshape(side,m,[]));
+end
+side = findgroups(side);

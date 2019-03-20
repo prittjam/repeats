@@ -11,6 +11,4 @@ ransac = make_ransac(solver,x,G,cc,varargin);
 ransac.lo.max_iter = 150;
 [loss0,E] = ransac.eval.calc_loss(x,model0,cc,G,num_planes,varargin);
 %[model,res] =  ransac.lo.fit(x,model0,res0,cc,G);
-
-model = model0;
-res = res0;
+model = model0;res = res0;

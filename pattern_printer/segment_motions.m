@@ -18,7 +18,6 @@ xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model.cc, ...
 %end
 
 %rt = rt(:,:,1:floor(size(rt,3)/2))
-
 M = size(cspond,2);
 N = size(rt,3); 
 is_inverted = unique_ro(rt);
@@ -43,7 +42,6 @@ d2 = reshape(d2,M,N);
 K = double(d2 < vqT);
 
 is_valid_ii = find(any(K,2));
-
 K = K(is_valid_ii,any(K,1));
 w0 = lp_vq(K);
 w = rm_duplicate_motions(K,w0);

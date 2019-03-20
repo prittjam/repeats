@@ -21,8 +21,7 @@ classdef Ransac < handle
             loM = [];
             lo_res = [];
             if ~isempty(this.lo)
-                [loM,lo_res] = this.lo.fit(x,M,res, ...
-                                           varargin{:});
+                [loM,lo_res] = this.lo.fit(x,M,res,varargin{:});
             end
         end
 
@@ -91,7 +90,7 @@ classdef Ransac < handle
                     stats.model_count = stats.model_count+numel(model_list);
                     loss = inf(numel(model_list),1);
                     for k = 1:numel(model_list)
-                        [loss(k),err{k}] = ...
+                        [loss(k),err{k},loss_info{k}] = ...
                             this.eval.calc_loss(x,model_list(k),varargin{:});
                         cs{k} = this.eval.calc_cs(err{k});
                     end
@@ -100,6 +99,7 @@ classdef Ransac < handle
                     res0 = struct('err', err{mink}, ...
                                   'loss', loss(mink), ...
                                   'cs', cs{mink}, ...
+                                  'info', loss_info(mink), ...
                                   'mss', {idx});
                     if (sum(res0.cs) > 0) && ...
                             (res0.loss < res.loss) && ...
@@ -123,8 +123,7 @@ classdef Ransac < handle
                                           'model_count',stats.model_count); ...
                             stats.lo = cat(2,stats.lo,lo_stats);
                         
-                        assert(lo_res.loss <= res.loss, ...
-                               ['likelihood decreased!']);
+                        assert(lo_res.loss <= res.loss, ['likelihood decreased!']);
                         if (lo_res.loss <= opt_res.loss)
                             optM = loM;
                             opt_res = lo_res;

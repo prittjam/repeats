@@ -7,15 +7,13 @@
 classdef RepeatEval < handle
     properties    
         max_iter = 10;
-        vqT = 15;
         reprojT = 15;
     end
     
     methods (Static)
-        function [loss,E,pattern_printer] = ...
-                calc_loss_impl(x,G,M00,vqT,reprojT)         
+        function [loss,E,loss_info] = calc_loss_impl(x,G,M00,reprojT)         
             N = size(x,2); 
-            
+           
             if ~isfield(M00,'q')
                 q = -1e-9;
             else
@@ -30,31 +28,29 @@ classdef RepeatEval < handle
                         'cc',M00.cc, ...
                         'q', q);
             
-            [good_cspond,Rtij00,d200] = resection(x,M0,G,'Rt',vqT); 
-            
-            E = reprojT*ones(1,N);
+            [cspond,Rtij0,inl] = resection(x,M0,G,'Rt',reprojT); 
+            E = ones(1,size(cspond,2))*reprojT;
             loss = sum(E);
-            pattern_printer = [];
+            loss_info = struct;
+            
+            Gm = nan(1,size(cspond,2));
 
-            if ~isempty(good_cspond)
-                [rtree,X,Rtij0,Tlist,d20] = ...
-                    make_scene_graph(x,good_cspond,M0,Rtij00,vqT);
-                [Rtij,Gm,needs_inverted] = ...
-                    segment_motions(x,M0,rtree.Edges.EndNodes',Rtij0,vqT);
-                
-                Gs = nan(1,N);
-                inl = unique(rtree.Edges.EndNodes);
-                Gs(inl) = findgroups(G(inl));
+            if any(inl)
+                [Rtij,Gm(inl),needs_inverted] = ...
+                    segment_motions(x,M0,cspond(:,inl),Rtij0(:,:,inl),reprojT);
+                [cspond(1,inl(needs_inverted)), ...
+                 cspond(2,inl(needs_inverted))] = ...
+                    deal(cspond(2,inl(needs_inverted)), ...
+                         cspond(1,inl(needs_inverted)));
 
-                pattern_printer = ...
-                    PatternPrinter(M00.cc,x,rtree,Gs,Tlist, ...
-                                   Gm,needs_inverted,q,A,M00.l,X,Rtij, ...
-                                   'motion_model', 'Rt');
-                
-                E0 = pattern_printer.calc_err();
-                E = ones(1,N)*reprojT;
-                E(~isnan(Gs)) = sum(reshape(E0,6,[]).^2);
+                E0 = theloss(x,cspond(:,inl),Gm(inl),q,M0.cc,H,Rtij);
+                E(inl) = sum(E0.^2);
                 loss = sum(E);
+                loss_info= struct('cspond', cspond, ...
+                                  'inl', inl, ...
+                                  'Gm', Gm, ...
+                                  'Rtij', Rtij, ...
+                                  'reprojT', reprojT);
             end
         end
     end 
@@ -64,11 +60,10 @@ classdef RepeatEval < handle
             [this,~] = cmp_argparse(this,varargin{:});
         end        
        
-        function [loss,E,pattern_printer] = calc_loss(this,x,M00,varargin)         
+        function [loss,E,loss_info] = calc_loss(this,x,M00,varargin)         
             Gapp = varargin{2};
             G = findgroups(Gapp);
-            [loss,E,pattern_printer] = ...
-                RepeatEval.calc_loss_impl(x,G,M00,this.vqT,this.reprojT);
+            [loss,E,loss_info] = RepeatEval.calc_loss_impl(x,G,M00,this.reprojT);
         end
 
         function cs = calc_cs(this,E)

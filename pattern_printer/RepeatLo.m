@@ -16,27 +16,30 @@ classdef RepeatLo < handle
             this.eval = eval;
         end
 
-        function [mle_model,mle_res,mle_stats] = fit(this,x,M00,res,varargin)
+        function [mle_model,mle_res,mle_stats] = fit(this,x,M0,res,varargin)
             N = size(x,2);
-            Gapp = varargin{2};
-            G = findgroups(Gapp);
-            [loss0,E,pattern_printer] = this.eval.calc_loss(x,M00, ...
-                                                            varargin{:});
             
-            if ~isempty(pattern_printer)
-                [mle_model,mle_stats] = ...
-                    pattern_printer.fit('MaxIterations', ...
-                                        this.max_iter);               
-                inl = ~isnan(mle_model.Gs);
-                err = this.eval.reprojT*ones(1,N);
-                err(~isnan(mle_model.Gs)) = mle_stats.sqerr;
-                cs = this.eval.calc_cs(err);
-                loss = sum(err);
-                assert(loss <= loss0, 'likelihood decreased!');
-                mle_res = struct('loss', loss, ...
-                                 'err', err, ...
-                                 'cs', cs);
-            end
+            cspond = res.info.cspond(:,res.info.inl);
+            Gm = res.info.Gm(res.info.inl);
+            Rtij = res.info.Rtij;
+            inl = res.info.inl;
+            pattern_printer = PatternPrinter2(x,M0.cc,Gm,M0.q, ...
+                                              M0.A,M0.l,Rtij,cspond);
+            [mle_model,mle_stats] = pattern_printer.fit('MaxIterations',this.max_iter); 
+
+            E0 = theloss(x,cspond,Gm,...
+                         mle_model.q,mle_model.cc, ...
+                         mle_model.Hr,mle_model.Rtij);
+            E = ones(1,size(res.info.cspond,2))*res.info.reprojT;
+            E(inl) = sum(E0.^2);
+
+            loss = sum(E);
+            assert(loss <= res.loss,'Likelihood Decreased!');
+            cs = this.eval.calc_cs(E);
+            mle_res = struct('loss', loss, ...
+                             'err', E, ...
+                             'cs', cs, ...
+                             'info',res.info);
         end
     end
 end
