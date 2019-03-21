@@ -17,8 +17,6 @@ load(['output/' img_name '.mat']);
 k=1;
 ind = find(~isnan(model_list(k).Gm));
 
-
-
 v = reshape(meas.x(:,unique(lo_res_list.info.cspond(lo_res_list.info.inl))),3,[]);
 
 sides = side(cspond(:,));

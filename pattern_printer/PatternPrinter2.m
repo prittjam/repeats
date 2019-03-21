@@ -103,7 +103,7 @@ classdef PatternPrinter2 < handle
                 dz = this.dz0;
             end
             [q,Hinf,Rtij] = this.unpack(dz);            
-            cost = theloss(this.x,this.cspond,this.Gm,q/sum(2*this.cc)^2,this.cc,Hinf,Rtij);
+            cost = calc_cost(this.x,this.cspond,this.Gm,q/sum(2*this.cc)^2,this.cc,Hinf,Rtij);
             cost = reshape(cost,3,[]);
             cost = reshape(cost(1:2,:),[],1);
         end

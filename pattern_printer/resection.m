@@ -26,21 +26,24 @@ xform_list = [xform_list{:}];
 cspond = [xform_list(:).i; xform_list(:).j];
 
 Rtij = reshape([xform_list(:).Rt],3,3,[]);
+invRtij = multinv(Rtij);
 ut_j =  PT.rd_div(PT.renormI( ...
     PT.mtimesx(multiprod(Hinv,Rtij),xp(:,cspond(1,:)))),model0.cc,model0.q);
-
-invRtij = multinv(Rtij);
 ut_i =  PT.rd_div(PT.renormI( ...
     PT.mtimesx(multiprod(Hinv,invRtij),xp(:,cspond(2,:)))),model0.cc,model0.q);
-
 d2 = sum([ut_j-x(:,cspond(2,:)); ...
           ut_i-x(:,cspond(1,:))].^2);
-
 d2inl = find(d2 < vqT);
 sides = side(cspond(:,d2inl));
-[~,best_side] = max(hist(sides,[1,2]));
+[~,best_side] = max(hist(sides(:),[1,2]));
 side_inl =  find(all(sides == best_side));
+
 inl = d2inl(side_inl);
+
+inlx = unique(cspond(:,inl));
+[are_same,side] = PT.are_same_orientation(x(:,inlx),l);
+assert(are_same, ...
+       ['There are measurements on both sides of the vanishing line!']);
 
 
 function xform_list = laf2xNxN_to_RtxNxN(x,ind,motion_solver,do_inversion)
