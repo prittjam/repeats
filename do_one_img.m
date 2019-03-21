@@ -16,7 +16,7 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
     cid_cache = CidCache(img.cid,cache_params{:});
     cc = [(img.width)/2 (img.height)/2];
     dr = DR.get(img,cid_cache, ...
-                    {'type','mser', 'reflection', false });
+                    {'type','mser', 'reflection', true});
     [x,G] = group_desc(dr);
 
     G = filter_features(x,G,img);

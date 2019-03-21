@@ -4,23 +4,35 @@
 %
 %  Written by James Pritts and Denys Rozumnyi
 %
-function [Gapp,Gr] = group_desc(dr,varargin)
+function G = group_desc_app(dr,varargin)
+cfg.desc_cutoff = 150;
+cfg.desc_linkage = 'single';
+
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
-G = DR.group_desc_app(dr);
-Gr = DR.group_reflections(dr);
 
-%if cfg.rm_duplicates
-%    Gapp = findgroups(msplitapply(@(dr,G) rm_duplicates([dr(:).u],G),dr,Gapp,Gapp));
-%end
+N = numel(dr);
 
-keyboard;
-if ~cfg.group_reflections
-    Gr_tmp = Gr;
-    Gr_tmp(find(Gr_tmp == 0)) = -1;
-    Gapp = findgroups(Gapp.*Gr_tmp);
-    freq = hist(Gapp,1:max(Gapp));
-    bad_labels = find(freq < 2);
-    [~,ind] = ismember(bad_labels,Gapp);
-    Gapp(ind) = nan;
-    Gapp = findgroups(Gapp);
+tmp = squeeze(struct2cell(dr)); 
+names = tmp(4,:);
+names = cellfun(@(u) strrep(u,'ReflectImg:',''),names, ...
+                 'UniformOutput',false);
+Gnames = categorical(names);
+Gunames = findgroups(Gnames);
+[T,idx] =  ...
+    splitapply(@(x,y) ...
+               deal({clusterdata(single([x(:).desc]'), ...
+                                 'linkage',cfg.desc_linkage, ...
+                                 'criterion','distance', ...
+                                 'cutoff',cfg.desc_cutoff)},{y}), ... 
+               dr,1:numel(dr),Gunames);
+
+maxT = 0;
+for k = 1:numel(T)
+    G(idx{k}) = T{k}+maxT;
+    maxT = max(G);
 end
+
+freq = hist(G,1:max(G));
+[~,idxb] = ismember(find(freq == 1),G);
+G(idxb) = nan;
+G = reshape(findgroups(G),1,[]);
