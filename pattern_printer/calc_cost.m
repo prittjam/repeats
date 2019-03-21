@@ -1,4 +1,4 @@
-function cost = calc_cost(x,cspond,Gm,q,cc,Hinf,Rtij)
+function [cost,xp] = calc_cost(x,cspond,Gm,q,cc,Hinf,Rtij)
 Hinv = inv(Hinf);
 invRtij = multinv(Rtij);
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,cc,q));

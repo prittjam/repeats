@@ -39,7 +39,8 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
         [T,A] = register_by_affinity(cfg.cspond,T0);
       case 'similarity'
         assert(~isempty(cfg.cspond), ...
-               ['You cannot register the rectification without inliers!']);
+               ['You cannot register the rectification without ' ...
+                'inliers!']);
         [T,A] = register_by_similarity(cfg.cspond,T0);
       case 'scale'
         [T,A] = register_by_scale(img,T0,cfg.border);

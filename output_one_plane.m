@@ -22,7 +22,6 @@ LINE.draw_extents(gca,l,'Color','g', ...
                   'LineWidth', 2);
 axis equal;
 
-keyboard;
 dims = [ny nx]';
 border = IMG.calc_rectification_border(dims,H,cc,q,0.5,8,v);
 [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
@@ -38,8 +37,7 @@ subplot(1,3,3);
 imshow(rimg);
 
 drawnow;
-
-
+keyboard;
 
 %l = transpose(H(3,:));
 %c = LINE.rd_div(l,cc,q);

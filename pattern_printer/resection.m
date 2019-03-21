@@ -15,9 +15,11 @@ Hinf = model0.H;
 Hinv = inv(model0.H);
 
 l = transpose(model0.H(3,:));
-[~,side] = PT.are_same_orientation(x,l);
-xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model0.cc,model0.q));
 
+xu = PT.ru_div(x,model0.cc,model0.q);
+[~,side] = PT.are_same_orientation(xu,l);
+
+xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*xu);
 xform_list = ...
     cmp_splitapply(@(xp,ind) ...
                    deal( { laf2xNxN_to_RtxNxN(xp,ind,motion_solver,true) }), ...
@@ -41,7 +43,7 @@ side_inl =  find(all(sides == best_side));
 inl = d2inl(side_inl);
 
 inlx = unique(cspond(:,inl));
-[are_same,side] = PT.are_same_orientation(x(:,inlx),l);
+[are_same,side] = PT.are_same_orientation(xu(:,inlx),l);
 assert(are_same, ...
        ['There are measurements on both sides of the vanishing line!']);
 
