@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts and Denys Rozumnyi
 %
-function G = group_desc_app(dr,varargin)
+function G = group_desc(dr,varargin)
 cfg.desc_cutoff = 150;
 cfg.desc_linkage = 'single';
 
@@ -36,3 +36,5 @@ freq = hist(G,1:max(G));
 [~,idxb] = ismember(find(freq == 1),G);
 G(idxb) = nan;
 G = reshape(findgroups(G),1,[]);
+
+x = [dr(:).u];
