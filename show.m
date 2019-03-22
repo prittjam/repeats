@@ -1,7 +1,7 @@
 %img_name = 'cropped_dartboard';
-%img_name = 'pattern1b'
+img_name = 'pattern1b'
 %img_name = 'pavement'
-img_name = 'raw'
+%img_name = 'raw'
 load(['output/' img_name '.mat']);
 %figure;
 %subplot(1,3,1);
