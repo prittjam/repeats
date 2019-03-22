@@ -6,7 +6,7 @@
 %
 repeats_init();
 %
-img_name = 'cropped_dartboard';
+%img_name = 'cropped_dartboard';
 %img_name = 'pattern1b'
 %img_name = 'darts'
 %img_name = 'tran_1_046'
@@ -16,7 +16,7 @@ img_name = 'cropped_dartboard';
 %img_name = 'pattern24w'
 %img_name = 'download'
 %img_name = 'img'
-%img_name = 'raw'
+img_name = 'raw'
 %img_name = 'cards'
 %img_name = 'small'
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);

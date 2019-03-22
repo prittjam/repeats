@@ -17,10 +17,10 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
     cc = [(img.width)/2 (img.height)/2];
     dr = DR.get(img,cid_cache, ...
                     {'type','mser', 'reflection', true});
-    [x,G] = group_desc(dr);
-
+    x = [dr(:).u];
+    G = DR.group_desc(dr);
     G = filter_features(x,G,img);
-
+    
     [model_list,lo_res_list,stats_list] = ...
         rectify_planes(x,G,solver,cc,varargin{:});
 
@@ -32,5 +32,4 @@ function G = filter_features(x,G,img)
     G(find(abs(PT.calc_scale(x)) < areaT)) = nan;
     angles = LAF.calc_angle(x);
     G(find((angles < 1/10*pi) | (angles > 9/10*pi))) = nan;
-
     G = DR.rm_singletons(findgroups(G));

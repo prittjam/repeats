@@ -20,8 +20,13 @@ classdef RepeatSampler < handle
     end
     
     methods
-        function this = RepeatSampler(x,mss,Gsamp,varargin)
-            this.labeling0 = findgroups(Gsamp);
+        function this = RepeatSampler(x,mss,G,varargin)
+        % handle problems with reflections!
+            keyboard;
+            is_ccwise = PT.is_ccwise(x);            
+            G(is_ccwise) = findgroups(G(is_ccwise));
+            G(~is_ccwise) = findgroups(G(~is_ccwise))+max(G(is_ccwise));
+            this.labeling0 = findgroups(G);
             this.freq = hist(this.labeling0,1:max(this.labeling0));
             this.mss = mss; 
             umss = unique(mss);

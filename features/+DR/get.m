@@ -81,7 +81,7 @@ if isempty(fdr)
             cid_cache.get_chains(dr_chains,'ReflectImg',@extract,rimg);
         res_list2 = LAF.reflect(res_list2,img.width);
         res_list = [res_list; res_list2];
-        name_list = [name_list name_list2]';
+        name_list = [name_list;name_list2];
     end
     assert(size(res_list,1) == size(name_list,1))
     dr = cellfun(@(x) x(end),res_list);
