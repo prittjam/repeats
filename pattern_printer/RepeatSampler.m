@@ -22,7 +22,6 @@ classdef RepeatSampler < handle
     methods
         function this = RepeatSampler(x,mss,G,varargin)
         % handle problems with reflections!
-            keyboard;
             is_ccwise = PT.is_ccwise(x);            
             G(is_ccwise) = findgroups(G(is_ccwise));
             G(~is_ccwise) = findgroups(G(~is_ccwise))+max(G(is_ccwise));
