@@ -30,7 +30,7 @@ else
          0 1 -cc(2); ...
          0 0      1];
     xn = A*x;
-    ln = inv(A)'*l;
+    ln = PT.renormI(inv(A)'*l);
     sc = si_fn(1,ln(1),ln(2),q,1,xn(1,:),xn(2,:));
 end
 

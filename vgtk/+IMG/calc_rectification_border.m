@@ -20,13 +20,13 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
              0 1 -cc(2); ...
              0 0      1];
         ptn = A*refpt;        
-        ln = inv(A)'*l;
+        ln = PT.renormI(inv(A)'*l);
         ref_sc = si_fn(1,ln(1),ln(2),q,1,ptn(1),ptn(2));
     end
     
     sc_img = sc_img/ref_sc;
+
     bw = (sc_img > minscale) & (sc_img < maxscale);
-    bw = imerode(bw,strel('square',20));
     [yy,xx] = find(bw);
     
     idx = convhull(xx,yy,'simplify',true);

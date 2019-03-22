@@ -10,21 +10,17 @@ function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
 [uimg,udtrect,~] = IMG.ru_div(img,cc,q);
 
 figure;
-imshow(uimg);
-image(udtrect(1:2),udtrect(3:4),uimg);
-axis off 
+image(udtrect(1),udtrect(2),uimg);
 l = transpose(H(3,:));
-LINE.draw_extents(gca,l,'Color','w', ...
-                  'LineWidth', 3, ...
-                  'Color', 'w', ...
+LINE.draw_extents(gca,l,'LineWidth', 3, ...
+                  'Color', 'g', ...
                   'MarkerEdgeColor','w');
-LINE.draw_extents(gca,l,'Color','g', ...
-                  'LineWidth', 2);
+axis off;
 axis equal;
+axis ij;
 
 dims = [ny nx]';
-keyboard;
-border = IMG.calc_rectification_border(dims,H,cc,q,0.5,8,v);
+border = IMG.calc_rectification_border(dims,H,cc,q,0.1,10,v);
 [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
                                         'cspond', v, 'border', border, ...
                                         'Registration','Similarity', ...
@@ -38,7 +34,6 @@ subplot(1,3,3);
 imshow(rimg);
 
 drawnow;
-keyboard;
 
 %l = transpose(H(3,:));
 %c = LINE.rd_div(l,cc,q);

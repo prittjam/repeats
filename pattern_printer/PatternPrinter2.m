@@ -71,7 +71,6 @@ classdef PatternPrinter2 < handle
             dq = dz(this.params.q);
             dH = dz(this.params.H);
             dRtij = reshape(dz(this.params.Rtij),this.num_Rt_params,[]);
-            
             q = this.q0+dq;
             if numel(dH) == 3
                 l = this.l0+dH(1:3);
@@ -108,51 +107,6 @@ classdef PatternPrinter2 < handle
             cost = reshape(cost(1:2,:),[],1);
         end
         
-        function w = calc_weights(this,z)
-            c = 10;
-            r = z(1)*exp(-z(2)*this.x).*sin(z(3)*this.x)-this.y;
-            inl = abs(r)<c;
-            this.w = zeros(size(this.w));
-            this.w(inl) = 1-(r(inl)/c).^2;
-        end
-        
-        function [M,stats] = robust_fit(this,varargin)        
-            err0 = this.errfun(this.dz0);
-            lb = -8;
-            if numel(this.dz0) <= numel(err0)
-                lb = transpose([lb -inf(1,numel(this.dz0)-1)]);
-                ub = transpose([0 inf(1,numel(this.dz0)-1)]);
-                options = optimoptions(@lsqnonlin, ...
-                                       'Algorithm', 'trust-region-reflective', ...
-                                       'Display','none', ...
-                                       'Display', 'iter', ...
-                                       varargin{:});
-                for k = 1:5
-                    [dz,resnorm,err] = lsqnonlin(@(dz) errfun(this.dz), ...
-                                                 this.dz0,lb,ub, ...
-                                                 options);
-                    this.calc_weights(dz);
-                end
-            else
-                dz = this.dz0;
-                err = err0;
-                resnorm = sum(err.^2);
-            end
-
-            [q,~,Rtij,A,l] = this.unpack(dz);
-            %l = l;
-
-            M = struct('q',q/sum(2*this.cc)^2,'cc', this.cc, ...
-                       'A',A,'l',l, ...
-                       'Rtij', Rtij, ...
-                       'Gm',this.Gm);
-            
-            stats = struct('dz', dz, ...
-                           'resnorm', resnorm, ...
-                           'err', err, ...
-                           'err0', err0);            
-        end
-            
         function [M,stats] = fit(this,varargin)
             err0 = this.errfun(this.dz0);
             lb = -8;
@@ -186,5 +140,24 @@ classdef PatternPrinter2 < handle
                            'err', err, ...
                            'err0', err0);            
         end
+        
+%        function Jpat = make_Jpat(this)
+%            n = this.params.Rtij(end);
+%            [dq_ii dq_jj] = meshgrid(1:m,this.params.q);
+%            [dH_ii dH_jj] = meshgrid(1:m,this.params.H);
+%            
+%            Rtij_idx = reshape(this.params.Rtij_idx,3,[]);
+%            Rtij_ii = repmat(this.cspond(
+%            Rtij_jj = repmat(Rtij_idx(:,this.Gm),12,[]);
+%            
+%            
+%
+%            v = ones(numel([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii]),1);
+%            Jpat = ...
+%                sparse([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii], ...
+%                       [dq_jj(:); dH_jj(:); dG_jj;dRti_dj_jj], ...
+%                       v,m,n);
+%        end
+        
     end
 end
