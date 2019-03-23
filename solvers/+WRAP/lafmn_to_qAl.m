@@ -17,43 +17,38 @@ classdef lafmn_to_qAl < WRAP.RectSolver
             this.solver_impl = solver_impl;
         end
 
-        function M = fit(this,x,idx,varargin)            
+        function model_list = fit(this,x,idx,varargin)            
             M = this.solver_impl.fit(x,idx,varargin{:});
-            Gsamp = varargin{2};
+            G = findgroups(varargin{2});
             m = [idx{:}];        
+            if isempty(M)
+                model_list = [];
+            else
+                for k = 1:numel(M)
+                    Hinf = eye(3);
+                    Hinf(3,:) = transpose(M(k).l);
+                    xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,M(k).cc,M(k).q));
+                    A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
 
-            for k = 1:numel(M)
-                H = eye(3);
-                H(3,:) = transpose(M(k).l);
-                xp = ...
-                    PT.renormI(blkdiag(H,H,H)*PT.ru_div(x,M(k).cc, ...
-                                                        M(k).q));
-                A{k} =laf2_to_Amu(xp(:,m),findgroups(Gsamp(m))); 
-                %                [A{k},l{k}] = laf2_vl_to_Hmr(xp,idx,M(k).cc, ...
-                %                                            M(k).l);
-                
-            end         
-            
-            if ~isempty(M)
-                bad_ind = cellfun(@(x) isempty(x),A);
-                A(bad_ind) =  ...
-                    squeeze(mat2cell(repmat(eye(3,3),1,1,sum(bad_ind)),...
-                                     3,3,ones(1,sum(bad_ind)))); 
-                good_ind = ~bad_ind;                          
-                if exist('l')
-                    if any(good_ind)
-                        [M(good_ind).l] = l{good_ind};
+                    if isempty(A)
+                        A = eye(3);
                     end
-                end
-                [M(:).A] = A{:};
 
-                HH = eye(3);
-                HH = [M(1).A];
-                HH(3,:) = transpose(M(1).l);
-                xp = ...
-                    PT.renormI(blkdiag(HH,HH,HH)*PT.ru_div(x, ...
-                                                           M(k).cc, ...
-                                                           M(k).q));
+                    if ~isfield(M,'q')
+                        q = 0;
+                    else
+                        q = M(k).q;
+                    end
+
+                    H = A*Hinf;
+
+                    model_list(k) = struct('l',M(k).l, ...
+                                           'A',A, ...
+                                           'q',q, ...
+                                           'cc',M(k).cc, ...
+                                           'H', H, ...
+                                           'solver_time',M(k).solver_time);
+                end         
             end
         end
     end

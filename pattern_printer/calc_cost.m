@@ -1,7 +1,6 @@
-function [cost,xp] = calc_cost(x,cspond,Gm,q,cc,Hinf,Rtij)
-Hinv = inv(Hinf);
+function cost = calc_cost(x,xp,cspond,Gm,q,cc,H,Rtij)
+Hinv = inv(H);
 invRtij = multinv(Rtij);
-xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,cc,q));
 ut_j =  PT.rd_div(PT.renormI(PT.mtimesx(multiprod(Hinv,Rtij(:,:,Gm)), ...
                                         xp(:,cspond(1,:)))),cc,q);
 ut_i =  PT.rd_div(PT.renormI(PT.mtimesx(multiprod(Hinv,invRtij(:,:,Gm)), ...

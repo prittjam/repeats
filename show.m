@@ -1,8 +1,8 @@
 %img_name = 'cropped_dartboard';
-img_name = 'pattern1b'
-%img_name = 'pavement'
+%img_name = 'pattern1b'
+img_name = 'pavement'
 %img_name = 'raw'
-load(['output/' img_name '.mat']);
+%load(['output/' img_name '.mat']);
 %figure;
 %subplot(1,3,1);
 %imshow(img.data);
@@ -24,4 +24,4 @@ q = model_list(k).q;
 
 inlx = unique(res_list.info.cspond(:,res_list.cs));
 
-output_one_plane(img.data,model_list(k).Hr,cc,q,v);
+output_one_plane(img.data,model_list(k).H,cc,q,v);

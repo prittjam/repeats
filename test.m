@@ -7,7 +7,7 @@
 repeats_init();
 %
 %img_name = 'cropped_dartboard';
-img_name = 'pavement'
+%img_name = 'pavement'
 %img_name = 'darts'
 %img_name = 'tran_1_046'
 %img_name = 'circletext'
@@ -19,6 +19,8 @@ img_name = 'pavement'
 %img_name = 'raw'
 %img_name = 'cards'
 %img_name = 'small'
+%img_name = 'pattern1b';
+img_name = 'pavement'
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 [model_list,res_list,stats_list,meas,img] = ...
     do_one_img(['data/' img_name '.jpg'], solver);

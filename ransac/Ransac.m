@@ -2,17 +2,17 @@
 % 
 classdef Ransac < handle
     properties 
-        model
+        solver
         sampler
         eval
         lo = []
     end
     
     methods
-        function this = Ransac(model,sampler,eval,varargin)
+        function this = Ransac(solver,sampler,eval,varargin)
             [this,~] = cmp_argparse(this,varargin{:});
             
-            this.model = model;
+            this.solver = solver;
             this.sampler = sampler;
             this.eval = eval;
         end
@@ -47,10 +47,10 @@ classdef Ransac < handle
                 for k = 1:this.sampler.max_num_retries
                     idx = this.sampler.sample(x);
                     is_sample_good = ...
-                        this.model.is_sample_good(x,idx);
+                        this.solver.is_sample_good(x,idx);
                     if is_sample_good
                         try
-                            model_list = this.model.fit(x,idx,varargin{:});
+                            model_list = this.solver.fit(x,idx,varargin{:});
                         catch excpn
                         end
                         if ~isempty(model_list)
@@ -71,13 +71,13 @@ classdef Ransac < handle
 
                 for k = 1:numel(model_list)
                     is_model_good(k) = ...
-                        this.model.is_model_good(x,idx,model_list(k));
+                        this.solver.is_model_good(x,idx,model_list(k));
                 end
                 
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
-                        Mfix = this.model.fix(x,idx,model_list(k));
+                        Mfix = this.solver.fix(x,idx,model_list(k));
                         if ~isempty(Mfix)
                             is_model_good(k) = true;
                             model_list(k) = Mfix;
@@ -107,7 +107,7 @@ classdef Ransac < handle
                         M = M0;
                         res = res0;
                         stats.ransac = cat(2,stats.ransac, ...
-                                           struct('M',M, ...
+                                           struct('model',M, ...
                                                   'res',res, ...
                                                   'model_count', stats.model_count, ...
                                                   'trial_count', stats.trial_count));
@@ -117,7 +117,7 @@ classdef Ransac < handle
                         end
                         
                         [loM,lo_res] = this.do_lo(x,M0,res,varargin{:});
-                        lo_stats = struct('M',loM, ...
+                        lo_stats = struct('model',loM, ...
                                           'res',lo_res, ...
                                           'trial_count',stats.trial_count, ...
                                           'model_count',stats.model_count); ...

@@ -21,26 +21,28 @@ classdef RepeatLo < handle
             
             good_cspond = res.info.cspond(:,res.cs);
             Gm = res.info.Gm(res.cs);
+            
             Rtij = res.info.Rtij;
 
             pattern_printer = PatternPrinter2(x,M0.cc,Gm,M0.q, ...
                                               M0.A,M0.l,Rtij,good_cspond);
             [mle_model,mle_stats] = pattern_printer.fit('MaxIterations',this.max_iter); 
 
-            E0 = calc_cost(x,good_cspond,Gm,...
-                           mle_model.q,mle_model.cc, ...
-                           mle_model.Hr,mle_model.Rtij);
+            xp = PT.renormI(blkdiag(mle_model.H,mle_model.H,mle_model.H)*PT.ru_div(x,mle_model.cc,mle_model.q));
+            [loss,E] = calc_loss(x,xp,res.info.cspond,res.cs, ...
+                                 res.info.Gm,mle_model.q, mle_model.cc,mle_model.H, ...
+                                 mle_model.Rtij,this.eval.reprojT);
 
-            E = ones(1,size(res.info.cspond,2))*res.info.reprojT;
-            E(res.cs) = sum(E0.^2);
-
-            loss = sum(E);           
-            cs = this.eval.calc_cs(E);
+            loss_info = struct('cspond', res.info.cspond, ...
+                               'Gm', res.info.Gm, ...
+                               'Rtij', mle_model.Rtij);
+            
             mle_res = struct('loss', loss, ...
                              'err', E, ...
-                             'cs', cs, ...
-                             'info',res.info);
-            inlx = unique(res.info.cspond(:,cs));
+                             'info',loss_info, ...
+                             'cs', this.eval.calc_cs(E));
+            
+            inlx = unique(res.info.cspond(:,res.cs));
             
             xu = PT.ru_div(x,mle_model.cc,mle_model.q);
             are_same = PT.are_same_orientation(xu(:,inlx),M0.l);

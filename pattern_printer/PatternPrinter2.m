@@ -97,43 +97,44 @@ classdef PatternPrinter2 < handle
             Hr(3,:) = transpose(l);
         end
                    
-        function cost = errfun(this,dz)
+        function cost = costfun(this,dz)
             if nargin < 2
                 dz = this.dz0;
             end
-            [q,Hinf,Rtij] = this.unpack(dz);            
-            cost = calc_cost(this.x,this.cspond,this.Gm,q/sum(2*this.cc)^2,this.cc,Hinf,Rtij);
+            [q,H,Rtij] = this.unpack(dz);            
+            xp = PT.renormI(blkdiag(H,H,H)*PT.ru_div(this.x,this.cc,q/sum(2*this.cc)^2));
+            cost = calc_cost(this.x,xp,this.cspond,this.Gm,q/sum(2*this.cc)^2,this.cc,H,Rtij);
             cost = reshape(cost,3,[]);
             cost = reshape(cost(1:2,:),[],1);
         end
         
         function [M,stats] = fit(this,varargin)
-            err0 = this.errfun(this.dz0);
+            err0 = this.costfun(this.dz0);
             lb = -8;
             if numel(this.dz0) <= numel(err0)
                 lb = transpose([lb -inf(1,numel(this.dz0)-1)]);
                 ub = transpose([0 inf(1,numel(this.dz0)-1)]);
+                Jpat = this.make_Jpat();
                 options = optimoptions(@lsqnonlin, ...
                                        'Algorithm', 'trust-region-reflective', ...
                                        'Display','none', ...
                                        'Display', 'iter', ...
+                                       'JacobPattern',Jpat, ...
                                        varargin{:});
-                errfun = @this.errfun;
-                [dz,resnorm,err] = lsqnonlin(errfun,this.dz0,lb,ub,options);
+                costfun = @this.costfun;
+                [dz,resnorm,err] = lsqnonlin(costfun,this.dz0,lb,ub,options);
             else
                 dz = this.dz0;
                 err = err0;
                 resnorm = sum(err.^2);
             end
 
-            [q,Hr,Rtij,A,l] = this.unpack(dz);
+            [q,H,Rtij,A,l] = this.unpack(dz);
 
             M = struct('q',q/sum(2*this.cc)^2, ...
                        'cc', this.cc, ...
                        'A',A,'l',l, ...
-                       'Hr',Hr, ...
-                       'Rtij', Rtij, ...
-                       'Gm',this.Gm);
+                       'H',H, 'Rtij', Rtij,'Gm',this.Gm);
             
             stats = struct('dz', dz, ...
                            'resnorm', resnorm, ...
@@ -141,23 +142,46 @@ classdef PatternPrinter2 < handle
                            'err0', err0);            
         end
         
-%        function Jpat = make_Jpat(this)
-%            n = this.params.Rtij(end);
-%            [dq_ii dq_jj] = meshgrid(1:m,this.params.q);
-%            [dH_ii dH_jj] = meshgrid(1:m,this.params.H);
+        function Jpat = make_Jpat(this)
+        %            n = this.params.Rtij(end);
+            m = 12*size(this.cspond,2);
+            [dq_ii dq_jj] = meshgrid(1:m,this.params.q);
+            [dH_ii dH_jj] = meshgrid(1:m,this.params.H);
+            
+            dRt_ii = [];dRt_jj = [];
+
+            for k1 = 1:numel(this.Gm)
+                [aa,bb] = ...
+                    meshgrid(12*(k1-1)+[1:12], ...
+                             [3*(this.Gm(k1)-1)+1:3* ...
+                              this.Gm(k1)]+max(dH_jj(:)));
+                dRt_ii = cat(1,dRt_ii,aa(:));
+                dRt_jj = cat(1,dRt_jj,bb(:));
+            end
+            
+            ii = [dq_ii(:);dH_ii(:);dRt_ii];
+            jj = [dq_jj(:);dH_jj(:);dRt_jj];
+            v = ones(numel(ii),1);
+            Jpat = sparse(ii,jj,v,max(ii),max(jj));
+             
+%            costfun = @this.costfun;
+%            [J,err] = jacobianest(costfun,this.dz0);
+%            J(find(J)) = 1;
+%            J = sparse(J);
 %            
-%            Rtij_idx = reshape(this.params.Rtij_idx,3,[]);
+%            keyboard;
+%            
+            %            Rtij_idx = reshape(this.params.Rtij_idx,3,[]);
 %            Rtij_ii = repmat(this.cspond(
 %            Rtij_jj = repmat(Rtij_idx(:,this.Gm),12,[]);
 %            
-%            
-%
-%            v = ones(numel([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii]),1);
+           
+            %            v = ones(numel([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii]),1);
 %            Jpat = ...
-%                sparse([dq_ii(:); dH_ii(:); dG_ii;dRti_dj_ii], ...
-%                       [dq_jj(:); dH_jj(:); dG_jj;dRti_dj_jj], ...
+%                sparse([dq_ii(:); dH_ii(:);
+%                       [dq_jj(:); dH_jj(:);
 %                       v,m,n);
-%        end
+        end
         
     end
 end
