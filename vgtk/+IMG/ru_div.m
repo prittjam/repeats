@@ -5,7 +5,8 @@
 %  Written by James Pritts
 %
 function [timg,trect,T,S] = ru_div(img,cc,q,varargin)
-cfg = struct('boundary', []);
+cfg = struct('boundary', [], ...
+             'size', size(img));
 
 [cfg,varargin] = cmp_argparse(cfg,varargin{:});
 
@@ -23,8 +24,8 @@ else
                 1  ny];
 end
 
-[T,S] = IMG.register_by_extents(img,T0,boundary,nx,ny, ...
-                                'LockAspectRatio', false);
+[T,S] = IMG.register_by_size(img,T0,boundary,cfg.size, ...
+                             'LockAspectRatio', false);
 
 tbounds = tformfwd(T,boundary);
 
