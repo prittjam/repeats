@@ -45,11 +45,17 @@ classdef RepeatLo < handle
             inlx = unique(res.info.cspond(:,res.cs));
             
             xu = PT.ru_div(x,mle_model.cc,mle_model.q);
-            are_same = PT.are_same_orientation(xu(:,inlx),M0.l);
+            [are_same,side] = PT.are_same_orientation(xu(:,inlx),mle_model.l);
 
-            assert(loss <= res.loss,'Likelihood Decreased!');           
-            assert(are_same, ...
-                   ['There are measurements on both sides of the vanishing line!']);
+%            assert(loss <= res.loss,'Likelihood Decreased!');           
+%            assert(are_same, ...
+%                   ['There are measurements on both sides of the
+%                   vanishing line!']);
+disp(['remember']);    
         end
     end
 end
+
+%            xu = PT.ru_div(x,mle_model.cc,M0.q);
+%            [are_same,side] = PT.are_same_orientation(xu(:,inlx),M0.l);
+%

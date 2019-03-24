@@ -20,7 +20,9 @@ repeats_init();
 %img_name = 'cards'
 %img_name = 'small'
 %img_name = 'pattern1b';
-img_name = 'pavement'
+%img_name = 'pavement'
+%img_name = 'coke'
+img_name = 'fisheye'
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 [model_list,res_list,stats_list,meas,img] = ...
     do_one_img(['data/' img_name '.jpg'], solver);

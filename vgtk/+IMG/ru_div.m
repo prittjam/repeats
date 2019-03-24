@@ -4,9 +4,8 @@
 %
 %  Written by James Pritts
 %
-function [timg,trect,T] = ru_div(img,cc,q,varargin)
-cfg = struct('dims', transpose([size(img,1) size(img,2)]), ...
-             'boundary', []);
+function [timg,trect,T,S] = ru_div(img,cc,q,varargin)
+cfg = struct('boundary', []);
 
 [cfg,varargin] = cmp_argparse(cfg,varargin{:});
 
@@ -18,20 +17,15 @@ ny = size(img,1);
 if ~isempty(cfg.boundary)
     boundary = cfg.boundary;
 else
-    boundary = [0.5     0.5; ...
-                nx-0.5  0.5; ...    
-                nx-0.5  ny-0.5; ...
-                0.5     ny-0.5];
+    boundary = [1  1; ...
+                nx 1; ...    
+                nx ny; ...
+                1  ny];
 end
 
-if cfg.dims
-    [T,S] = IMG.register_by_dims(img,T0,boundary,cfg.dims);
-else
-    T = T0;
-    S = eye(3);
-end
- 
-T = T0;
+[T,S] = IMG.register_by_extents(img,T0,boundary,nx,ny, ...
+                                'LockAspectRatio', false);
+
 tbounds = tformfwd(T,boundary);
 
 minx = min(tbounds(:,1));
@@ -44,9 +38,5 @@ timg = imtransform(img,T,'bicubic', ...
                    'XData',[minx maxx], ...
                    'YData',[miny maxy], ...
                    'Fill',transpose([255 255 255]));
-
-if ~isempty(cfg.dims)
-    timg = imresize(timg,[ny nx]);
-end
 
 trect = [minx miny maxx maxy];

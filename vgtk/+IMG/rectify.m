@@ -6,13 +6,11 @@
 %
 function [timg,trect,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
-
     [ny,nx,~] = size(img);
-
-    cfg.border = [ 0.5    0.5; ...
-                   nx-0.5 0.5; ...
-                   nx-0.5 ny-0.5; ...
-                   0.5 ny-0.5 ];
+    cfg.border = [ 1           1; ...
+                   size(img,2) 1; ...
+                   size(img,2) size(img,1); ...
+                   1 size(img,1)];
     cfg.dims = [];
     cfg.cspond = [];
     cfg.registration = 'Similarity';
@@ -52,7 +50,9 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
     end
 
     if ~isempty(cfg.dims)
-        [T,A2] = IMG.register_by_dims(img,T,cfg.border,cfg.dims);
+        [T,A2] = IMG.register_by_extents(img,T,cfg.border, ...
+                                         cfg.dims(2),cfg,dims(1), ...
+                                         'LockAspectRatio','true');
         A = A2*A;
     end
     

@@ -24,10 +24,8 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
     G = filter_features(x,G,img);
     G = limit_group_size(x,G,50);
     [x,G] = limit_drs(x,G,1000);
-    
     x = x(:,~isnan(G));
     G = G(~isnan(G));
-    
     [model_list,lo_res_list,stats_list] = ...
         rectify_planes(x,G,solver,cc,varargin{:});
     

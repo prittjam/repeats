@@ -7,11 +7,11 @@
 function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
     output_one_plane(img,H,cc,q,v)
 [ny,nx,~] = size(img);
-[uimg,udtrect,~] = IMG.ru_div(img,cc,q);
+[uimg,udtrect,~,S] = IMG.ru_div(img,cc,q);
 
 figure;
 image(udtrect(1),udtrect(2),uimg);
-l = transpose(H(3,:));
+l = PT.renormI(S' \ transpose(H(3,:)));
 LINE.draw_extents(gca,l,'LineWidth', 3, ...
                   'Color', 'g', ...
                   'MarkerEdgeColor','w');
