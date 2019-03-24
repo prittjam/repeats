@@ -6,19 +6,11 @@
 %
 function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
     output_one_plane(img,H,cc,q,v)
-[uimg,udtrect,~,S] = IMG.ru_div(img,cc,q);
 
-figure;
-image(udtrect(1),udtrect(2),uimg);
-l = PT.renormI(S' \ transpose(H(3,:)));
-LINE.draw_extents(gca,l,'LineWidth', 3, ...
-                  'Color', 'g', ...
-                  'MarkerEdgeColor','w');
-axis off;
-axis equal;
-axis ij;
 
-border = IMG.calc_rectification_border(size(img),H,cc,q,0.1,10,v);
+
+
+
 [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
                                         'cspond', v, 'border', border, ...
                                         'Registration','Similarity');

@@ -6,11 +6,8 @@
 %
 function [timg,trect,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
-    [ny,nx,~] = size(img);
-    cfg.border = [ 1           1; ...
-                   size(img,2) 1; ...
-                   size(img,2) size(img,1); ...
-                   1 size(img,1)];
+
+    cfg.border = IMG.calc_rectification_border(size(img),H,cc,q,0.1,10,v);
     cfg.size = size(img);
     cfg.cspond = [];
     cfg.registration = 'Similarity';
@@ -40,8 +37,6 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
                ['You cannot register the rectification without ' ...
                 'inliers!']);
         [T,A] = register_by_similarity(cfg.cspond,T0);
-      case 'scale'
-        [T,A] = register_by_scale(img,T0,cfg.border);
       case 'none'
         T = T0;
         A = eye(3);
@@ -49,11 +44,10 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
         error('No registration method specified'); 
     end
 
-    if ~isempty(cfg.size)
-        [T,A2] = IMG.register_by_size(img,T,cfg.border,cfg.size, ...
-                                      'LockAspectRatio','true');
-        A = A2*A;
-    end
+
+    [T,A2] = IMG.register_by_size(img,T,cfg.border,cfg.size, ...
+                                  'LockAspectRatio','true');
+    A = A2*A;
     
     outbounds = tformfwd(T,cfg.border);
 
@@ -82,20 +76,3 @@ function [T,A] = register_by_affinity(u,T0)
     T = maketform('composite', ...
                   maketform('affine',transpose(A)), ...
                   T0);
-
-function [T,S] = register_by_scale(img,T0,roi)
-    nx = size(img,2);
-    ny = size(img,1);
-
-    troi = tformfwd(T0,roi);
-    
-    s1 = polyarea(roi(:,1),roi(:,2));
-    s2 = polyarea(troi(:,1),troi(:,2));
-    s3 = sqrt(s2/s1);
-
-    S = [s3 0 0; 0 s3 0; 0 0 1];
-
-    T = maketform('composite', ...
-                  maketform('affine',S'), ...
-                  T0);
-

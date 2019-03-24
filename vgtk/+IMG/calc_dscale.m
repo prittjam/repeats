@@ -8,7 +8,7 @@ function [img,si_fn] = calc_dscale(sz,l,cc,q)
 nx = sz(2);
 ny = sz(1);
 
-l = l/l(3);
+l = PT.renormI(l);
 
 cartesian = make_change_of_scale_constraints();
 
