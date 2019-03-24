@@ -136,6 +136,7 @@ classdef Ransac < handle
                     end   
                 end
                 stats.trial_count = stats.trial_count+1;
+                disp(['Trial '  num2str(stats.trial_count) ' out of ' num2str(N)]);
                 if (stats.trial_count >= N)
                     break;
                 end

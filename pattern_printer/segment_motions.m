@@ -39,7 +39,7 @@ err2 = reshape(ut_i,9,M,N)-x(:,cspond(1,:));
 d2 = sum([err1.^2;err2.^2]);
 d2 = reshape(d2,M,N);
 
-K = double(d2 < vqT);
+K = sparse(double(d2 < vqT));
 
 is_valid_ii = find(any(K,2));
 K = K(is_valid_ii,any(K,1));
