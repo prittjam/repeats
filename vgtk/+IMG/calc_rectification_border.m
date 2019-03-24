@@ -1,6 +1,6 @@
-function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
-    nx = dims(2);
-    ny = dims(1);
+function border = calc_rectification_border(sz,H,cc,q,minscale,maxscale,x)
+    nx = sz(2);
+    ny = sz(1);
 
     if size(x,2) > 1
         xp =  PT.renormI(H*CAM.ru_div(x,cc,q));
@@ -12,7 +12,7 @@ function border = calc_rectification_border(dims,H,cc,q,minscale,maxscale,x)
     end  
     l = transpose(H(3,:));
     l = l/l(3);
-    [sc_img,si_fn] = IMG.calc_dscale(dims,l,cc,q);
+    [sc_img,si_fn] = IMG.calc_dscale(sz,l,cc,q);
     if q == 0
         ref_sc = si_fn(l(1),l(2),1,refpt(1),refpt(2));
     else

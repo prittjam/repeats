@@ -6,7 +6,6 @@
 %
 function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
     output_one_plane(img,H,cc,q,v)
-[ny,nx,~] = size(img);
 [uimg,udtrect,~,S] = IMG.ru_div(img,cc,q);
 
 figure;
@@ -19,12 +18,10 @@ axis off;
 axis equal;
 axis ij;
 
-dims = [ny nx]';
-border = IMG.calc_rectification_border(dims,H,cc,q,0.1,10,v);
+border = IMG.calc_rectification_border(size(img),H,cc,q,0.1,10,v);
 [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
                                         'cspond', v, 'border', border, ...
-                                        'Registration','Similarity', ...
-                                        'Dims',dims);
+                                        'Registration','Similarity');
 figure;
 subplot(1,3,1);
 imshow(img);

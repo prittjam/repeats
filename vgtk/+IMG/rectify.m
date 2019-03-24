@@ -49,7 +49,7 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
         error('No registration method specified'); 
     end
 
-    if ~isempty(cfg.dims)
+    if ~isempty(cfg.size)
         [T,A2] = IMG.register_by_size(img,T,cfg.border,cfg.size, ...
                                       'LockAspectRatio','true');
         A = A2*A;
