@@ -1,12 +1,12 @@
-function [T,S] = register_by_size(img,T0,boundary,sz,varargin)
+function [T,S] = register_by_size(img,T0,border,sz,varargin)
     cfg.lockaspectratio = true;
     [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
     nx = sz(2);
     ny = sz(1);
-    tboundary = tformfwd(T0,boundary);
-    xextent = max(tboundary(:,1))-min(tboundary(:,1));
-    yextent = max(tboundary(:,2))-min(tboundary(:,2));
+    tborder = tformfwd(T0,border);
+    xextent = max(tborder(:,1))-min(tborder(:,1));
+    yextent = max(tborder(:,2))-min(tborder(:,2));
     s = [(nx-1)/xextent (ny-1)/yextent];
     
     if cfg.lockaspectratio

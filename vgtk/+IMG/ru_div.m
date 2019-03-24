@@ -5,7 +5,7 @@
 %  Written by James Pritts
 %
 function [timg,trect,T,S] = ru_div(img,cc,q,varargin)
-cfg = struct('boundary', [], ...
+cfg = struct('border', [], ...
              'size', size(img));
 
 [cfg,varargin] = cmp_argparse(cfg,varargin{:});
@@ -15,19 +15,19 @@ T0 = CAM.make_ru_div_tform(cc,q);
 nx = size(img,2);
 ny = size(img,1);
 
-if ~isempty(cfg.boundary)
-    boundary = cfg.boundary;
+if ~isempty(cfg.border)
+    border = cfg.border;
 else
-    boundary = [1  1; ...
-                nx 1; ...    
-                nx ny; ...
-                1  ny];
+    border = [1  1; ...
+              nx 1; ...    
+              nx ny; ...
+              1  ny];
 end
 
-[T,S] = IMG.register_by_size(img,T0,boundary,cfg.size, ...
+[T,S] = IMG.register_by_size(img,T0,border,cfg.size, ...
                              'LockAspectRatio', false);
 
-tbounds = tformfwd(T,boundary);
+tbounds = tformfwd(T,border);
 
 minx = min(tbounds(:,1));
 maxx = max(tbounds(:,1));
