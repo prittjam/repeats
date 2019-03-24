@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [img,si_fn] = calc_dscale(sz,l,cc,q)
+function [img,si_fn] = calc_dscale(sz,l,cc,q,x)
 nx = sz(2);
 ny = sz(1);
 
@@ -19,20 +19,47 @@ else
 end
 
 [u,v] = meshgrid(1:nx,1:ny);
-x = [u(:)'-0.5; ...
+z = [u(:)'-0.5; ...
      v(:)'-0.5; ...
      ones(1,numel(u))];
 
 if q == 0
-    sc = si_fn(l(1),l(2),1,x(1,:),x(2,:));
+    sc = si_fn(l(1),l(2),1,z(1,:),z(2,:));
 else
     A = [1 0 -cc(1); ...
          0 1 -cc(2); ...
          0 0      1];
-    xn = A*x;
+    zn = A*z;
     ln = PT.renormI(inv(A)'*l);
-    sc = si_fn(1,ln(1),ln(2),q,1,xn(1,:),xn(2,:));
+    sc = si_fn(1,ln(1),ln(2),q,1,zn(1,:),zn(2,:));
 end
 
-img = reshape(sc,ny,nx);
+red_sc = 1;
+if nargin > 4
+    x = reshape(x,3,[]);
+    if size(x,2) > 1
+        Hinf = eye(3);
+        Hinf(3,:) = transpose(l);
+        xp =  PT.renormI(Hinf*CAM.ru_div(x,cc,q));
+        idx = convhull(xp(1,:),xp(2,:));
+        mux = mean(xp(:,idx),2);
+        refpt = CAM.rd_div(PT.renormI(Hinf \ mux),cc,q);
+    else
+        refpt = x;
+    end  
+    
+    if q == 0
+        ref_sc = si_fn(l(1),l(2),1,refpt(1),refpt(2));
+    else
+        A = [1 0 -cc(1); ...
+             0 1 -cc(2); ...
+             0 0      1];
+        ptn = A*refpt;        
+        ln = PT.renormI(inv(A)'*l);
+        ref_sc = si_fn(1,ln(1),ln(2),q,1,ptn(1),ptn(2));
+    end
+end
 
+sc = sc/ref_sc;
+
+img = reshape(sc,ny,nx);

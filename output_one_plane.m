@@ -5,25 +5,37 @@
 %  Written by James Pritts
 %
 function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
-    output_one_plane(img,H,cc,q,v)
+        output_one_plane(img,H,cc,q,x)
+    [ny,nx,~] = size(img);
+    x = reshape(x,3,[]);
+    l = PT.renormI(transpose(H(3,:)));    
+    uimg = IMG.ru_div(img,cc,q);
+    border = IMG.calc_rectification_border(size(img),l,cc,q,0.1,10,x);
+    [rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, 'cspond', x, ...
+                                            'border', border, ...
+                                            'Registration','Similarity');
+    figure;
+    subplot(1,3,1);
+    imshow(img);
+    subplot(1,3,2);
+    imshow(uimg);
+    subplot(1,3,3);
+    imshow(rimg);
 
+    drawnow;
 
+    [csimg,si_fn] = IMG.calc_dscale(size(img),l,cc,q,x);
 
-
-
-[rimg,trect,tform] = IMG.ru_div_rectify(img,H,cc,q, ...
-                                        'cspond', v, 'border', border, ...
-                                        'Registration','Similarity');
-figure;
-subplot(1,3,1);
-imshow(img);
-subplot(1,3,2);
-imshow(uimg);
-subplot(1,3,3);
-imshow(rimg);
-
-drawnow;
-
+    L = superpixels(img,500);
+    xhullind = convhull(x(1,:),x(2,:));
+    xh = x(:,xhullind);
+    mask = imdilate(poly2mask(xh(1,:),xh(2,:),ny,nx),strel('square',20));
+    BW = grabcut(img,L,mask);
+    figure;
+    imshow(BW);
+    
+    keyboard;
+    
 %l = transpose(H(3,:));
 %c = LINE.rd_div(l,cc,q);
 %[ny,nx,~] = size(img);

@@ -7,7 +7,11 @@
 function [timg,trect,T,A] = rectify(img,H,varargin)
     assert(all(size(H) == [3 3]));
 
-    cfg.border = IMG.calc_rectification_border(size(img),H,cc,q,0.1,10,v);
+    [ny,nx,~] = size(img);
+    cfg.border = [1  1; ...
+                  nx 1; ...    
+                  nx ny; ...
+                  1  ny];
     cfg.size = size(img);
     cfg.cspond = [];
     cfg.registration = 'Similarity';

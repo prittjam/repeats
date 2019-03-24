@@ -1,24 +1,15 @@
-%img_name = 'cropped_dartboard';
+clear all;
+img_name = 'cropped_dartboard';
 %img_name = 'pattern1b'
 %img_name = 'pavement'
 %img_name = 'coke'
 %img_name = 'train'
 %img_name = 'fisheye'
-img_name = 'raw'
-%load(['output/' img_name '.mat']);
-%figure;
-%subplot(1,3,1);
-%imshow(img.data);
-%PT.draw_groups(gca,meas.x,meas.G);
-%
-%subplot(1,3,2);
-%imshow(img.data);
-%PT.draw_groups(gca,meas.x,model_list(1).Gs');
-%
-%subplot(1,3,3);
-%imshow(img.data);
-%PT.draw_groups(gca,meas.x,model_list(1).Gm');
-% 
+%img_name = 'raw'
+
+
+load(['output/' img_name '.mat']);
+
 k = 1;
 
 ind = find(~isnan(model_list(k).Gm));
@@ -27,5 +18,4 @@ cc = model_list(k).cc;
 q = model_list(k).q;
 
 inlx = unique(res_list.info.cspond(:,res_list.cs));
-
 output_one_plane(img.data,model_list(k).H,cc,q,v);
