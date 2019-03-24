@@ -20,13 +20,14 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
                     {'type','mser', 'reflection', true});
     x = [dr(:).u];
     G = DR.group_desc(dr);
-    clear(dr);
+    clear dr;
     G = filter_features(x,G,img);
     G = limit_group_size(x,G,50);
-    %[x,G] = limit_drs(x,G,4000);
-
+    [x,G] = limit_drs(x,G,1000);
+    
     x = x(:,~isnan(G));
     G = G(~isnan(G));
+    
     [model_list,lo_res_list,stats_list] = ...
         rectify_planes(x,G,solver,cc,varargin{:});
     
@@ -41,8 +42,8 @@ function G = filter_features(x,G,img)
     
 function G = limit_group_size(x,G,T)
     freq = hist(G,1:max(G));
-    breakup = find(freq > T);
-    for k = breakup
+    breakit = find(freq > T);
+    for k = breakit
         ind = find(G == k);
         m = ceil(freq(k)/T);
         Gp = repmat([1:m],T,1)+max(G);
@@ -53,6 +54,10 @@ function G = limit_group_size(x,G,T)
     
 function [x,G] = limit_drs(x,G,T)
     freq = hist(G,1:max(G));
-    [sfreq,ind] = sort(freq,'descend');
+    [sfreq,ind0] = sort(freq,'descend');
     csum = cumsum(sfreq);
-    ind = find(csum < T);
+    ind1 = find(csum > T);
+    rmind = ind0(ind1);
+    [Lia,Lib] = ismember(G',rmind' ,'rows');
+    G(Lia) = nan;
+    G = findgroups(G);
