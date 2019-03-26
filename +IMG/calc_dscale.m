@@ -4,9 +4,9 @@
 %
 %  Written by James Pritts
 %
-function [img,si_fn] = calc_dscale(dims,l,cc,q)
-nx = dims(2);
-ny = dims(1);
+function [img,si_fn] = calc_dscale(sz,l,cc,q)
+nx = sz(2);
+ny = sz(1);
 
 l = l/l(3);
 
