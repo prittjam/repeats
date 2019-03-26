@@ -27,9 +27,3 @@ solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 [model_list,res_list,stats_list,meas,img] = ...
     do_one_img(['data/' img_name '.jpg'], solver);
 
-if ~exist('./output','dir') 
-    mkdir('output');
-end
-
-save(['output/' img_name '.mat'],'model_list', ...
-     'res_list','stats_list','meas','img');

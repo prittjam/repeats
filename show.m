@@ -1,12 +1,11 @@
 clear all;
-img_name = 'cropped_dartboard';
+%img_name = 'cropped_dartboard';
 %img_name = 'pattern1b'
 %img_name = 'pavement'
 %img_name = 'coke'
 %img_name = 'train'
 %img_name = 'fisheye'
-%img_name = 'raw'
-
+img_name = 'raw'
 
 load(['output/' img_name '.mat']);
 

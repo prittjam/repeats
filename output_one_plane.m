@@ -26,11 +26,16 @@ function [rimg,uimg,rect_rd_div_scale_img,rect_dscale_img] = ...
 
     [csimg,si_fn] = IMG.calc_dscale(size(img),l,cc,q,x);
 
-    L = superpixels(img,500);
+    L = superpixels(img,1500);
     xhullind = convhull(x(1,:),x(2,:));
     xh = x(:,xhullind);
-    mask = imdilate(poly2mask(xh(1,:),xh(2,:),ny,nx),strel('square',20));
-    BW = grabcut(img,L,mask);
+    roimask = imdilate(poly2mask(xh(1,:),xh(2,:),ny,nx), ...
+                       strel('square',75));
+    fg = poly2mask(xh(1,:),xh(2,:),ny,nx);
+    bg = ~roimask;
+    
+    %    BW = grabcut(img,L,roimask,fg,bg);
+    BW = lazysnapping(img,L,fg,bg);
     figure;
     imshow(BW);
     
