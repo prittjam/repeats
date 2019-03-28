@@ -85,7 +85,7 @@ classdef RepeatSampler < handle
 %            eip = p3*100;
 %            disp(['Expected inlier percentage: ' num2str(eip,'%04.1f') ...
 %                  ' |  # trials needed: ' num2str(trial_count)]);
-    trial_count = 1000;
+    trial_count = 100;
         end
     end
 end 

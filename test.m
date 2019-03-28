@@ -4,9 +4,6 @@
 %
 %  Written by James Pritts
 %
-repeats_init();
-%
-%img_name = 'cropped_dartboard';
 %img_name = 'pavement'
 %img_name = 'darts'
 %img_name = 'tran_1_046'
@@ -22,8 +19,14 @@ repeats_init();
 %img_name = 'pattern1b';
 %img_name = 'pavement'
 %img_name = 'coke'
-img_name = 'fisheye'
-solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
-[model_list,res_list,stats_list,meas,img] = ...
-    do_one_img(['data/' img_name '.jpg'], solver);
+%img_name = 'fisheye'
 
+repeats_init();
+img_name = 'cropped_dartboard';
+img_path = ['data/' img_name '.jpg'];
+solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
+%[model_list,res_list,stats_list,meas,img] = do_one_img(img_path,solver);
+dt = datestr(now,'yyyymmdd_HHMMSS');
+load('output/cropped_dartboard.mat');
+save_results(img_path,dt,model_list, ...
+             res_list,stats_list,meas,img);
