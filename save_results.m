@@ -15,5 +15,3 @@ function [] = save_results(img_path,dt,model_list, ...
     imwrite(uimg,ud_file_path);
     rect_file_path = fullfile(results_path,[img_name '_rect.jpg']);
     imwrite(rimg,rect_file_path);
-    
-    keyboard;

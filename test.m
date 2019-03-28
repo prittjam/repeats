@@ -23,7 +23,7 @@
 
 repeats_init();
 img_name = 'cropped_dartboard';
-img_path = ['data/' img_name '.jpg'];
+src_path = 'data/ijcv19/*.jpg';
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 %[model_list,res_list,stats_list,meas,img] = do_one_img(img_path,solver);
 dt = datestr(now,'yyyymmdd_HHMMSS');
