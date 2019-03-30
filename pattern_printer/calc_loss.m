@@ -1,6 +1,10 @@
-function [loss,E] = calc_loss(x,xp,cspond,cs,Gm,q,cc,H,Rtij,reprojT)
+function [loss,E,cs] = calc_loss(x,xp,cspond,cs0,Gm,q,cc,H,Rtij,reprojT)
+if nargin < 8
+    reprojT = inf
+end
 E = ones(1,size(cspond,2))*reprojT;
-Einl = calc_cost(x,xp,cspond(:,cs),Gm(cs),q,cc,H,Rtij);
-E(cs) = sum(Einl.^2);
-E(E > reprojT) = reprojT;
+E(cs0) = sum(calc_cost(x,xp,cspond(:,cs0),Gm(cs0),q,cc,H,Rtij).^2);
+
+cs = E < reprojT;
+E(~cs) = reprojT;
 loss = sum(E);

@@ -15,29 +15,7 @@ classdef RepeatEval < handle
             [this,~] = cmp_argparse(this,varargin{:});
         end        
         
-        function [cs,d2] = label_inliers(this,x,xu,xp,M0,cspond,Rtij)
-            cost = calc_cost(x,xp,cspond,1:size(cspond,2),M0.q,M0.cc,M0.H,Rtij);            
-            [~,side] = PT.are_same_orientation(xu,M0.l);
-            d2 = sum(cost.^2);
-            d2inl = find(d2 < this.reprojT);
-            sides = side(cspond(:,d2inl));
-            [~,best_side] = max(hist(sides(:),[1,2]));
-            side_inl =  find(all(sides == best_side));
-            inl = d2inl(side_inl);
-            cs = false(size(inl));
-            cs(inl) = true;
-            inlx = unique(cspond(:,inl));
-            
-            if numel(inlx) > 0
-                [are_same,side] = ...
-                    PT.are_same_orientation(xu(:,inlx),M0.l);
-                assert(are_same, ...
-                       ['There are measurements on both sides of the ' ...
-                        'vanishing line!']);            
-            end
-        end
-            
-        function [loss,E,loss_info] = calc_loss(this,x,M0,varargin)         
+        function [loss,E,cs,loss_info] = calc_loss(this,x,M0,varargin)         
             G = findgroups(varargin{2});
             loss_info = struct;
             
@@ -45,12 +23,26 @@ classdef RepeatEval < handle
             xp = PT.renormI(blkdiag(M0.H,M0.H,M0.H)*xu);
             
             [cspond,Rtij0] = resection(xp,G,'Rt');             
-            [cs,E] = this.label_inliers(x,xu,xp,M0,cspond,Rtij0);
-            E(E > this.reprojT) = this.reprojT;
-            loss = sum(E);
-            Gm = nan(1,size(cspond,2));
+            n = size(cspond,2);
             
+            [loss,E,cs0] = calc_loss(x,xp,cspond,1:n,1:n,M0.q,M0.cc,M0.H,Rtij0,this.reprojT);
+
+            Einl = find(cs0);           
+            side_inl = unique(find(label_best_orientation(xu,cspond(:,Einl),M0.l)));
+            inl = Einl(side_inl);
+            cs = false(1,n);
+            cs(inl) = true;
+
+            Gm = nan(1,n);
+
             if any(cs)
+                inlx = unique(cspond(:,inl));
+                [are_same,side] = ...
+                    PT.are_same_orientation(xu(:,inlx),M0.l);
+                assert(are_same, ...
+                       ['There are measurements on both sides of the ' ...
+                        'vanishing line!']);            
+
                 inl = find(cs);
                 [Rtij,Gm(inl),needs_inverted] = ...
                     segment_motions(x,M0,cspond(:,inl),Rtij0(:,:, ...
@@ -60,19 +52,15 @@ classdef RepeatEval < handle
                     deal(cspond(2,inl(needs_inverted)), ...
                          cspond(1,inl(needs_inverted)));
 
-                [loss,E] = calc_loss(x,xp,cspond,cs,Gm,M0.q,M0.cc,M0.H,Rtij,this.reprojT);
+                [loss,E,cs] = calc_loss(x,xp,cspond,cs,Gm,M0.q,M0.cc,M0.H,Rtij,this.reprojT);
 
-                assert(all(~isnan(Gm(this.calc_cs(E)))), ...
-                       'You have issues');
-                
+                assert(all(~isnan(Gm(cs))), 'Invalid motions found.');
+
                 loss_info = struct('cspond', cspond, ...
                                    'Gm', Gm, ...
                                    'Rtij', Rtij);
             end
         end
-
-        function cs = calc_cs(this,E)
-            cs = E < this.reprojT;
-        end                        
+       
     end
 end

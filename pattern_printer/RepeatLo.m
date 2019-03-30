@@ -29,23 +29,17 @@ classdef RepeatLo < handle
             [mle_model,mle_stats] = pattern_printer.fit('MaxIterations',this.max_iter); 
 
             xp = PT.renormI(blkdiag(mle_model.H,mle_model.H,mle_model.H)*PT.ru_div(x,mle_model.cc,mle_model.q));
-            [loss,E] = calc_loss(x,xp,res.info.cspond,res.cs, ...
+            [loss,E,cs0] = calc_loss(x,xp,res.info.cspond,res.cs, ...
                                  res.info.Gm,mle_model.q, mle_model.cc,mle_model.H, ...
                                  mle_model.Rtij,this.eval.reprojT);
 
             xu = PT.ru_div(x,mle_model.cc,mle_model.q);
 
-            [~,side] = PT.are_same_orientation(xu,mle_model.l);
-            lo_cs = this.eval.calc_cs(E); 
-            d2inl = unique(res.info.cspond(:,lo_cs));
-            sides = side(res.info.cspond(:,d2inl));
-            [~,best_side] = max(hist(sides(:),[1,2]));
-            side_inl =  find(all(sides == best_side));
-            inl = d2inl(side_inl);
-            cs = false(size(inl));
+            Einl = find(cs0);           
+            side_inl = unique(find(label_best_orientation(xu,res.info.cspond(:,Einl),M0.l)));
+            inl = Einl(side_inl);
+            cs = false(1,size(res.info.cspond,2));
             cs(inl) = true;
-            
-            keyboard;
 
             loss_info = struct('cspond', res.info.cspond, ...
                                'Gm', res.info.Gm, ...
@@ -54,15 +48,11 @@ classdef RepeatLo < handle
                              'err', E, ...
                              'info',loss_info, ...
                              'cs', cs);            
-            
-%            assert(loss <= res.loss,'Likelihood Decreased!');           
-%            assert(are_same, ...
-%                   ['There are measurements on both sides of the
-%                   vanishing line!']);
+
+            are_same = PT.are_same_orientation(xu(:,unique(res.info.cspond(:,mle_res.cs))),mle_model.l);
+            assert(loss <= res.loss,'Likelihood Decreased!');           
+            assert(are_same, ...
+                   ['There are measurements on both sides of the vanishing line!']);
         end
     end
 end
-
-%            xu = PT.ru_div(x,mle_model.cc,M0.q);
-%            [are_same,side] = PT.are_same_orientation(xu(:,inlx),M0.l);
-%

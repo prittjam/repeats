@@ -21,7 +21,6 @@
 %img_name = 'coke'
 %img_name = 'fisheye'
 
-
 img_path = 'data/cropped_dartboard.jpg';
 repeats_init();
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);

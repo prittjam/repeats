@@ -90,9 +90,8 @@ classdef Ransac < handle
                     stats.model_count = stats.model_count+numel(model_list);
                     loss = inf(numel(model_list),1);
                     for k = 1:numel(model_list)
-                        [loss(k),err{k},loss_info{k}] = ...
+                        [loss(k),err{k},cs{k},loss_info{k}] = ...
                             this.eval.calc_loss(x,model_list(k),varargin{:});
-                        cs{k} = this.eval.calc_cs(err{k});
                     end
                     [~,mink] = min(loss);
                     M0 = model_list(mink);
