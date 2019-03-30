@@ -12,12 +12,10 @@ Hinv = inv(Hinf);
 
 xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model.cc, ...
                                                   model.q));
-%if size(rt,3) > cfg.num_codes
-%    ind = randsample(size(rt,3),cfg.num_codes);
-%    rt = rt(:,:,ind);
-%end
-
-%rt = rt(:,:,1:floor(size(rt,3)/2))
+if size(rt,3) > cfg.num_codes
+    ind = randsample(size(rt,3),cfg.num_codes);
+    rt = rt(:,:,ind);
+end
 
 M = size(cspond,2);
 N = size(rt,3); 
@@ -54,16 +52,14 @@ rt = rt(:,:,code_ind);
 
 Gm(min_d2c > vqT) = nan;
 
-assert(all(min_d2c < vqT), ...
-       'Motion segmentation increased error.');
-assert(sum(~isnan(Gm))==size(cspond,2), ...
-       'Some cspondondences dont have motions.');
-
-uGm = unique(Gm);
+uGm = unique(Gm(~isnan(Gm)));
 rt2 = rt(:,:,uGm);
-
 Gm = findgroups(Gm);
 
+%assert(all(min_d2c < vqT), ...
+%       'Motion segmentation increased error.');
+%assert(sum(~isnan(Gm))==size(cspond,2), ...
+%       'Some cspondondences dont have motions.');
 %check_err(x,cspond,rt2(:,:,Gm),model,vqT,is_inverted);
 
 function d2 = check_err(x,cspond,Rtij,model0,vqT,is_inverted)

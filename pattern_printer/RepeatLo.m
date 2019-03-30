@@ -36,7 +36,7 @@ classdef RepeatLo < handle
             xu = PT.ru_div(x,mle_model.cc,mle_model.q);
 
             Einl = find(cs0);           
-            side_inl = unique(find(label_best_orientation(xu,res.info.cspond(:,Einl),M0.l)));
+            side_inl = unique(find(label_best_orientation(xu,res.info.cspond(:,Einl),mle_model.l)));
             inl = Einl(side_inl);
             cs = false(1,size(res.info.cspond,2));
             cs(inl) = true;

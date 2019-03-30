@@ -4,7 +4,7 @@ listing = dir(src_path);
 dt = datestr(now,'yyyymmdd_HHMMSS');
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 
-%listing = listing(9:end);
+listing = listing(9:end);
 for k = 1:numel(listing)
     item = listing(k);
     img_path = fullfile(item.folder,item.name);
