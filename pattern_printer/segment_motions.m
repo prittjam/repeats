@@ -18,6 +18,7 @@ xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,model.cc, ...
 %end
 
 %rt = rt(:,:,1:floor(size(rt,3)/2))
+
 M = size(cspond,2);
 N = size(rt,3); 
 is_inverted = unique_ro(rt);

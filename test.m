@@ -21,11 +21,11 @@
 %img_name = 'coke'
 %img_name = 'fisheye'
 
+
+img_path = 'data/cropped_dartboard.jpg';
 repeats_init();
-img_name = 'cropped_dartboard';
-src_path = 'data/ijcv19/*.jpg';
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
-%[model_list,res_list,stats_list,meas,img] = do_one_img(img_path,solver);
+[model_list,res_list,stats_list,meas,img] = do_one_img(img_path,solver);
 dt = datestr(now,'yyyymmdd_HHMMSS');
 load('output/cropped_dartboard.mat');
 save_results(img_path,dt,model_list, ...

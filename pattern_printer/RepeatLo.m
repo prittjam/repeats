@@ -33,25 +33,32 @@ classdef RepeatLo < handle
                                  res.info.Gm,mle_model.q, mle_model.cc,mle_model.H, ...
                                  mle_model.Rtij,this.eval.reprojT);
 
+            xu = PT.ru_div(x,mle_model.cc,mle_model.q);
+
+            [~,side] = PT.are_same_orientation(xu,mle_model.l);
+            lo_cs = this.eval.calc_cs(E); 
+            d2inl = unique(res.info.cspond(:,lo_cs));
+            sides = side(res.info.cspond(:,d2inl));
+            [~,best_side] = max(hist(sides(:),[1,2]));
+            side_inl =  find(all(sides == best_side));
+            inl = d2inl(side_inl);
+            cs = false(size(inl));
+            cs(inl) = true;
+            
+            keyboard;
+
             loss_info = struct('cspond', res.info.cspond, ...
                                'Gm', res.info.Gm, ...
                                'Rtij', mle_model.Rtij);
-            
             mle_res = struct('loss', loss, ...
                              'err', E, ...
                              'info',loss_info, ...
-                             'cs', this.eval.calc_cs(E));
+                             'cs', cs);            
             
-            inlx = unique(res.info.cspond(:,res.cs));
-            
-            xu = PT.ru_div(x,mle_model.cc,mle_model.q);
-            [are_same,side] = PT.are_same_orientation(xu(:,inlx),mle_model.l);
-
 %            assert(loss <= res.loss,'Likelihood Decreased!');           
 %            assert(are_same, ...
 %                   ['There are measurements on both sides of the
 %                   vanishing line!']);
-disp(['remember']);    
         end
     end
 end

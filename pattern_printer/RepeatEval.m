@@ -62,7 +62,8 @@ classdef RepeatEval < handle
 
                 [loss,E] = calc_loss(x,xp,cspond,cs,Gm,M0.q,M0.cc,M0.H,Rtij,this.reprojT);
 
-                assert(all(~isnan(Gm(this.calc_cs(E)))),'You have issues');
+                assert(all(~isnan(Gm(this.calc_cs(E)))), ...
+                       'You have issues');
                 
                 loss_info = struct('cspond', cspond, ...
                                    'Gm', Gm, ...
