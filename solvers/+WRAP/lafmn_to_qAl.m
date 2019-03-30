@@ -20,7 +20,8 @@ classdef lafmn_to_qAl < WRAP.RectSolver
         function model_list = fit(this,x,idx,varargin)            
             M = this.solver_impl.fit(x,idx,varargin{:});
             G = findgroups(varargin{2});
-            m = [idx{:}];        
+            m = [idx{:}];
+            keyboard;
             if isempty(M)
                 model_list = [];
             else

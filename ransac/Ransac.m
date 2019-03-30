@@ -52,6 +52,7 @@ classdef Ransac < handle
                         try
                             model_list = this.solver.fit(x,idx,varargin{:});
                         catch excpn
+                            model_list = [];
                         end
                         if ~isempty(model_list)
                             has_model = true;
