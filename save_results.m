@@ -1,7 +1,6 @@
 function [] = save_results(img_path,dt,model_list, ...
                            res_list,stats_list,meas,img) 
     results_path = fullfile('results', dt);
-    mkdir(results_path);
     if ~exist(results_path, 'dir')
         mkdir(results_path);
     end
