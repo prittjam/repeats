@@ -19,16 +19,17 @@ classdef lafmn_to_qAl < WRAP.RectSolver
 
         function model_list = fit(this,x,idx,varargin)            
             M = this.solver_impl.fit(x,idx,varargin{:});
+            
+            cc = varargin{1};
             G = findgroups(varargin{2});
             m = [idx{:}];
-            keyboard;
             if isempty(M)
                 model_list = [];
             else
                 for k = 1:numel(M)
                     Hinf = eye(3);
                     Hinf(3,:) = transpose(M(k).l);
-                    xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,M(k).cc,M(k).q));
+                    xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,cc,M(k).q));
                     A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
 
                     if isempty(A)
@@ -46,7 +47,7 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                     model_list(k) = struct('l',M(k).l, ...
                                            'A',A, ...
                                            'q',q, ...
-                                           'cc',M(k).cc, ...
+                                           'cc',cc, ...
                                            'H', H, ...
                                            'solver_time',M(k).solver_time);
                 end         
