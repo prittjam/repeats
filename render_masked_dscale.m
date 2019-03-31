@@ -1,6 +1,4 @@
 function [] = render_masked_dscale(results_file,mask)
-results_file = '/home/jbpritts/src/repeats/results/WRAP.laf222_to_ql/20190331_111605/cropped_dartboard.mat';
-mask = imread('/home/jbpritts/src/repeats/results/WRAP.laf222_to_ql/20190331_111605/cropped_dartboard_mask.png');
 load(results_file);
 res = res_list(1);
 l = PT.renormI(model_list(1).l);
