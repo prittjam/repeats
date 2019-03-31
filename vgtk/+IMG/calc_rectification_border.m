@@ -1,4 +1,4 @@
-function border = calc_rectification_border(sz,l,cc,q,minscale,maxscale,x)
+function [border,sc_img] = calc_rectification_border(sz,l,cc,q,minscale,maxscale,x)
     nx = sz(2);
     ny = sz(1);
 
