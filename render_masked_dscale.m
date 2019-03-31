@@ -18,5 +18,3 @@ bwmask = repmat(bwmask,1,1,3);
 bgimg(bwmask==1) = scimg8(bwmask==1);
 [~,img_name] = fileparts(results_file);
 imwrite(bgimg,[img_name '_cs.jpg']);
-
-
