@@ -28,6 +28,7 @@ classdef RepeatSampler < handle
         % handle problems with reflections!
             this.G = G;
             this.cspond = cspond;
+            this.Gcspond = 
             
             is_ccwise = PT.is_ccwise(x);            
             G(is_ccwise) = findgroups(G(is_ccwise));
