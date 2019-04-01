@@ -23,12 +23,12 @@
 
 img_path = 'data/cropped_dartboard.jpg';
 repeats_init();
-solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
-%solver = WRAP.lafmn_to_qAl(WRAP.laf22_to_ql);
+%solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
+solver = WRAP.lafmn_to_qAl(WRAP.laf22_to_ql);
 
 [model_list,res_list,stats_list,meas,img] = do_one_img(img_path,solver);
 dt = datestr(now,'yyyymmdd_HHMMSS');
 results_path = fullfile('results',class(solver.solver_impl),dt);
+keyboard;
 save_results(results_path,img_path,dt,model_list, ...
              res_list,stats_list,meas,img);
-

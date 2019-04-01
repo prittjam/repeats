@@ -15,6 +15,14 @@ classdef RepeatEval < handle
             [this,~] = cmp_argparse(this,varargin{:});
         end        
         
+        function max_loss = calc_max_loss(this,x,M0,varargin) 
+            G = findgroups(varargin{2});
+            cspond = resection(x,G,'Rt');
+            n = sum(~isnan(G));
+            m = nchoosek(n,2);
+            max_loss = m*this.reprojT;
+        end
+                
         function [loss,E,cs,loss_info] = calc_loss(this,x,M0,varargin)         
             G = findgroups(varargin{2});
             loss_info = struct;
