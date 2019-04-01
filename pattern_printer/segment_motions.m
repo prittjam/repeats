@@ -35,7 +35,7 @@ ut_i = PT.rd_div(PT.renormI(blkdiag(Hinv,Hinv,Hinv)*...
 err1 = reshape(ut_j,9,M,N)-x(:,cspond(2,:));
 err2 = reshape(ut_i,9,M,N)-x(:,cspond(1,:));
 
-d2 = sum([err1.^2;err2.^2]);
+d2 = sum([err1;err2].^2);
 d2 = reshape(d2,M,N);
 
 K = sparse(double(d2 < vqT));

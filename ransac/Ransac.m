@@ -30,14 +30,14 @@ classdef Ransac < handle
             max_loss = this.eval.calc_max_loss(x,varargin{:});
             stats = struct('time_elapsed', 0, ...
                            'trial_count', 1, ...
+                           'N', inf,...
                            'sample_count', 0, ...
                            'model_count', 0, ...
                            'max_loss', max_loss, ...
                            'local_list', [], ...
                            'global_list', []);
 
-            N = inf;
-            res = struct('loss', inf, ...
+           res = struct('loss', inf, ...
                          'cs', 0);
             optM = [];
             lo_res = res;
@@ -133,13 +133,14 @@ classdef Ransac < handle
                         % Update estimate of est_trial_count, the number
                         % of trial_count to ensure we pick, with
                         % probability p, a data set with no outliers.
-                        N = this.sampler.update_trial_count(opt_res.cs);
+                        stats.N = this.sampler.update_trial_count(opt_res.cs);
                     end   
                 end
                     
                 stats.trial_count = stats.trial_count+1;
-                disp(['Trial '  num2str(stats.trial_count) ' out of ' num2str(N)]);
-                if (stats.trial_count >= N)
+                disp(['Trial '  num2str(stats.trial_count) ' out of ' num2str(stats.N)]); 
+
+                if (stats.trial_count >= stats.N)
                     break;
                 end
             end
