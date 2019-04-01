@@ -6,7 +6,7 @@
 %
 classdef RepeatSampler < handle
     properties
-        min_trial_count = 50;
+        min_trial_count = 500;
         max_trial_count = 500;
         max_num_retries = 200;
         
@@ -16,12 +16,19 @@ classdef RepeatSampler < handle
 
         freq = []
         mss = []
-        pmap = containers.Map('KeyType','double','ValueType','any');
+        pmap = containers.Map('KeyType','double','ValueType', ...
+                              'any');
+        
+        G = [];
+        cspond = [];
     end
     
     methods
-        function this = RepeatSampler(x,mss,G,varargin)
+        function this = RepeatSampler(x,mss,G,cspond,varargin)
         % handle problems with reflections!
+            this.G = G;
+            this.cspond = cspond;
+            
             is_ccwise = PT.is_ccwise(x);            
             G(is_ccwise) = findgroups(G(is_ccwise));
             G(~is_ccwise) = findgroups(G(~is_ccwise))+max(G(is_ccwise));

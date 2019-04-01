@@ -4,8 +4,17 @@
 %
 %  Written by James Pritts
 %
-function ransac = make_ransac(solver,x,G,cc,varargin)
-sampler = RepeatSampler(x,solver.mss,G);
-eval = RepeatEval(varargin{:});
+function ransac = make_ransac(solver,x,G,varargin)
+cspond = splitapply(@(ind) { make_cspond(ind) },1:size(G,2),G);
+cspond = [cspond{:}];
+
+sampler = RepeatSampler(x,solver.mss,G,cspond);
+eval = RepeatEval(cspond,varargin{:});
 lo = RepeatLo('Rt',eval,varargin{:});
 ransac = Ransac(solver,sampler,eval,'lo',lo);
+
+
+function cspond = make_cspond(ind)
+N = size(ind,2);
+[ii0,jj0] = itril([N N],-1);
+cspond = [ind(ii0);ind(jj0)];

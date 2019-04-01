@@ -8,29 +8,26 @@ classdef RepeatEval < handle
     properties    
         max_iter = 10;
         reprojT = 10;
+        cspond = [];
     end
     
     methods
-        function this = RepeatEval(varargin)
+        function this = RepeatEval(cspond,varargin)
             [this,~] = cmp_argparse(this,varargin{:});
+            this.cspond = cspond;
         end        
         
-        function max_loss = calc_max_loss(this,x,M0,varargin) 
-            G = findgroups(varargin{2});
-            cspond = resection(x,G,'Rt');
-            n = sum(~isnan(G));
-            m = nchoosek(n,2);
-            max_loss = m*this.reprojT;
+        function max_loss = calc_max_loss(this,x,varargin) 
+            max_loss = size(this.cspond,2)*this.reprojT;
         end
                 
         function [loss,E,cs,loss_info] = calc_loss(this,x,M0,varargin)         
-            G = findgroups(varargin{2});
             loss_info = struct;
             
             xu = PT.ru_div(x,M0.cc,M0.q);
             xp = PT.renormI(blkdiag(M0.H,M0.H,M0.H)*xu);
             
-            [cspond,Rtij0] = resection(xp,G,'Rt');             
+            [cspond,Rtij0] = resection(xp,this.cspond,'Rt');             
             n = size(cspond,2);
             
             [loss,E,cs0] = calc_loss(x,xp,cspond,1:n,1:n,M0.q,M0.cc,M0.H,Rtij0,this.reprojT);
