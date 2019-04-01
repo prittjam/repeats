@@ -7,7 +7,7 @@
 classdef RepeatSampler < handle
     properties
         min_trial_count = 500;
-        max_trial_count = 500;
+        max_trial_count = 1e4;
         max_num_retries = 200;
         
         confidence = 0.99
@@ -28,7 +28,6 @@ classdef RepeatSampler < handle
         % handle problems with reflections!
             this.G = G;
             this.cspond = cspond;
-            this.Gcspond = 
             
             is_ccwise = PT.is_ccwise(x);            
             G(is_ccwise) = findgroups(G(is_ccwise));
@@ -72,7 +71,10 @@ classdef RepeatSampler < handle
         end
 
         function trial_count = update_trial_count(this,cs)
-%            trial_count = inf;
+            n = sum(this.mss);
+            w = sum(cs)/numel(cs);
+            trial_count = round(log(1-this.confidence)/log(1-w^n));
+        %            trial_count = inf;
 %            cslabeling = this.labeling0.*cs;
 %            cslabeling(find(cslabeling==0)) = nan;
 %            cs_freq = hist(cslabeling,1:max(this.labeling0));
@@ -93,7 +95,6 @@ classdef RepeatSampler < handle
 %            eip = p3*100;
 %            disp(['Expected inlier percentage: ' num2str(eip,'%04.1f') ...
 %                  ' |  # trials needed: ' num2str(trial_count)]);
-    trial_count = 500;
         end
     end
 end 
