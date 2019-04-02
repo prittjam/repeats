@@ -14,7 +14,7 @@ imwrite(rimg,rect_file_path);
 sc_file_path = fullfile(results_path,[img_name '_cs.jpg']);
 imwrite(sc_img,sc_file_path);
 
-if nargin > 3
-    sc_file_path = fullfile(results_path,[img_name 'masked_cs.jpg']);
-    imwrite(sc_img,sc_file_path);    
+if nargin > 5
+    sc_file_path = fullfile(results_path,[img_name '_masked_cs.jpg']);
+    imwrite(masked_sc_img,sc_file_path);    
 end

@@ -38,4 +38,5 @@ mask = imread('data/cropped_dartboard_mask.png');
 masked_sc_img = IMG.render_masked_scale_change(img.data,meas, ...
                                                model_list(1),res_list(1),mask);
 
+keyboard;
 save_imgs(results_path,img_path,uimg,rimg,sc_img,masked_sc_img);
