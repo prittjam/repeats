@@ -4,7 +4,7 @@ function [border,sc_img] = calc_rectification_border(sz,l,cc,q,minscale,maxscale
 
     l = PT.renormI(l);
     
-    [sc_img,si_fn] = IMG.calc_dscale(sz,l,cc,q,x);
+    [sc_img,si_fn] = IMG.render_scale_change(sz,l,cc,q,x);
      
     bw = (sc_img > minscale) & (sc_img < maxscale);
     [yy,xx] = find(bw);

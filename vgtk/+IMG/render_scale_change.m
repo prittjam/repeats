@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [img,si_fn] = calc_dscale(sz,l,cc,q,x)
+function [img,si_fn] = render_scale_change(sz,l,cc,q,x)
 nx = sz(2);
 ny = sz(1);
 
