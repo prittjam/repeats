@@ -44,7 +44,6 @@ varargin = { ransac_settings{:} dr_settings{:} };
 [model_list,res_list,stats_list,meas,img] = ...
     do_one_img(img_path,solver,varargin{:});
 
-
 save_results(results_path,img_path,dt,model_list, ...
              res_list,stats_list,meas,img);
 
