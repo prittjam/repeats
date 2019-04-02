@@ -31,7 +31,7 @@ repeats_init();
 
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql('solver','ijcv19'));
 
-results_path = fullfile('results',class(solver.solver_impl),dt);
+results_path = fullfile('scale_change_results',class(solver.solver_impl),dt);
 
 ransac_settings = ...
     { 'min_trial_count', 750, ...
