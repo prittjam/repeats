@@ -8,9 +8,7 @@ function [fdr,res] = get(img,cid_cache,varargin)
 fdr = [];
 res = [];
 
-min_size = img.area/640/480*4;
-min_mser_scale = 20;
-min_haff_scale = 20;
+min_size = 0.000035*img.area;
 
 cfg.type = 'all';
 cfg.reflection = 1;

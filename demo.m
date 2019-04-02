@@ -23,6 +23,7 @@
 
 img_path = 'data/cropped_dartboard.jpg';
 %img_path = 'data/circles.jpg';
+%img_path = 'data/barrels.jpg';
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 results_path = fullfile('results',class(solver.solver_impl),dt);
@@ -33,9 +34,9 @@ repeats_init();
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 
 ransac_settings = ...
-    { 'min_trial_count', 500, ...
-      'max_trial_count', 500, ...
-      'reprojT', 15 } ;
+    { 'min_trial_count', 700, ...
+      'max_trial_count', 700, ...
+      'reprojT', 7 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
