@@ -52,4 +52,8 @@ save_results(results_path,img_path,dt,model_list, ...
     render_imgs(img.data,meas,model_list(1),res_list(1),...
                 'min_scale',0.05, 'max_scale',15);
 
-save_imgs(results_path,img_path,uimg,rimg,sc_img);
+mask = imread('data/cropped_dartboard_mask.png');
+masked_sc_img = IMG.render_masked_scale_change(img.data,meas, ...
+                                               model_list(1),res_list(1),mask);
+
+save_imgs(results_path,img_path,uimg,rimg,sc_img,masked_sc_img);
