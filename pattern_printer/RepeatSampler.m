@@ -6,7 +6,7 @@
 %
 classdef RepeatSampler < handle
     properties
-        min_trial_count = 500;
+        min_trial_count = 100;
         max_trial_count = 1e4;
         max_num_retries = 200;
         
@@ -25,10 +25,11 @@ classdef RepeatSampler < handle
     
     methods
         function this = RepeatSampler(x,mss,G,cspond,varargin)
-        % handle problems with reflections!
+            [this,~] = cmp_argparse(this,varargin{:});
             this.G = G;
             this.cspond = cspond;
-            
+
+            % handle problems with reflections!
             is_ccwise = PT.is_ccwise(x);            
             G(is_ccwise) = findgroups(G(is_ccwise));
             G(~is_ccwise) = findgroups(G(~is_ccwise))+max(G(is_ccwise));
@@ -66,7 +67,6 @@ classdef RepeatSampler < handle
                     k3 = k3+1;
                 end
             end
-
             idx(inda) = idx;
         end
 
@@ -74,6 +74,7 @@ classdef RepeatSampler < handle
             n = sum(this.mss);
             w = sum(cs)/numel(cs);
             trial_count = round(log(1-this.confidence)/log(1-w^n));
+            trial_count = max(this.min_trial_count,min([trial_count,this.max_trial_count]));
         %            trial_count = inf;
 %            cslabeling = this.labeling0.*cs;
 %            cslabeling(find(cslabeling==0)) = nan;

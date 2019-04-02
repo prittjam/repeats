@@ -8,7 +8,7 @@ function ransac = make_ransac(solver,x,G,varargin)
 cspond = splitapply(@(ind) { make_cspond(ind) },1:size(G,2),G);
 cspond = [cspond{:}];
 
-sampler = RepeatSampler(x,solver.mss,G,cspond);
+sampler = RepeatSampler(x,solver.mss,G,cspond,varargin{:});
 eval = RepeatEval(cspond,varargin{:});
 lo = RepeatLo('Rt',eval,varargin{:});
 ransac = Ransac(solver,sampler,eval,'lo',lo);

@@ -1,7 +1,8 @@
 function [uimg,rimg,sc_img] = render_images(img,meas,model,res,varargin)
-cfg = struct('min_scale', 0.1
+cfg = struct('min_scale', 0.1, ...
              'max_scale', 10);
-cfg = cmp_argparse(this,varargin{:});
+
+cfg = cmp_argparse(cfg,varargin{:});
 
 ind = find(~isnan(model.Gm));
 x = reshape(meas.x(:,unique(res.info.cspond(:,res.cs))),3,[]);
