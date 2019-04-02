@@ -20,22 +20,21 @@
 %img_name = 'pavement'
 %img_name = 'coke'
 %img_name = 'fisheye'
-
-img_path = 'data/cropped_dartboard.jpg';
 %img_path = 'data/circles.jpg';
 %img_path = 'data/barrels.jpg';
+img_path = 'data/cropped_dartboard.jpg';
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
-results_path = fullfile('results',class(solver.solver_impl),dt);
 
 repeats_init();
 
-%solver = WRAP.lafmn_to_qAl(WRAP.laf22_to_ql);
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 
+results_path = fullfile('results',class(solver.solver_impl),dt);
+
 ransac_settings = ...
-    { 'min_trial_count', 700, ...
-      'max_trial_count', 700, ...
+    { 'min_trial_count', 750, ...
+      'max_trial_count', 750, ...
       'reprojT', 7 } ;
 
 dr_settings = ...
@@ -50,6 +49,6 @@ save_results(results_path,img_path,dt,model_list, ...
 
 [uimg,rimg,sc_img] = ...
     render_images(img.data,meas,model_list(1),res_list(1),...
-                  'min_scale',0.05, 'max_scale',20);
+                  'min_scale',0.05, 'max_scale',15);
 
 save_imgs(results_path,img_path,uimg,rimg,sc_img);
