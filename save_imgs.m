@@ -1,4 +1,4 @@
-function [] = save_imgs(results_path,img_path,uimg,rimg,sc_img);
+function [] = save_imgs(results_path,img_path,uimg,rimg,sc_img,masked_sc_img);
 if ~exist(results_path, 'dir')
     mkdir(results_path);
 end
@@ -13,3 +13,8 @@ imwrite(rimg,rect_file_path);
 
 sc_file_path = fullfile(results_path,[img_name '_cs.jpg']);
 imwrite(sc_img,sc_file_path);
+
+if nargin > 3
+    sc_file_path = fullfile(results_path,[img_name 'masked_cs.jpg']);
+    imwrite(sc_img,sc_file_path);    
+end
