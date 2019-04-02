@@ -1,6 +1,4 @@
-function [] = render_masked_dscale(results_file,mask)
-load(results_file);
-res = res_list(1);
+function [] = render_masked_dscale(img,meas,model,res,mask)
 l = PT.renormI(model_list(1).l);
 x = reshape(meas.x(:,unique(res.info.cspond(:,res.cs))),3,[]);
 [sc_img,si_fn] = ...
