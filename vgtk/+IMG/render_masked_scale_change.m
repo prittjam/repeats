@@ -1,9 +1,9 @@
-function [] = render_masked_dscale(img,meas,model,res,mask)
+function [] = render_masked_scale_change(img,meas,model,res,mask)
 l = PT.renormI(model_list(1).l);
 x = reshape(meas.x(:,unique(res.info.cspond(:,res.cs))),3,[]);
 [sc_img,si_fn] = ...
-    IMG.calc_dscale(size(img.data),model_list(1).l, ...
-                    model_list(1).cc,model_list(1).q,x);
+    IMG.render_scale_change(size(img.data),model_list(1).l, ...
+                            model_list(1).cc,model_list(1).q,x);
 sc_img = 1./sc_img;
 bwmask = mat2gray(mask);
 bgimg = img.data;
