@@ -50,7 +50,7 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
                 flag = PT.are_same_orientation(x,M.l) & isreal(M.l); 
             else
                 nq = M.q*sum(2*M.cc)^2;
-                if nq <= 0 && nq > -6
+                if nq <= 0 && nq > -8
                     xp = PT.ru_div(x,M.cc,M.q);
                     flag = PT.are_same_orientation(xp,M.l) & isreal(M.l); 
                 end
