@@ -1,7 +1,7 @@
 repeats_init();
 ransac_settings = ...
-    { 'min_trial_count',500, ...
-      'max_trial_count',500, ...
+    { 'min_trial_count',10, ...
+      'max_trial_count',10, ...
       'reprojT', 7 } ;
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
@@ -25,6 +25,7 @@ listing1 = dir(src_path1);
 listing2 = dir(src_path2);
 listing = [listing1;listing2];
 
+listing = listing(1);
 for k = 1:numel(listing)
     splt = strsplit(listing(k).folder,'/');
     all_camera_names{k} = splt{end};
@@ -43,15 +44,19 @@ summary_list = cell2table(cell(0,6),'VariableNames', ...
 for k1 = 1:numel(solver_list)
     solver = solver_list{k1};
     for k2 = 1:numel(listing)
-        item = listing(k2);
-        img_path = fullfile(item.folder,item.name);
-        [model_list,res_list,stats_list,meas,img] = ...
-            do_one_img(img_path,solver,varargin{:});
-        summary_row = ...
-            { solver_category_list(k1), camera_category_list(k2), ...
-              model_list, res_list, stats_list, img_path };        
-        tmp_summary = summary_list;
-        summary_list = [tmp_summary;summary_row]; 
+        try
+            item = listing(k2);
+            img_path = fullfile(item.folder,item.name);
+            [model_list,res_list,stats_list,meas,img] = ...
+                do_one_img(img_path,solver,varargin{:});
+            summary_row = ...
+                { solver_category_list(k1), camera_category_list(k2), ...
+                  model_list, res_list, stats_list, img_path };        
+            tmp_summary = summary_list;
+            summary_list = [tmp_summary;summary_row]; 
+        catch
+            disp(['There was some error']);
+        end
     end
     save(strcat('results/sattler_', dt, '.mat'), 'summary_list');
 end
