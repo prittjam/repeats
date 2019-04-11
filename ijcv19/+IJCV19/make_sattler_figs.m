@@ -20,6 +20,8 @@ uimg_path_list = unique(summary_list.img_path);
 color_list = {'r','g','b','c','y','m'};
 line_style = {'-','--'};
 
+
+keyboard;
 for k = 1:numel(uimg_path_list)
     rows = find(cellfun(@(x) strcmpi(x,uimg_path_list{k}) , ...
                         summary_list.img_path));

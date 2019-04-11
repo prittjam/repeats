@@ -49,10 +49,10 @@ for k1 = 1:numel(solver_list)
             disp(['There was some error']);
         end
     end
-    if ~exist('results', 'dir')
-        mkdir('results');
-    end
-    save(strcat('results/sattler_', dt, '.mat'), 'summary_list');
 end
 
-
+if ~exist('results', 'dir')
+    mkdir('results');
+end
+save(strcat('results/sattler_', dt, '.mat'), 'summary_list');
+disp(['Finished!']);
