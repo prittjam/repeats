@@ -2002,8 +2002,7 @@ function [stat] = customLegend()
   y = tan(sin(x)) - sin(tan(x));
   plot(x,y,'--rs');
 
-  lh=legend('y');
-  set(lh,'Location','West')
+  lh=legend('y',4);
   set(lh,'color','g')
   set(lh,'edgecolor','r')
   set(lh, 'position',[.5 .6 .1 .05])

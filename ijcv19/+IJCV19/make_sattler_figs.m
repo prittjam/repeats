@@ -17,9 +17,6 @@ stats_list =  cell2table(cell(0,4),'VariableNames', ...
                          {'solver_name', 'camera_name', 'local_loss', 'trial_count'});
 
 uimg_path_list = unique(summary_list.img_path);
-
-%summary_list = IJCV19.fix_summary_list(summary_list);
-
 color_list = {'r','g','b','c','y','m'};
 line_style = {'-','--'};
 
@@ -80,28 +77,17 @@ for k1 = 1:numel(solver_categories)
         plot(mean_loss,'Color', color_list{k2}, 'LineStyle',line_style{k1});
         hold off;
     end
-%    set(leg1, 'FontSize', 10);
-%    set(leg1,'Interpreter','Latex');
 end
 
-keyboard;
-legend(camera_categories{:},'Location','northeast');
-%
-%        
-%keyboard;
-%for k2 = 1:numel(camera_categories)
-%    for k1 = 1:numel(solver_categories)
-%        v = c[cellstr(solver_categories(k1))':' ...
-%              cellstr(camera_categores)];
-%        meanv = mean(v);
-%        figure;
-%        hold on;       
-%        for k3 = 1:num_rows
-%            plot(u,v(k3,:),'r-','LineWidth',3);
-%        %        plot(x,y,'b*');
-%        end
-%        hold ff;
-%        plot(u,meanv,'g-','LineWidth',3);
-%        hold off;
-%    end
-%end
+%    set(leg1, 'FontSize', 10);
+%    set(leg1,'Interpreter','Latex');
+legend(camera_categories{:},'Location','southeast');
+xlabel('RANSAC iterations');
+ylabel('Mean Normalized Negative Log Likelihood');
+axis_options = {'enlargelimits=false'};  
+target_path = '/home/jbpritts/Documents/ijcv19/fig2/';
+cleanfigure;
+
+matlab2tikz([target_path 'nll_comparisons.tikz'], ...
+            'width', '\fwidth', ...
+            'extraAxisOptions',axis_options);

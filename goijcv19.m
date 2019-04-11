@@ -35,10 +35,9 @@ summary_list = cell2table(cell(0,6),'VariableNames', ...
 for k1 = 1:numel(solver_list)
     solver = solver_list{k1};
     for k2 = 1:numel(listing)
-        %        try
+        try
             item = listing(k2);
             img_path = fullfile(item.folder,item.name);
-
             [model_list,res_list,stats_list,meas,img] = ...
                 do_one_img(img_path,solver,varargin{:});
             summary_row = ...
@@ -46,13 +45,14 @@ for k1 = 1:numel(solver_list)
                   model_list, res_list, stats_list, img_path };        
             tmp_summary = summary_list;
             summary_list = [tmp_summary;summary_row]; 
-            %        catch
-            %   disp(['There was some error']);
-            %        end
+        catch
+            disp(['There was some error']);
+        end
     end
-    
     if ~exist('results', 'dir')
         mkdir('results');
     end
     save(strcat('results/sattler_', dt, '.mat'), 'summary_list');
 end
+
+
