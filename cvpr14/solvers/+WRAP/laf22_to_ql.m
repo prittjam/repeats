@@ -4,7 +4,7 @@ classdef laf22_to_ql < WRAP.RectSolver
     properties
         q = [];
         solver_type = 'polynomial';
-        qvals = [0:-1:-6];
+        qvals = [0:-0.1:-6];
     end
 
     methods(Static)

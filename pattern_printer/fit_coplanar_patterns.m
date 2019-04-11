@@ -5,11 +5,11 @@
 %  Written by James Pritts
 %
 function [model,res,stats_list] = ...
-   fit_coplanar_patterns(solver,x,G,cc,num_planes,varargin)
+   fit_coplanar_patterns(solver,x,G,K,num_planes,varargin)
 ransac = make_ransac(solver,x,G,varargin{:});
-[model0,res0,stats_list] = ransac.fit(x,cc,G);
+[model0,res0,stats_list] = ransac.fit(x,K,G);
 ransac.lo.max_iter = 150;
-[model,res] =  ransac.lo.fit(x,model0,res0,cc,G);
+[model,res] =  ransac.lo.fit(x,model0,res0,K,G);
 
 stats_list.local_list(end) = struct('model',model, ...
                                     'res',res, ...

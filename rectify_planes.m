@@ -4,8 +4,6 @@
 %
 %  Written by James Pritts
 %
-function [model_list,lo_res_list,stats_list] = ...
-    rectify_planes(x,G,solver,cc,varargin)
-
-[model_list,lo_res_list,stats_list] = ...
-    fit_coplanar_patterns(solver,x,G,cc,1,varargin{:});
+function [model_list,lo_res_list,stats_list] = rectify_planes(x,G,solver,K,varargin)
+    [model_list,lo_res_list,stats_list] = ...
+        fit_coplanar_patterns(solver,x,G,K,1,varargin{:});
