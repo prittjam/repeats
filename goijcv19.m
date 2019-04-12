@@ -26,8 +26,6 @@ for k = 1:numel(listing)
     all_camera_names{k} = splt{end};
 end
 
-camera_category_list = unique(all_camera_names);
-
 dt = datestr(now,'yyyymmdd_HHMMSS');
 summary_list = cell2table(cell(0,6),'VariableNames', ...
                           {'solver_name', 'camera_name', 'model_list', ...
@@ -41,11 +39,11 @@ for k1 = 1:numel(solver_list)
             [model_list,res_list,stats_list,meas,img] = ...
                 do_one_img(img_path,solver,varargin{:});
             summary_row = ...
-                { solver_category_list{k1}, camera_category_list{k2}, ...
+                { solver_category_list{k1}, all_camera_names{k2}, ...
                   model_list, res_list, stats_list, img_path };        
             tmp_summary = summary_list;
             summary_list = [tmp_summary;summary_row]; 
-        catch
+        catch ME
             disp(['There was some error']);
         end
     end
