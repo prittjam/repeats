@@ -20,8 +20,6 @@ uimg_path_list = unique(summary_list.img_path);
 color_list = {'r','g','b','c','y','m'};
 line_style = {'-','--'};
 
-
-keyboard;
 for k = 1:numel(uimg_path_list)
     rows = find(cellfun(@(x) strcmpi(x,uimg_path_list{k}) , ...
                         summary_list.img_path));
@@ -39,6 +37,12 @@ for k = 1:numel(uimg_path_list)
         local_res = [local_stats(:).res];
         trial_count = [local_stats(:).trial_count];
         local_loss = [local_res(:).loss];
+        
+        tst = local_loss(1:end-1)-local_loss(2:end);
+        if any(tst < 0)
+            keyboard;
+        end
+
         x = [0 trial_count];
         y = -[ex(k3,:).stats_list(1).max_loss local_loss];
 

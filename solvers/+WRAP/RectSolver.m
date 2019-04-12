@@ -42,37 +42,46 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
             flag = numel(unique([idx{:}])) == sum(this.mss);
         end    
         
-        function flag = is_real(this,x,idx,M,cc,varargin)
-            q = [M(:).q];
+        function flag = is_real(this,M,cc,varargin)
+            if ~isfield(M,'q')
+                q = zeros(1,numel(M));
+            else
+                q = [M(:).q];
+            end
             l = [M(:).l];
             flag = false(1,numel(M));
             for k = 1:numel(M)
-                flag(k) = isreal(M(k).q) & isreal(M(k).l);
+                flag(k) = isreal(q(k)) & isreal(M(k).l);
             end
         end
 
-        function flag = is_feasible(this,x,idx,M,cc,varargin)
-            nq = [M(:).q*sum(2*cc)^2];
-            flag = nq <= 0 && nq > -8;
+        function [flag,fflag,rflag] = is_model_good(this,x,idx,M,cc,varargin)
+            m = [idx{:}];
+            x = x(:,m(:));
+
+            if ~isfield(M,'q')
+                q = zeros(1,numel(M));
+            else
+                q = [M(:).q];
+            end
+                
+            rflag = this.is_real(M,cc);
+            nq = q*sum(2*cc)^2;
+            qflag = (nq <= 0) & (nq > -8);
+            oflag = false(size(qflag));
+            flag = qflag & rflag;
+
             if any(flag)
                 ind = find(flag);
                 for k = 1:numel(ind)
-                    xp = PT.ru_div(x,cc,M(ind(k)).q);
-                    flag(ind(k)) = ...
+                    xp = PT.ru_div(x,cc,q(ind(k)));
+                    oflag(ind(k)) = ...
                         PT.are_same_orientation(xp,M(ind(k)).l); 
                 end
-            end            
+            end         
+            fflag = oflag & qflag;
+            flag = flag & rflag & fflag;
         end        
-        
-        function flag = is_model_good(this,x,idx,M,cc,varargin)
-            keyboard;
-            flag = false;
-            m = [idx{:}];
-            x = x(:,m(:));
-            flag = this.is_real(x,idx,M,cc,varargin{:})
-            feas_flag = this.is_feasible(x,idx,M(flag),cc,varargin{:});
-            flag(flag) = feas_flag;
-        end                
 
         function M = fix(this,x,idx,M,varargin)
             M = [];

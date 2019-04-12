@@ -99,7 +99,7 @@ classdef laf22_to_l < WRAP.RectSolver
                 if N > 0 
                     ll2 = A'*l;
                     ll2 = bsxfun(@rdivide,ll2,ll2(3,:));
-                    M = struct('l', mat2cell(real(ll2),3,ones(1,N)), ...
+                    M = struct('l', mat2cell(ll2,3,ones(1,N)), ...
                                'solver_time', solver_time);
                 end
                 

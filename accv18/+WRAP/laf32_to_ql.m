@@ -49,19 +49,15 @@ classdef laf32_to_ql < WRAP.RectSolver
                 [q,ll] = this.ijcv19_fit(xd,idx,cc,varargin{:});
                 solver_time = toc;
             end 
+
+            ll2 = A'*ll;
+            ll2 = bsxfun(@rdivide,ll2,ll2(3,:));
             
-            qn = q*sum(2*cc)^2;
-            good_ind = find((qn < 1) & (qn > -8));
-            N = numel(good_ind);
-            if N > 0 
-                ll2 = A'*ll;
-                ll2 = bsxfun(@rdivide,ll2,ll2(3,:));
-                M = struct('q', mat2cell(real(q(good_ind)),1,ones(1,N)), ...
-                           'l', mat2cell(real(ll2(:,good_ind)),3,ones(1,N)), ...
-                           'cc', cc, ...
-                           'solver_time', solver_time);
-                
-            end
+            N = numel(q);
+            M = struct('q', mat2cell(q,1,ones(1,N)), ...
+                       'l', mat2cell(ll2,3,ones(1,N)), ...
+                       'cc', cc, ...
+                       'solver_time', solver_time);            
         end
     end
 end

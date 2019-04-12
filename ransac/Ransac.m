@@ -75,7 +75,7 @@ classdef Ransac < handle
                     is_model_good(k) = ...
                         this.solver.is_model_good(x,idx,model_list(k),varargin{:});
                 end
-                
+
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
@@ -121,15 +121,26 @@ classdef Ransac < handle
                         lo_stats = struct('model',loM, ...
                                           'res',lo_res, ...
                                           'trial_count',stats.trial_count, ...
-                                          'model_count',stats.model_count); ...
-                            stats.local_list = cat(2,stats.local_list,lo_stats);
+                                          'model_count',stats.model_count);
                         
-                        assert(lo_res.loss <= res.loss, ['likelihood decreased!']);
+                        assert(lo_res.loss <= res.loss,['likelihood decreased!']);
+                        
                         if (lo_res.loss <= opt_res.loss)
+                            stats.local_list = cat(2,stats.local_list,lo_stats);
                             optM = loM;
                             opt_res = lo_res;
                             opt_res.loss
                         end
+                        
+                        if numel(stats.local_list) > 1
+                            if (stats.local_list(end).res.loss- ...
+                                stats.local_list(end-1).res.loss > 0)
+                                keyboard;
+                            end
+%                            assert(stats.local_list(end)- ...
+%                                   stats.local_list(end-1) < 0, ...
+%                                   ['likelihood decreased!']);
+                        end                        
                         % Update estimate of est_trial_count, the number
                         % of trial_count to ensure we pick, with
                         % probability p, a data set with no outliers.

@@ -13,7 +13,7 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                  'ny', 1000, ...
                  'cc', [], ...
                  'rigidxform', 'Rt', ...
-                 'numscenes', 40, ...
+                 'numscenes', 50, ...
                  'ccdsigmalist', [0 0.1 0.5 1 2 5], ...
                  'normqlist',-4);
 
@@ -33,9 +33,10 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
     wplane = 10;
     hplane = 10;
 
-    res = cell2table(cell(0,6), 'VariableNames', ...
+    res = cell2table(cell(0,9), 'VariableNames', ...
                      {'solver','ex_num','rewarp',...
-                      'ransac_rewarp','q','ransac_q'});
+                      'ransac_rewarp','q','ransac_q', ...
+                      'num_sol','num_real','num_feasible'});
     gt = cell2table(cell(0,4), 'VariableNames', ...
                     {'ex_num', 'scene_num', 'q_gt','sigma'});
 
@@ -78,6 +79,9 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                 for k = 1:numel(solver_list)
                     optq_list = nan(1,samples_drawn);
                     opt_warp_list = nan(1,samples_drawn);
+                    num_sol = nan(1,samples_drawn);
+                    num_real = nan(1,samples_drawn);
+                    num_feasible = nan(1,samples_drawn);
                     cspond_info = ...
                         cspond_dict(solver_sample_type{k});
                     for k2 = 1:samples_drawn
@@ -96,7 +100,15 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                         catch err
                             M = [];
                         end
+                        
                         if ~isempty(M)
+                            [flag,fflag,rflag] = ...
+                                solver_list(k).is_model_good(xdn,idx,M,cc,G);
+                            
+                            num_sol(k2) = numel(M);
+                            num_real(k2) = sum(rflag);
+                            num_feasible(k2) = sum(fflag);                            
+                            
                             [~,opt_warp_list(k2)] = ...
                                 calc_opt_warp(truth,cam,M,P,wplane,hplane);
                             optq_list(k2) = ...
@@ -105,12 +117,14 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                             disp(['solver failure for ' name_list{k}]);
                         end
                     end
+                        
                     [~,best_ind] = min(opt_warp_list);
                     [~,optq_ind] = min(abs(optq_list-truth.q));
                     ind = find(~isnan(optq_list),1);
                     res_row = { solver_names(find(strcmpi(name_list(k),categories(solver_names)))), ...
                                 ex_num, opt_warp_list(ind), opt_warp_list(best_ind), ...
-                                optq_list(ind), optq_list(optq_ind) };
+                                optq_list(ind), optq_list(optq_ind), ...
+                                num_sol, num_real, num_feasible };
                     tmp_res = res;
                     res = [tmp_res;res_row]; 
                 end
