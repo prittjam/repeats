@@ -73,13 +73,13 @@ classdef Ransac < handle
 
                 for k = 1:numel(model_list)
                     is_model_good(k) = ...
-                        this.solver.is_model_good(x,idx,model_list(k));
+                        this.solver.is_model_good(x,idx,model_list(k),varargin{:});
                 end
                 
                 if ~all(is_model_good)
                     bad_ind = find(~is_model_good);
                     for k = bad_ind
-                        Mfix = this.solver.fix(x,idx,model_list(k));
+                        Mfix = this.solver.fix(x,idx,model_list(k),varargin{:});
                         if ~isempty(Mfix)
                             is_model_good(k) = true;
                             model_list(k) = Mfix;
