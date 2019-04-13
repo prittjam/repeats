@@ -43,19 +43,13 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
         end    
         
         function flag = is_real(this,M,cc,varargin)
-            if ~isfield(M,'q')
-                q = zeros(1,numel(M));
-            else
-                q = [M(:).q];
-            end
-            l = [M(:).l];
             flag = false(1,numel(M));
             for k = 1:numel(M)
-                flag(k) = isreal(q(k)) & isreal(M(k).l);
-            end
+                flag(k) = isreal(M(k).q) & isreal(M(k).l);
+            end    
         end
 
-        function [flag,fflag,rflag] = is_model_good(this,x,idx,M,cc,varargin)
+        function [flag,rflag] = is_model_good(this,x,idx,M,cc,varargin)
             m = [idx{:}];
             x = x(:,m(:));
 
@@ -79,8 +73,7 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
                         PT.are_same_orientation(xp,M(ind(k)).l); 
                 end
             end         
-            fflag = oflag & qflag;
-            flag = flag & rflag & fflag;
+            flag = flag & oflag;
         end        
 
         function M = fix(this,x,idx,M,varargin)

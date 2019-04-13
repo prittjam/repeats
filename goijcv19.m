@@ -14,6 +14,7 @@ src_path2 = '/home/jbpritts/Downloads/data/**/*.JPG';
 solver_list{1} = WRAP.lafmn_to_qAl(WRAP.laf22_to_ql);
 solver_list{2} = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
 
+
 solver_category_list = {'$\mH22\{\,\lambda\,\}_k$', ...
                     '$\mH222\vl\lambda$'};
 

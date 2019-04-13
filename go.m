@@ -24,21 +24,22 @@
 %img_path = 'data/cropped_dartboard.jpg';
 %img_path =
 %'/home/jbpritts/Downloads/data/fisheye/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen.jpg';
+%img_path = 'data/new_medium_63_o.jpg'
 
-img_path = 'data/new_medium_63_o.jpg'
+img_path = '~/Desktop/veggies.jpg';
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
 repeats_init();
 
-solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
+solver = WRAP.lafmn_to_qAl(WRAP.laf22_to_l);
 
 results_path = fullfile('results',class(solver.solver_impl),dt);
 
 ransac_settings = ...
     { 'min_trial_count', 750, ...
       'max_trial_count', 750, ...
-      'reprojT', 10 } ;
+      'reprojT', 15 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 

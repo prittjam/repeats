@@ -31,7 +31,7 @@ classdef laf222_to_ql < WRAP.RectSolver
             s2 = PT.calc_scale(x(:,2:2:end));
             c2 = ones(1,numel(s2));
 
-            [q,ll] = solver_rect_cos_222(x1,s1,c1,x2,s2,c2);
+            [q,ll] = solver_rect_cos_222_bs(x1,s1,c1,x2,s2,c2);
             ll = [ll;ones(1,size(ll,2))];
         end
                

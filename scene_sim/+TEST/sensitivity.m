@@ -102,18 +102,21 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                         end
                         
                         if ~isempty(M)
-                            [flag,fflag,rflag] = ...
-                                solver_list(k).is_model_good(xdn,idx,M,cc,G);
-                            
+                            if isfield(M,'l')
+                                [flag,rflag] = ...
+                                    solver_list(k).is_model_good(xdn,idx,M,cc,G);
+                            end
+                                
                             num_sol(k2) = numel(M);
                             num_real(k2) = sum(rflag);
-                            num_feasible(k2) = sum(fflag);                            
+                            num_feasible(k2) = sum(flag);                            
                             
                             [~,opt_warp_list(k2)] = ...
                                 calc_opt_warp(truth,cam,M,P,wplane,hplane);
                             optq_list(k2) = ...
                                 calc_opt_q(truth,cam,M,P,wplane,hplane);
                         else
+                            keyboard;
                             disp(['solver failure for ' name_list{k}]);
                         end
                     end

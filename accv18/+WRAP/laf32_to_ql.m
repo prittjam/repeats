@@ -23,14 +23,11 @@ classdef laf32_to_ql < WRAP.RectSolver
         end
         
         function [q,ll] = ijcv19_fit(this,x,idx,cc,varargin)
-            x1 = PT.calc_mu(x(:,1:2:end));
-            s1 = PT.calc_scale(x(:,1:2:end));
-            c1 = ones(1,numel(s1));
-            x2 = PT.calc_mu(x(:,2:2:end));
-            s2 = PT.calc_scale(x(:,2:2:end));
-            c2 = ones(1,numel(s2));
-
-            [q,ll] = solver_rect_cos_222(x1,s1,c1,x2,s2,c2);
+            mux = PT.calc_mu(x);
+            sc = PT.calc_scale(x);
+            c = ones(1,size(mux,2));
+            [q,ll] = solver_rect_cos_32_bs(mux(:,idx{1}),sc(idx{1}),c(idx{1}), ...
+                                           mux(:,idx{2}),sc(idx{2}),c(idx{2}));
             ll = [ll;ones(1,size(ll,2))];
         end
 
@@ -39,12 +36,13 @@ classdef laf32_to_ql < WRAP.RectSolver
             A = [1 0 -cc(1); ...
                  0 1 -cc(2); ...
                  0 0  1];    
-            xd = A*reshape(x(:,[idx{:}]),3,[]);
             if strcmpi(this.solver,'accv18')
+                xd = A*reshape(x(:,[idx{:}]),3,[]);
                 tic
                 [q,ll] = this.accv18_fit(xd,idx,cc,varargin{:});
                 solver_time = toc;
             else
+                xd = blkdiag(A,A,A)*x;
                 tic
                 [q,ll] = this.ijcv19_fit(xd,idx,cc,varargin{:});
                 solver_time = toc;
@@ -52,7 +50,6 @@ classdef laf32_to_ql < WRAP.RectSolver
 
             ll2 = A'*ll;
             ll2 = bsxfun(@rdivide,ll2,ll2(3,:));
-            
             N = numel(q);
             M = struct('q', mat2cell(q,1,ones(1,N)), ...
                        'l', mat2cell(ll2,3,ones(1,N)), ...

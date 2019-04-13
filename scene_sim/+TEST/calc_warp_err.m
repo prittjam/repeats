@@ -53,32 +53,3 @@ aa = pinv(M)*[u;v];
 A = [aa(1:3)'; ...
      aa(4:6)'; ...
      0 0 1];
-
-function [v,A] = do_hartley(u)
-v = reshape(u,3,[]);
-v = PT.renormI(v);
-
-tx = mean(v(1,:));
-ty = mean(v(2,:));
-v(1,:) = v(1,:) - tx;
-v(2,:) = v(2,:) - ty;
-dsc = max(max(abs(v(1:2,:)),[],2));
-v(1:2,:) = v(1:2,:)/dsc;
-
-v = reshape(v,6,[]);
-
-A = eye(3);
-A([1,2],3) = -[tx ty] / dsc;
-A(1,1) = 1 / dsc;
-A(2,2) = 1 / dsc;
-
-function [X] = whiten(X,fudgefactor)
-X = [rand(2,4)];
-muX = mean(X,2);
-mX = X-muX;
-S = mX*mX'/size(mX,2);
-[U,S,V] = svd(S);
-M = [U*diag(1./sqrt(diag(S)))*U' -muX; 
-     0 0 1];
-Y = M*[X;ones(1,4)];
-keyboard;
