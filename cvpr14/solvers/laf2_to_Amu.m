@@ -1,8 +1,12 @@
 function Ha = laf2_to_Amu(u,G,varargin)
-X = cmp_splitapply(@(x) ({x}),u,G);    
-Ha = laf2x2_to_Amu_internal(X);   
+x = reshape(u(:,find(G)),3,[]);
+M = whiten(x(1:2,:));
+v = blkdiag(M,M,M)*u;
+X = cmp_splitapply(@(x) ({x}),v,G);    
 
-function A = laf2x2_to_Amu_internal(X)
+Ha = laf2x2_to_Amu_internal(X,M);   
+
+function A = laf2x2_to_Amu_internal(X,M)
 m = sum(cellfun(@get_size,X));
 n = numel(X);
 Z = zeros(3*m,3+3*n); 
@@ -36,19 +40,20 @@ for j = 1:numel(X)
     k = k+k2;
 end
 
-S = diag(1./max(max(abs(Z)),1));
-[~,~,V] = svd(Z*S);
-V2 = S*V;
-%V2 = V;
-
-z = V2(:,end);
+[~,~,V] = svd(Z);
+z = V(:,end);
 z = z/z(1);
+
+Z = [z(1) z(2); z(2) z(3)];
+
+M = M(1:2,1:2);
+Z = M'*Z*M;
 
 if any(z([1,3:end]) < 0)
     A = [];
 else
     try
-        a = chol([z(1) z(2); z(2) z(3)]);
+        a = chol(Z);
     catch err
         A = [];
         return;
@@ -59,3 +64,12 @@ end
 
 function n = get_size(X)
 n = size(X,2);
+
+function M = whiten(X)
+muX = mean(X,2);
+mX = X-muX;
+S = mX*mX'/size(mX,2);
+[U,S,V] = svd(S);
+T = U*diag(1./sqrt(diag(S)))*U';
+M = [T -T*muX; 
+     0 0 1];

@@ -33,7 +33,7 @@ for k = 1:numel(solver_ind)
     hold on;
     h = cdfplot(res.rewarp(ind(ind2)));
     solver_name = cellstr(solver_list(solver_ind(k)));
-    set(h,'color',color_list(colormap(solver_name{:}),:));
+    set(h,'color',colormap(solver_name{:}));
     hold off;
 end
 

@@ -7,22 +7,25 @@
 %img_name = 'pavement'
 %img_name = 'darts'
 %img_name = 'tran_1_046'
-%img_name = 'circletext'
-%img_name = 'nyu_test3'
-%uimg_name = 'new_medium_63_o'
-%img_name = 'pattern24w'
-%img_name = 'download'
-%img_name = 'img'
-%img_name = 'raw'
-%img_name = 'cards'
-%img_name = 'small'
-%img_name = 'pattern1b';
-%img_name = 'pavement'
-%img_name = 'coke'
+%img_path = 'circletext'
+%img_path = 'nyu_test3'
+%img_path = 'data/pattern24w.jpg'
+%img_path = 'download'
+%img_path = 'img'
+%img_path = 'raw'
+%img_path = 'cards'
+%img_path = 'small'
+%img_path = 'data/pattern1b.jpg';
+%img_path = 'pavement'
+%img_path = 'coke'
 %img_name = 'fisheye'
 %img_path = 'data/circles.jpg';
 %img_path = 'data/barrels.jpg';
-img_path = 'data/cropped_dartboard.jpg';
+%img_path = 'data/cropped_dartboard.jpg';
+%img_path =
+%'/home/jbpritts/Downloads/data/fisheye/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen.jpg';
+
+img_path = 'data/new_medium_63_o.jpg'
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
@@ -35,7 +38,7 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 750, ...
       'max_trial_count', 750, ...
-      'reprojT', 7 } ;
+      'reprojT', 10 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
@@ -46,7 +49,6 @@ varargin = { ransac_settings{:} dr_settings{:} };
 
 save_results(results_path,img_path,dt,model_list, ...
              res_list,stats_list,meas,img);
-
 
 render_settings =  ...
     { 'min_scale',1e-5, 'max_scale',15 };

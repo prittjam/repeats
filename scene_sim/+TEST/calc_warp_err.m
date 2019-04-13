@@ -1,4 +1,4 @@
-function rms = calc_bmvc16_err(x,gtlinf,gtlambda,estlinf,estlambda,cc)
+function rms = calc_warp_err(x,gtlinf,gtlambda,estlinf,estlambda,cc)
 N = size(x,2);
 
 gtlinf = gtlinf/gtlinf(3);
@@ -71,3 +71,14 @@ A = eye(3);
 A([1,2],3) = -[tx ty] / dsc;
 A(1,1) = 1 / dsc;
 A(2,2) = 1 / dsc;
+
+function [X] = whiten(X,fudgefactor)
+X = [rand(2,4)];
+muX = mean(X,2);
+mX = X-muX;
+S = mX*mX'/size(mX,2);
+[U,S,V] = svd(S);
+M = [U*diag(1./sqrt(diag(S)))*U' -muX; 
+     0 0 1];
+Y = M*[X;ones(1,4)];
+keyboard;

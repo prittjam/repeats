@@ -1,4 +1,4 @@
-function [] = make_sensitivity_figs(src_path,target_path,colormap,color_list,rigid_xform)
+function [] = make_sensitivity_figs(src_path,target_path,colormap,rigid_xform)
 repeats_init();
 sensitivity = load(src_path);
 is_legend_on = 'Off';
@@ -30,7 +30,7 @@ ubound = q_gt+4;
 
 axis_options = {'enlargelimits=false'};  
 is_valid = Lia & Lib;
-boxplot_colors = make_boxplot_colors(res(is_valid,:),color_list,colormap);
+boxplot_colors = make_boxplot_colors(res(is_valid,:),colormap);
 
 ax1 = make_grouped_boxplot(res(is_valid,:), ...
                            {'q'},{ 'sigma', 'solver' }, ...
@@ -43,8 +43,8 @@ ax1 = make_grouped_boxplot(res(is_valid,:), ...
                            'legend',is_legend_on);
 
 drawnow;
-
 cleanfigure;
+keyboard;
 matlab2tikz([target_path sprintf('lambda_sensitivity_%s.tikz',rigid_xform)], ...
              'width', '\fwidth','extraAxisOptions',axis_options);
 
@@ -90,7 +90,7 @@ matlab2tikz([target_path sprintf('ransac_rel_lambda_sensitivity_%s.tikz',rigid_x
             'extraAxisOptions',axis_options);
 
 is_valid = Lia & Lid;
-boxplot_colors = make_boxplot_colors(res(is_valid,:),color_list,colormap);
+boxplot_colors = make_boxplot_colors(res(is_valid,:),colormap);
 ax5 = make_grouped_boxplot(res(is_valid,:), {'rewarp'},{ 'sigma', 'solver'}, ...
                            'ylabel', ['$\Delta^{\mathrm{warp}}_{\' ...
                     'mathrm{RMS}}$ [pixels]'], ...
@@ -119,10 +119,10 @@ cleanfigure;
 matlab2tikz([target_path sprintf('ransac_rewarp_sensitivity_%s.tikz',rigid_xform)], ...
             'width','\fwidth','extraAxisOptions',axis_options);
 
-function boxplot_colors = make_boxplot_colors(res,colorlist,colormap)
+function boxplot_colors = make_boxplot_colors(res,colormap)
 num_solvers = numel(unique(res.solver));
 solver_order = cellstr(res(1:num_solvers,:).solver);
 boxplot_colors = zeros(num_solvers,3);
 for k = 1:num_solvers
-    boxplot_colors(k,:) = colorlist(colormap(solver_order{k}),:);
+    boxplot_colors(k,:) = colormap(solver_order{k});
 end
