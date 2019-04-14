@@ -14,7 +14,7 @@ img_stats = cell2table(cell(0,5),'VariableNames', ...
                        {'img_path', 'local_min_loss', 'local_max_loss', 'global_min_loss', 'global_max_loss'});
 
 stats_list =  cell2table(cell(0,4),'VariableNames', ...
-                         {'solver_name', 'camera_name', 'local_loss', 'trial_count'});
+                         {'solver_name', 'camera_name', 'local_nnl', 'trial_count'});
 
 uimg_path_list = unique(summary_list.img_path);
 color_list = {'r','g','b','c','y','m'};
@@ -23,6 +23,7 @@ line_style = {'-','--'};
 for k = 1:numel(uimg_path_list)
     rows = find(cellfun(@(x) strcmpi(x,uimg_path_list{k}) , ...
                         summary_list.img_path));
+    
     ex = summary_list(rows,:);
     num_rows = size(ex,1);
 
@@ -39,9 +40,7 @@ for k = 1:numel(uimg_path_list)
         local_loss = [local_res(:).loss];
         
         tst = local_loss(1:end-1)-local_loss(2:end);
-        if any(tst < 0)
-            keyboard;
-        end
+        assert(all(tst > 0), 'Likelihood decreased');
 
         x = [0 trial_count];
         y = -[ex(k3,:).stats_list(1).max_loss local_loss];
@@ -69,18 +68,18 @@ end
 figure;
 for k1 = 1:numel(solver_categories)
     for k2 = 1:numel(camera_categories)
-        rows = find(strcmpi(stats_list.solver_name,solver_categories{k1}) ...
-                    & strcmpi(stats_list.camera_name,camera_categories{k2}));
+        rows = find(strcmpi(stats_list.solver_name,solver_categories{k1})  & ...
+                    strcmpi(stats_list.camera_name, camera_categories{k2}));
         ex = stats_list(rows,:);
         color = colormap(solver_categories{k1});
-        loss = [ex.local_loss];
+        nll = [ex.local_nll];
         if size(loss,1) > 1
-            mean_loss = mean(loss);
+            mean_nll = mean(nll);
         else
-            mean_loss = loss;
+            mean_nll = nll;
         end
         hold on;
-        plot(mean_loss,'Color', color_list{k2}, 'LineStyle',line_style{k1});
+        plot(mean_nll,'Color', color_list{k2}, 'LineStyle',line_style{k1});
         hold off;
     end
 end

@@ -26,7 +26,7 @@
 %'/home/jbpritts/Downloads/data/fisheye/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen.jpg';
 %img_path = 'data/new_medium_63_o.jpg'
 
-img_path = '~/Desktop/veggies.jpg';
+%img_path = '~/Desktop/veggies.jpg';
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
