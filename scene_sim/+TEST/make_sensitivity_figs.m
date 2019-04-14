@@ -44,7 +44,7 @@ ax1 = make_grouped_boxplot(res(is_valid,:), ...
 
 drawnow;
 cleanfigure;
-keyboard;
+
 matlab2tikz([target_path sprintf('lambda_sensitivity_%s.tikz',rigid_xform)], ...
              'width', '\fwidth','extraAxisOptions',axis_options);
 
@@ -118,6 +118,10 @@ drawnow;
 cleanfigure;
 matlab2tikz([target_path sprintf('ransac_rewarp_sensitivity_%s.tikz',rigid_xform)], ...
             'width','\fwidth','extraAxisOptions',axis_options);
+
+keyboard;
+
+
 
 function boxplot_colors = make_boxplot_colors(res,colormap)
 num_solvers = numel(unique(res.solver));

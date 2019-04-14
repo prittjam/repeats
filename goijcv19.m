@@ -37,6 +37,7 @@ for k1 = 1:numel(solver_list)
         try
             item = listing(k2);
             img_path = fullfile(item.folder,item.name);
+            keyboard;
             [model_list,res_list,stats_list,meas,img] = ...
                 do_one_img(img_path,solver,varargin{:});
             summary_row = ...

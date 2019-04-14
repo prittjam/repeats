@@ -24,31 +24,46 @@ Lia = res.sigma == 1;
 Lid = ismember(res.solver,setdiff(solver_list,{'$\mH22\lambda$'}));
 
 solver_ind = find(Lid(1:numel(solver_list)));
-
 is_valid = Lia & Lid;
-
 ind = find(is_valid);
-for k = 1:numel(solver_ind)
-    ind2 = find(ismember(res.solver(ind),solver_list(solver_ind(k))));
-    hold on;
-    h = cdfplot(res.rewarp(ind(ind2)));
-    solver_name = cellstr(solver_list(solver_ind(k)));
-    set(h,'color',colormap(solver_name{:}));
-    hold off;
-end
 
+figure;
+for k = 1:numel(solver_ind)
+    solver_name = cellstr(solver_list(solver_ind(k)));
+    linecolor = colormap(solver_name{:});
+    %    set(h,'color',colormap(solver_name{:}));
+    ind2 = find(ismember(res.solver(ind),solver_list(solver_ind(k))));
+    x = res.rewarp(ind(ind2));
+    [f,xi] = ksdensity(x,0:0.1:max(x), ...
+                       'BoundaryCorrection','reflection');
+    y = cumsum(f);
+    y = y/max(y);
+
+    hold on;
+    plot(xi,y,'Color',linecolor,'LineWidth',1.5);
+    hold off;
+    %%    h = cdfplot(res.rewarp(ind(ind2)));
+end
+ylim([0,0.8]);
 xlim([0 15]);
+xticks([0:5:15]);
 xlabel('$\Delta^{\mathrm{warp}}_{\mathrm{RMS}}$ [pixels] at $\sigma=1$ pixel', ...
        'Interpreter','Latex','Color','k'); 
 ylabel('$p(x < \Delta^{\mathrm{warp}}_{\mathrm{RMS}})$', ...
        'Interpreter','Latex');
 grid off;
 title('');
-%title('Empirical CDF of RMS warp error');
-%legend('a','b','c','d','e','f','Location','northwest');
-legend('off');
+legend(cellstr(solver_list(solver_ind)), ...
+       'Location','northwest', ...
+       'Interpreter','Latex');
 drawnow;
 
 cleanfigure('targetResolution',100);
 matlab2tikz([target_path 'ecdf_warp_1px_ct.tikz'], ...
             'width', '\fwidth', 'extraAxisOptions',axis_options);
+
+
+
+%title('Empirical CDF of RMS warp error');
+
+%legend('off');

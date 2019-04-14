@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,varargin)
+function [res,gt,cam] = sensitivity(out_name,name_list,solver_list,all_solver_names,varargin)
     repeats_init;
     assert(numel(name_list) == numel(solver_list), ...
            'The number of names MUST match the number of solvers');
@@ -13,7 +13,7 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                  'ny', 1000, ...
                  'cc', [], ...
                  'rigidxform', 'Rt', ...
-                 'numscenes', 50, ...
+                 'numscenes', 1000, ...
                  'ccdsigmalist', [0 0.1 0.5 1 2 5], ...
                  'normqlist',-4);
 
@@ -135,14 +135,14 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                 gt_row = ...
                     { ex_num, scene_num, q_gt, ccd_sigma };
                 gt = [gt;gt_row];
-                disp(['Computing ex number ' num2str(ex_num)]);
+                
+                disp(['Computing ex number ' num2str(ex_num) ' of ' ...
+                      num2str(cfg.numscenes*numel(cfg.ccdsigmalist)*numel(q_gt_list))]);
                 ex_num = ex_num+1;
             end
         end
     end
     disp(['Finished']);
-    save(out_name,'res','gt','cam');
-
 
 function optq = calc_opt_q(gt,cam,M,P,w,h)
     if isfield(M,'q1')
