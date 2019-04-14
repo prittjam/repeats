@@ -42,10 +42,11 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
             flag = numel(unique([idx{:}])) == sum(this.mss);
         end    
         
-        function flag = is_real(this,M,cc,varargin)
+        function flag = is_valid_real(this,M,cc,varargin)
             flag = false(1,numel(M));
             for k = 1:numel(M)
-                flag(k) = isreal(M(k).q) & isreal(M(k).l);
+                flag(k) = isreal(M(k).q) & isreal(M(k).l) & ...
+                          all(~isnan(M(k).q)) & all(~isnan(M(k).l)) ;
             end    
         end
 
@@ -59,7 +60,7 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
                 q = [M(:).q];
             end
                 
-            rflag = this.is_real(M,cc);
+            rflag = this.is_valid_real(M,cc);
             nq = q*sum(2*cc)^2;
             qflag = (nq <= 0) & (nq > -8);
             oflag = false(size(qflag));

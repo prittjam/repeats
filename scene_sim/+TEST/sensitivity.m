@@ -105,22 +105,23 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                             if isfield(M,'l')
                                 [flag,rflag] = ...
                                     solver_list(k).is_model_good(xdn,idx,M,cc,G);
+                                M = M(rflag);
+                                num_sol(k2) = numel(M);
+                                num_real(k2) = sum(rflag);
+                                num_feasible(k2) = sum(flag);
                             end
-                                
-                            num_sol(k2) = numel(M);
-                            num_real(k2) = sum(rflag);
-                            num_feasible(k2) = sum(flag);                            
-                            
+                        end
+                        
+                        if ~isempty(M)
                             [~,opt_warp_list(k2)] = ...
                                 calc_opt_warp(truth,cam,M,P,wplane,hplane);
                             optq_list(k2) = ...
-                                calc_opt_q(truth,cam,M,P,wplane,hplane);
+                                calc_opt_q(truth,cam,M,P,wplane, ...
+                                           hplane);
                         else
-                            keyboard;
                             disp(['solver failure for ' name_list{k}]);
                         end
                     end
-                        
                     [~,best_ind] = min(opt_warp_list);
                     [~,optq_ind] = min(abs(optq_list-truth.q));
                     ind = find(~isnan(optq_list),1);
@@ -134,7 +135,6 @@ function [] = sensitivity(out_name,name_list,solver_list,all_solver_names,vararg
                 gt_row = ...
                     { ex_num, scene_num, q_gt, ccd_sigma };
                 gt = [gt;gt_row];
-
                 disp(['Computing ex number ' num2str(ex_num)]);
                 ex_num = ex_num+1;
             end
@@ -175,7 +175,7 @@ function [optq,opt_warp] = calc_opt_warp(gt,cam,M,P,w,h)
     warp_list = nan(1,numel(M));
     optq = nan;
     opt_warp = nan;
-    if isfield(M(1),'l')
+    if isfield(M,'l')
         for k = 1:numel(M)
             warp_list(k) = ...
                 TEST.calc_warp_err(x,gt.l,gt.q,M(k).l,mq(k),gt.cc);

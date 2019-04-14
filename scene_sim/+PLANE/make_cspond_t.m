@@ -7,7 +7,7 @@
 function [X,cspond,G] = make_cspond_t(N)
 x = LAF.make_random(N);
 t = 0.9*rand(2,N)-0.45;
-x1 = LAF.translate(x,t);
+x1 = translate(x,t);
 x2 = do_translate(x1);
 x = reshape([x1;x2],9,[]);
 M = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
@@ -29,5 +29,10 @@ l = as(2,:);
 u = as(3,:);
 x2 = zeros(size(x1));
 t = (u-l).*(0.9*rand(1,N)+0.1);
-x2 = LAF.translate(x1,bsxfun(@times,t,n));
+x2 = translate(x1,t);
 
+function v = translate(u,t)
+z = zeros(1,size(t,2));
+o = ones(1,size(t,2));
+A = Rt.params_to_mtx([z;t;o]);
+v = PT.mtimesx(A,u);
