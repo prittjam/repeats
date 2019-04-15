@@ -27,6 +27,8 @@ solver_ind = find(Lid(1:numel(solver_list)));
 is_valid = Lia & Lid;
 ind = find(is_valid);
 
+keyboard;
+
 figure;
 for k = 1:numel(solver_ind)
     solver_name = cellstr(solver_list(solver_ind(k)));
@@ -53,9 +55,13 @@ ylabel('$p(x < \Delta^{\mathrm{warp}}_{\mathrm{RMS}})$', ...
        'Interpreter','Latex');
 grid off;
 title('');
-legend(cellstr(solver_list(solver_ind)), ...
-       'Location','northwest', ...
-       'Interpreter','Latex');
+lh = legend(cellstr(solver_list(solver_ind)), ...
+            'Location','northwest', ...
+            'Interpreter','Latex', ...
+            'FontSize', 10);
+
+legend boxoff;
+
 drawnow;
 
 cleanfigure('targetResolution',100);
