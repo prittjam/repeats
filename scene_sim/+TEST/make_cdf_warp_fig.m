@@ -60,6 +60,8 @@ lh = legend(cellstr(solver_list(solver_ind)), ...
             'Interpreter','Latex', ...
             'FontSize', 10);
 
+axis square;
+pbaspect([16 9 1]);
 legend boxoff;
 
 drawnow;
