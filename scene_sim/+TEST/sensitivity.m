@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [res,gt,cam] = sensitivity(out_name,name_list,solver_list,all_solver_names,varargin)
+function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varargin)
     repeats_init;
     assert(numel(name_list) == numel(solver_list), ...
            'The number of names MUST match the number of solvers');

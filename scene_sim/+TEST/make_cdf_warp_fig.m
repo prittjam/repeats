@@ -27,8 +27,6 @@ solver_ind = find(Lid(1:numel(solver_list)));
 is_valid = Lia & Lid;
 ind = find(is_valid);
 
-keyboard;
-
 figure;
 for k = 1:numel(solver_ind)
     solver_name = cellstr(solver_list(solver_ind(k)));
@@ -63,8 +61,6 @@ lh = legend(cellstr(solver_list(solver_ind)), ...
 axis square;
 pbaspect([16 9 1]);
 legend boxoff;
-
-drawnow;
 
 cleanfigure('targetResolution',100);
 matlab2tikz([target_path 'ecdf_warp_1px_ct.tikz'], ...
