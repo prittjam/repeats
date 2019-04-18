@@ -1,10 +1,12 @@
 function [] = test_constraints()
 nx = 1000;
 ny = 1000;
+keyboard;
 f = 5*rand(1)+3;
 cam = CAM.make_ccd(f,4.8,nx,ny);
 [P,xb] = PLANE.make_viewpoint(cam);
 X = PLANE.sample_cspond('laf22','RigidXform','Rt');
+keyboard;
 M = [1 0 0 0;0 1 0 0; 0 0 1 0; 0 0 0 1];
 x = LAF.renormI(blkdiag(P,P,P)*blkdiag(M,M,M)*X);
 qn = 0;

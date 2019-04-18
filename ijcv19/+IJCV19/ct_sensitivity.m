@@ -1,9 +1,6 @@
 function [] = ct_sensitivity()
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
-if ~exist('results', 'dir')
-    mkdir('results');
-end
 
 nx = 1000;
 ny = 1000;
@@ -17,5 +14,8 @@ IJCV19.make_solver_list();
                                 solver_names, 'nx',nx,'ny',ny,'cc',cc, ...
                                 'RigidXform','t');
 
+if ~exist('results', 'dir')
+    mkdir('results');
+end
 save(strcat('results/ct_sensitivity_', dt, '.mat'), ...
      'res','gt','cam');

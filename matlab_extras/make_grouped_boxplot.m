@@ -1,6 +1,7 @@
 function ax = make_grouped_boxplot(res,data_field,group_list,varargin)
 cfg.ylim = [];
-cfg.xlabel = [];
+cfg.xlabel = 'Noise ($\sigma$) [pixels]';
+cfg.xticklabels = [];
 cfg.ylabel = [];
 cfg.truth = [];
 cfg.yticks = [];
@@ -50,15 +51,21 @@ boxplot(ax,data, 'Colors', cfg.colors, ...
 legend('off');
 xticks((0:num_categories-1)*(num_groups)+(num_groups+1)/2);
 
-if isnumeric(categories)
-    xticklabels(num2str(categories));
+if isempty(cfg.xticklabels)
+    if isnumeric(categories)
+        xticklabels(num2str(categories));
+    else
+        xticklabels(categories);
+    end
 else
-    xticklabels(categories);
+    xticklabels(cfg.xticklabels);
 end
 
-xlabel(ax,'Noise ($\sigma$) [pixels]', ...
-       'Interpreter','Latex','Color','k'); 
-ylabel(cfg.ylabel,'Interpreter','Latex');
+xlabel(ax,cfg.xlabel, ...
+       'Color','k', ...
+       'Interpreter','Latex'); 
+ylabel(cfg.ylabel, ...
+       'Interpreter','Latex');
 ylim(cfg.ylim);
 yticks(cfg.yticks);
 tickstr = arrayfun(@(x) num2str(x), cfg.yticks, ...

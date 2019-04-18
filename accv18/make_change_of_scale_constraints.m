@@ -36,6 +36,9 @@ detJxy = det(Jxy);
 for k = 1:6
     si(k) = subs(detJxy,[c x y],[ci(k) xi(k) yi(k)])*sdi(k);
 end
+
+alg_err_fn = matlabFunction(si(1)-si(2));
+
 %%%%%%%%%%%%%%%%%%%%
 % compare to accv10 constraints
 si10 = make_accv10(si);
@@ -47,6 +50,7 @@ si10_fn = matlabFunction(si10(1));
 
 cartesian = struct('si', si, ...
                    'si_fn', si_fn, ...
+                   'si_alg_err_fn', alg_err_fn, ...
                    'si10', si10, ...
                    'si10_fn', si10_fn);
 

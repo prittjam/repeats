@@ -4,7 +4,7 @@
 % si        is the rectified scale
 % l1 l2 l3  are the components of vanishing line
 % q         is the division model parameter
-function [si,si_fn] = make_closed_form_constraints()
+function [si,si_fn,sij_alg_err_fn] = make_closed_form_constraints()
 clear all
 syms l1 l2 l3 q;
 Hinf = sym(eye(3)); 
@@ -26,6 +26,12 @@ for k = 1:6
 end
 
 si_fn = matlabFunction(si(1));
+
+[a1,b1] = numden(si(1));
+[a2,b2] = numden(si(2));
+alg_err = a1*b2-a2*b1;
+
+sij_alg_err_fn = matlabFunction(alg_err);
 
 function si = make_constraint(X,Hinf,q)
 X(3,:) = 1+q*(sum(X(1:2,:).^2));

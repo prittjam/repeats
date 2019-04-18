@@ -131,7 +131,13 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                 num_sol, num_real, num_feasible };
                     tmp_res = res;
                     res = [tmp_res;res_row]; 
+ 
+                    csind = [];                   
+                    for k = 1:size(idx,2)
+                        csind = cat(1,csind,nchoosek(idx{k},2));
+                    end
                 end
+                
                 gt_row = ...
                     { ex_num, scene_num, q_gt, ccd_sigma };
                 gt = [gt;gt_row];

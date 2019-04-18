@@ -53,19 +53,24 @@ set(gca,'zscale', 'log');
 xlabel('Number of Real Solutions')
 zlabel('Frequency');
 yticks([]);
-%yticklabels(solver_names(remapit));
 xticks(0:5:45);
-%yticks([0 10 10^2 10^3 10^4 10^5]);
+%zticklabels({'','$10$','$10^2$','$10^3$','$10^4$','$10^5$'});
+%zticklabels({'1','2'})
+
+ztick=10.^(0:5);
+zticklab = cellstr(num2str(round(log10(ztick(:))), '10^{%d}'));
+set(gca,'ZTick',ztick,'ZTickLabel',zticklab,'TickLabelInterpreter','tex')
+
 view([35 35])
 pbaspect([2 1 0.8]);
 grid off;
-xlabel('');
+xlabel('# Real Solutions');
 xlh = get(gca,'xlabel');
+set(xlh, 'Rotation',-22);
+
 %ylp = get(ylh, 'Position');
 %ext=get(y_h,'Extent');
 %
-%set(xlh, 'Rotation',-22)
-
 matlab2tikz([target_path 'real_solutions.tikz'], ...
             'width', '\fwidth','extraAxisOptions',axis_options);
  
