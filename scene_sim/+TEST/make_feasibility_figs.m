@@ -67,12 +67,14 @@ grid off;
 xlabel('# Real Solutions');
 xlh = get(gca,'xlabel');
 set(xlh, 'Rotation',-22);
-
+drawnow;
 %ylp = get(ylh, 'Position');
 %ext=get(y_h,'Extent');
 %
 matlab2tikz([target_path 'real_solutions.tikz'], ...
             'width', '\fwidth','extraAxisOptions',axis_options);
+
+keyboard;
  
 figure;
 b2 = bar(edges2(1:end-1)', ...
@@ -87,6 +89,6 @@ xticks(1:3);
 
 axis square;
 pbaspect([16 9 1]);
-
+drawnow;
 matlab2tikz([target_path 'feasible_solutions.tikz'], ...
             'width', '\fwidth','extraAxisOptions',axis_options);

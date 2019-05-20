@@ -1,7 +1,6 @@
 function [] = ct_sensitivity()
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
-
 nx = 1000;
 ny = 1000;
 cc = [nx/2+0.5; ...

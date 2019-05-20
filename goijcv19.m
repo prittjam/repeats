@@ -13,15 +13,17 @@ src_path2 = '/home/jbpritts/Downloads/data/**/*.JPG';
 
 solver_list{1} = WRAP.lafmn_to_qAl(WRAP.laf22_to_ql);
 solver_list{2} = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
-
+solver_list{3} = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql('solver','ijcv19'));
 
 solver_category_list = {'$\mH22\{\,\lambda\,\}_k$', ...
-                    '$\mH222\vl\lambda$'};
+                    '$\mH222\vl\lambda$', ...
+                    '$\mH^{\prime}222\vl\lambda$'};
 
 listing1 = dir(src_path1); 
 listing2 = dir(src_path2);
 listing = [listing1;listing2];
 
+listing = listing(1:10);
 for k = 1:numel(listing)
     splt = strsplit(listing(k).folder,'/');
     all_camera_names{k} = splt{end};
@@ -37,7 +39,6 @@ for k1 = 1:numel(solver_list)
         try
             item = listing(k2);
             img_path = fullfile(item.folder,item.name);
-            keyboard;
             [model_list,res_list,stats_list,meas,img] = ...
                 do_one_img(img_path,solver,varargin{:});
             summary_row = ...

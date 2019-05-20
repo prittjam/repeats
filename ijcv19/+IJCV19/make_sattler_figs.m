@@ -17,7 +17,7 @@ stats_list =  cell2table(cell(0,4),'VariableNames', ...
 
 uimg_path_list = unique(summary_list.img_path);
 color_list = {'r','g','b','c','y','m'};
-line_style = {'-','--'};
+line_style = {'-','--','-.'};
 
 for k = 1:numel(uimg_path_list)
     rows = find(cellfun(@(x) strcmpi(x,uimg_path_list{k}) , ...

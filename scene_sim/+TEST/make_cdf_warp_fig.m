@@ -47,7 +47,7 @@ end
 ylim([0,0.8]);
 xlim([0 15]);
 xticks([0:5:15]);
-xlabel('$\Delta^{\mathrm{warp}}_{\mathrm{RMS}}$ [pixels] at $\sigma=1$ pixel', ...
+xlabel('$\Delta^{\mathrm{warp}}_{\mathrm{RMS}}$ [pixels] at $1-\sigma$ pixel white noise', ...
        'Interpreter','Latex','Color','k'); 
 ylabel('$p(x < \Delta^{\mathrm{warp}}_{\mathrm{RMS}})$', ...
        'Interpreter','Latex');
@@ -59,7 +59,7 @@ lh = legend(cellstr(solver_list(solver_ind)), ...
             'FontSize', 10);
 
 axis square;
-pbaspect([16 9 1]);
+pbaspect([3 2 1]);
 legend boxoff;
 
 cleanfigure('targetResolution',100);
