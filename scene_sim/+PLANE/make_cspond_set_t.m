@@ -1,8 +1,15 @@
-function [X,cspond,G] = make_cspond_set_t(N,w,h)
+function [X,cspond,G] = make_cspond_set_t(N,w,h,reflect)
+if nargin < 4
+    reflect = 0
+end
+
 x = repmat(LAF.make_random(1),1,N);
 t = 0.9*rand(2,N)-0.45;
-%x = LAF.translate(x,t);
-A = Rt.params_to_mtx([zeros(1,N);t;ones(1,N)]);
+
+r = double(rand(1,N) > reflect);
+r(r==0) = -1;
+
+A = Rt.params_to_mtx([zeros(1,N);t;r]);
 x = PT.mtimesx(A,repmat(LAF.make_random(1),1,N));
 
 
