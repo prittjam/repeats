@@ -5,8 +5,7 @@
 %  Written by James Pritts
 %
 function [X,cspond,idx,G] = sample_cspond(sample_type,w,h,varargin)
-    cfg = struct('rigidxform', 'Rt', ...
-                 'reflect', 0);
+    cfg = struct('rigidxform', 'Rt');
     cfg = cmp_argparse(cfg,varargin{:});
     
     make_cspond_same = str2func(['PLANE.make_cspond_same_' cfg.rigidxform]);
@@ -14,7 +13,7 @@ function [X,cspond,idx,G] = sample_cspond(sample_type,w,h,varargin)
 
     switch sample_type
       case '2'
-        [X,cspond,G] = make_cspond_set(2,w,h,cfg.reflect);        
+        [X,cspond,G] = make_cspond_set(2,w,h);        
         
       case '22s'
         [X,cspond,G] = make_cspond_same(2,w,h);
