@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef pt4x2_to_qlusv
+classdef pt4x2_to_qlusv < handle
     properties
         A = [];
         invA = [];

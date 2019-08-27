@@ -7,7 +7,7 @@ classdef laf2_to_qlsu < WRAP.RectSolver
     end
     
     methods
-        function this = laf2_to_qlsu(cc)
+        function this = laf2_to_qlsu()
             this = this@WRAP.RectSolver('2');
             this.solver_impl = WRAP.pt3x2_to_qlsu();
         end

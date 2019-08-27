@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef pt3x2_to_qlsu < handle & matlab.mixin.Heterogeneous
+classdef pt3x2_to_qlsu < handle
     properties
         solver = 'det';
     end
@@ -66,7 +66,7 @@ classdef pt3x2_to_qlsu < handle & matlab.mixin.Heterogeneous
         function M = unnormalize(this,M,cc)
             A = CAM.make_fitz_normalization(cc);
             invA = inv(A); 
-            normcc = sum(2*invA(1:2,3))^2;
+            normcc = sum(2*invA(1:2,3))^2; 
             
             M.Hu = invA*(eye(3)+M.u*M.l')*A;
             M.Hsu = invA*(eye(3)+M.s*M.u*M.l')*A;

@@ -20,6 +20,7 @@ qres = array2table([data.q*sum(2*sum(sensitivity.cam.cc))^2 ...
 res = [data(:,{'ex_num','scene_num','solver','sigma'}) qres];
 solver_list = unique(res.solver);
 
+keyboard;
 Lia = res.sigma > 0;
 Lib = ismember(res.solver, ...
                setdiff(solver_list, {'$\mH22\vl s_i$','$\mH22\vl$'}));
