@@ -8,16 +8,8 @@ stability_file_path = [stability_listing(end).folder '/' stability_listing(end).
 load(stability_file_path);
 keyboard;
 
-%hnchoosek([1 2 3],2);
-
-[~,si_fn] = make_closed_form_constraints();
-
-
-
-
 figure;
 for k = 1:numel(solver_names)
-    
     [G,solver_list] = findgroups(res_list{k}.solver);
     logxmin = -15;
     logxmax = 5;

@@ -15,7 +15,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                  'rigidxform', 'Rt', ...
                  'numscenes', 1000, ...
                  'ccdsigmalist', [0 0.1 0.5 1 2 5], ...
-                 'normqlist',-4);
+                 'normqlist',-4, ...
+                 'samplesdrawn', 25);
 
     cfg = cmp_argparse(cfg,varargin{:});
 
@@ -28,7 +29,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
     
     q_gt_list = arrayfun(@(x) x/(sum(2*cc)^2),cfg.normqlist);
 
-    samples_drawn = 25;
+    samples_drawn = cfg.samplesdrawn;
 
     wplane = 10;
     hplane = 10;

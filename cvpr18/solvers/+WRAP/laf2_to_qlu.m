@@ -7,13 +7,14 @@ classdef laf2_to_qlu < WRAP.RectSolver
     end
     
     methods
-        function this = laf2_to_qlu()
+        function this = laf2_to_qlu(solver_type)
+            if nargin < 1
+                solver_type = 'det';
+            end
+            
             this = this@WRAP.RectSolver('2'); 
-            this.solver_impl = WRAP.pt3x2_to_qlu();      
-        end
-        
-        function [] = set_solver(this,solver)
-            this.solver_impl.solver = solver;
+            this.solver_impl = ...
+                WRAP.pt3x2_to_qlu('solver',solver_type);      
         end
         
         function M = fit(this,x,idx,cc,varargin)

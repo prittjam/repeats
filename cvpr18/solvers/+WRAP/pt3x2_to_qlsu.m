@@ -60,7 +60,8 @@ classdef pt3x2_to_qlsu < handle
     end
     
     methods
-        function this = pt3x2_to_qlsu()
+        function this = pt3x2_to_qlsu(varargin)
+            this = cmp_argparse(this,varargin{:});
         end
         
         function M = unnormalize(this,M,cc)
