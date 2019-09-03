@@ -3,7 +3,6 @@
 classdef laf22_to_qluv < WRAP.RectSolver
     properties
         solver_impl = [];
-        name = 'H3.5qluv';
     end
     
     methods

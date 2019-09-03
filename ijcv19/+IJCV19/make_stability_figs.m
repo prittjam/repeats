@@ -39,11 +39,13 @@ pbaspect([16 9 1]);
 
 drawnow;
 cleanfigure;
-matlab2tikz('/home/prittjam/Documents/eccv18/fig/rms_stability.tikz', ...
+matlab2tikz('/home/jbpritts/Documents/pami19/fig2/rms_stability.tikz', ...
             'width', '\fwidth', ...
             'extraAxisOptions','enlargelimits=false');
 function h = smooth_hist(x,log_range)
 totalmin = 1e-20;
+logxmin = -15;
+logxmax = 5;
 used = find(x == 0);
 x(used) = totalmin;
 h = hist(log10(abs(x)), log_range);

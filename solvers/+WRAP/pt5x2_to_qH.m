@@ -10,7 +10,7 @@ classdef pt5x2_to_qH
         end
         
         function M = unnormalize(this,M,A,invA,normcc)
-            M.Hu = invA*M.Hu*A;
+            M.Hu = A\M.Hu*A;
             M.q = M.q/normcc;
         end
         
@@ -36,7 +36,9 @@ classdef pt5x2_to_qH
             H = cellfun(@(x) real(x),H(is_valid),'UniformOutput',false);
             q = cellfun(@(x) real(x),q(is_valid),'UniformOutput',false);
             
-            M = struct('Hu',H,'q',q);
+            M = struct('Hu', H, ...
+                       'q', q, ...
+                       'cc', cc);
             M = arrayfun(@(m) this.unnormalize(m,A,invA,normcc),M);
         end
     end

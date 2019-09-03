@@ -7,7 +7,6 @@
 classdef laf2_to_ql < WRAP.RectSolver
     properties
         solver_impl = []
-        name = 'H3ql';
     end
 
     methods

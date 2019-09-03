@@ -3,7 +3,6 @@
 classdef laf22_to_qlusv < WRAP.RectSolver
     properties
         solver_impl = [];
-        name = 'H4qlusv';
     end
     
     methods

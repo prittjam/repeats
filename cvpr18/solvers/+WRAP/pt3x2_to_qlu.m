@@ -84,10 +84,16 @@ classdef pt3x2_to_qlu < handle
             xn = A*x(:,idx);
             xng = reshape(xn,6,[]);
             assert(size(xng,2)==3, ...
-                   'incorrect number of correspondences');
-
-            M = WRAP.pt3x2_to_qlsu.solve(xng,this.solver);
+                   'incorrect number of correspondences');            
+            M = WRAP.pt3x2_to_qlu.solve(xng,this.solver);
             M = arrayfun(@(m) this.unnormalize(m,cc),M);
+            
+            for k = 1:numel(M)
+                xp = PT.rd_div(PT.renormI(M(k).Hu*PT.ru_div(x(:,[1 ...
+                                    3 5]),M(k).cc,M(k).q)),M(k).cc, ...
+                               M(k).q);
+             
+            end          
         end
 
     end

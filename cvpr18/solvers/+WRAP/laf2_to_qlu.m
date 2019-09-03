@@ -3,7 +3,6 @@
 classdef laf2_to_qlu < WRAP.RectSolver
     properties
         solver_impl = [];
-        name = 'H2.5qlu';
     end
     
     methods

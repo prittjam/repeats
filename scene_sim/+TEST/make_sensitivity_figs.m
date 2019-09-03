@@ -27,7 +27,6 @@ Lib = ismember(string(res.solver), ...
 Lid = ismember(string(res.solver), ...
                setdiff(solver_list_str,{'$\mH22\lambda$'}));
 
-keyboard;
 lbound = q_gt-4;
 ubound = q_gt+4;
 

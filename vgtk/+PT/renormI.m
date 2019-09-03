@@ -4,7 +4,10 @@
 %
 %  Written by James Pritts
 %
-function y = renormI(x)
+function y = renormI(x,k)
+if nargin < 2
+    k = 3
+end
 m = size(x,1);
-x = reshape(x,3,[]);
+x = reshape(x,k,[]);
 y = reshape(x./x(end,:),m,[]);
