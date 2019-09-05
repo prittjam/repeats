@@ -1,4 +1,8 @@
 function u = pt1x2l_to_u(x,l)
+W = PT.calc_whitening_xform(x);
+x = blkdiag(W,W)*x;
+l = W'\l;
+
 m = 2*size(x,2);
 n = 3;
 
@@ -26,7 +30,9 @@ A = [M'*M l;
      l'   0];
 
 u = A\c;
-u = u(1:3);
+u = W\u(1:3);
+
+
 %u2 = M\b;
 
 %syms l1 l2 l3 u1 u2 u3 a 

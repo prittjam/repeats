@@ -95,13 +95,12 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                                  cam.cc,ccd_sigma);
                         X4 = reshape(X,4,[]);
                         x = PT.renormI(P*X4);
-                        xd = CAM.rd_div(reshape(x,3,[]),...
-                                        cam.cc,q_gt);
+                        xd = CAM.rd_div(x,cam.cc,q_gt);
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
 
                         try                           
-                            M = solver_list(k).fit(xdn,idx,wcc,G);
+                            M = solver_list(k).fit(xdn,idx,cc,G);
                         catch err
                             M = [];
                         end
@@ -124,11 +123,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                             optq_list(k2) = ...
                                 calc_opt_q(truth,cam,M,P,wplane, ...
                                            hplane);
-                            opt_xfer(k2) = calc_opt_xfer(x(:,[1 4]), ...
-                                                         cc,truth.q, ...
-                                                         M,P,wplane,hplane);    
-                        else
-                            disp(['solver failure for ' name_list{k}]);
+                            opt_xfer(k2) = calc_opt_xfer(truth,cam,reshape(x,9,[]),...
+                                                         idx,M,P,wplane,hplane);
                         end
                     end
                     
@@ -142,6 +138,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                     num_sol, num_real, num_feasible };
                         tmp_res = res;
                         res = [tmp_res;res_row]; 
+                    else
+                        disp(['solver failure for ' name_list{k}]);
                     end
  
 %                    csind = [];                   
@@ -162,8 +160,9 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
     end
     disp(['Finished']);
 
-function [opt_xfer] = calc_opt_xfer(xu,idx,cc,q,M,P,w,h)           
-    U = PT.renormI(P\xu,4);
+function [opt_xfer] = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h) 
+    xu = reshape([xu(1:3,1:2) xu(4:6,1:2) xu(7:9,1:2)],6,[]);
+    U = PT.renormI(P\[xu(1:3,1) xu(4:6,1)],4);
     dU = U(:,2)-U(:,1)
     normu = norm(dU);
 
@@ -187,27 +186,32 @@ function [opt_xfer] = calc_opt_xfer(xu,idx,cc,q,M,P,w,h)
         mq = nan(1,numel(M));
     end 
     
-    xd = PT.rd_div(PT.renormI(P*X),cc,q);
-    xdp = PT.rd_div(PT.renormI(P*Xp),cc,q);
+    xd = PT.rd_div(PT.renormI(P*X),gt.cc,gt.q);
+    xdp = PT.rd_div(PT.renormI(P*Xp),gt.cc,gt.q);
  
     xfer_list = nan(1,numel(M));
     opt_xfer = nan;
-
-    keyboard;
+   
     if ~isfield(M,'Hu')
+        u = nan(3,numel(M));
+        Hu = nan(3,3,numel(M));
         for k = 1:numel(M)
-            xu = PT.ru_div(x,[0 0],q(k));
-            u(:,k) = WRAP.pt2x2_to_u(xu,l(:,k));
+            keyboard;
+            u(:,k) = WRAP.pt1x2l_to_u(xu,M(k).l);
+            Hu(:,:,k) = [eye(3)+u(:,k)*M(k).l'];
+            H = eye(3)+(Hu(:,:,k)-eye(3))/normu;
+            x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,gt.cc,M(k).q)),gt.cc,M(k).q);
+            d2 = (x2d-xdp).^2
+            xfer_list(k) = sqrt(mean(d2(:)));
         end                    
+    else
+        for k = 1:numel(M)
+            H = eye(3)+(M(k).Hu-eye(3))/normu;
+            x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,cc,M(k).q)),gt.cc,M(k).q);
+            d2 = (x2d-xdp).^2
+            xfer_list(k) = sqrt(mean(d2(:)));
+        end
     end
-    
-    for k = 1:numel(M)
-        H = eye(3)+(M(k).Hu-eye(3))/normu;
-        x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,cc,M(k).q)),cc,M(k).q);
-        d2 = (x2d-xdp).^2
-        xfer_list(k) = sqrt(mean(d2(:)));
-    end
-    
     
     [opt_xfer,best_ind] = min(xfer_list);    
 

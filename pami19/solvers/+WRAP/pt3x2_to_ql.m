@@ -24,7 +24,6 @@ classdef pt3x2_to_ql < handle
                     u = nan(3,4);
                     M = struct('q', mat2cell(real(q(good_ind)),1,ones(1,n)), ...
                                'l', mat2cell(real(l(:,good_ind)),3,ones(1,n)), ...
-                               'u', mat2cell(real(u(:,good_ind)),3,ones(1,n)), ...
                                'solver_time', solver_time);
                 end
             end
@@ -40,18 +39,17 @@ classdef pt3x2_to_ql < handle
             invA = inv(A); 
             normcc = sum(2*invA(1:2,3))^2;
 
-            M.Hu = invA*(eye(3)+M.u*M.l')*A;
             M.l = M.l/norm(M.l);
             M.l = A'*M.l;
             M.q = M.q/normcc;
-            M.u = invA*M.u;      
+            
             M.cc = cc;
         end
         
         function M = fit(this,x,idx,cc)
             A = CAM.make_fitz_normalization(cc);
-
             xn = A*x(:,idx);
+            
             xng = reshape(xn,6,[]);
             assert(size(xng,2)==3, ...
                    'incorrect number of correspondences');
