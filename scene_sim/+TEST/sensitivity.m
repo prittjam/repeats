@@ -101,7 +101,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                       9,[]);       
 
                         try                           
-                            M = solver_list(k).fit(xdn,idx,cc,G);
+                            M = solver_list(k).fit(xdn,idx,wcc,G);
                         catch err
                             M = [];
                         end
@@ -162,8 +162,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
     end
     disp(['Finished']);
 
-function [opt_xfer] = calc_opt_xfer(x,cc,q,M,P,w,h)        
-    U = PT.renormI(P\x,4);
+function [opt_xfer] = calc_opt_xfer(xu,idx,cc,q,M,P,w,h)           
+    U = PT.renormI(P\xu,4);
     dU = U(:,2)-U(:,1)
     normu = norm(dU);
 
@@ -173,10 +173,9 @@ function [opt_xfer] = calc_opt_xfer(x,cc,q,M,P,w,h)
     t = linspace(-0.5,0.5,10);
     [a,b] = meshgrid(t,t);
 
-    x = transpose([a(:) b(:) ones(numel(a),1)]);
     M1 = [[w 0; 0 h] [0 0]';0 0 1];
     M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-    X = M2*M1*x;
+    X = M2*M1*transpose([a(:) b(:) ones(numel(a),1)]);
     Xp = T*X;
     
     if isfield(M,'q1')
@@ -194,18 +193,24 @@ function [opt_xfer] = calc_opt_xfer(x,cc,q,M,P,w,h)
     xfer_list = nan(1,numel(M));
     opt_xfer = nan;
 
-    if isfield(M,'Hu')
+    keyboard;
+    if ~isfield(M,'Hu')
         for k = 1:numel(M)
-            H = eye(3)+(M(k).Hu-eye(3))/normu;
-            x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,cc,M(k).q)),cc,M(k).q);
-            d2 = (x2d-xdp).^2
-            xfer_list(k) = sqrt(mean(d2(:)));
-
-        end
+            xu = PT.ru_div(x,[0 0],q(k));
+            u(:,k) = WRAP.pt2x2_to_u(xu,l(:,k));
+        end                    
     end
     
+    for k = 1:numel(M)
+        H = eye(3)+(M(k).Hu-eye(3))/normu;
+        x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,cc,M(k).q)),cc,M(k).q);
+        d2 = (x2d-xdp).^2
+        xfer_list(k) = sqrt(mean(d2(:)));
+    end
+    
+    
     [opt_xfer,best_ind] = min(xfer_list);    
-    keyboard;
+
     
 function optq = calc_opt_q(gt,cam,M,P,w,h)
     if isfield(M,'q1')

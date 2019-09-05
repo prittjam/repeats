@@ -22,10 +22,6 @@ classdef pt3x2_to_ql < handle
                 n = sum(good_ind);                                                  
                 if n > 0 
                     u = nan(3,4);
-                    for k = find(good_ind)
-                        xu = PT.ru_div(x,[0 0],q(k));
-                        u(:,k) = WRAP.pt2x2_to_u(xu,l(:,k));
-                    end                    
                     M = struct('q', mat2cell(real(q(good_ind)),1,ones(1,n)), ...
                                'l', mat2cell(real(l(:,good_ind)),3,ones(1,n)), ...
                                'u', mat2cell(real(u(:,good_ind)),3,ones(1,n)), ...

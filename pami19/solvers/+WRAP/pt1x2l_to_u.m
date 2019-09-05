@@ -1,4 +1,4 @@
-function u = pt2x2_to_u(x,l)
+function u = pt1x2l_to_u(x,l)
 m = 2*size(x,2);
 n = 3;
 
