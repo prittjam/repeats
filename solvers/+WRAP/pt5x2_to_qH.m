@@ -10,7 +10,7 @@ classdef pt5x2_to_qH
         end
         
         function M = unnormalize(this,M,A,invA,normcc)
-            M.Hu = A\M.Hu*A;
+            M.Hu = inv(A)*M.Hu*A;
             M.q = M.q/normcc;
         end
         
@@ -23,7 +23,11 @@ classdef pt5x2_to_qH
             
             assert(size(xng,1)==5, ...
                    'incorrect number of correspondences');
-            [H q] = H5rKuk(xng(:,4:5),xng(:,1:2));
+%            [H q] = H5rKuk(xng(:,4:5), ...
+%                           xng(:,1:2));
+%            
+            [H,q] = H5rFitz(xng(:,4:5), ...
+                            xng(:,1:2));
 
             is_valid1 = cellfun(@(x) abs(imag(x)) < 1e-6 & ...
                                 isfinite(x) & ...

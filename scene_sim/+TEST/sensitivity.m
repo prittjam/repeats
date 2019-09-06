@@ -56,7 +56,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                   'UniformOutput',false);
     
     ex_num = 1;
-    
+
     for scene_num = 1:cfg.numscenes
         f = 5*rand(1)+3;
         cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
@@ -76,7 +76,6 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                 struct('Xlist', Xlist, 'idx', idx, 'G', G);                
         end
         
-        keyboard;
         for q_gt = q_gt_list
             for ccd_sigma = cfg.ccdsigmalist
                 for k = 1:numel(solver_list)
@@ -120,13 +119,12 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         
                         if ~isempty(M)
                             solver_success = true;
-                            [~,opt_warp_list(k2)] = ...
+                            opt_warp_list(k2) = ...
                                 calc_opt_warp(truth,cam,M,P,wplane,hplane);
                             optq_list(k2) = ...
-                                calc_opt_q(truth,cam,M,P,wplane, ...
-                                           hplane);
-                            opt_xfer(k2) = calc_opt_xfer(truth,cam,reshape(x,9,[]),...
-                                                         idx,M,P,wplane,hplane);
+                                calc_opt_q(truth,cam,M,P,wplane,hplane);
+                            opt_xfer_list(k2) = calc_opt_xfer(truth,cam,reshape(x,9,[]),...
+                                                              idx,M,P,wplane,hplane);
                         end
                     end
                     
@@ -134,7 +132,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         [~,best_ind] = min(opt_warp_list);
                         [~,optq_ind] = min(abs(optq_list-truth.q));
                         [~,optxfer_ind] = min(opt_xfer_list);
-
+                        
                         ind = find(~isnan(optq_list),1);
                         res_row = { solver_names(find(strcmpi(name_list(k),categories(solver_names)))), ...
                                     ex_num, opt_warp_list(ind), opt_warp_list(best_ind), ...
@@ -147,13 +145,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                     else
                         disp(['solver failure for ' name_list{k}]);
                     end
- 
-%                    csind = [];                   
-%                    for k = 1:size(idx,2)
-%                        csind = cat(1,csind,nchoosek(idx{k},2));
-%                    end
                 end
-                
+                keyboard;
                 gt_row = ...
                     { ex_num, scene_num, q_gt, ccd_sigma };
                 gt = [gt;gt_row];
@@ -166,10 +159,10 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
     end
     disp(['Finished']);
 
-function [opt_xfer] = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h) 
+function opt_xfer = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h) 
     xu = reshape([xu(1:3,1:2) xu(4:6,1:2) xu(7:9,1:2)],6,[]);
     U = PT.renormI(P\[xu(1:3,1) xu(4:6,1)],4);
-    dU = U(:,2)-U(:,1)
+    dU = U(:,2)-U(:,1);
     normu = norm(dU);
 
     T = [eye(3) dU(1:3)/norm(dU);
@@ -202,26 +195,24 @@ function [opt_xfer] = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h)
         u = nan(3,numel(M));
         Hu = nan(3,3,numel(M));
         for k = 1:numel(M)
-            keyboard;
             u(:,k) = WRAP.pt1x2l_to_u(xu,M(k).l);
             Hu(:,:,k) = [eye(3)+u(:,k)*M(k).l'];
             H = eye(3)+(Hu(:,:,k)-eye(3))/normu;
             x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,gt.cc,M(k).q)),gt.cc,M(k).q);
-            d2 = (x2d-xdp).^2
+            d2 = (x2d-xdp).^2;
             xfer_list(k) = sqrt(mean(d2(:)));
         end                    
     else
         for k = 1:numel(M)
             H = eye(3)+(M(k).Hu-eye(3))/normu;
-            x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,cc,M(k).q)),gt.cc,M(k).q);
-            d2 = (x2d-xdp).^2
+            x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,gt.cc,M(k).q)),gt.cc,M(k).q);
+            d2 = (x2d-xdp).^2;
             xfer_list(k) = sqrt(mean(d2(:)));
         end
     end
-    
-    [opt_xfer,best_ind] = min(xfer_list);    
 
-    
+    [opt_xfer,best_ind] = min(xfer_list);    
+   
 function optq = calc_opt_q(gt,cam,M,P,w,h)
     if isfield(M,'q1')
         mq = ([M(:).q1]+[M(:).q2])/2;
@@ -232,8 +223,8 @@ function optq = calc_opt_q(gt,cam,M,P,w,h)
     end        
     [~,best_ind] = min(abs(mq-gt.q));
     optq = mq(best_ind);
-    
-function [optq,opt_warp] = calc_opt_warp(gt,cam,M,P,w,h)    
+
+function [opt_warp,optq] = calc_opt_warp(gt,cam,M,P,w,h)    
     t = linspace(-0.5,0.5,10);
     [a,b] = meshgrid(t,t);
     x = transpose([a(:) b(:) ones(numel(a),1)]);

@@ -32,18 +32,18 @@ color_list = [0 0 0; ...
               1 0 1];                    
 
 
-solver_names = solver_names(1:1);
-solver_list = solver_list(1:1);
+%solver_names = solver_names(1:1);
+%solver_list = solver_list(1:1);
+%%
+%linestylemap  = [];
+%colormap = [];
 
-linestylemap  = [];
-colormap = [];
+tst = mat2cell(color_list,ones(9,1),3);
+colormap = containers.Map(solver_names, tst);
 
-%tst = mat2cell(color_list,ones(9,1),3);
-%colormap = containers.Map(solver_names, tst);
-%
-%linestylemap = ...
-%    containers.Map(solver_names, ...
-%                   { '-','-','-', ...
-%                    '-','-','--', ...
-%                    '--','--','--'});
+linestylemap = ...
+    containers.Map(solver_names, ...
+                   { '-','-','-', ...
+                    '-','-','--', ...
+                    '--','--','--'});
 
