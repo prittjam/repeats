@@ -18,8 +18,9 @@ classdef laf22_to_qH < WRAP.RectSolver
         function M = fit(this,x,idx,cc,varargin)
             x = x(:,[idx{:}]);
             x = [x(1:3,:) x(4:6,:) x(7:9,:)];
-            M = this.solver_impl.fit(x,{ [1,2],[3,4],[5,6],[7,8],[9,10] },cc);
+            M = this.solver_impl.fit(x, ...
+                                     { [1,2],[3,4],[5,6], ...
+                                [7,8],[9,10] }, cc);
         end
-
     end
 end

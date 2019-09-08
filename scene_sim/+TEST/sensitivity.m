@@ -99,8 +99,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         xd = CAM.rd_div(x,cam.cc,q_gt);
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
-
-                        try                           
+                        try
                             M = solver_list(k).fit(xdn,idx,cc,G);
                         catch err
                             M = [];
@@ -132,7 +131,6 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         [~,best_ind] = min(opt_warp_list);
                         [~,optq_ind] = min(abs(optq_list-truth.q));
                         [~,optxfer_ind] = min(opt_xfer_list);
-                        
                         ind = find(~isnan(optq_list),1);
                         res_row = { solver_names(find(strcmpi(name_list(k),categories(solver_names)))), ...
                                     ex_num, opt_warp_list(ind), opt_warp_list(best_ind), ...
@@ -146,7 +144,6 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         disp(['solver failure for ' name_list{k}]);
                     end
                 end
-                keyboard;
                 gt_row = ...
                     { ex_num, scene_num, q_gt, ccd_sigma };
                 gt = [gt;gt_row];
@@ -204,10 +201,21 @@ function opt_xfer = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h)
         end                    
     else
         for k = 1:numel(M)
-            H = eye(3)+(M(k).Hu-eye(3))/normu;
-            x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,gt.cc,M(k).q)),gt.cc,M(k).q);
-            d2 = (x2d-xdp).^2;
-            xfer_list(k) = sqrt(mean(d2(:)));
+            H1 = eye(3)+(M(k).Hu-eye(3))/normu;
+            H2 = mpower(M(k).Hu,1/normu);
+
+            x2d1 = PT.rd_div(PT.renormI(H1*PT.ru_div(xd,gt.cc, ...
+                                                     M(k).q)),gt.cc,M(k).q);
+            x2d2 = PT.rd_div(PT.renormI(H2*PT.ru_div(xd,gt.cc, ...
+                                                     M(k).q)),gt.cc,M(k).q);
+            
+            d2a = (x2d1(1:2,:)-xdp(1:2,:)).^2;
+            d2b = (x2d2(1:2,:)-xdp(1:2,:)).^2;
+            
+            rmsa = rms(d2a(:));
+            rmsb = rms(d2b(:));
+            
+            xfer_list(k) = min([rmsa rmsb]);
         end
     end
 
