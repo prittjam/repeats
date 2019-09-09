@@ -259,15 +259,14 @@ function [opt_warp,optq] = calc_opt_warp(gt,cam,M,P,w,h)
         end
     elseif isfield(M(1),'Hu')
 %        for k = 1:numel(M)
-%            tmp = real(eig(M(k).Hu));
-%            [U,S,V] = svd(M(k).Hu-tmp(1)*eye(3));
+%            [U,S,V] = svd(M(k).Hu-eye(3));
 %            S(2,2) = 0;
 %            S(3,3) = 0;
 %            projH = U*S*transpose(V);
 %            warp_list(k) = ...
-%                calc_bmvc16_err(x,gt.l,gt.q,transpose(projH(3,:)),mq(k),gt.cc);
+%                TEST.calc_warp_err(x,gt.l,gt.q,transpose(projH(3,:)),mq(k),gt.cc);
 %        end
     end
-    
+
     [opt_warp,best_ind] = min(warp_list);    
     optq = mq(best_ind); 

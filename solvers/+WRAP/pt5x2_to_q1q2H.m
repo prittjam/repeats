@@ -12,20 +12,21 @@ classdef pt5x2_to_q1q2H < Solver
     end
     
     methods
-        function this = pt5x2_to_q1q2H(cc)
-            this.A = CAM.make_fitz_normalization(cc);
-            this.invA = inv(this.A); 
-            this.normcc = sum(2*this.invA(1:2,3))^2;
+        function this = pt5x2_to_q1q2H()
         end
         
-        function M = unnormalize(this,M)
-            M.Hu = this.invA*M.Hu*this.A;
+        function M = unnormalize(this,M,A,normcc)
+            M.Hu = A\M.Hu*this.A;
             M.q1 = M.q1/this.normcc;
             M.q2 = M.q2/this.normcc;
             M.q = (M.q1+M.q2)/2;
         end
         
         function M = fit(this,x,corresp,idx,varargin)
+            A = CAM.make_fitz_normalization(cc);
+            invA = inv(this.A); 
+            normcc = sum(2*this.invA(1:2,3))^2;
+            
             m  = corresp(:,idx);
             xn = this.A*x(:,m);
             xng = transpose(reshape(xn,6,[]));            
