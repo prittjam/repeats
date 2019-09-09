@@ -8,9 +8,8 @@ if ~isempty(ct_listing)
     ct_file_path = [ct_listing(end).folder '/' ...
                     ct_listing(end).name];
     
-    keyboard;
-    TEST.make_sensitivity_figs(ct_file_path,target_path,colormap, ...
-                               'ct');
+    TEST.make_sensitivity_figs(ct_file_path,target_path, ...
+                               colormap, 'ct');
 else
     disp(['No Sensitivity Study was Found.']);
 end
