@@ -4,24 +4,23 @@
 %
 %  Written by James Pritts
 %
-classdef laf22_to_q1q2H < WRAP.LafRectSolver
+classdef laf22_to_q1q2H < WRAP.RectSolver
     properties
         solver_impl = [];
     end
     
     methods
-        function this = laf22_to_q1q2H(cc)
-            this = this@WRAP.LafRectSolver([2 2]);
-            this.solver_impl = WRAP.pt5x2_to_q1q2H(cc);
+        function this = laf22_to_q1q2H()
+            this = this@WRAP.RectSolver('22s');
+            this.solver_impl = WRAP.pt5x2_to_q1q2H();
         end
 
-        function M = fit(this,x,corresp,idx,varargin)
-            m = corresp(:,idx);
-            x = x(:,m(:));
+        function M = fit(this,x,idx,cc,varargin)
+            x = x(:,[idx{:}]);
             x = [x(1:3,:) x(4:6,:) x(7:9,:)];
             M = this.solver_impl.fit(x, ...
-                                     [1 3 5 7 9; 2 4 6 8 10], ...
-                                     [1 2 3 4 5]);            
+                                     [1 3 5 7 9; 2 4 6 8 10],cc);
+            
         end
     end
 end

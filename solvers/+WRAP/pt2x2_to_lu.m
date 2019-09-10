@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-classdef pt2x2_to_lu < Solver
+classdef pt2x2_to_lu 
     properties
         A = [];
         invA = [];

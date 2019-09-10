@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-classdef pt5x2_to_q1q2H < Solver
+classdef pt5x2_to_q1q2H
     properties
         A = [];
         invA = [];
@@ -16,19 +16,18 @@ classdef pt5x2_to_q1q2H < Solver
         end
         
         function M = unnormalize(this,M,A,normcc)
-            M.Hu = A\M.Hu*this.A;
-            M.q1 = M.q1/this.normcc;
-            M.q2 = M.q2/this.normcc;
+            M.Hu = A\M.Hu*A;
+            M.q1 = M.q1/normcc;
+            M.q2 = M.q2/normcc;
             M.q = (M.q1+M.q2)/2;
         end
         
-        function M = fit(this,x,corresp,idx,varargin)
+        function M = fit(this,x,idx,cc,varargin)
             A = CAM.make_fitz_normalization(cc);
-            invA = inv(this.A); 
-            normcc = sum(2*this.invA(1:2,3))^2;
-            
-            m  = corresp(:,idx);
-            xn = this.A*x(:,m);
+            invA = inv(A); 
+            normcc = sum(2*invA(1:2,3))^2;
+ 
+            xn = A*x(:,idx);
             xng = transpose(reshape(xn,6,[]));            
 
             assert(size(xng,1)==5, ...
@@ -49,10 +48,13 @@ classdef pt5x2_to_q1q2H < Solver
             if n > 0
                 H = cellfun(@(x) real(x),H(is_valid),'UniformOutput',false);
                 q1 = arrayfun(@(x) real(x),q1(is_valid));
-                q2 = arrayfun(@(x) real(x),q2(is_valid));                                                 M = struct('Hu',H,...
+                q2 = arrayfun(@(x) real(x),q2(is_valid));
+
+                M = struct('Hu',H,...
                            'q1',mat2cell(q1,1,ones(1,n)), ...
                            'q2',mat2cell(q2,1,ones(1,n)));
-                M = arrayfun(@(m) this.unnormalize(m),M);
+                
+                M = arrayfun(@(m) this.unnormalize(m,A,normcc),M);
             end
         end
     end

@@ -10,7 +10,7 @@ classdef laf22_to_qH < WRAP.RectSolver
     end
     
     methods
-        function this = laf22_to_qH(cc)
+        function this = laf22_to_qH()
             this = this@WRAP.RectSolver('22s');
             this.solver_impl = WRAP.pt5x2_to_qH();
         end
