@@ -7,7 +7,7 @@ x = PT.mtimesx(A,repmat(LAF.make_random(1),1,N));
 
 
 M = [[w 0; 0 h] [0 0]';0 0 1];
-M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-X = reshape(M2*M*reshape(x,3,[]),12,[]);
+%M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
+X = reshape(M*reshape(x,3,[]),9,[]);
 cspond = transpose(nchoosek(1:N,2));
 G = repmat(1,1,N);

@@ -43,7 +43,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                     {'ex_num', 'scene_num', 'q_gt','sigma'});
 
     sample_type_strings = ...
-        {'laf2','laf22','laf22s','laf222','laf32','laf4'};
+        {'laf2','laf22','laf22s','laf222','laf32','laf4','laf2ln2'};
 
     sample_type_list = categorical(1:numel(sample_type_strings),...
                                    1:numel(sample_type_strings), ...
@@ -94,8 +94,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         G = cspond_info(k2).G;
                         truth = PLANE.make_Rt_gt(scene_num,P,q_gt, ...
                                                  cam.cc,ccd_sigma);
-                        X4 = reshape(X,4,[]);
-                        x = PT.renormI(P*X4);
+                        X3 = reshape(X,3,[]);
+                        x = PT.renormI(P*X3);
                         xd = CAM.rd_div(x,cam.cc,q_gt);
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
@@ -158,19 +158,18 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
 
 function opt_xfer = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h) 
     xu = reshape([xu(1:3,1:2) xu(4:6,1:2) xu(7:9,1:2)],6,[]);
-    U = PT.renormI(P\[xu(1:3,1) xu(4:6,1)],4);
+    U = PT.renormI(P\[xu(1:3,1) xu(4:6,1)]);
     dU = U(:,2)-U(:,1);
     normu = norm(dU);
 
-    T = [eye(3) dU(1:3)/norm(dU);
-         0 0 0 1];
-    
+    T = eye(3);
+    T(1:2,3) = dU(1:2)/norm(dU);
+
     t = linspace(-0.5,0.5,10);
     [a,b] = meshgrid(t,t);
 
     M1 = [[w 0; 0 h] [0 0]';0 0 1];
-    M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-    X = M2*M1*transpose([a(:) b(:) ones(numel(a),1)]);
+    X = M1*transpose([a(:) b(:) ones(numel(a),1)]);
     Xp = T*X;
     
     if isfield(M,'q1')
@@ -237,8 +236,7 @@ function [opt_warp,optq] = calc_opt_warp(gt,cam,M,P,w,h)
     [a,b] = meshgrid(t,t);
     x = transpose([a(:) b(:) ones(numel(a),1)]);
     M1 = [[w 0; 0 h] [0 0]';0 0 1];
-    M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-    X = M2*M1*x;
+    X = M1*x;
     x = CAM.rd_div(PT.renormI(P*X),cam.cc,gt.q);
 
     if isfield(M,'q1')

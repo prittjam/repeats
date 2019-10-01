@@ -5,8 +5,7 @@ x1 = translate(x,t);
 x2 = do_translate(x1);
 x = reshape([x1;x2],9,[]);
 M = [[w 0; 0 h] [0 0]';0 0 1];
-M2 = [1 0 0; 0 1 0; 0 0 0; 0 0 1];
-X = reshape(M2*M*reshape(x,3,[]),12,[]);
+X = reshape(M*reshape(x,3,[]),9,[]);
 
 cspond = reshape([1:2*N],2,[]);
 G = reshape(repmat([1:N],2,1),1,[]);
