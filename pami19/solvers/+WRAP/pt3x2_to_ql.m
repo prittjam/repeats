@@ -3,6 +3,7 @@
 classdef pt3x2_to_ql < handle
     properties
         solver = 'matlab';
+        cspond = [];
     end
 
     methods(Static)
@@ -29,13 +30,44 @@ classdef pt3x2_to_ql < handle
             end
         end
         
-        function M = find_opt_solution(x,q,l)
-            qflag = (q <= 0) & (q > -8);
+        function [q,l] = find_opt_solution(x,q,l,cspond)
+            good_flag = abs(imag(q)) < 1e-6 & ...
+                ~isnan(q) & ...
+                isfinite(q);
+            qflag = (q <= 0) & (q > -8) & good_flag;
+            
             q = q(qflag);
             l = l(:,qflag);
+            x = [x(1:3,:), x(4:6,:)];
+            u = zeros(3,numel(cspond));
+
+            cc = [0 0];
+            d2 = zeros(1,numel(q));
+            
+            for k1 = 1:numel(q)
+                xu = PT.ru_div(x,cc,q(k1));
+                for k2 = 1:numel(cspond)
+                    cs = cspond{k2};
+                    u(:,k2) = WRAP.pt1x2l_to_u(reshape(xu(:,cs(:)),6,[]),l(:,k1));
+                    Hu = [eye(3)+u(:,k2)*l(:,k1)'];
+                    x2d = PT.rd_div(PT.renormI(Hu*PT.ru_div(x(:, ...
+                                                              cs(1,:)),cc,q(k1))),cc,q(k1));
+                    
+                    x1d = PT.rd_div(PT.renormI(Hu \ PT.ru_div(x(:, ...
+                                                              cs(2, ...
+                                                                 :)),cc,q(k1))),cc,q(k1));
+                    err2 = (x2d-x(:,cs(2,:))).^2+(x1d-x(:,cs(1,:))).^2;
+                    d2(k1) = sum(err2(:));
+                end
+            end
+            
+            [~,idx] = min(d2);
+
+            q = q(idx);
+            l = l(:,idx);
         end
         
-        function M = cpp_solve(x)
+        function M = cpp_solve(x,cspond)
             M = [];
             res = nan(3,40);
 
@@ -48,28 +80,23 @@ classdef pt3x2_to_ql < handle
             is_good = ~all(res == 0);
             q = res(1,is_good);
             l = [res(2:3,is_good);ones(1,sum(is_good))];
-            
-            WRAP.pt3x2_to_ql.find_opt_solution(x,q,l);
-            
-            if ~isempty(q)
-                good_ind = abs(imag(q)) < 1e-6 & ...
-                    ~isnan(q) & ...
-                    isfinite(q);
-                
-                n = sum(good_ind);                                                  
-                if n > 0 
-                    M = struct('q', mat2cell(real(q(good_ind)),1,ones(1,n)), ...
-                               'l', mat2cell(real(l(:,good_ind)),3,ones(1,n)), ...
-                               'solver_time', solver_time);
-                end
+            [optq,optl] = WRAP.pt3x2_to_ql.find_opt_solution(x,q,l,cspond);
+           
+            if ~isempty(optq)
+                M = struct('q', optq, ...
+                           'l', optl, ...
+                           'solver_time', solver_time);
             end
         end
-        
     end
     
     methods
         function this = pt3x2_to_ql(varargin)
             this = cmp_argparse(this,varargin{:});
+            this.cspond = { [1 2 3;4 5 6], ...
+                            [1 4; 4 6], ...
+                            [1 4; 2 5], ...
+                            [2 3; 5 6] };
         end
         
         function M = unnormalize(this,M,cc)
@@ -97,7 +124,7 @@ classdef pt3x2_to_ql < handle
                 M = WRAP.pt3x2_to_ql.solve(xng);
               
               case 'cpp'
-                M = WRAP.pt3x2_to_ql.cpp_solve(xng);
+                M = WRAP.pt3x2_to_ql.cpp_solve(xng,this.cspond);
                 
               otherwise
                 throw;

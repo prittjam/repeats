@@ -140,6 +140,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                     num_sol, num_real, num_feasible };
                         tmp_res = res;
                         res = [tmp_res;res_row]; 
+                        keyboard;
                     else
                         disp(['solver failure for ' name_list{k}]);
                     end

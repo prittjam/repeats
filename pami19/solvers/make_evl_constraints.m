@@ -12,7 +12,7 @@
 % J         constraint equations 
 % Jfn       incidence constraints as a Matlab objective function 
 %
-function [J,Jfn,coeffs_q] = make_jmm_constraints()
+function [J,Jfn,coeffs_q] = make_evl_constraints()
 clear all
 syms l1 l2 l3 q;
 Hinf = sym(eye(3)); 
@@ -29,11 +29,9 @@ J = make_constraints(X,l,q);
 J(end) = simplify(J(end));
 J(end) = collect(J(end),q);
 coeffs_q = coeffs(J(end),q);
-keyboard;
-
+ 
 res = solve(J(end),q,'MaxDegree', 4);
 
-keyboard;
 %coeffs_qfn = matlabFunction(coeffs_q);
 %
 Jfn = matlabFunction(J(1));
@@ -49,6 +47,7 @@ for k = 1:size(idx,1)
     m2 = cross(X(:,3+idx(k,1)), ...
                X(:,3+idx(k,2))); 
     v(:,k) = cross(m1,m2); 
+    keyboard;
 end
 M = transpose(v);
 J = [M*l;det(M)];
