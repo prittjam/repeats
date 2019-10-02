@@ -99,12 +99,11 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         xd = CAM.rd_div(x,cam.cc,q_gt);
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
-                        try
-                            M = solver_list(k).fit(xdn,idx,cc,G);
-                        catch err
-                            M = [];
-                        end
-                        
+                        %                        try
+                        M = solver_list(k).fit(xdn,idx,cc,G);
+                        %                        catch err
+                        %                            M = [];
+                            %                        end
                         if ~isempty(M)
                             if isfield(M,'l')
                                 [flag,rflag] = ...
@@ -121,7 +120,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                             opt_warp_list(k2) = ...
                                 calc_opt_warp(truth,cam,M,P,wplane,hplane);
                             optq_list(k2) = ...
-                                calc_opt_q(truth,cam,M,P,wplane,hplane);
+                                calc_opt_q(truth,cam,M,P,wplane, ...
+                                           hplane);
                             opt_xfer_list(k2) = calc_opt_xfer(truth,cam,reshape(x,9,[]),...
                                                               idx,M,P,wplane,hplane);
                         end

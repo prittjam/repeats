@@ -10,9 +10,9 @@ classdef laf2_to_ql < WRAP.RectSolver
     end
 
     methods
-        function this = laf2_to_ql()
+        function this = laf2_to_ql(varargin)
             this = this@WRAP.RectSolver('2');   
-            this.solver_impl = WRAP.pt3x2_to_ql();      
+            this.solver_impl = WRAP.pt3x2_to_ql(varargin{:});
         end
 
         function M = fit(this,x,idx,cc,varargin)

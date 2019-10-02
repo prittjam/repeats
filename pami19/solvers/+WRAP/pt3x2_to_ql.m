@@ -2,6 +2,7 @@
 % 
 classdef pt3x2_to_ql < handle
     properties
+        solver = 'matlab';
     end
 
     methods(Static)
@@ -21,17 +22,54 @@ classdef pt3x2_to_ql < handle
                 
                 n = sum(good_ind);                                                  
                 if n > 0 
-                    u = nan(3,4);
                     M = struct('q', mat2cell(real(q(good_ind)),1,ones(1,n)), ...
                                'l', mat2cell(real(l(:,good_ind)),3,ones(1,n)), ...
                                'solver_time', solver_time);
                 end
             end
         end
+        
+        function M = find_opt_solution(x,q,l)
+            qflag = (q <= 0) & (q > -8);
+            q = q(qflag);
+            l = l(:,qflag);
+        end
+        
+        function M = cpp_solve(x)
+            M = [];
+            res = nan(3,40);
+
+            tic
+            for k = 0:9
+                res(:,4*k+1:4*(k+1)) = solver_evl_mex([x(1:2,:) x(4:5,:)],k);
+            end
+            solver_time = toc;
+            
+            is_good = ~all(res == 0);
+            q = res(1,is_good);
+            l = [res(2:3,is_good);ones(1,sum(is_good))];
+            
+            WRAP.pt3x2_to_ql.find_opt_solution(x,q,l);
+            
+            if ~isempty(q)
+                good_ind = abs(imag(q)) < 1e-6 & ...
+                    ~isnan(q) & ...
+                    isfinite(q);
+                
+                n = sum(good_ind);                                                  
+                if n > 0 
+                    M = struct('q', mat2cell(real(q(good_ind)),1,ones(1,n)), ...
+                               'l', mat2cell(real(l(:,good_ind)),3,ones(1,n)), ...
+                               'solver_time', solver_time);
+                end
+            end
+        end
+        
     end
     
     methods
-        function this = pt3x2_to_ql()
+        function this = pt3x2_to_ql(varargin)
+            this = cmp_argparse(this,varargin{:});
         end
         
         function M = unnormalize(this,M,cc)
@@ -53,8 +91,18 @@ classdef pt3x2_to_ql < handle
             xng = reshape(xn,6,[]);
             assert(size(xng,2)==3, ...
                    'incorrect number of correspondences');
-
-            M = WRAP.pt3x2_to_ql.solve(xng);
+            
+            switch this.solver
+              case 'matlab'
+                M = WRAP.pt3x2_to_ql.solve(xng);
+              
+              case 'cpp'
+                M = WRAP.pt3x2_to_ql.cpp_solve(xng);
+                
+              otherwise
+                throw;
+            end            
+            
             M = arrayfun(@(m) this.unnormalize(m,cc),M);
         end
     end
