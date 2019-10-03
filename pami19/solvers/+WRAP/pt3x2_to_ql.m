@@ -88,6 +88,25 @@ classdef pt3x2_to_ql < handle
                            'solver_time', solver_time);
             end
         end
+        
+        function M = random_cpp_solve(x,cspond)
+            M = [];
+            k = randi([0 9]);
+            tic
+            res = solver_evl_mex([x(1:2,:) x(4:5,:)],k);
+            solver_time = toc;
+            
+            is_good = ~all(res == 0);
+            q = res(1,is_good);
+            l = [res(2:3,is_good);ones(1,sum(is_good))];
+            [optq,optl] = WRAP.pt3x2_to_ql.find_opt_solution(x,q,l,cspond);
+            if ~isempty(optq)
+                M = struct('q', optq, ...
+                           'l', optl, ...
+                           'solver_time', solver_time);
+            end
+        end
+        
     end
     
     methods
@@ -118,13 +137,16 @@ classdef pt3x2_to_ql < handle
             xng = reshape(xn,6,[]);
             assert(size(xng,2)==3, ...
                    'incorrect number of correspondences');
-            
+
             switch this.solver
               case 'matlab'
                 M = WRAP.pt3x2_to_ql.solve(xng);
               
               case 'cpp'
                 M = WRAP.pt3x2_to_ql.cpp_solve(xng,this.cspond);
+                
+              case 'random_cpp'
+                M = WRAP.pt3x2_to_ql.random_cpp_solve(xng,this.cspond);
                 
               otherwise
                 throw;

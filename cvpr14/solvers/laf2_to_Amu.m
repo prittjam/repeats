@@ -1,10 +1,10 @@
 function Ha = laf2_to_Amu(u,G,varargin)
 x = reshape(u(:,find(G)),3,[]);
-M = whiten(x(1:2,:));
+W = RP2.whiten(x);
 v = blkdiag(M,M,M)*u;
 X = cmp_splitapply(@(x) ({x}),v,G);    
 
-Ha = laf2x2_to_Amu_internal(X,M);   
+Ha = laf2x2_to_Amu_internal(X,W);   
 
 function A = laf2x2_to_Amu_internal(X,M)
 m = sum(cellfun(@get_size,X));
@@ -64,12 +64,3 @@ end
 
 function n = get_size(X)
 n = size(X,2);
-
-function M = whiten(X)
-muX = mean(X,2);
-mX = X-muX;
-S = mX*mX'/size(mX,2);
-[U,S,V] = svd(S);
-T = U*diag(1./sqrt(diag(S)))*U';
-M = [T -T*muX; 
-     0 0 1];

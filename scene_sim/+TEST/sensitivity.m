@@ -99,11 +99,12 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                         xd = CAM.rd_div(x,cam.cc,q_gt);
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
-                        %                        try
-                        M = solver_list(k).fit(xdn,idx,cc,G);
-                        %                        catch err
-                        %                            M = [];
-                            %                        end
+                        try
+                            M = solver_list(k).fit(xdn,idx,cc,G);
+                        catch err
+                            M = [];
+                        end
+ 
                         if ~isempty(M)
                             if isfield(M,'l')
                                 [flag,rflag] = ...
@@ -123,7 +124,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                 calc_opt_q(truth,cam,M,P,wplane, ...
                                            hplane);
                             opt_xfer_list(k2) = calc_opt_xfer(truth,cam,reshape(x,9,[]),...
-                                                              idx,M,P,wplane,hplane);
+                                                              idx, ...
+                                                              M,P,wplane,hplane);
                         end
                     end
                     
@@ -140,7 +142,6 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                     num_sol, num_real, num_feasible };
                         tmp_res = res;
                         res = [tmp_res;res_row]; 
-                        keyboard;
                     else
                         disp(['solver failure for ' name_list{k}]);
                     end
@@ -187,7 +188,7 @@ function opt_xfer = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h)
  
     xfer_list = nan(1,numel(M));
     opt_xfer = nan;
-   
+
     if ~isfield(M,'Hu')
         u = nan(3,numel(M));
         Hu = nan(3,3,numel(M));

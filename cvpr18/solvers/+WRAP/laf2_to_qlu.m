@@ -10,7 +10,6 @@ classdef laf2_to_qlu < WRAP.RectSolver
             if nargin < 1
                 solver_type = 'det';
             end
-            
             this = this@WRAP.RectSolver('2'); 
             this.solver_impl = ...
                 WRAP.pt3x2_to_qlu('solver',solver_type);      

@@ -1,5 +1,5 @@
 function u = pt1x2l_to_u(x,l)
-W = PT.calc_whitening_xform(x);
+W = RP2.calc_whitening_xform(x);
 x = blkdiag(W,W)*x;
 l = W'\l;
 
@@ -31,7 +31,6 @@ A = [M'*M l;
 
 u = A\c;
 u = W\u(1:3);
-
 
 %u2 = M\b;
 

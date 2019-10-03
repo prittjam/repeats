@@ -44,10 +44,14 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
         
         function flag = is_valid_real(this,M,cc,varargin)
             flag = false(1,numel(M));
+            qflag = true(1,numel(M));
             for k = 1:numel(M)
-                flag(k) = isreal(M(k).q) & isreal(M(k).l) & ...
-                          all(~isnan(M(k).q)) & all(~isnan(M(k).l)) ;
+                if isfield(M,'q')
+                    qflag(k) = isreal(M(k).q) & all(~isnan(M(k).q));
+                end 
+                flag(k) = isreal(M(k).l) & all(~isnan(M(k).l));
             end    
+            flag = flag & qflag;
         end
 
         function [flag,rflag] = is_model_good(this,x,idx,M,cc,varargin)
