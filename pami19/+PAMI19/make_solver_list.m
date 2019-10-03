@@ -51,6 +51,3 @@ color_list = [soa_color_list; ...
 
 tst = mat2cell(color_list,ones(size(color_list,1),1),3);
 colormap = containers.Map(solver_names',tst);
-
-solver_list = solver_list([1 6]);
-solver_names = solver_names([1 6]);
