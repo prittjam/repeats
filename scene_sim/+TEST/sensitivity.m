@@ -197,8 +197,8 @@ function opt_xfer = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h)
             Hu(:,:,k) = [eye(3)+u(:,k)*M(k).l'];
             H = eye(3)+(Hu(:,:,k)-eye(3))/normu;
             x2d = PT.rd_div(PT.renormI(H*PT.ru_div(xd,gt.cc,M(k).q)),gt.cc,M(k).q);
-            d2 = (x2d-xdp).^2;
-            xfer_list(k) = sqrt(mean(d2(:)));
+            err = x2d(1:2,:)-xdp(1:2,:);
+            xfer_list(k) = rms(err(:));
         end                    
     else
         for k = 1:numel(M)
@@ -210,13 +210,9 @@ function opt_xfer = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h)
             x2d2 = PT.rd_div(PT.renormI(H2*PT.ru_div(xd,gt.cc, ...
                                                      M(k).q)),gt.cc,M(k).q);
             
-            d2a = (x2d1(1:2,:)-xdp(1:2,:)).^2;
-            d2b = (x2d2(1:2,:)-xdp(1:2,:)).^2;
-            
-            rmsa = rms(d2a(:));
-            rmsb = rms(d2b(:));
-            
-            xfer_list(k) = min([rmsa rmsb]);
+            erra = x2d1(1:2,:)-xdp(1:2,:);
+            errb = x2d2(1:2,:)-xdp(1:2,:);
+            xfer_list(k) = min([rms(erra(:)) rms(errb(:))]);
         end
     end
 

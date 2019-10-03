@@ -9,10 +9,6 @@ estHinf = [1 0 0; 0 1 0;estlinf'];
 
 xu = CAM.ru_div(x,cc,gtlambda);
 
-%mu_xu = [mean(xu,2);1];
-%mu_d = sqrt(sum([bsxfun(@minus,xu,mu)].^2));
-%sc = sqrt(2)/mu_d;
-
 A0 = calc_A0(xu,gtHinf,estHinf);
 y = CAM.rd_div(PT.renormI(inv(estHinf)*A0*gtHinf*xu),cc,estlambda);
 y = real(y);
