@@ -1,7 +1,7 @@
 function Ha = laf2_to_Amu(u,G,varargin)
 x = reshape(u(:,find(G)),3,[]);
-W = RP2.whiten(x);
-v = blkdiag(M,M,M)*u;
+W = RP2.calc_whitening_xform(x);
+v = blkdiag(W,W,W)*u;
 X = cmp_splitapply(@(x) ({x}),v,G);    
 
 Ha = laf2x2_to_Amu_internal(X,W);   

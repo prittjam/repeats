@@ -9,9 +9,9 @@ classdef pt3x2_to_ql < handle
     methods(Static)
         function M = solve(x)
             M = [];
-            
+
             tic
-            [q,l] = jmm_solver(x(1:3,:), x(4:6,:));
+            [q,l] = evl_solver(x(1:3,:), x(4:6,:));
             solver_time = toc;
             
             q = transpose(q);

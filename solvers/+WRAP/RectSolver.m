@@ -39,7 +39,11 @@ classdef RectSolver < handle & matlab.mixin.Heterogeneous
         end
        
         function flag = is_sample_good(this,x,idx)
-            flag = numel(unique([idx{:}])) == sum(this.mss);
+            x3 = reshape(x(:,[idx{:}]),3,[]);
+            [c,ia,ib] = uniquetol(x3',1e-3,'ByRows',true);
+            flag1 = numel(ia) == size(x3,2);
+            flag2 = numel(unique([idx{:}])) == sum(this.mss);
+            flag = flag1 & flag2;
         end    
         
         function flag = is_valid_real(this,M,cc,varargin)

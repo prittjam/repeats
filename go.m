@@ -15,7 +15,7 @@
 %img_path = 'raw'
 %img_path = 'cards'
 %img_path = 'small'
-%img_path = 'data/pattern1b.jpg';
+img_path = 'data/pattern1b.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'
 %img_name = 'fisheye'
@@ -32,7 +32,7 @@ dt = datestr(now,'yyyymmdd_HHMMSS');
 
 repeats_init();
 
-solver = WRAP.lafmn_to_qAl(WRAP.laf22_to_ql);
+solver = WRAP.lafmn_to_qAl(WRAP.laf2_to_ql);
 
 results_path = fullfile('results',class(solver.solver_impl),dt);
 

@@ -9,7 +9,7 @@ function [model,res,stats_list] = ...
 ransac = make_ransac(solver,x,G,varargin{:});
 [model0,res0,stats_list] = ransac.fit(x,K,G);
 
-guided_search(x,model,cspond,rt,vqT);
+%guided_search(x,model,cspond,rt,vqT);
 
 ransac.lo.max_iter = 150;
 [model,res] =  ransac.lo.fit(x,model0,res0,K,G);
