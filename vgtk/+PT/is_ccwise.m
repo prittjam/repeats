@@ -1,2 +1,2 @@
 function y = is_ccwise(x)
-y = PT.calc_scale(x) > 0;
+y = LAF.calc_scale(x) > 0;

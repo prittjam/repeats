@@ -12,16 +12,27 @@ classdef lafmn_to_qAl < WRAP.RectSolver
     end
     
     methods(Static)
-        function [] = minimal_upgrade(xp,idx,M,varargin)
+        function A = minimal_upgrade(xp,idx,M,varargin)
             G = findgroups(varargin{2});
             m = [idx{:}];
-            xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,cc,M.q));
             A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
         end
         
-        function [] = inliers_upgrade(x,idx,M,varargin)
+        function A = inliers_upgrade(xp,idx,varargin)           
             G = findgroups(varargin{2});
-            xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)*PT.ru_div(x,cc,M.q));
+            sc = abs(LAF.calc_scale(xp));
+            inl = false(size(sc));
+            scale_thresh = 0.1;
+            for k = 1:max(G)
+                idx = find(G == k);
+                scidx = sc(idx);
+                mscidx = median(scidx);
+                lgscratio = log10(scidx/mscidx);
+                idxinl = log10(0.85)  < lgscratio & lgscratio < ...
+                         log10(1.15);
+                inl(idx(idxinl)) = true;
+            end
+            G(~inl) = false;
             A = laf2_to_Amu(xp,findgroups(G));             
         end
     end
@@ -42,8 +53,9 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 for k = 1:numel(M)
                     Hinf = eye(3);
                     Hinf(3,:) = transpose(M(k).l);
-                    
-                    
+                    xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)* ...
+                                    PT.ru_div(x,cc,M(k).q));
+                    A = WRAP.lafmn_to_qAl.inliers_upgrade(xp,idx,varargin{:});
 
                     if isempty(A)
                         A = eye(3);

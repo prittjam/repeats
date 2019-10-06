@@ -42,7 +42,7 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
 
 function G = filter_features(x,G,img)
     areaT = 0.000035*img.area;
-    G(find(abs(PT.calc_scale(x)) < areaT)) = nan;
+    G(find(abs(LAF.calc_scale(x)) < areaT)) = nan;
     angles = LAF.calc_angle(x);
     G(find((angles < 1/10*pi) | (angles > 9/10*pi))) = nan;
     G = DR.rm_singletons(findgroups(G));
