@@ -2,7 +2,7 @@
 % 
 classdef pt3x2_to_ql < handle
     properties
-        solver = 'matlab';
+        solver = 'cpp';
         cspond = [];
     end
 

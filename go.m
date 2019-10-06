@@ -15,13 +15,14 @@
 %img_path = 'raw'
 %img_path = 'cards'
 %img_path = 'small'
-img_path = 'data/pattern1b.jpg';
+%img_path = 'data/pattern1b.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'
 %img_name = 'fisheye'
 %img_path = 'data/circles.jpg';
 %img_path = 'data/barrels.jpg';
 %img_path = 'data/cropped_dartboard.jpg';
+img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
 %img_path =
 %'/home/jbpritts/Downloads/data/fisheye/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen.jpg';
 %img_path = 'data/new_medium_63_o.jpg'

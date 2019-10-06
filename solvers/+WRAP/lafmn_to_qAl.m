@@ -28,8 +28,8 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 scidx = sc(idx);
                 mscidx = median(scidx);
                 lgscratio = log10(scidx/mscidx);
-                idxinl = log10(0.85)  < lgscratio & lgscratio < ...
-                         log10(1.15);
+                idxinl = log10(0.925)  < lgscratio & lgscratio < ...
+                         log10(1.075);
                 inl(idx(idxinl)) = true;
             end
             G(~inl) = false;
@@ -57,7 +57,9 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                                     PT.ru_div(x,cc,M(k).q));
                     A = WRAP.lafmn_to_qAl.inliers_upgrade(xp,idx,varargin{:});
 
+                    upgrade_succeeded = true;
                     if isempty(A)
+                        upgrade_succeeded = false;
                         A = eye(3);
                     end
 
@@ -68,6 +70,7 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                     end
 
                     H = A*Hinf;
+                                     
                     model_list(k) = struct('l',M(k).l, ...
                                            'A',A, ...
                                            'q',q, ...
