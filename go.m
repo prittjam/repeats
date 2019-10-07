@@ -20,14 +20,12 @@
 %img_path = 'coke'
 %img_name = 'fisheye'
 %img_path = 'data/circles.jpg';
-%img_path = 'data/barrels.jpg';
 %img_path = 'data/cropped_dartboard.jpg';
-img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
+%img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
+%img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
-%'/home/jbpritts/Downloads/data/fisheye/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen.jpg';
 %img_path = 'data/new_medium_63_o.jpg'
-
-%img_path = '~/Desktop/veggies.jpg';
+img_path = 'data/pami19/samyang_7.5mm/10.jpg'
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
@@ -40,7 +38,7 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 15 } ;
+      'reprojT', 10 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 

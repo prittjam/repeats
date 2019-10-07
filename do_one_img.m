@@ -26,8 +26,8 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
     clear dr;
     
     G = filter_features(x,G,img);
-    G = limit_group_size(x,G,50);
-    [x,G] = limit_drs(x,G,1000);
+    G = limit_group_size(x,G,70);
+    [x,G] = limit_drs(x,G,2000);
     x = x(:,~isnan(G));
     G = findgroups(G(~isnan(G)));
     
