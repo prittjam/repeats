@@ -68,7 +68,7 @@ classdef PatternPrinter2 < handle
             this.dz0 = zeros(this.params.Rtij(end),1);
         end
         
-        function [q,Hr,Rtij,A,l] = unpack(this,dz)
+        function [q,H,Rtij,A,l] = unpack(this,dz)
             dq = dz(this.params.q);
             dH = dz(this.params.H);
             dRtij = reshape(dz(this.params.Rtij),this.num_Rt_params,[]);
@@ -96,8 +96,8 @@ classdef PatternPrinter2 < handle
                 %                end
                 Rtij = multiprod(this.Rtij0,Rt.params_to_mtx(dRtij));
             end
-            Hr = A;
-            Hr(3,:) = transpose(l);
+            H = A;
+            H(3,:) = transpose(l);
         end
                    
         function cost = costfun(this,dz)
