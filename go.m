@@ -22,10 +22,10 @@
 %img_path = 'data/circles.jpg';
 %img_path = 'data/cropped_dartboard.jpg';
 %img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
-%img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
+img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
 %img_path = 'data/new_medium_63_o.jpg'
-img_path = 'data/pami19/samyang_7.5mm/10.jpg'
+%img_path = 'data/pami19/samyang_7.5mm/10.jpg'
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
