@@ -32,7 +32,16 @@ classdef RepeatSampler < handle
             % handle problems with reflections!
             is_ccwise = PT.is_ccwise(x);            
             G(is_ccwise) = findgroups(G(is_ccwise));
-            G(~is_ccwise) = findgroups(G(~is_ccwise))+max(G(is_ccwise));
+            if any(is_ccwise)
+                offset = max(G(is_ccwise))
+            else
+                offset = 0;
+            end
+            
+            if any(~is_ccwise)
+                G(~is_ccwise) = findgroups(G(~is_ccwise))+offset;
+;           end
+            
             this.labeling0 = findgroups(G);
             this.freq = hist(this.labeling0,1:max(this.labeling0));
             this.mss = mss; 

@@ -33,7 +33,7 @@ T = Rt.params_to_mtx([2*pi*rand(1,num_lafs); ...
                     ones(1,num_lafs)]);
 xc = PT.mtimesx(T,xc);
 tsc = 0.001*rand(1,num_lafs)+0.001;
-sc = abs(PT.calc_scale(xc));
+sc = abs(LAF.calc_scale(xc));
 s = sqrt(tsc./sc);
 sx = zeros(9,num_lafs);
 for k = 1:numel(s)

@@ -10,7 +10,7 @@ cspond = [cspond{:}];
 
 sampler = RepeatSampler(x,solver.mss,G,cspond,varargin{:});
 eval = RepeatEval(cspond,varargin{:});
-lo = RepeatLo('Rt',eval,varargin{:});
+lo = RepeatLo(eval,varargin{:});
 ransac = Ransac(solver,sampler,eval,'lo',lo);
 
 

@@ -33,6 +33,7 @@ classdef PatternPrinter2 < handle
     methods(Access = public)
         function this = PatternPrinter2(x,cc,Gm,q,A0,l0,Rtij,cspond,varargin)
             this = cmp_argparse(this,varargin{:});
+            
             this.Gm = Gm;
             this.cc = reshape(cc,2,[]);
             this.x = x;
@@ -53,9 +54,9 @@ classdef PatternPrinter2 < handle
             q_idx = 1;
             switch this.motion_model
               case 't'
-                H_idx = [1:3]+q_idx(end);
+                H_idx = [1:6]+q_idx(end);
                 Rtij_idx = ...
-                    [1:2*size(Rtij,2)]+H_idx(end);
+                    [1:2*size(Rtij,3)]+H_idx(end);
                 this.num_Rt_params = 2;
               case 'Rt'
                 H_idx = [1:6]+q_idx(end);
@@ -72,17 +73,19 @@ classdef PatternPrinter2 < handle
             dH = dz(this.params.H);
             dRtij = reshape(dz(this.params.Rtij),this.num_Rt_params,[]);
             q = this.q0+dq;
-            if numel(dH) == 3
-                l = this.l0+dH(1:3);
-                Rtij(2:3,:) = Rtij(2:3,:)+dRtij; 
-            elseif numel(dH) == 6
+            A = eye(3,3);
+            A(1,1) = this.A0(1)+dH(1);
+            A(2,1) = this.A0(2);
+            A(1,2) = this.A0(3)+dH(2);
+            A(2,2) = this.A0(4)+dH(3);
+            l = this.l0+[dH(4:6)];
+            
+            if this.num_Rt_params == 2
+                dRtij = [zeros(1,size(dRtij,2)); ...
+                         dRtij];
+                Rtij = multiprod(this.Rtij0,Rt.params_to_mtx(dRtij));
+            else
                 %                if this.A0(2) == 0
-                A = eye(3,3);
-                A(1,1) = this.A0(1)+dH(1);
-                A(2,1) = this.A0(2);
-                A(1,2) = this.A0(3)+dH(2);
-                A(2,2) = this.A0(4)+dH(3);
-                l = this.l0+[dH(4:6)];
                 %                else
                 %                    A(1,1) = this.A0(1)+dH(1);
                 %                    A(2,1) = this.A0(2)+dH(2);
@@ -153,7 +156,7 @@ classdef PatternPrinter2 < handle
             for k1 = 1:numel(this.Gm)
                 [aa,bb] = ...
                     meshgrid(12*(k1-1)+[1:12], ...
-                             [3*(this.Gm(k1)-1)+1:3* ...
+                             [this.num_Rt_params*(this.Gm(k1)-1)+1:this.num_Rt_params* ...
                               this.Gm(k1)]+max(dH_jj(:)));
                 dRt_ii = cat(1,dRt_ii,aa(:));
                 dRt_jj = cat(1,dRt_jj,bb(:));

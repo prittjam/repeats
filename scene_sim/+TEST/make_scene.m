@@ -18,12 +18,8 @@ end
 f = 5*rand(1)+3;
 cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
 P = PLANE.make_viewpoint(cam);
-
-[X,~,G] = PLANE.make_group_same_Rt(10, ...
-                                   'Reflect',0.0, ...
-                                   'Orientation','Clockwise');
-X4 = reshape(X,4,[]);
-x = PT.renormI(P*X4);
+[x,~,G] = PLANE.make_cspond_same_Rt(10,10,10);
+x = RP2.renormI(blkdiag(P,P,P)*x);
 q_gt = cfg.q/(sum(2*cc)^2);
 
 xd = CAM.rd_div(reshape(x,3,[]),...
@@ -32,4 +28,3 @@ xdn = reshape(xd,9,[]);
 
 figure;
 PT.draw_groups(gca,xdn,G);
-drawnow;

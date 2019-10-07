@@ -8,10 +8,11 @@ classdef RepeatLo < handle
     properties
         eval = [];
         max_iter = 10;
+        motion_model = 'Rt';
     end
 
     methods
-        function this = RepeatLo(motion_model,eval,varargin)
+        function this = RepeatLo(eval,varargin)
             [this,~] = cmp_argparse(this,varargin{:});
             this.eval = eval;
         end
@@ -25,7 +26,8 @@ classdef RepeatLo < handle
             Rtij = res.info.Rtij;
 
             pattern_printer = PatternPrinter2(x,M0.cc,Gm,M0.q, ...
-                                              M0.A,M0.l,Rtij,good_cspond);
+                                              M0.A,M0.l,Rtij,good_cspond, ...
+                                              'motion_model', this.motion_model);
             [mle_model,mle_stats] = pattern_printer.fit('MaxIterations',this.max_iter); 
 
             xp = PT.renormI(blkdiag(mle_model.H,mle_model.H,mle_model.H)*PT.ru_div(x,mle_model.cc,mle_model.q));

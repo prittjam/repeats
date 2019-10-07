@@ -9,6 +9,7 @@ classdef RepeatEval < handle
         max_iter = 10;
         reprojT = 10;
         cspond = [];
+        motion_model = 'Rt';
     end
     
     methods
@@ -26,8 +27,8 @@ classdef RepeatEval < handle
             
             xu = PT.ru_div(x,M0.cc,M0.q);
             xp = PT.renormI(blkdiag(M0.H,M0.H,M0.H)*xu);
-            
-            [cspond,Rtij0] = resection(xp,this.cspond,'Rt');             
+           
+            [cspond,Rtij0] = resection(xp,this.cspond,this.motion_model);             
             n = size(cspond,2);
             
             [loss,E,cs0] = calc_loss(x,xp,cspond,1:n,1:n,M0.q,M0.cc,M0.H,Rtij0,this.reprojT);
