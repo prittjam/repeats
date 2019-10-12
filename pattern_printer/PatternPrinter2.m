@@ -79,7 +79,6 @@ classdef PatternPrinter2 < handle
             A(1,2) = this.A0(3)+dH(2);
             A(2,2) = this.A0(4)+dH(3);
             l = this.l0+[dH(4:6)];
-            
             if this.num_Rt_params == 2
                 dRtij = [zeros(1,size(dRtij,2)); ...
                          dRtij];

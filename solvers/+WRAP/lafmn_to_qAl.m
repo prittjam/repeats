@@ -31,18 +31,32 @@ classdef lafmn_to_qAl < WRAP.RectSolver
             G = findgroups(G);
         end
         
-        function A = minimal_metric(xp,idx,varargin)
+        function A = minimal_metric(x,idx,varargin)
+            cc = varargin{2};
+            Hinf = eye(3);
+            Hinf(3,:) = transpose(M0.l);
+            xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)* ...
+                            PT.ru_div(x,cc,M0.q));
             G = findgroups(varargin{2});
             m = [idx{:}];
             A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
         end
         
-        function A = inliers_metric(xp,idx,varargin)           
-            A = eye(3);
-            Ginl = WRAP.lafmn_to_qAl.calc_inliers(xp,idx,varargin{: ...
-                   });
-            if any(Ginl)
-                A = laf2_to_Amu(xp,findgroups(Ginl));
+        function A = inliers_metric(x,idx,M0,varargin)           
+            A = [];
+            cc = varargin{1};
+            Hinf = eye(3);
+            Hinf(3,:) = transpose(M0.l);
+            xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)* ...
+                            PT.ru_div(x,cc,M0.q));
+            G = WRAP.lafmn_to_qAl.calc_inliers(xp,idx,varargin{:});
+            if any(~isnan(G))
+                xu = PT.ru_div(x,cc,M0.q);
+                l = laf22_to_l(xu,G);
+                Hinf = eye(3);
+                Hinf(3,:) = transpose(M0.l);
+                xp = RP2.renormI(blkdiag(Hinf,Hinf,Hinf)*xu);
+                A = laf2_to_Amu(xp,G);
             end
         end
         
@@ -75,23 +89,19 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 model_list = [];
             else
                 for k = 1:numel(M)
-                    Hinf = eye(3);
-                    Hinf(3,:) = transpose(M(k).l);
-                    xp = PT.renormI(blkdiag(Hinf,Hinf,Hinf)* ...
-                                    PT.ru_div(x,cc,M(k).q));
                     switch this.solver_type
                       case 'minimal_metric'
                         A = ...
-                            WRAP.lafmn_to_qAl.minimal_metric(xp,idx,varargin{:});                        
+                            WRAP.lafmn_to_qAl.minimal_metric(x,idx,varargin{:});                        
                       case 'inliers_metric'
                         A = ...
-                            WRAP.lafmn_to_qAl.inliers_metric(xp,idx,varargin{:});                        
+                            WRAP.lafmn_to_qAl.inliers_metric(x,idx,M(k),varargin{:});                        
                       case 'minimal_semimetric'
                         A = ...
-                            WRAP.lafmn_to_qAl.minimal_semimetric(xp,idx,varargin{:});
+                            WRAP.lafmn_to_qAl.minimal_semimetric(x,idx,varargin{:});
                       case 'inliers_semimetric'
                         A = ...
-                            WRAP.lafmn_to_qAl.inliers_semimetric(xp,idx,varargin{:});
+                            WRAP.lafmn_to_qAl.inliers_semimetric(x,idx,varargin{:});
                       otherwise
                         throw;
                     end
@@ -107,16 +117,18 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                     else
                         q = M(k).q;
                     end
+                    
+                    Hp = eye(3);
+                    Hp(3,:) = M(k).l;
+                    H = A*Hp;
 
-                    H = A*Hinf;
-                                     
                     model_list(k) = struct('l',M(k).l, ...
                                            'A',A, ...
                                            'q',q, ...
                                            'cc',cc, ...
                                            'H', H, ...
                                            'solver_time',M(k).solver_time);
-                end         
+                end
             end
         end
     end

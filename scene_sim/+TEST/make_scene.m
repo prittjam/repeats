@@ -19,6 +19,7 @@ f = 5*rand(1)+3;
 cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
 P = PLANE.make_viewpoint(cam);
 [x,~,G] = PLANE.make_cspond_same_Rt(10,10,10);
+
 x = RP2.renormI(blkdiag(P,P,P)*x);
 q_gt = cfg.q/(sum(2*cc)^2);
 

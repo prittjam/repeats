@@ -1,4 +1,8 @@
 function A = laf2_to_Amur(xp,G)
+    x = reshape(u(:,find(G)),3,[]);
+    W = RP2.calc_whitening_xform(x);
+    v = blkdiag(W,W,W)*u;
+    
     sc = LAF.calc_scale(xp);
     Gr = sc < 0;
     left = cmp_splitapply(@(v,gr) { v(:,gr) },xp,Gr,G);
