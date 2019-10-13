@@ -22,7 +22,7 @@
 %img_path = 'data/circles.jpg';
 %img_path = 'data/cropped_dartboard.jpg';
 %img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
-img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
+%img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
 %img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/pami19/samyang_7.5mm/10.jpg'
@@ -34,7 +34,7 @@ img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path = 'data/pami19/Samyang_f8mm/34.jpg';
 %img_path = 'data/pami19/Panasonic_DMC_GM5-Samyang_7.5_mm_UMC_Fish_eye_MFT-f7.5/39.jpg';
 %img_path = 'data/pami19/Olympus_E_M1-f_unknow/43.jpg';
-%img_path = 'data/pami19/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen/45.jpg';
+img_path = 'data/pami19/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen/45.jpg';
 %img_path = 'data/pami19/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen/44.jpg';
 %img_path = ['/home/jbpritts/Desktop/data/pami19/Pentax_K5-' ...
 %            'PENTAX_DA_FISH-EYE_10-17mm-f10mm/35.jpg'];
