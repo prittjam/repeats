@@ -30,5 +30,5 @@ function [M,res] = guided_search(x,M0,ransac,dc,G)
                   'loss', loss, ...
                   'cs', cs, ...
                   'info', loss_info);
-    ransac.lo.max_iter = 150;
+    ransac.lo.max_iter = inf;
     [M,res] = ransac.do_lo(x,M0,res0,dc,G);

@@ -31,7 +31,8 @@ classdef lafmn_to_qAl < WRAP.RectSolver
             G = findgroups(G);
         end
         
-        function A = minimal_metric(x,idx,varargin)
+        function [A,l] = minimal_metric(x,idx,M0,varargin)
+            l = M0.l;
             cc = varargin{2};
             Hinf = eye(3);
             Hinf(3,:) = transpose(M0.l);
@@ -42,7 +43,8 @@ classdef lafmn_to_qAl < WRAP.RectSolver
             A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
         end
         
-        function A = inliers_metric(x,idx,M0,varargin)           
+        function [A,l] = inliers_metric(x,idx,M0,varargin)           
+            l = M0.l;
             A = [];
             cc = varargin{1};
             Hinf = eye(3);
@@ -52,24 +54,24 @@ classdef lafmn_to_qAl < WRAP.RectSolver
             G = WRAP.lafmn_to_qAl.calc_inliers(xp,idx,varargin{:});
             if any(~isnan(G))
                 xu = PT.ru_div(x,cc,M0.q);
-                l = laf22_to_l(xu,G);
+                %l = laf22_to_l(xu,G);
                 Hinf = eye(3);
-                Hinf(3,:) = transpose(M0.l);
+                Hinf(3,:) = transpose(l);
                 xp = RP2.renormI(blkdiag(Hinf,Hinf,Hinf)*xu);
                 A = laf2_to_Amu(xp,G);
             end
         end
         
-        function A = minimal_semimetric(xp,idx,varargin)
-            G = findgroups(varargin{2});
-            m = [idx{:}];
-            A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
-        end
-        
-        function A = inliers_semimetric(xp,idx,varargin)           
-            Ginl = WRAP.lafmn_to_qAl.calc_inliers(xp,idx,varargin{:});
-            A = laf2_to_Amur(xp,Ginl);             
-        end
+%        function A = minimal_semimetric(xp,idx,varargin)
+%            G = findgroups(varargin{2});
+%            m = [idx{:}];
+%            A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
+%        end
+%        
+%        function A = inliers_semimetric(xp,idx,varargin)           
+%            Ginl = WRAP.lafmn_to_qAl.calc_inliers(xp,idx,varargin{:});
+%            A = laf2_to_Amur(xp,Ginl);             
+%        end
         
     end
     
@@ -77,7 +79,6 @@ classdef lafmn_to_qAl < WRAP.RectSolver
         function this = lafmn_to_qAl(solver_impl,varargin)
             this = this@WRAP.RectSolver(solver_impl.sample_type); 
             this.solver_impl = solver_impl;
-            
             this = cmp_argparse(this,varargin{:});
         end
 
@@ -91,17 +92,18 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 for k = 1:numel(M)
                     switch this.solver_type
                       case 'minimal_metric'
-                        A = ...
-                            WRAP.lafmn_to_qAl.minimal_metric(x,idx,varargin{:});                        
+                        [A,l] = ...
+                            WRAP.lafmn_to_qAl.minimal_metric(x,idx,varargin{:});
                       case 'inliers_metric'
-                        A = ...
-                            WRAP.lafmn_to_qAl.inliers_metric(x,idx,M(k),varargin{:});                        
-                      case 'minimal_semimetric'
-                        A = ...
-                            WRAP.lafmn_to_qAl.minimal_semimetric(x,idx,varargin{:});
-                      case 'inliers_semimetric'
-                        A = ...
-                            WRAP.lafmn_to_qAl.inliers_semimetric(x,idx,varargin{:});
+                        [A,l] = ...
+                            WRAP.lafmn_to_qAl.inliers_metric(x,idx, ...
+                                                             M(k),varargin{:});                        
+%                      case 'minimal_semimetric'
+%                        A = ...
+%                            WRAP.lafmn_to_qAl.minimal_semimetric(x,idx,varargin{:});
+%                      case 'inliers_semimetric'
+%                        A = ...
+%                            WRAP.lafmn_to_qAl.inliers_semimetric(x,idx,varargin{:});
                       otherwise
                         throw;
                     end
@@ -111,7 +113,7 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                         upgrade_succeeded = false;
                         A = eye(3);
                     end
-
+                    
                     if ~isfield(M,'q')
                         q = 0;
                     else
@@ -119,10 +121,10 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                     end
                     
                     Hp = eye(3);
-                    Hp(3,:) = M(k).l;
+                    Hp(3,:) = l;
                     H = A*Hp;
 
-                    model_list(k) = struct('l',M(k).l, ...
+                    model_list(k) = struct('l',l, ...
                                            'A',A, ...
                                            'q',q, ...
                                            'cc',cc, ...

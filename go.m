@@ -22,11 +22,11 @@
 %img_path = 'data/circles.jpg';
 %img_path = 'data/cropped_dartboard.jpg';
 %img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
-%img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
+img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
 %img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/pami19/samyang_7.5mm/10.jpg'
-img_path = 'data/niceone.jpg';
+%img_path = 'data/niceone.jpg';
 %img_path = 'data/tower.jpg';
 %img_path = 'data/church.jpg'
 %img_path = 'data/portal.jpg'
@@ -42,23 +42,21 @@ img_path = 'data/niceone.jpg';
 %img_path = 'data/pami19/Olympus_E-P5-f_unknow/40.jpg'
 %img_path = 'data/rotunda.png'
 %img_path = 'data/china.jpg' 
-%img_path = 'data/milan.jpg' 
+%img_path = 'data/vittorio.jpg' 
 %img_path = 'data/soup.jpg' 
 %img_path = 'data/montreal.jpg' 
 %img_path = 'data/stars.jpg' 
-% img_path = 'data/church3.jpg';
-%img_path = 'data/prague.jpg';
 %img_path = 'data/sunny.jpg';
 %img_path = 'data/pentax.jpg';
 %img_path = 'data/pami19/Canon_EOS_REBEL_T2i-Samyang_8mm-f8mm/50.jpg'
+%img_path = 'data/smmilan6.jpg';
 %img_path = '/home/jbpritts/src/repeats/data/pami19/sigma_15mm/12.jpg'
 %img_path = ['/home/jbpritts/src/repeats/data/pami19/samyang_7.5mm/' ...
 %            '42.jpg']
-%%img_path = 'data/pami19/Pentax_K3-PENTAX_DA_FISH-EYE_10-17mm-f10mm/36.jpg'
-%img_path = 'data/pami19/Panasonic_DMC-GM5_Samyang7.5mm_f3.5_fishey-f7.5mm-3/37.jpg'
-%img_path = 'data/lensrent.jpg'
-%img_path = 'data/port.jpg'
-%img_path = 'data/art4.jpg'
+%img_path = 'data/pami19/Pentax_K3-PENTAX_DA_FISH-EYE_10-17mm-f10mm/36.jpg'
+%img_path =
+%'data/pami19/Panasonic_DMC-GM5_Samyang7.5mm_f3.5_fishey-f7.5mm-3/37.jpg'
+
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
@@ -71,7 +69,7 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 15 } ;
+      'reprojT', 7 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
