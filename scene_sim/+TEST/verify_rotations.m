@@ -1,6 +1,6 @@
 function [] = verify_rotations
 solver = WRAP.lafmn_to_qAl(WRAP.laf222_to_ql);
-[x,G,cc,P,q_gt,X] = TEST.make_scene();
+[x,G,cc,P,q_gt,X] = PLANE.make_rotated_scene();
 varargin = {};
 [model_list,lo_res_list,stats_list] = ...
     rectify_planes(x,G,solver,cc,varargin{:});

@@ -1,6 +1,6 @@
 function warp_err = verify_reflections()
 solver = WRAP.lafmn_to_qAl(WRAP.laf2_to_ql);
-[x,G,cc,P,q_gt,X] = TEST.make_reflected_scene();
+[x,G,cc,P,q_gt,X] = PLANE.make_reflected_scene();
 varargin = { 'motion_model', 't' };
 [model_list,lo_res_list,stats_list] = ...
     rectify_planes(x,G,solver,cc,varargin{:});

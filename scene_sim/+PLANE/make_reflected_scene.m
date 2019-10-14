@@ -30,4 +30,3 @@ q_gt = cfg.q/(sum(2*cc)^2);
 xd = CAM.rd_div(reshape(x,3,[]),...
                 cam.cc,q_gt);
 xdn = reshape(xd,9,[]); 
-
