@@ -4,21 +4,19 @@ function A = laf2_to_Amur(x,G)
 %    W = RP2.calc_whitening_xform(x);
 %    v = blkdiag(W,W,W)*u;
     
-    Gr = LAF.calc_scale(xp) < 0;
+    Gr = LAF.calc_scale(x) < 0;
     left = cmp_splitapply(@(v,gr) { v(:,gr) },x,Gr,G);
     right = cmp_splitapply(@(v,gr) { v(:,~gr) },x,Gr,G);
     
-    is_good_left = cellfun(~isempty(x),left);
-    is_good_right = cellfun(~isempty(x),right);
+    is_good_left = cellfun(@(x) ~isempty(x),left);
+    is_good_right = cellfun(@(x) ~isempty(x),right);
     is_good = is_good_left & is_good_right;
-    
+
     if any(is_good)
         good_ind = find(is_good);
         A = laf2x1_to_Amur_internal(left(good_ind), ...
                                     right(good_ind));
     end
-    
-    keyboard;
 
 function A = laf2x1_to_Amur_internal(aY,arY)
     if ~iscell(aY)
