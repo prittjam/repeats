@@ -19,10 +19,10 @@ f = 5*rand(1)+3;
 cam = CAM.make_ccd(f,4.8,cfg.nx,cfg.ny);
 P = PLANE.make_viewpoint(cam);
 
-[X1,~,G1] = PLANE.make_cspond_set_reflect_v(3,10,10);
-[X2,~,G2] = PLANE.make_cspond_set_reflect_v(3,10,10);
-X = [X1 X2];
-G = [G1 G2+max(G1)];
+[X,~,G] = PLANE.make_cspond_set_reflect_v(2,10,10);
+%[X2,~,G2] = PLANE.make_cspond_set_reflect_v(10,10,10);
+%X = [X1 X2];
+%G = [G1 G2+max(G1)];
 
 x = RP2.renormI(blkdiag(P,P,P)*X);
 q_gt = cfg.q/(sum(2*cc)^2);
