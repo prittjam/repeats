@@ -22,7 +22,7 @@ classdef RepeatEval < handle
             max_loss = size(this.cspond,2)*this.reprojT;
         end
                 
-        function [loss,E,cs,loss_info] = calc_loss(this,x,M0,varargin)         
+        function [loss,E,cs,loss_info] = calc_loss(this,x,M0,varargin)
             loss_info = struct;
             
             xu = PT.ru_div(x,M0.cc,M0.q);

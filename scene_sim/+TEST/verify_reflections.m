@@ -1,8 +1,17 @@
 function warp_err = verify_reflections()
-[x,G,cc,P,q_gt,X] = PLANE.make_reflected_scene();
+[x,G,cspond,cc,P,q_gt,X] = PLANE.make_reflected_scene();
 varargin = { 'motion_model', 't' };
 
 l_gt = P' \ [0 0 1]';
+
+eval = RepeatEval(cspond);
+
+gtM = struct('H', inv(P),  ...
+             'q', q_gt, ...
+             'cc', cc, ...
+             'l', l_gt);
+keyboard;
+eval.calc_loss(x,gtM);
 
 solver = WRAP.lafmn_to_qAl(WRAP.laf2_to_ql);
 [model_list,lo_res_list,stats_list] = ...
