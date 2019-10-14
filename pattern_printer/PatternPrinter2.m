@@ -27,7 +27,6 @@ classdef PatternPrinter2 < handle
     end
     
     methods(Static)
-
     end
 
     methods(Access = public)

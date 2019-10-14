@@ -24,8 +24,8 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 scidx = sc(idx);
                 mscidx = median(scidx);
                 lgscratio = log10(scidx/mscidx);
-                idxinl = log10(0.95)  < lgscratio & ...
-                         lgscratio < log10(1.05);
+                idxinl = log10(0.925)  < lgscratio & ...
+                         lgscratio < log10(1.075);
                 inl(idx(idxinl)) = true;
             end
             G(~inl) = nan;

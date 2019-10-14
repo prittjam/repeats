@@ -30,7 +30,7 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
                        maketform('projective',H'), ...
                        cfg.ru_xform);
     end
-    
+
     switch lower(cfg.registration)
       case 'affinity'
         assert(~isempty(cfg.cspond), ...

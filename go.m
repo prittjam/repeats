@@ -10,13 +10,13 @@
 %img_path = 'circletext'
 %img_path = 'nyu_test3'
 %img_path = 'data/pattern24w.jpg'
-img_path = 'data/beer.jpg';
+%img_path = 'data/beer.jpg';
 %img_path = 'download'
 %img_path = 'img'
 %img_path = 'raw'
 %img_path = 'cards'
 %img_path = 'small'
-%img_path = 'data/pattern1b.jpg';
+img_path = 'data/pattern1b.jpg';
 %img_path = 'data/fairey.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'
@@ -57,8 +57,7 @@ img_path = 'data/beer.jpg';
 %img_path = ['/home/jbpritts/src/repeats/data/pami19/samyang_7.5mm/' ...
 %            '42.jpg']
 %img_path = 'data/pami19/Pentax_K3-PENTAX_DA_FISH-EYE_10-17mm-f10mm/36.jpg'
-%img_path =
-%'data/pami19/Panasonic_DMC-GM5_Samyang7.5mm_f3.5_fishey-f7.5mm-3/37.jpg'
+%img_path = 'data/pami19/Panasonic_DMC-GM5_Samyang7.5mm_f3.5_fishey-f7.5mm-3/37.jpg'
 
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
@@ -73,13 +72,13 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 10 } ;
+      'reprojT', 15 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
 
 model_settings = ...
-    { 'motion_model', 'Rt' };
+    { 'motion_model', 't' };
 
 varargin = { ransac_settings{:} dr_settings{:} model_settings{:} };
 [model_list,res_list,stats_list,meas,img] = ...

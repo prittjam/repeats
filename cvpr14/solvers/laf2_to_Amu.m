@@ -51,7 +51,6 @@ A = [];
 if det(Z) > 0
     try
         a = chol(W'*Z*W);
-        %        a = chol(Z);
         A = eye(3,3);
         A(1:2,1:2) = a;
     catch err
