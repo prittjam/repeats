@@ -9,7 +9,8 @@
 classdef lafmn_to_qAl < WRAP.RectSolver
     properties
         solver_impl = [];
-        solver_type = 'inliers_metric'
+        upgrade_type = 'scale_consensus';
+        upgrade_fn = @laf2_to_Amu;
     end
     
     methods(Static)
@@ -42,8 +43,23 @@ classdef lafmn_to_qAl < WRAP.RectSolver
             m = [idx{:}];
             A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
         end
+               
+        function A = minimal_semimetric(xp,idx,varargin)
+            G = findgroups(varargin{2});
+            m = [idx{:}];
+            A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
+        end
         
-        function [A,l] = inliers_metric(x,idx,M0,varargin)           
+    end
+    
+    methods
+        function this = lafmn_to_qAl(solver_impl,varargin)
+            this = this@WRAP.RectSolver(solver_impl.sample_type); 
+            this.solver_impl = solver_impl;
+            this = cmp_argparse(this,varargin{:});
+        end
+        
+        function [A,l] = scale_consensus_upgrade(this,x,idx,M0,varargin)           
             l = M0.l;
             A = [];
             cc = varargin{1};
@@ -58,28 +74,8 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 Hinf = eye(3);
                 Hinf(3,:) = transpose(l);
                 xp = RP2.renormI(blkdiag(Hinf,Hinf,Hinf)*xu);
-                A = laf2_to_Amu(xp,G);
+                A = this.upgrade_fn(xp,G);
             end
-        end
-        
-%        function A = minimal_semimetric(xp,idx,varargin)
-%            G = findgroups(varargin{2});
-%            m = [idx{:}];
-%            A = laf2_to_Amu(xp(:,m),findgroups(G(m))); 
-%        end
-%        
-%        function A = inliers_semimetric(xp,idx,varargin)           
-%            Ginl = WRAP.lafmn_to_qAl.calc_inliers(xp,idx,varargin{:});
-%            A = laf2_to_Amur(xp,Ginl);             
-%        end
-        
-    end
-    
-    methods
-        function this = lafmn_to_qAl(solver_impl,varargin)
-            this = this@WRAP.RectSolver(solver_impl.sample_type); 
-            this.solver_impl = solver_impl;
-            this = cmp_argparse(this,varargin{:});
         end
 
         function model_list = fit(this,x,idx,varargin)            
@@ -90,25 +86,17 @@ classdef lafmn_to_qAl < WRAP.RectSolver
                 model_list = [];
             else
                 for k = 1:numel(M)
-                    switch this.solver_type
-                      case 'minimal_metric'
+                    switch this.upgrade_type
+                      case 'minimal'
                         [A,l] = ...
                             WRAP.lafmn_to_qAl.minimal_metric(x,idx, ...
                                                              varargin{:});
-                      case 'inliers_metric'
-                        [A,l] = ...
-                            WRAP.lafmn_to_qAl.inliers_metric(x,idx, ...
-                                                             M(k),varargin{:});                        
-%                      case 'minimal_semimetric'
-%                        A = ...
-%                            WRAP.lafmn_to_qAl.minimal_semimetric(x,idx,varargin{:});
-%                      case 'inliers_semimetric'
-%                        A = ...
-%                            WRAP.lafmn_to_qAl.inliers_semimetric(x,idx,varargin{:});
+                      case 'scale_consensus'
+                        [A,l] = this.scale_consensus_upgrade(x,idx,M(k),varargin{:});
                       otherwise
                         throw;
                     end
-
+                    
                     upgrade_succeeded = true;
                     if isempty(A)
                         upgrade_succeeded = false;
