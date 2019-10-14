@@ -10,12 +10,13 @@
 %img_path = 'circletext'
 %img_path = 'nyu_test3'
 %img_path = 'data/pattern24w.jpg'
+img_path = 'data/beer.jpg';
 %img_path = 'download'
 %img_path = 'img'
 %img_path = 'raw'
 %img_path = 'cards'
 %img_path = 'small'
-img_path = 'data/pattern1b.jpg';
+%img_path = 'data/pattern1b.jpg';
 %img_path = 'data/fairey.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'

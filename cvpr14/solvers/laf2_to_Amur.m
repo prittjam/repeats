@@ -1,20 +1,22 @@
 function A = laf2_to_Amur(x,G)
     A = [];
-%    W = RP2.calc_whitening_xform(x(:,~isnan(G)));
-%    x = blkdiag(W,W,W)*x;
-%    
+    W = RP2.calc_whitening_xform(x(:,~isnan(G)));
+    x = blkdiag(W,W,W)*x;
+    
     Gr = LAF.calc_scale(x) < 0;
     left = cmp_splitapply(@(v,gr) { v(:,gr) },x,Gr,G);
     right = cmp_splitapply(@(v,gr) { v(:,~gr) },x,Gr,G);
-    
+
     is_good_left = cellfun(@(x) ~isempty(x),left);
     is_good_right = cellfun(@(x) ~isempty(x),right);
     is_good = is_good_left & is_good_right;
 
     if any(is_good)
         good_ind = find(is_good);
-        A = laf2x1_to_Amur_internal(left(good_ind), ...
+        A0 = laf2x1_to_Amur_internal(left(good_ind), ...
                                      right(good_ind));
+        A = eye(3);
+        A(1:2,1:2) = A0(1:2,1:2)*W(1:2,1:2);
     end
 
 function A = laf2x1_to_Amur_internal(aY,arY)
