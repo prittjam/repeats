@@ -15,8 +15,8 @@
 %img_path = 'raw'
 %img_path = 'cards'
 %img_path = 'small'
-%img_path = 'data/pattern1b.jpg';
-img_path = 'data/fairey.jpg';
+img_path = 'data/pattern1b.jpg';
+%img_path = 'data/fairey.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'
 %img_name = 'fisheye'
@@ -29,6 +29,7 @@ img_path = 'data/fairey.jpg';
 %img_path = 'data/pami19/samyang_7.5mm/10.jpg'
 %img_path = 'data/niceone.jpg';
 %img_path = 'data/tower.jpg';
+%img_path = 'data/fairey3.jpg';
 %img_path = 'data/church.jpg'
 %img_path = 'data/portal.jpg'
 %img_path = 'data/big_church.jpg'
@@ -71,7 +72,7 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 15 } ;
+      'reprojT', 10 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 

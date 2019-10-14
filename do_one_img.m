@@ -19,7 +19,7 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
     pp = [(img.width)/2 (img.height)/2];
     
     dr = DR.get(img,cid_cache, ...
-                    {'type','all', ...
+                    {'type','mser', ...
                      'reflection', true});
     x = [dr(:).u];
     G = DR.group_desc(dr,varargin{:});
@@ -37,7 +37,7 @@ function [model_list,lo_res_list,stats_list,meas,img] = ...
     meas = struct('x',x,'G',G);
 
 function G = filter_features(x,G,img)
-    areaT = 0.000015*img.area;
+    areaT = 0.000035*img.area;
     G(find(abs(LAF.calc_scale(x)) < areaT)) = nan;
     angles = LAF.calc_angle(x);
     G(find((angles < 1/10*pi) | (angles > 9/10*pi))) = nan;
