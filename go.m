@@ -16,6 +16,7 @@
 %img_path = 'cards'
 %img_path = 'small'
 %img_path = 'data/pattern1b.jpg';
+img_path = 'data/fairey.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'
 %img_name = 'fisheye'
@@ -34,7 +35,7 @@
 %img_path = 'data/pami19/Samyang_f8mm/34.jpg';
 %img_path = 'data/pami19/Panasonic_DMC_GM5-Samyang_7.5_mm_UMC_Fish_eye_MFT-f7.5/39.jpg';
 %img_path = 'data/pami19/Olympus_E_M1-f_unknow/43.jpg';
-img_path = 'data/pami19/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen/45.jpg';
+%img_path = 'data/pami19/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen/45.jpg';
 %img_path = 'data/pami19/Nikon_D7000-10.5mm-f10.5mm-fe3516mm_shotwideopen/44.jpg';
 %img_path = ['/home/jbpritts/Desktop/data/pami19/Pentax_K5-' ...
 %            'PENTAX_DA_FISH-EYE_10-17mm-f10mm/35.jpg'];
@@ -62,14 +63,15 @@ dt = datestr(now,'yyyymmdd_HHMMSS');
 
 repeats_init();
 
-solver = WRAP.lafmn_to_qAl(WRAP.laf2_to_ql);
+solver = WRAP.lafmn_to_qAl(WRAP.laf2_to_ql, ...
+                           'upgrade_fn',@laf2_to_Amur);
 
 results_path = fullfile('results',class(solver.solver_impl),dt);
 
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 7 } ;
+      'reprojT', 15 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 

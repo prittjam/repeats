@@ -1,9 +1,8 @@
 function A = laf2_to_Amur(x,G)
     A = [];
-%    x = reshape(u(:,find(G)),3,[]);
-%    W = RP2.calc_whitening_xform(x);
-%    v = blkdiag(W,W,W)*u;
-    
+%    W = RP2.calc_whitening_xform(x(:,~isnan(G)));
+%    x = blkdiag(W,W,W)*x;
+%    
     Gr = LAF.calc_scale(x) < 0;
     left = cmp_splitapply(@(v,gr) { v(:,gr) },x,Gr,G);
     right = cmp_splitapply(@(v,gr) { v(:,~gr) },x,Gr,G);
@@ -15,7 +14,7 @@ function A = laf2_to_Amur(x,G)
     if any(is_good)
         good_ind = find(is_good);
         A = laf2x1_to_Amur_internal(left(good_ind), ...
-                                    right(good_ind));
+                                     right(good_ind));
     end
 
 function A = laf2x1_to_Amur_internal(aY,arY)
