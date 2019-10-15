@@ -16,7 +16,7 @@
 %img_path = 'raw'
 %img_path = 'cards'
 %img_path = 'small'
-img_path = 'data/pattern1b.jpg';
+%img_path = 'data/pattern1b.jpg';
 %img_path = 'data/fairey.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'
@@ -44,6 +44,7 @@ img_path = 'data/pattern1b.jpg';
 %img_path = 'data/pami19/canon_eos_30d_10mm/4.jpg'
 %img_path = 'data/pami19/Olympus_E-P5-f_unknow/40.jpg'
 %img_path = 'data/rotunda.png'
+img_path = 'data/red_portal.jpg';
 %img_path = 'data/china.jpg' 
 %img_path = 'data/vittorio.jpg' 
 %img_path = 'data/soup.jpg' 
@@ -72,13 +73,13 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 15 } ;
+      'reprojT', 8 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
 
 model_settings = ...
-    { 'motion_model', 't' };
+    { 'motion_model', 'Rt' };
 
 varargin = { ransac_settings{:} dr_settings{:} model_settings{:} };
 [model_list,res_list,stats_list,meas,img] = ...
@@ -88,7 +89,7 @@ save_results(results_path,img_path,dt,model_list, ...
              res_list,stats_list,meas,img);
 
 render_settings =  ...
-    { 'min_scale',1e-5, 'max_scale',10 };
+    { 'min_scale',1e-5, 'max_scale',15 };
 
 [uimg,rimg,rd_div_line_img] = ...
     render_imgs(img.data,meas,model_list(1),res_list(1),...

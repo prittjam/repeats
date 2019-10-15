@@ -5,7 +5,7 @@
 %  Written by James Pritts
 %
 function [rt2,Gm,is_inverted] = segment_motions(x,model,cspond,rt,vqT)
-cfg.num_codes = 1e3;
+cfg.num_codes = 2e3;
 
 Hinf = model.H;
 Hinv = inv(Hinf);

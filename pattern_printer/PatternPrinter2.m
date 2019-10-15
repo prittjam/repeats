@@ -12,6 +12,7 @@ classdef PatternPrinter2 < handle
         A0 = [];
         l0 = [];
         Rtij0 = [];
+        Q = [];
         
         Gm = [];
         cspond = [];
@@ -42,23 +43,27 @@ classdef PatternPrinter2 < handle
         end
         
         function [] = pack(this,q,A0,l0,Rtij)
+            H0 = eye(3);
+            H0(1:2,1:2) = A0(1:2,1:2);
+            H0(3,:) = l0';
+            M = flip(eye(3));
+            [Qp,Rp]  = qr((M*A0)');
+            this.Q = M*Qp';
+            A0 = M*Rp'*M;
+            
             this.q0 = q*sum(2*this.cc)^2;
-            if A0(2,1) == 0
-                this.A0 = A0(1:2,1:2);
-            else
-                this.A0 = reshape(A0(1:2,1:2),1,[]);
-            end
+            this.A0 = reshape(A0(1:2,1:2),1,[]);
             this.l0 = l0;
             this.Rtij0 = Rtij;
             q_idx = 1;
+
+            H_idx = [1:5]+q_idx(end);
             switch this.motion_model
               case 't'
-                H_idx = [1:6]+q_idx(end);
                 Rtij_idx = ...
                     [1:2*size(Rtij,3)]+H_idx(end);
                 this.num_Rt_params = 2;
               case 'Rt'
-                H_idx = [1:6]+q_idx(end);
                 Rtij_idx = ...
                     [1:3*size(Rtij,3)]+H_idx(end);
                 this.num_Rt_params = 3;
@@ -77,23 +82,13 @@ classdef PatternPrinter2 < handle
             A(2,1) = this.A0(2);
             A(1,2) = this.A0(3)+dH(2);
             A(2,2) = this.A0(4)+dH(3);
-            l = this.l0+[dH(4:6)];
+            A = A*this.Q;
+            l = this.l0+[dH(4:5);0];
             if this.num_Rt_params == 2
                 dRtij = [zeros(1,size(dRtij,2)); ...
                          dRtij];
-                Rtij = multiprod(this.Rtij0,Rt.params_to_mtx(dRtij));
-            else
-                %                if this.A0(2) == 0
-                %                else
-                %                    A(1,1) = this.A0(1)+dH(1);
-                %                    A(2,1) = this.A0(2)+dH(2);
-                %                    A(1,2) = this.A0(3)+dH(3);
-                %                    A(2,2) = this.A0(4)+dH(4);
-                %                    l(1:2) =  transpose([A(1,1) A(1,2)]);
-                %                    l(3) = -det(A(1:2,1:2));
-                %                end
-                Rtij = multiprod(this.Rtij0,Rt.params_to_mtx(dRtij));
             end
+            Rtij = multiprod(this.Rtij0,Rt.params_to_mtx(dRtij));
             H = A;
             H(3,:) = transpose(l);
         end

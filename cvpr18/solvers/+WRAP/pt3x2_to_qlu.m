@@ -69,7 +69,6 @@ classdef pt3x2_to_qlu < handle
             
             M.Hu = eye(3)+M.u*M.l';
             M.Hu = invA*M.Hu*A;
-            M.l = M.l/norm(M.l);
             M.l = A'*M.l;
             M.u = invA*M.u;            
             M.q = M.q/normcc;

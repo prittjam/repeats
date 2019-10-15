@@ -123,8 +123,7 @@ classdef pt3x2_to_ql < handle
             invA = inv(A); 
             normcc = sum(2*invA(1:2,3))^2;
 
-            M.l = M.l/norm(M.l);
-            M.l = A'*M.l;
+            M.l = RP2.renormI(A'*M.l);
             M.q = M.q/normcc;
             
             M.cc = cc;

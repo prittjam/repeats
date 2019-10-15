@@ -24,7 +24,7 @@ classdef RepeatLo < handle
             Gm = res.info.Gm(res.cs);
             
             Rtij = res.info.Rtij;
-
+            display(['Initial loss is ' num2str(sum(res.err(res.cs)))]);
             pattern_printer = PatternPrinter2(x,M0.cc,Gm,M0.q, ...
                                               M0.A,M0.l,Rtij,good_cspond, ...
                                               'motion_model', this.motion_model);
