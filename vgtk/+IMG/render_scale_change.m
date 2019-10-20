@@ -34,16 +34,17 @@ else
     sc = si_fn(1,ln(1),ln(2),q,1,zn(1,:),zn(2,:));
 end
 
-red_sc = 1;
 if nargin > 4
     x = reshape(x,3,[]);
     if size(x,2) > 1
-        Hinf = eye(3);
-        Hinf(3,:) = transpose(l);
-        xp =  PT.renormI(Hinf*CAM.ru_div(x,cc,q));
-        idx = convhull(xp(1,:),xp(2,:));
-        mux = mean(xp(:,idx),2);
-        refpt = CAM.rd_div(PT.renormI(Hinf \ mux),cc,q);
+%        Hinf = eye(3);
+%        Hinf(3,:) = transpose(l);
+%        xp =  PT.renormI(Hinf*CAM.ru_div(x,cc,q));
+        idx = convhull(x(1,:),x(2,:));
+        %        idx = convhull(xp(1,:),xp(2,:));
+%        mux = mean(xp(:,idx),2);
+%        refpt = CAM.rd_div(PT.renormI(Hinf \ mux),cc,q);
+        refpt = mean(x(:,idx),2);
     else
         refpt = x;
     end  

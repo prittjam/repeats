@@ -26,14 +26,13 @@
 %img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
 %img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
-%img_path = 'data/new_medium_63_o.jpg'
+img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/pami19/samyang_7.5mm/10.jpg'
 %img_path = 'data/niceone.jpg';
-%img_path = 'data/tower.jpg';
 %img_path = 'data/fairey5.jpg';
-img_path = 'data/empire.jpg';
+%img_path = 'data/empire.jpg';
 %img_path = 'data/church.jpg'
-%img_path = 'data/portal.jpg'
+%img_path = 'data/green_portal.jpg'
 %img_path = 'data/big_church.jpg'
 %img_path = 'data/prague.jpg'
 %img_path = 'data/pami19/Samyang_f8mm/34.jpg';
@@ -44,7 +43,6 @@ img_path = 'data/empire.jpg';
 %img_path = ['/home/jbpritts/Desktop/data/pami19/Pentax_K5-' ...
 %            'PENTAX_DA_FISH-EYE_10-17mm-f10mm/35.jpg'];
 %img_path = 'data/pami19/canon_eos_30d_10mm/4.jpg'
-%img_path = 'data/rotunda.png'
 %img_path = 'data/red_portal.jpg';
 %img_path = 'data/china.jpg' 
 %img_path = 'data/vittorio.jpg' 
@@ -54,15 +52,20 @@ img_path = 'data/empire.jpg';
 %img_path = 'data/sunny.jpg';
 %img_path = 'data/pentax.jpg';
 %img_path = 'data/pami19/Canon_EOS_REBEL_T2i-Samyang_8mm-f8mm/50.jpg'
-
+%img_path = '/home/jbpritts/src/repeats/data/pami19/GoPro_Hero4_7med/62.jpg';
 %img_path = '/home/jbpritts/src/repeats/data/pami19/sigma_15mm/12.jpg'
-%img_path = ['/home/jbpritts/src/repeats/data/pami19/samyang_7.5mm/' ...
-%            '42.jpg']
+%img_path = ['/home/jbpritts/src/repeats/data/pami19/samyang_7.5mm/42.jpg']
 %img_path = 'data/pami19/Pentax_K3-PENTAX_DA_FISH-EYE_10-17mm-f10mm/36.jpg'
 %img_path = 'data/pami19/Panasonic_DMC-GM5_Samyang7.5mm_f3.5_fishey-f7.5mm-3/37.jpg'
 %img_path = 'data/oblique_fairey.jpg'
 %img_path = '/home/jbpritts/src/repeats/data/pami19/Olympus_E_M1-f_unknow/43.jpg'
-%img_path = 'data/grocery.jpg'
+%img_path = 'data/china.jpg'
+%img_path = 'data/castle.jpg';
+%img_path = 'data/flatiron.jpg';
+%img_path = 'data/port.jpg';
+%img_path = 'data/china2.jpg'
+%img_path = 'data/rotunda.png'
+
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
@@ -76,13 +79,13 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 5 } ;
+      'reprojT', 9 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
 
 model_settings = ...
-    { 'motion_model', 'Rt' };
+    { 'motion_model', 't' };
 
 varargin = { ransac_settings{:} dr_settings{:} model_settings{:} };
 [model_list,res_list,stats_list,meas,img] = ...
@@ -92,7 +95,9 @@ save_results(results_path,img_path,dt,model_list, ...
              res_list,stats_list,meas,img);
 
 render_settings =  ...
-    { 'min_scale',1e-5, 'max_scale',5 };
+    { 'min_scale', 1e-5, ...
+      'max_scale', 25, ...
+      'Registration', 'Affinity' };
 
 [uimg,rimg,rd_div_line_img] = ...
     render_imgs(img.data,meas,model_list(1),res_list(1),...

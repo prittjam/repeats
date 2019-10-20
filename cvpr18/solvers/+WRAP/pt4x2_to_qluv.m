@@ -28,7 +28,7 @@ classdef pt4x2_to_qluv < handle
             x4p1 = u(1:3,4);
             
             M = [];
-
+            k = [];
             switch solver
               case 'gb'
                 tic;
@@ -43,11 +43,15 @@ classdef pt4x2_to_qluv < handle
                 u3 = reshape(u3,1,[]);
                 
               case 'det'
-                tic;
-                [l1, l2, k, v1, v2, v3, u1, u2, u3] = ...
-                    solver_H35lv1v2k_det_54x60(x11, x1p1, x21, x2p1, ...
-                                               x31, x3p1,x41,x4p1);
-                solver_time = toc;
+                try
+                    tic;
+                    [l1, l2, k, v1, v2, v3, u1, u2, u3] = ...
+                        solver_H35lv1v2k_det_54x60(x11, x1p1, x21, x2p1, ...
+                                                   x31, x3p1,x41, ...
+                                                   x4p1);
+                    solver_time = toc;
+                catch
+                end
             end 
 
             %%%% note the swap of u anv v
