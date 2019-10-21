@@ -24,9 +24,9 @@
 %img_path = 'data/circles.jpg';
 %img_path = 'data/cropped_dartboard.jpg';
 %img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
-%img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
+img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
-img_path = 'data/new_medium_63_o.jpg'
+%img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/pami19/samyang_7.5mm/10.jpg'
 %img_path = 'data/niceone.jpg';
 %img_path = 'data/fairey5.jpg';
@@ -65,7 +65,16 @@ img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/port.jpg';
 %img_path = 'data/china2.jpg'
 %img_path = 'data/rotunda.png'
-
+%img_path = '/home/jbpritts/src/repeats/results/WRAP.laf2_to_ql/20191020_112921/green_portal.mat'
+%img_path = 'data/downtown.jpg'
+%img_path = 'data/GOPR0186.JPG';
+%img_path = 'data/oldtown.JPG';
+%img_path = 'data/arch.jpg';
+%img_path = 'data/sanpedro.jpg';
+%img_path = 'data/milan6.jpg'
+%img_path = 'data/casa_Bezos.jpg'
+%img_path = 'data/tv.jpg'
+img_path = 'data/barrels.jpg'
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
@@ -79,7 +88,7 @@ results_path = fullfile('results',class(solver.solver_impl),dt);
 ransac_settings = ...
     { 'min_trial_count', 100, ...
       'max_trial_count', 100, ...
-      'reprojT', 9 } ;
+      'reprojT', 10 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 

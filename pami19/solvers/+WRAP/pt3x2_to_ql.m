@@ -1,3 +1,4 @@
+
 % Copyright (c) 2017 James Pritts
 % 
 classdef pt3x2_to_ql < handle
@@ -48,7 +49,7 @@ classdef pt3x2_to_ql < handle
                 xu = PT.ru_div(x,cc,q(k1));
                 for k2 = 1:numel(cspond)
                     cs = cspond{k2};
-                    u(:,k2) = WRAP.pt1x2l_to_u(reshape(xu(:,cs(:)),6,[]),l(:,k1));
+                    u(:,k2) = pt1x2l_to_u(reshape(xu(:,cs(:)),6,[]),l(:,k1));
                     Hu = [eye(3)+u(:,k2)*l(:,k1)'];
                     x2d = PT.rd_div(PT.renormI(Hu*PT.ru_div(x(:, ...
                                                               cs(1,:)),cc,q(k1))),cc,q(k1));
