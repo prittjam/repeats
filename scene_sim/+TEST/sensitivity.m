@@ -96,6 +96,8 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                                  cam.cc,ccd_sigma);
                         X3 = reshape(X,3,[]);
                         x = PT.renormI(P*X3);
+                        
+                        keyboard;
                         xd = CAM.rd_div(x,cam.cc,q_gt);
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
