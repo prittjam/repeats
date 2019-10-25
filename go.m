@@ -24,9 +24,9 @@
 %img_path = 'data/circles.jpg';
 %img_path = 'data/cropped_dartboard.jpg';
 %img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
-img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
+%img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
-%img_path = 'data/new_medium_63_o.jpg'
+img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/pami19/samyang_7.5mm/10.jpg'
 %img_path = 'data/niceone.jpg';
 %img_path = 'data/fairey5.jpg';
@@ -74,7 +74,7 @@ img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path = 'data/milan6.jpg'
 %img_path = 'data/casa_Bezos.jpg'
 %img_path = 'data/tv.jpg'
-img_path = 'data/barrels.jpg'
+%img_path = 'data/barrels.jpg'
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
@@ -94,7 +94,7 @@ dr_settings = ...
     { 'desc_cutoff', 150 }; 
 
 model_settings = ...
-    { 'motion_model', 't' };
+    { 'motion_model', 'Rt' };
 
 varargin = { ransac_settings{:} dr_settings{:} model_settings{:} };
 [model_list,res_list,stats_list,meas,img] = ...
@@ -106,7 +106,7 @@ save_results(results_path,img_path,dt,model_list, ...
 render_settings =  ...
     { 'min_scale', 1e-5, ...
       'max_scale', 25, ...
-      'Registration', 'Affinity' };
+      'Registration', 'Similarity' };
 
 [uimg,rimg,rd_div_line_img] = ...
     render_imgs(img.data,meas,model_list(1),res_list(1),...
