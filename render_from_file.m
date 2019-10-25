@@ -22,8 +22,11 @@
 %load('/home/jbpritts/src/repeats/results/WRAP.laf2_to_ql/20191020_112921/green_portal.mat')
 %load('/home/jbpritts/src/repeats/results/WRAP.laf2_to_ql/20191018_182306/42.mat');
 %load('/home/jbpritts/src/repeats/results/WRAP.laf2_to_ql/20191019_233254/china.mat');
+%load('/home/jbpritts/src/repeats/results/WRAP.laf2_to_ql/20191020_212348/barrels.mat');
+
+load('/home/jbpritts/src/repeats/results/WRAP.laf2_to_ql/20191014_170117/pattern1b.mat');
 repeats_init
-load('/home/jbpritts/src/repeats/results/WRAP.laf2_to_ql/20191020_212348/barrels.mat');
+
 model = model_list(end);
 render_settings =  ...
     { 'min_scale', 1e-5, ...
