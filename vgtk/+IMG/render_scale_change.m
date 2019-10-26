@@ -4,7 +4,7 @@
 %
 %  Written by James Pritts
 %
-function [img,si_fn] = render_scale_change(sz,l,cc,q,x)
+function [img,si_fn,refpt] = render_scale_change(sz,l,cc,q,x)
 nx = sz(2);
 ny = sz(1);
 
@@ -37,18 +37,19 @@ end
 if nargin > 4
     x = reshape(x,3,[]);
     if size(x,2) > 1
-%        Hinf = eye(3);
-%        Hinf(3,:) = transpose(l);
-%        xp =  PT.renormI(Hinf*CAM.ru_div(x,cc,q));
-        idx = convhull(x(1,:),x(2,:));
-        %        idx = convhull(xp(1,:),xp(2,:));
-%        mux = mean(xp(:,idx),2);
-%        refpt = CAM.rd_div(PT.renormI(Hinf \ mux),cc,q);
-        refpt = mean(x(:,idx),2);
+        Hinf = eye(3);
+        Hinf(3,:) = transpose(l);
+        xu = CAM.ru_div(x,cc,q);
+        xp =  PT.renormI(Hinf*xu);
+        A = HG.pt3x2_to_A([Hinf \ reshape(xp,3,[]); ...
+                           reshape(xu,3,[])]); 
+        idx = convhull(xp(1,:),xp(2,:));
+        mux = mean(xp(:,idx),2);
+        refpt = A*CAM.rd_div(PT.renormI(Hinf \ mux),cc,q);
     else
         refpt = x;
     end  
-    
+      
     if q == 0
         ref_sc = si_fn(l(1),l(2),1,refpt(1),refpt(2));
     else
