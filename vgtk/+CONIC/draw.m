@@ -1,10 +1,10 @@
-%
+f%
 %  Copyright (c) 2018 James Pritts
 %  Licensed under the MIT License (see LICENSE for details)
 %
 %  Written by James Pritts
 %
-function [K,Q,D,W,l,qf] = draw(ax1,CC,varargin)
+function [K,Q,D,W,l,qf] = draw_conic(ax1,CC,varargin)
 M = 100;
 if ~iscell(CC)
     CC = {CC};
@@ -16,7 +16,7 @@ for k = 1:numel(CC)
     C = CC{k};
     [A,m] = CONIC.C_to_A(C);
     t = linspace(0,2*pi,M);
-    x(:,M*(k-1)+1:M*k) = PT.renormI(A*[cos(t);sin(t);ones(1,length(t))]);
+    x(:,M*(k-1)+1:M*k) = RP2.renormI(A*[cos(t);sin(t);ones(1,length(t))]);
 end
 
 %mpdc = distinguishable_colors(numel(CC));
