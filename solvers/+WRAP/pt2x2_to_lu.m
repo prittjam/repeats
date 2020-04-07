@@ -24,8 +24,9 @@ classdef pt2x2_to_lu
             
             l = cross(u,w);
             %            l = A'*l;
-            u = WRAP.pt1x2l_to_u(x,l);
+            u = pt1x2l_to_u(x,l);
             M = struct('l', l, 'u', u, ...
+                       'solver_time',0, ...
                        'Hu',eye(3)+u*l', ...
                        'q', 0);
         end

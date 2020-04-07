@@ -35,6 +35,7 @@ summary_list = cell2table(cell(0,6),'VariableNames', ...
                     'res_list', 'stats_list', 'img_path'});
 for k1 = 1:numel(solver_list)
     solver = solver_list{k1};
+    keyboard;
     for k2 = 1:numel(listing)
         try
             item = listing(k2);
