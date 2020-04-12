@@ -4,5 +4,7 @@
 %
 %  Written by James Pritts
 %
-function x2 = homogenize(x)
-    x2 = [x;ones(1,size(x,2))];
+function S = mtx_make_skew_3x3(e1)
+S = [  0   -e1(3)  e1(2); ...
+     e1(3)    0   -e1(1); ...
+    -e1(2)  e1(1)   0];

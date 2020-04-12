@@ -5,61 +5,30 @@
 %  Written by James Pritts
 %
 function v = rd_div(u,cc,q,varargin)
-if isnumeric(q)
-    display('CAM.rd_div(u,cc,q,Name,Value) is deprecated. New call format: CAM.distort_div(u,q,Name,Value)');
-    if abs(q) > 0
-        A = make_A(cc,varargin{:});
+if abs(q) > 0
+    A = make_A(cc,varargin{:});
 
-        m = size(u,1);
-        if (m == 2)
-            v = PT.homogenize(u);
-        else
-            v = u;
-        end
-
-        v = A*v;
-
-        xu = v(1,:);
-        yu = v(2,:);
-        v(1,:) = xu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
-        v(2,:) = yu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
-
-        v = A\v;
-
-        if (m == 2)
-            v = v(1:2,:);
-        end
+    m = size(u,1);
+    if (m == 2)
+        v = PT.homogenize(u);
     else
         v = u;
+    end
+
+    v = A*v;
+
+    xu = v(1,:);
+    yu = v(2,:);
+    v(1,:) = xu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
+    v(2,:) = yu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
+
+    v = A\v;
+
+    if (m == 2)
+        v = v(1:2,:);
     end
 else
-    varargin = {q, varargin{:}};
-    q = cc;
-    if abs(q) > 0
-        A = CAM.make_norm_xform(varargin{:});
-
-        m = size(u,1);
-        if (m == 2)
-            v = PT.homogenize(u);
-        else
-            v = u;
-        end
-
-        v = A*v;
-
-        xu = v(1,:);
-        yu = v(2,:);
-        v(1,:) = xu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
-        v(2,:) = yu/2./(q*yu.^2+xu.^2*q).*(1-sqrt(1-4*q*yu.^2-4*xu.^2*q));
-
-        v = A\v;
-
-        if (m == 2)
-            v = v(1:2,:);
-        end
-    else
-        v = u;
-    end
+    v = u;
 end
 
 function A = make_A(cc,varargin)

@@ -10,20 +10,6 @@ cfg.printlabels = false;
 cfg.linewidth = 3;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-if isempty(G)
-    assert(~isempty(cfg.idx))
-    for k=1:numel(cfg.idx)
-        G(cfg.idx{k}) = k;
-    end
-end
-
-if iscell(G)
-    for k=1:numel(G)
-        G_temp(G{k}) = k;
-    end
-    G = G_temp;
-end
-
 if isstruct(u)
     u = [u(:).u];
 end

@@ -4,5 +4,6 @@
 %
 %  Written by James Pritts
 %
-function x2 = homogenize(x)
-    x2 = [x;ones(1,size(x,2))];
+function [] = cvtk2_init()
+[cvtk_base_path, name, ext] = fileparts(mfilename('fullpath'));
+addpath(cvtk_base_path);

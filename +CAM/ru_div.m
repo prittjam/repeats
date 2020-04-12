@@ -5,51 +5,25 @@
 %  Written by James Pritts
 %
 function v = ru_div(u,cc,q,varargin)
-if isnumeric(q)
-    display('CAM.ru_div(u,cc,q,Name,Value) is deprecated. New call format: CAM.ru_div(u,q,Name,Value)');
-    if abs(q) > 0
-        A = make_A(cc,varargin{:});
+if abs(q) > 0 
+    A = make_A(cc,varargin{:});
 
-        m = size(u,1);
+    m = size(u,1);
 
-        if (m == 2)
-            u = [u;ones(1,size(u,2))];
-        end
+    if (m == 2)
+        u = [u;ones(1,size(u,2))];
+    end
 
-        v = A*u;
-        dv = 1+q*(v(1,:).^2+v(2,:).^2);
-        v(1:2,:)  = bsxfun(@rdivide,v(1:2,:),dv); 
-        v = inv(A)*v;
+    v = A*u;
+    dv = 1+q*(v(1,:).^2+v(2,:).^2);
+    v(1:2,:)  = bsxfun(@rdivide,v(1:2,:),dv); 
+    v = inv(A)*v;
 
-        if (m == 2)
-            v = v(1:2,:);
-        end
-    else
-        v = u;
+    if (m == 2)
+        v = v(1:2,:);
     end
 else
-    varargin = {q, varargin{:}};
-    q = cc;
-    if abs(q) > 0
-        A = CAM.make_norm_xform(varargin{:});
-
-        m = size(u,1);
-
-        if (m == 2)
-            u = [u;ones(1,size(u,2))];
-        end
-
-        v = A*u;
-        dv = 1+q*(v(1,:).^2+v(2,:).^2);
-        v(1:2,:)  = bsxfun(@rdivide,v(1:2,:),dv); 
-        v = inv(A)*v;
-
-        if (m == 2)
-            v = v(1:2,:);
-        end
-    else
-        v = u;
-    end
+    v = u;
 end
 
 function A = make_A(cc,varargin)

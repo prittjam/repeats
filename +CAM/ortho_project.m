@@ -4,5 +4,5 @@
 %
 %  Written by James Pritts
 %
-function x2 = homogenize(x)
-    x2 = [x;ones(1,size(x,2))];
+function u = cam_ortho_project(X)
+u = [X(1,:);X(2,:);ones(1,size(X,2))];

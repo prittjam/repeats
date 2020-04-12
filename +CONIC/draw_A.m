@@ -16,7 +16,7 @@ x = zeros(3,M*numel(A));
 for k = 1:numel(A)
     A0 = A{k};
     t = linspace(0,2*pi,M);
-    x(:,M*(k-1)+1:M*k) = PT.renormI(A0*[cos(t);sin(t);ones(1,length(t))]);
+    x(:,M*(k-1)+1:M*k) = renormI(A0*[cos(t);sin(t);ones(1,length(t))]);
 end
 
 mpdc = distinguishable_colors(numel(A));
