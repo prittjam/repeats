@@ -29,7 +29,5 @@ T(7:8) = transpose(Hs2x2)*transpose(T(7:8));
 Ha = eye(3); 
 Ha(1:2,1:2) = Ha2x2/sqrt(det(Ha2x2));
 
-%assert(norm(s*Hs*T*Ha*Hp-H0) < 1e-3, ...
+%assert(norm(s*Hs*T*Ha*Hp-H0) < 1e-7, ...
 %       'Problem with decomposition');
-%
-

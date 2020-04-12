@@ -6,7 +6,6 @@
 %
 function [timg,trect,T,A] = ru_div_rectify(img,H,cc,q,varargin)
     ru_xform = [];
-
     if q ~= 0
         ru_xform = CAM.make_ru_div_tform(cc,q);
     end

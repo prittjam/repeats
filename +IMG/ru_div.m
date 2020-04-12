@@ -4,49 +4,49 @@
 %
 %  Written by James Pritts
 %
-function [timg,trect,T] = ru_div(img,cc,q,varargin)
-cfg = struct('dims', transpose([size(img,1) size(img,2)]), ...
-             'boundary', []);
+function [timg,trect,T,S] = ru_div(img,cc,q,varargin)
+    if isnumeric(q)
+        display('IMG.ru_div(img,cc,q,Name,Value) is deprecated. New call format: IMG.ru_div(img,q,Name,Value)');
+        T0 = CAM.make_ru_div_tform(cc,q);
+        cfg = struct('border', [], ...
+                     'size', size(img));
+        cfg = cmp_argparse(cfg,varargin{:});
+    else
+        varargin = {q, varargin{:}};
+        q = cc;
+        cfg = struct('border', [], ...
+                     'size', size(img));
+        [cfg,varargin] = cmp_argparse(cfg,varargin{:});
+        T0 = CAM.make_ru_div_tform(q, varargin{:});
+    end
 
-[cfg,varargin] = cmp_argparse(cfg,varargin{:});
+    nx = size(img,2);
+    ny = size(img,1);
 
-T0 = CAM.make_ru_div_tform(cc,q);
+    if ~isempty(cfg.border)
+        border = cfg.border;
+    else
+        border = [1  1; ...
+                nx 1; ...    
+                nx ny; ...
+                1  ny];
+    end
 
-nx = size(img,2);
-ny = size(img,1);
+    [T,S] = IMG.register_by_size(T0,border,cfg.size, ...
+                                'LockAspectRatio', false);
 
-if ~isempty(cfg.boundary)
-    boundary = cfg.boundary;
-else
-    boundary = [0.5     0.5; ...
-                nx-0.5  0.5; ...    
-                nx-0.5  ny-0.5; ...
-                0.5     ny-0.5];
+    tbounds = tformfwd(T,border);
+
+    minx = min(tbounds(:,1));
+    maxx = max(tbounds(:,1));
+    miny = min(tbounds(:,2));
+    maxy = max(tbounds(:,2));
+
+    timg = imtransform(img,T,'bicubic', ...
+                    'XYScale',1, ...
+                    'XData',[minx maxx], ...
+                    'YData',[miny maxy], ...
+                    'Fill',transpose([255 255 255]));
+
+    trect = [minx miny maxx maxy];
 end
-
-if cfg.dims
-    [T,S] = IMG.register_by_dims(img,T0,boundary,cfg.dims);
-else
-    T = T0;
-    S = eye(3);
-end
- 
-T = T0;
-tbounds = tformfwd(T,boundary);
-
-minx = min(tbounds(:,1));
-maxx = max(tbounds(:,1));
-miny = min(tbounds(:,2));
-maxy = max(tbounds(:,2));
-
-timg = imtransform(img,T,'bicubic', ...
-                   'XYScale',1, ...
-                   'XData',[minx maxx], ...
-                   'YData',[miny maxy], ...
-                   'Fill',transpose([255 255 255]));
-
-if ~isempty(cfg.dims)
-    timg = imresize(timg,[ny nx]);
-end
-
-trect = [minx miny maxx maxy];

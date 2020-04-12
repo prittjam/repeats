@@ -4,26 +4,21 @@
 %
 %  Written by James Pritts
 %
-function sc = calc_scale(lafs)
-%A = [1:3];
-%B = [4:6];
-%C = [7:9];
-%
-%sc = ar(lafs(A,:),lafs(B,:)) + ar(lafs(B,:),lafs(C,:)) + ar(lafs(C, ...
-%                                                  :),lafs(A,:));
-%sc = 2*sc;
-%%sc = abs(sc);
-%
-%function a = ar(A,B)
-%  a = (A(1,:) - B(1,:)) .* (A(2,:) + B(2,:)) /2; 
-%
-lafsA1 = lafs(1,:);
-lafsA2 = lafs(2,:);
-lafsB1 = lafs(4,:);
-lafsB2 = lafs(5,:);
-lafsC1 = lafs(7,:);
-lafsC2 = lafs(8,:);
-
-sc = abs((lafsA1-lafsB1).*(lafsA2+lafsB2) + ...
+function s = calc_scale(x)
+m = size(x,1);
+x = PT.renormI(x);
+if m == 6
+    mux = PT.calc_mu(x);
+    s = pi*sum((mux-x(1:3,:)).^2);
+elseif m == 9
+    lafsA1 = x(1,:);
+    lafsA2 = x(2,:);
+    lafsB1 = x(4,:);
+    lafsB2 = x(5,:);
+    lafsC1 = x(7,:);
+    lafsC2 = x(8,:);
+    
+    s = ((lafsA1-lafsB1).*(lafsA2+lafsB2) + ...
          (lafsB1-lafsC1).*(lafsB2+lafsC2) + ...
          (lafsC1-lafsA1).*(lafsC2+lafsA2))/2;
+end

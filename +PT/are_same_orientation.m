@@ -4,10 +4,16 @@
 %
 %  Written by James Pritts
 %
-function [flag,side] = are_same_orientation(u,l)
-m = size(u,1);
-u = reshape(u,3,[]);
-z = dot(l(:,ones(1,size(u,2))),u);
+function [flag,side] = are_same_orientation(x,l)
+m = size(x,1)/3;
+x = reshape(x,3,[]);
+z = l'*x;
 side = z/z(1) > 0;
 flag = all(side);
-side = prod(reshape(side,m,[]));
+if m > 1
+    side = reshape(side,m,[]);
+    ismixed = any(side ~= side(1,:));
+    side = prod(side);
+    side(ismixed) = nan;
+end
+side = findgroups(side);

@@ -4,8 +4,10 @@
 %
 %  Written by James Pritts
 %
-function c = rd_div(l,cc,q)
+function c = rd_div(q,cc,l)
 assert(q ~= 0, 'The division model parameter must be non-zero');
+
+l = PT.renormI(l);
 c = zeros(size(l));
 cc = reshape(cc,2,[]);
 
