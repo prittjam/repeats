@@ -50,34 +50,34 @@ function [timg,trect,T,A] = rectify(img,H,varargin)
     end
 
 
-    [T,A2] = IMG.register_by_size(T,cfg.border,cfg.size, ...
+    [T,A2] = IMG.register_by_size(img,T,cfg.border,cfg.size, ...
                                   'LockAspectRatio','true');
     A = A2*A;
     
     outbounds = tformfwd(T,cfg.border);
 
     timg = imtransform(img,T,'bicubic', ...
-                       'XYScale',1/cfg.scale_output, ...
                        'XData', [min(outbounds(:,1)) max(outbounds(:,1))], ...
                        'YData', [min(outbounds(:,2)) max(outbounds(:,2))], ...
-                       leftover{:});
+                       'XYScale',1/cfg.scale_output, ...
+                       leftover{:}); 
     
     trect = [min(outbounds(:,1)) min(outbounds(:,2)) ...
              max(outbounds(:,1)) max(outbounds(:,2))];
-end
+                                                     
+    
+function [T,A] = register_by_similarity(u,T0)
+    v = [tformfwd(T0,transpose(u(1:2,:))) ... 
+         ones(size(u,2),1)];
+    A = HG.pt2x2_to_sRt([transpose(v);u]);
+    T = maketform('composite', ...
+                  maketform('affine',transpose(A)), ...
+                  T0);
 
-
-function [T,A] = register_by_similarity(u, T0)
-  [T, A] = register_by(u, T0, 'pt2x2_to_sRt');
-end
-
-function [T,A] = register_by_affinity(u, T0)
-    [T, A] = register_by(u, T0, 'pt3x2_to_A');
-end
-
-function [T,A] = register_by(u, T0, xform_solver)
-  v = [tformfwd(T0,transpose(u(1:2,:))) ones(size(u,2),1)];
-  xform_solver_fn = str2func(['HG.' xform_solver]);
-  A = xform_solver_fn([transpose(v);u]);
-  T = maketform('composite', maketform('affine',transpose(A)), T0);
-end
+function [T,A] = register_by_affinity(u,T0)
+    v = [tformfwd(T0,transpose(u(1:2,:))) ... 
+         ones(size(u,2),1)];
+    A = HG.pt3x2_to_A([transpose(v);u]);
+    T = maketform('composite', ...
+                  maketform('affine',transpose(A)), ...
+                  T0);

@@ -5,13 +5,9 @@
 %  Written by James Pritts
 %
 function h1 = draw(ax1,u,varargin)
-if size(u,1)==2
-    u = PT.homogenize(u);
-end
-
 cfg.labels = [];
 cfg.draw_centroid = false;
-cfg.DrawAnchor = true;
+cfg.DrawAnchor = false;
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
 m = size(u,1);
@@ -33,7 +29,7 @@ else
 end
 
 if cfg.DrawAnchor
-    color_list = cell2mat({get(h1,'Color')});
+    color_list = cell2mat(get(h1,'Color'));
     scatter(u(1,:),u(2,:),40,color_list,'filled');
 end
 

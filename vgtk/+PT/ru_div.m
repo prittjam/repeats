@@ -4,5 +4,6 @@
 %
 %  Written by James Pritts
 %
-function x2 = homogenize(x)
-    x2 = [x;ones(1,size(x,2))];
+function v = ru_div(u,cc,k)
+m = size(u,1);
+v = reshape(CAM.ru_div(reshape(u,3,[]),cc,k),m,[]);

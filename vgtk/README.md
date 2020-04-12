@@ -1,1 +1,2 @@
-# Visual Geometry ToolKit
+# vgtk
+Visual Geometry ToolKit
