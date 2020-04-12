@@ -82,7 +82,7 @@ dt = datestr(now,'yyyymmdd_HHMMSS');
 
 repeats_init();
 
-solver = WRAP.lafmn_to_qAl(WRAP.laf22_to_qluv(), ...
+solver = WRAP.lafmn_to_qAl(WRAP.laf2_to_ql(), ...
                            'upgrade_fn', @laf2_to_Amur);
 
 results_path = fullfile('results',class(solver.solver_impl),dt);
