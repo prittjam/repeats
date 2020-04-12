@@ -41,7 +41,7 @@ if nargin > 4
         Hinf(3,:) = transpose(l);
         xu = CAM.ru_div(x,cc,q);
         xp =  PT.renormI(Hinf*xu);
-        A = HG.pt3x2_to_A([Hinf \ reshape(xp,3,[]); ...
+        A = HG.pt3x2_to_A([PT.renormI(Hinf \ reshape(xp,3,[])); ...
                            reshape(xu,3,[])]); 
         idx = convhull(xp(1,:),xp(2,:));
         mux = mean(xp(:,idx),2);

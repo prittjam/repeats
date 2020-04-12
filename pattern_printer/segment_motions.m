@@ -39,7 +39,6 @@ d2 = sum([err1;err2].^2);
 d2 = reshape(d2,M,N);
 
 K = sparse(double(d2 < vqT));
-
 is_valid_ii = find(any(K,2));
 K = K(is_valid_ii,any(K,1));
 w0 = lp_vq(K);

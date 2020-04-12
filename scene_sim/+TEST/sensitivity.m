@@ -54,7 +54,6 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                all_solver_names, 'Ordinal', true);
     solver_sample_type = arrayfun(@(x) x.sample_type,solver_list, ...
                                   'UniformOutput',false);
-    
     ex_num = 1;
 
     for scene_num = 1:cfg.numscenes
@@ -125,7 +124,6 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
                                 calc_opt_q(truth,cam,M,P,wplane, ...
                                            hplane);
                             opt_xfer_list(k2) = calc_opt_xfer(truth,cam,reshape(x,9,[]),...
-                                                              idx, ...
                                                               M,P,wplane,hplane);
                         end
                     end
@@ -159,7 +157,7 @@ function [res,gt,cam] = sensitivity(name_list,solver_list,all_solver_names,varar
     end
     disp(['Finished']);
 
-function opt_xfer = calc_opt_xfer(gt,cam,xu,idx,M,P,w,h) 
+function opt_xfer = calc_opt_xfer(gt,cam,xu,M,P,w,h) 
     xu = reshape([xu(1:3,1:2) xu(4:6,1:2) xu(7:9,1:2)],6,[]);
     U = PT.renormI(P\[xu(1:3,1) xu(4:6,1)]);
     dU = U(:,2)-U(:,1);

@@ -124,7 +124,7 @@ classdef Ransac < handle
                                           'trial_count',stats.trial_count, ...
                                           'model_count',stats.model_count);
                         
-                        assert(lo_res.loss <= res.loss,['likelihood decreased!']);
+                        %                        assert(lo_res.loss <= res.loss,['likelihood decreased!']);
                         
                         if (lo_res.loss <= opt_res.loss)
                             stats.local_list = cat(2,stats.local_list,lo_stats);

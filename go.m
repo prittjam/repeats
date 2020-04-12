@@ -16,7 +16,6 @@
 %img_path = 'raw'
 %img_path = 'cards'
 %img_path = 'small'
-%img_path = 'data/pattern1b.jpg';
 %img_path = 'data/fairey.jpg';
 %img_path = 'pavement'
 %img_path = 'coke'
@@ -26,7 +25,7 @@
 %img_path = 'data/Fujifilm_X_E1_Samyang_8mm.jpg';
 %img_path = 'data/pami19/canon_eos_5d_15mm/0.jpg'
 %img_path =
-img_path = 'data/new_medium_63_o.jpg'
+%img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/pami19/samyang_7.5mm/10.jpg'
 %img_path = 'data/niceone.jpg';
 %img_path = 'data/fairey5.jpg';
@@ -75,26 +74,29 @@ img_path = 'data/new_medium_63_o.jpg'
 %img_path = 'data/casa_Bezos.jpg'
 %img_path = 'data/tv.jpg'
 %img_path = 'data/barrels.jpg'
+%img_path = '/home/jbpritts/Documents/pami19/suppimg/cool_building.jpg';
+
+img_path = '/home/jbpritts/Downloads/wide_pattern2.jpg';
 
 dt = datestr(now,'yyyymmdd_HHMMSS');
 
 repeats_init();
 
-solver = WRAP.lafmn_to_qAl(WRAP.laf2_to_ql, ...
-                           'upgrade_fn',@laf2_to_Amur);
+solver = WRAP.lafmn_to_qAl(WRAP.laf22_to_qluv(), ...
+                           'upgrade_fn', @laf2_to_Amur);
 
 results_path = fullfile('results',class(solver.solver_impl),dt);
 
 ransac_settings = ...
-    { 'min_trial_count', 100, ...
-      'max_trial_count', 100, ...
-      'reprojT', 10 } ;
+    { 'min_trial_count', 350, ...
+      'max_trial_count', 350, ...
+      'reprojT', 12 } ;
 
 dr_settings = ...
     { 'desc_cutoff', 150 }; 
 
 model_settings = ...
-    { 'motion_model', 'Rt' };
+    { 'motion_model', 't' };
 
 varargin = { ransac_settings{:} dr_settings{:} model_settings{:} };
 [model_list,res_list,stats_list,meas,img] = ...
@@ -105,8 +107,8 @@ save_results(results_path,img_path,dt,model_list, ...
 
 render_settings =  ...
     { 'min_scale', 1e-5, ...
-      'max_scale', 25, ...
-      'Registration', 'Similarity' };
+      'max_scale', 40, ...
+      'Registration', 'Affinity' };
 
 [uimg,rimg,rd_div_line_img] = ...
     render_imgs(img.data,meas,model_list(1),res_list(1),...
