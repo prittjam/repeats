@@ -1,5 +1,4 @@
 function [] = draw_groups(ax,arcs,G,varargin)
-
     if iscell(G)
         for k=1:numel(G)
             G_temp(G{k}) = k;
@@ -15,3 +14,4 @@ function [] = draw_groups(ax,arcs,G,varargin)
     cmp_splitapply(@(v,color) ...
                    ARC.draw(ax,v,'Color',color(:,1),varargin{:}),...
                    arcs,colors',G);
+end

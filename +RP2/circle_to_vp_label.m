@@ -63,3 +63,4 @@ function G = circle_to_vp_label(c,varargin)
             G = reshape(G,1,[]);
         end
     end
+end
