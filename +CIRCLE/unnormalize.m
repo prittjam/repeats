@@ -1,5 +1,4 @@
-function circ = unnormalize(circ, varargin)
-    A = CAM.make_norm_xform(varargin{:});
+function circ = unnormalize(circ, A)
     c = A \ PT.homogenize(circ(1:2,:));
     circ(1:2,:) = c(1:2,:);
     if size(circ,1) > 2

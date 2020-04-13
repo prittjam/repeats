@@ -1,4 +1,4 @@
-function L = undistort_div(l,q,varargin)
+function L = undistort_div(l,q)
     % l -- 3xN [cx...; cy...; R]
     % or
     % l -- 4xN [px...; py...; nx...; ny...]
@@ -13,8 +13,9 @@ function L = undistort_div(l,q,varargin)
         l = [p(1:2,:); n];
     end
 
-    A = CAM.make_norm_xform(varargin{:});
-    l0 = A * PT.homogenize(l(1:2,:));
+    % A = CAM.make_norm_xform(varargin{:});
+    % l0 = A * PT.homogenize(l(1:2,:));
+    l0 = l;
     l = [l0(1:2,:); l(3:4,:)];
 
     px = l(1,:);
@@ -28,6 +29,4 @@ function L = undistort_div(l,q,varargin)
                   2 * nx .* px .* py);
     Lz = - nx .* px - ny .* py;
     L = [Lx; Ly; Lz];
-
-    L = A' * L;
 end

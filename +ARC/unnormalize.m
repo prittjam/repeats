@@ -1,4 +1,3 @@
-function A = unnormalize(arcs, varargin)
-    A = CAM.make_norm_xform(varargin{:});
+function A = unnormalize(arcs, A)
     arcs = cellfun(@(x) A \ x, arcs, 'UniformOutput', false);
 end

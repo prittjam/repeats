@@ -6,8 +6,8 @@
 %
 function [timg,trect,T,S] = undistort_div(img,q,varargin)
     cfg = struct('border', [], 'size', size(img));
-    [cfg,varargin] = cmp_argparse(cfg,varargin{:});
-    T0 = CAM.make_ru_div_tform(q, varargin{:});
+    cfg = cmp_argparse(cfg,varargin{:});
+    T0 = make_undistort_div_xform(q);
 
     nx = size(img,2);
     ny = size(img,1);
@@ -38,4 +38,19 @@ function [timg,trect,T,S] = undistort_div(img,q,varargin)
                     'Fill',transpose([255 255 255]));
 
     trect = [minx miny maxx maxy];
+end
+
+function T = make_undistort_div_xform(q)
+    T = maketform('custom', 2, 2, ...
+                @undistort_div_xform, ...
+                @distort_div_xform, ...
+                struct('q',q));
+end
+
+function v = undistort_div_xform(u, T)
+    v = CAM.undistort_div(u', T.tdata.q)';
+end
+
+function v = distort_div_xform(u, T)
+    v = CAM.distort_div(u', T.tdata.q)';
 end

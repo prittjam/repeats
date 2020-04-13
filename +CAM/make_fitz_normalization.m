@@ -4,11 +4,18 @@
 %
 %  Written by James Pritts
 %
-function [A,sc] = make_fitz_normalization(cc)
-     display("CAM.make_fitz_normalization(cc) is deprecated. New call format: CAM.make_norm_xform('norm_type','fitz','norm_params',cc)");
-     sc = sum(2*cc);
+function [A,sc] = make_fitz_normalization(cc, varargin)
+     cfg.rescale = true;
+     cfg = cmp_argparse(cfg, varargin{:});
+
+     if cfg.rescale
+          sc = sum(2*cc);
+     else
+          sc = 1;
+     end
+
      ncc = -cc/sc;
-     A = [1/sc 0        ncc(1); ...
-          0       1/sc  ncc(2); ...
+     A = [1/sc 0        -cc(1)/sc; ...
+          0       1/sc  -cc(2)/sc; ...
           0       0      1];
-end
+end 

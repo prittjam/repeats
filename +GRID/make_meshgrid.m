@@ -11,7 +11,11 @@ function x = make_meshgrid(wplane, hplane, gt, varargin)
     A = [[wplane 0; 0 hplane] [0 0]'; 0 0 1];
     X = A * X;
     if ~isempty(gt)
-        x = CAM.rd_div(PT.renormI(gt.P * X), gt.q, 'norm_type', 'fitz', 'norm_params', gt.cc);
+        % keyboard
+        % A = CAM.make_fitz_normalization(gt.cc, 'rescale', false);
+        % x = A \ (CAM.distort_div(A * PT.renormI(gt.P * X), gt.q));
+        % keyboard
+        x = CAM.rd_div(PT.renormI(gt.P * X), gt.cc, gt.q);
     else
         x = X;
     end

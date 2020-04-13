@@ -1,10 +1,10 @@
-f%
+%
 %  Copyright (c) 2018 James Pritts
 %  Licensed under the MIT License (see LICENSE for details)
 %
 %  Written by James Pritts
 %
-function [K,Q,D,W,l,qf] = draw_conic(ax1,CC,varargin)
+function [K,Q,D,W,l,qf] = draw(ax1,CC,varargin)
 M = 100;
 if ~iscell(CC)
     CC = {CC};

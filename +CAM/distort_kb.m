@@ -1,13 +1,9 @@
-function v = distort_kb(u, k, varargin)
+function v = distort_kb(u, k)
     if any(k) > 0
-        A = CAM.make_norm_xform(varargin{:});
         m = size(u,1);
-
         if (m == 2)
             u = [u;ones(1,size(u,2))];
         end
-        
-        v = A * u;
 
         r = vecnorm(v(1:2,:),2,1);
         theta = atan(r);
@@ -22,7 +18,6 @@ function v = distort_kb(u, k, varargin)
         cdist(ind) = theta_d(ind) .* inv_r(ind);
 
         v = [v(1:2,:) .* cdist; ones(1,size(v,2))];
-        v = A \ v;
 
         if (m == 2)
             v = v(1:2,:);

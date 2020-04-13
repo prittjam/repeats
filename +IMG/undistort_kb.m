@@ -1,7 +1,7 @@
 function [timg,trect,T,S] = undistort_kb(img, k, varargin);
     cfg = struct('border', [], 'size', size(img));
-    [cfg,varargin] = cmp_argparse(cfg, varargin{:});
-    T0 = make_undistort_kb_xform(k, varargin{:});
+    cfg = cmp_argparse(cfg, varargin{:});
+    T0 = make_undistort_kb_xform(k);
     nx = size(img,2);
     ny = size(img,1);
     if ~isempty(cfg.border)
@@ -30,17 +30,17 @@ function [timg,trect,T,S] = undistort_kb(img, k, varargin);
     trect = [minx miny maxx maxy];
 end
 
-function T = make_undistort_kb_xform(k,varargin)
+function T = make_undistort_kb_xform(k)
     T = maketform('custom',2,2, ...
                 @undistort_kb_xform, ...
                 @distort_kb_xform, ...
-                struct('k',k,varargin{:}));
+                struct('k',k));
 end
 
-function v = undistort_kb_xform(u,T)
-    v = CAM.undistort_kb(u',T.tdata.k,namedargs2cell(rmfield(T.tdata,'k')))';
+function v = undistort_kb_xform(u, T)
+    v = CAM.undistort_kb(u', T.tdata.k)';
 end
 
-function v = distort_kb_xform(u,T)
-    v = CAM.distort_kb(u',T.tdata.k,namedargs2cell(rmfield(T.tdata,'k')))';
+function v = distort_kb_xform(u, T)
+    v = CAM.distort_kb(u', T.tdata.k)';
 end

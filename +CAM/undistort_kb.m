@@ -1,13 +1,9 @@
-function v = undistort_kb(u, k, varargin)
+function v = undistort_kb(u, k)
     if any(k) > 0
-        A = CAM.make_norm_xform(varargin{:});
         m = size(u,1);
-
         if (m == 2)
             u = [u;ones(1,size(u,2))];
         end
-
-        v = A * u;
         
         theta_d = vecnorm(v(1:2,:),2,1);
         theta_d = min(max(-pi/2.0, theta_d), pi/2.0);
@@ -34,9 +30,7 @@ function v = undistort_kb(u, k, varargin)
             end
             sc = tan(theta) ./ theta_d;
         end
-        
         v(1:2,:) = v(1:2,:) .* sc;
-        v = A \ v;
 
         if (m == 2)
             v = v(1:2,:);

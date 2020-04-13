@@ -8,7 +8,7 @@ function [border,sc_img] = calc_rectification_border(sz,l,cc,q,minscale,maxscale
      
     bw = (sc_img > minscale) & (sc_img < maxscale);
     [yy,xx] = find(bw);
-
+    
     idx = convhull(xx,yy,'simplify',true);
     xq = xx(idx);
     yq = yy(idx);
