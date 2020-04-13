@@ -7,6 +7,7 @@
 function [] = draw_circle(ax1,c,varargin)
 cfg.xintvl = [];
 cfg.yintvl = [];
+cfg.lim = false;
 
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
     
@@ -41,7 +42,9 @@ lims = [xlim;ylim];
 hold on;
 plot(ax1,x(1,:),x(2,:),leftover{:});
 
-x = [x(1:2,:) lims];
-xlim([min(x(1,:)) max(x(1,:))]);
-ylim([min(x(2,:)) max(x(2,:))]);
+if cfg.lim
+    x = [x(1:2,:) lims];
+    xlim([min(x(1,:)) max(x(1,:))]);
+    ylim([min(x(2,:)) max(x(2,:))]);
+end
 hold off;

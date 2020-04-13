@@ -1,4 +1,4 @@
-function [T,S] = register_by_size(img,T0,border,sz,varargin)
+function [T,S] = register_by_size(T0,border,sz,varargin)
     cfg.lockaspectratio = true;
     [cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
@@ -22,3 +22,11 @@ function [T,S] = register_by_size(img,T0,border,sz,varargin)
 
     T = maketform('composite', ...
                   maketform('affine',S'), T0);
+
+% S_tform = maketform('affine',S');
+% shift = -min(tformfwd(S_tform, tborder));
+% Tr = [1 0 shift(1);...
+%     0 1 shift(2);...
+%     0 0 1];
+% Tr_tform = maketform('projective', Tr');
+% T = maketform('composite', Tr_tform, S_tform, T0);
