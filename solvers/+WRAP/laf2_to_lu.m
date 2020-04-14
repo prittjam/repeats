@@ -16,6 +16,8 @@ classdef laf2_to_lu < WRAP.HybridRectSolver
         end
 
         function M = fit(this,x,idx,varargin)
+            x = x{1};
+            idx = idx{1};
             x = x(:,idx{:});
             xp = [x(1:3,:) x(4:6,:) x(7:9,:)];
             M = this.solver_impl.fit(xp,mat2cell([1 3 5; 2 4 6],2,ones(1,3)));

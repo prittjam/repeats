@@ -14,6 +14,8 @@ classdef laf22_to_ql < WRAP.HybridRectSolver
         end
 
         function M = fit(this,x,idx,cc,varargin)
+            x = x{1};
+            idx = idx{1};
             qn = this.qvals(randi(numel(this.qvals)));
             q = qn/sum(2*cc)^2;
             xu = PT.ru_div(x,cc,q);

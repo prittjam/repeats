@@ -76,7 +76,7 @@ function [] = stability(out_name,varargin)
             for k2 = 1:numel(solver_variants)
                 try
                     solver_list(k).set_solver(solver_variants{k2});
-                    M = solver_list(k).fit(xdn,[1 3;2 4],[1:2]);
+                    M = solver_list(k).fit({xdn},{[1 3;2 4],[1:2]});
                 catch err
                     M = [];
                 end

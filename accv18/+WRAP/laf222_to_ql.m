@@ -101,6 +101,8 @@ classdef laf222_to_ql < WRAP.HybridRectSolver
         end
                
         function M = fit(this,x,idx,cc,varargin)
+            x = x{1};
+            idx = idx{1};
             m = size(x,1);
             M = [];
             A = [1 0 -cc(1); ...

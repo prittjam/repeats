@@ -54,7 +54,7 @@ classdef lafmn_to_qAl < WRAP.HybridRectSolver
     
     methods
         function this = lafmn_to_qAl(solver_impl,varargin)
-            this = this@WRAP.HybridRectSolver(solver_impl.sample_type); 
+            this = this@WRAP.RectSolver(solver_impl.sample_type); 
             this.solver_impl = solver_impl;
             this = cmp_argparse(this,varargin{:});
         end
@@ -78,8 +78,10 @@ classdef lafmn_to_qAl < WRAP.HybridRectSolver
             end
         end
 
-        function model_list = fit(this,x,idx,varargin)            
+        function model_list = fit(this,x,idx,varargin)
             M = this.solver_impl.fit(x,idx,varargin{:});
+            x = x{1};
+            idx = idx{1};
             cc = varargin{1};
 
             if isempty(M)

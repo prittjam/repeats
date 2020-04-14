@@ -97,7 +97,7 @@ function [res,gt,cam] = stability(name_list,solver_list,all_solver_names,varargi
                         xdn = reshape(GRID.add_noise(xd,ccd_sigma), ...
                                       9,[]);       
                         try
-                            M = solver_list(k).fit(xdn,idx,cc,G);
+                            M = solver_list(k).fit({xdn},{idx},cc,G);
                         catch err
                             M = [];
                         end

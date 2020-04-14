@@ -51,7 +51,7 @@ classdef Ransac < handle
                         this.solver.is_sample_good(x,idx);
                     if is_sample_good
                         try
-                            model_list = this.solver.fit(x,idx,varargin{:});
+                            model_list = this.solver.fit({x},{idx},varargin{:});
                         catch excpn
                             model_list = [];
                         end
