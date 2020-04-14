@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf4_to_ql < WRAP.RectSolver
+classdef laf4_to_ql < WRAP.HybridRectSolver
     properties
         name = 'H4ql';
         solver = 'accv18';
@@ -8,7 +8,7 @@ classdef laf4_to_ql < WRAP.RectSolver
 
     methods
         function this = laf4_to_ql(varargin)
-            this = this@WRAP.RectSolver('4');
+            this = this@WRAP.HybridRectSolver('r4');
             this = cmp_argparse(this,varargin{:});                         
         end
         

@@ -4,14 +4,14 @@
 %
 %  Written by James Pritts
 %
-classdef laf22_to_q1q2H < WRAP.RectSolver
+classdef laf22_to_q1q2H < WRAP.HybridRectSolver
     properties
         solver_impl = [];
     end
     
     methods
         function this = laf22_to_q1q2H()
-            this = this@WRAP.RectSolver('22s');
+            this = this@WRAP.HybridRectSolver('r22s');
             this.solver_impl = WRAP.pt5x2_to_q1q2H();
         end
 

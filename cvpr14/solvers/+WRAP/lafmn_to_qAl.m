@@ -6,7 +6,7 @@
 %
 % Copyright (c) 2017 James Pritts
 % 
-classdef lafmn_to_qAl < WRAP.RectSolver
+classdef lafmn_to_qAl < WRAP.HybridRectSolver
     properties
         solver_impl = [];
         upgrade_type = 'scale_consensus';
@@ -54,7 +54,7 @@ classdef lafmn_to_qAl < WRAP.RectSolver
     
     methods
         function this = lafmn_to_qAl(solver_impl,varargin)
-            this = this@WRAP.RectSolver(solver_impl.sample_type); 
+            this = this@WRAP.HybridRectSolver(solver_impl.sample_type); 
             this.solver_impl = solver_impl;
             this = cmp_argparse(this,varargin{:});
         end

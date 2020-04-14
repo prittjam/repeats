@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf22_to_ql < WRAP.RectSolver
+classdef laf22_to_ql < WRAP.HybridRectSolver
     properties
         q = [];
         solver_type = 'polynomial';
@@ -9,7 +9,7 @@ classdef laf22_to_ql < WRAP.RectSolver
     
     methods
         function this = laf22_to_ql(varargin)
-            this = this@WRAP.RectSolver('22');
+            this = this@WRAP.HybridRectSolver('r22');
             this = cmp_argparse(this,varargin{:});
         end
 

@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf22_to_qlusv < WRAP.RectSolver
+classdef laf22_to_qlusv < WRAP.HybridRectSolver
     properties
         solver_impl = [];
     end
@@ -11,12 +11,14 @@ classdef laf22_to_qlusv < WRAP.RectSolver
                 solver_type = 'det';
             end            
 
-            this = this@WRAP.RectSolver('22');
+            this = this@WRAP.HybridRectSolver('r22');
             this.solver_impl = ...
                 WRAP.pt4x2_to_qlusv('solver',solver_type);
         end
         
         function M = fit(this,x,idx,cc,varargin)
+            x = x{1};
+            idx = idx{1};
             x = x(:,[idx{:}]);
             xp = [x(1:3,1:2) x(4:6,1:2) x(1:3,3:4) x(4:6,3:4)];
             M = ...
