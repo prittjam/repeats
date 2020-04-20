@@ -4,18 +4,20 @@
 %
 %  Written by James Pritts
 %
-classdef laf22_to_qH < WRAP.RectSolver
+classdef laf22_to_qH < WRAP.HybridRectSolver
     properties
         solver_impl = [];
     end
     
     methods
         function this = laf22_to_qH()
-            this = this@WRAP.RectSolver('22s');
+            this = this@WRAP.HybridRectSolver('r22s');
             this.solver_impl = WRAP.pt5x2_to_qH();
         end
 
         function M = fit(this,x,idx,cc,varargin)
+            x = x{1};
+            idx = idx{1};
             x = x(:,[idx{:}]);
             x = [x(1:3,:) x(4:6,:) x(7:9,:)];
             M = this.solver_impl.fit(x, ...

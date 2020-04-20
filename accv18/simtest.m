@@ -34,7 +34,7 @@ for scene_num = 1:num_scenes
             axis ij;
             axis equal;
             corresp = reshape([1:16],2,[]);
-            M = solver.fit(xdlaf,corresp,[1 3 5],Gsamp,Gapp);
+            M = solver.fit({xdlaf},{corresp},[1 3 5],Gsamp,Gapp);
             [model_list,lo_res_list,stats_list,cspond] = ...
                 fit_coplanar_patterns(solver,xdlaf,Gsamp,Gapp,cc,1);
             

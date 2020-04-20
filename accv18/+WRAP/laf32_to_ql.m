@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf32_to_ql < WRAP.RectSolver
+classdef laf32_to_ql < WRAP.HybridRectSolver
     properties
         name = 'H32ql';
         solver = 'accv18';
@@ -8,7 +8,7 @@ classdef laf32_to_ql < WRAP.RectSolver
 
     methods
         function this = laf32_to_ql(varargin)
-            this = this@WRAP.RectSolver('32');
+            this = this@WRAP.HybridRectSolver('r32');
             this = cmp_argparse(this,varargin{:});             
         end
         
@@ -51,6 +51,8 @@ classdef laf32_to_ql < WRAP.RectSolver
         end
 
         function M = fit(this,x,idx,cc,varargin)
+            x = x('rgn');
+            idx = idx('rgn');
             M = [];
             A = [1 0 -cc(1); ...
                  0 1 -cc(2); ...

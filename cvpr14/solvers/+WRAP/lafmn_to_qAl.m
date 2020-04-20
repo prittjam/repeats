@@ -6,7 +6,7 @@
 %
 % Copyright (c) 2017 James Pritts
 % 
-classdef lafmn_to_qAl < WRAP.RectSolver
+classdef lafmn_to_qAl < WRAP.HybridRectSolver
     properties
         solver_impl = [];
         upgrade_type = 'scale_consensus';
@@ -78,8 +78,10 @@ classdef lafmn_to_qAl < WRAP.RectSolver
             end
         end
 
-        function model_list = fit(this,x,idx,varargin)            
+        function model_list = fit(this,x,idx,varargin)
             M = this.solver_impl.fit(x,idx,varargin{:});
+            x = x('rgn');
+            idx = idx('rgn');
             cc = varargin{1};
 
             if isempty(M)

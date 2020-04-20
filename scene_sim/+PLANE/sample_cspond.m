@@ -12,20 +12,20 @@ function [X,cspond,idx,G] = sample_cspond(sample_type,w,h,varargin)
     make_cspond_set = str2func(['PLANE.make_cspond_set_' cfg.rigidxform]);
 
     switch sample_type
-      case '2'
+      case 'r2'
         [X,cspond,G] = make_cspond_set(2,w,h);        
         
-      case '22s'
+      case 'r22s'
         [X,cspond,G] = make_cspond_same(2,w,h);
         
-      case '22'
+      case 'r22'
         [X0,cspond0,G0] = make_cspond_set(2,w,h);
         [X1,cspond1,G1] = make_cspond_set(2,w,h);
         X = [X0 X1];
         cspond = [cspond0 cspond1+max(cspond0(:))];
         G = [G0 G1+max(G0)];
 
-      case '222'
+      case 'r222'
         [X0,cspond0,G0] = make_cspond_set(2,w,h);
         [X1,cspond1,G1] = make_cspond_set(2,w,h);
         [X2,cspond2,G2] = make_cspond_set(2,w,h);
@@ -37,14 +37,14 @@ function [X,cspond,idx,G] = sample_cspond(sample_type,w,h,varargin)
         G2 = G2+max(G1);
         G = [G0 G1 G2];
         
-      case '32'
+      case 'r32'
         [X0,cspond0,G0] = make_cspond_set(3,w,h);
         [X1,cspond1,G1] = make_cspond_set(2,w,h);
         X = [X0 X1];
         cspond = [cspond0 cspond1+max(cspond0(:))];
         G = [G0 G1+max(G0)];
         
-      case '4'
+      case 'r4'
         [X,cspond,G] = make_cspond_set(4,w,h);
     end
 
