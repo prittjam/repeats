@@ -16,8 +16,8 @@ classdef laf2_to_ql < WRAP.HybridRectSolver
         end
 
         function M = fit(this,x,idx,cc,varargin)
-            x = x{1};
-            idx = idx{1};
+            x = x('rgn');
+            idx = idx('rgn');
             x = x(:,[idx{:}]);
             xp = [x(1:3,1:2) x(4:6,1:2) x(7:9,1:2)];
             M = this.solver_impl.fit(xp,[1 3 5; 2 4 6],cc);

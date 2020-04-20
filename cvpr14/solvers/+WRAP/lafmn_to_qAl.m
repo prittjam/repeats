@@ -80,8 +80,8 @@ classdef lafmn_to_qAl < WRAP.HybridRectSolver
 
         function model_list = fit(this,x,idx,varargin)
             M = this.solver_impl.fit(x,idx,varargin{:});
-            x = x{1};
-            idx = idx{1};
+            x = x('rgn');
+            idx = idx('rgn');
             cc = varargin{1};
 
             if isempty(M)

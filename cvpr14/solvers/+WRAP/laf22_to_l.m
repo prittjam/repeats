@@ -13,8 +13,8 @@ classdef laf22_to_l < WRAP.HybridRectSolver
         end
 
         function M = fit(this,x,idx,cc,varargin)
-            x = x{1};
-            idx = idx{1};
+            x = x('rgn');
+            idx = idx('rgn');
             switch(this.solver_type)
               case 'polynomial'
                 M = [];

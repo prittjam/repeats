@@ -17,8 +17,8 @@ classdef laf22_to_qlusv < WRAP.HybridRectSolver
         end
         
         function M = fit(this,x,idx,cc,varargin)
-            x = x{1};
-            idx = idx{1};
+            x = x('rgn');
+            idx = idx('rgn');
             x = x(:,[idx{:}]);
             xp = [x(1:3,1:2) x(4:6,1:2) x(1:3,3:4) x(4:6,3:4)];
             M = ...
