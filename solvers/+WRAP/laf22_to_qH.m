@@ -4,14 +4,16 @@
 %
 %  Written by James Pritts
 %
-classdef laf22_to_qH < WRAP.HybridRectSolver
+classdef laf22_to_qH < WRAP.HybridSolver
     properties
         solver_impl = [];
     end
     
     methods
         function this = laf22_to_qH()
-            this = this@WRAP.HybridRectSolver('r22s');
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [2 2];
+            this = this@WRAP.HybridSolver(mss);
             this.solver_impl = WRAP.pt5x2_to_qH();
         end
 

@@ -89,13 +89,13 @@ classdef pt4x2_to_qluv < handle
         
         function M = unnormalize(this,M)
             M.Hu = eye(3)+M.u*M.l';
-            M.Hu = this.invA*M.Hu*this.A;
+            M.Hu = this.A*M.Hu*this.invA;
             M.Hv = eye(3)+M.v*M.l';
-            M.Hv = this.invA*M.Hv*this.A;
+            M.Hv = this.A*M.Hv*this.invA;
             M.l = M.l/norm(M.l);
-            M.l = this.A'*M.l;
-            M.u = this.invA*M.u;            
-            M.v = this.invA*M.v;            
+            M.l = this.invA'*M.l;
+            M.u = this.A*M.u;            
+            M.v = this.A*M.v;            
             M.q = M.q/this.normcc;
             M.cc = this.cc;
             
@@ -104,12 +104,18 @@ classdef pt4x2_to_qluv < handle
         end
         
         function M = fit(this,x,idx,cc,varargin)
-            this.A = CAM.make_fitz_normalization(cc);
-            this.invA = inv(this.A); 
-            this.normcc = sum(2*this.invA(1:2,3))^2;
-            
+            this.cc = cc;
+            if ~all(cc==0)
+                this.invA = CAM.make_fitz_normalization(this.cc);
+                this.A = inv(this.invA);
+                this.normcc = sum(2*this.invA(1:2,3))^2;
+            else
+                this.invA = eye(3);
+                this.A = eye(3);
+                this.normcc = 1;
+            end
             m = reshape([idx{:}],1,[]);
-            un = this.A*x(:,m(:));
+            un = this.A \ x(:,m(:));
             ung = reshape(un,6,[]);
             assert(size(ung,2)==4, ...
                    'incorrect number of correspondences');

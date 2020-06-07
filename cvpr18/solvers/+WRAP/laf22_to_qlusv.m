@@ -1,8 +1,9 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf22_to_qlusv < WRAP.HybridRectSolver
+classdef laf22_to_qlusv < WRAP.HybridSolver
     properties
         solver_impl = [];
+        sample_type = 'r22';
     end
     
     methods
@@ -10,8 +11,9 @@ classdef laf22_to_qlusv < WRAP.HybridRectSolver
             if nargin < 1
                 solver_type = 'det';
             end            
-
-            this = this@WRAP.HybridRectSolver('r22');
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [2 2];
+            this = this@WRAP.HybridSolver(mss);
             this.solver_impl = ...
                 WRAP.pt4x2_to_qlusv('solver',solver_type);
         end

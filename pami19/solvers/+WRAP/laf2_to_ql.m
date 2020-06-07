@@ -4,14 +4,16 @@
 %
 %  Written by James Pritts
 %
-classdef laf2_to_ql < WRAP.HybridRectSolver
+classdef laf2_to_ql < WRAP.HybridSolver
     properties
         solver_impl = []
     end
 
     methods
         function this = laf2_to_ql(varargin)
-            this = this@WRAP.HybridRectSolver('r2');   
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [2];
+            this = this@WRAP.HybridSolver(mss);
             this.solver_impl = WRAP.pt3x2_to_ql(varargin{:});
         end
 

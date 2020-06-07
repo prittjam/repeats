@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf222_to_ql < WRAP.HybridRectSolver
+classdef laf222_to_ql < WRAP.HybridSolver
     properties
         name = 'H222ql';
         solver = 'accv18';
@@ -10,7 +10,9 @@ classdef laf222_to_ql < WRAP.HybridRectSolver
 
     methods
         function this = laf222_to_ql(varargin)
-            this = this@WRAP.HybridRectSolver('r222');   
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [2 2 2];
+            this = this@WRAP.HybridSolver(mss);
             this = cmp_argparse(this,varargin{:});
             [~,this.sij_fn,this.sij_alg_err_fn] = make_closed_form_constraints();
         end

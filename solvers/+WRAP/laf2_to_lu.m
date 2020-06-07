@@ -4,14 +4,16 @@
 %
 %  Written by James Pritts
 %
-classdef laf2_to_lu < WRAP.HybridRectSolver
+classdef laf2_to_lu < WRAP.HybridSolver
     properties
         solver_impl = [];
     end
     
     methods
         function this = laf2_to_lu()
-            this = this@WRAP.HybridRectSolver('r2');
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [2];
+            this = this@WRAP.HybridSolver(mss);
             this.solver_impl = WRAP.pt2x2_to_lu();
         end
 

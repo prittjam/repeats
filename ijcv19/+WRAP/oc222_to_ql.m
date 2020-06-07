@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef oc222_to_ql < WRAP.HybridRectSolver
+classdef oc222_to_ql < WRAP.HybridSolver
     properties
         name = 'H222ql';
         cartesian; 
@@ -8,7 +8,9 @@ classdef oc222_to_ql < WRAP.HybridRectSolver
 
     methods
         function this = oc222_to_ql()
-            this = this@WRAP.HybridRectSolver('r222');   
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [2 2 2];
+            this = this@WRAP.HybridSolver(mss);
             this.cartesian = make_change_of_scale_constraints();
         end
 

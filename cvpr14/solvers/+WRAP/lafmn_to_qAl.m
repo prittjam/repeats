@@ -6,7 +6,7 @@
 %
 % Copyright (c) 2017 James Pritts
 % 
-classdef lafmn_to_qAl < WRAP.HybridRectSolver
+classdef lafmn_to_qAl < WRAP.HybridSolver
     properties
         solver_impl = [];
         upgrade_type = 'scale_consensus';

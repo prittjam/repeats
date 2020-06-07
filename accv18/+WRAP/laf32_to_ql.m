@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf32_to_ql < WRAP.HybridRectSolver
+classdef laf32_to_ql < WRAP.HybridSolver
     properties
         name = 'H32ql';
         solver = 'accv18';
@@ -8,7 +8,9 @@ classdef laf32_to_ql < WRAP.HybridRectSolver
 
     methods
         function this = laf32_to_ql(varargin)
-            this = this@WRAP.HybridRectSolver('r32');
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [3 2];
+            this = this@WRAP.HybridSolver(mss);
             this = cmp_argparse(this,varargin{:});             
         end
         

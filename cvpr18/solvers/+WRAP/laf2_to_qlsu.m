@@ -1,6 +1,6 @@
 % Copyright (c) 2017 James Pritts
 % 
-classdef laf2_to_qlsu < WRAP.HybridRectSolver
+classdef laf2_to_qlsu < WRAP.HybridSolver
     properties
         solver_impl = [];
     end
@@ -10,8 +10,9 @@ classdef laf2_to_qlsu < WRAP.HybridRectSolver
             if nargin < 1
                 solver_type = 'det';
             end
-            
-            this = this@WRAP.HybridRectSolver('r2');
+            mss = MEAS.make_empty_map();
+            mss('rgn') = [2];
+            this = this@WRAP.HybridSolver(mss);
             this.solver_impl = WRAP.pt3x2_to_qlsu('solver',solver_type);
         end
         
