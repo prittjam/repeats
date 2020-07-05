@@ -3,7 +3,7 @@
 classdef laf22_to_qluv < WRAP.HybridSolver
     properties
         solver_impl = [];
-        sample_type = 'r22';
+        input_configs = [];
     end
     
     methods
@@ -16,6 +16,7 @@ classdef laf22_to_qluv < WRAP.HybridSolver
             this = this@WRAP.HybridSolver(mss);
             this.solver_impl = ...
                 WRAP.pt4x2_to_qluv('solver',solver_type);
+            this.input_configs = {mss};
         end
         
         function M = fit(this,x,idx,cc,varargin)
